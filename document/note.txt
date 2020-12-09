@@ -1,0 +1,5 @@
+20201205:
+1.Created makefile.
+2.Created comport cpp class.
+3.Created tcpserver cpp class.
+4.Created cpp mulitthread control.

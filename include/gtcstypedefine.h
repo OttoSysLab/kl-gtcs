@@ -215,7 +215,6 @@ enum class AMSCMD :int{
     CMD310,
     CMD311,
     CMD312,
-    CMD313,
     CMD320,
     CMD321,
     CMD322,

@@ -514,7 +514,7 @@ public:
     ~GtcsAMSProtocol();
     static GtcsAMSProtocol* GetInstance();
     AMSBulletin amsBulletin;
-    void ConvertToProtocolString(std::string* prt,std::string & result);
+    void ConvertToProtocolString(std::string* prt,std::string& result);
     std::string GetAMSBulletinData(AMSCMD amscmd);
 };
 #pragma endregion

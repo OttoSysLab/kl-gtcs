@@ -512,9 +512,10 @@ private:
 public:    
     int cmdsn = 0; 
     ~GtcsAMSProtocol();
-    static GtcsAMSProtocol* getInstance();
+    static GtcsAMSProtocol* GetInstance();
     AMSBulletin amsBulletin;
-    std::string getAMSBulletinData(AMSCMD amscmd);
+    void ConvertToProtocolString(std::string* prt,std::string & result);
+    std::string GetAMSBulletinData(AMSCMD amscmd);
 };
 #pragma endregion
 #endif

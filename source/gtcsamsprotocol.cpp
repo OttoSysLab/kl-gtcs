@@ -21,50 +21,51 @@ GtcsAMSProtocol::~GtcsAMSProtocol()
 // SignleTon instance object.
 GtcsAMSProtocol* GtcsAMSProtocol::instance = 0;
 // Get Instance.
-GtcsAMSProtocol* GtcsAMSProtocol::getInstance(){
+GtcsAMSProtocol* GtcsAMSProtocol::GetInstance(){
     if(instance == 0){
         instance = new GtcsAMSProtocol();
     }
     return instance;
 }
-// Get 
+
+// Get AMS string 
+void GtcsAMSProtocol::ConvertToProtocolString(std::string* prt,std::string & result){
+    // std::string result = "";
+    result = "{"+*prt;
+    do{
+        prt = (std::string *)(void *)(prt+1);
+        result += ","+*prt;
+    }
+    while(*prt != "\n\r");
+    result += "}";
+    // std::cout<<result<<std::endl;
+    // return result;
+}
 
 // Get AMS Protocl string from bulletin.
-std::string GtcsAMSProtocol::getAMSBulletinData(AMSCMD amscmd){
+std::string GtcsAMSProtocol::GetAMSBulletinData(AMSCMD amscmd){
+    std::string result;      
+    std::string* prt_str;    // 接頭
     switch (amscmd)
     {
-        case AMSCMD::CMD300:
-            //  *prt_cmd300 = &amsBulletin.cmd300;
-            break;    
-        default:
-            break;
+    case AMSCMD::DATA300:     
+        prt_str = (std::string *)(void *)&amsBulletin.DATA300Struct;
+        ConvertToProtocolString(prt_str,result);    
+        // ConvertToProtocolString((std::string *)(void *)&amsBulletin.DATA300Struct,result);
+        break; 
+    case AMSCMD::DATA302:
+        // prt_str = (std::string *)(void *)&amsBulletin.DATA302Struct;
+        // ConvertToProtocolString(prt_str,result);
+        break;        
     }
-    return "--";
+     std::cout<<result<<std::endl;
+    return result;
 }
 
 // Tdd.
 int main(){
-    // Test Singleton.
-    GtcsAMSProtocol* gtcs_1 = GtcsAMSProtocol::getInstance();
-    std::cout<<"GTCS_1 cmd300 str2s = "<<gtcs_1->amsBulletin.CMD300Struct.str2<<std::endl;
-    gtcs_1->amsBulletin.CMD300Struct.str2 = "Fuck your family!!";
-    GtcsAMSProtocol* gtcs_2 = GtcsAMSProtocol::getInstance();
-    std::cout<<"GTCS_2 cmd300 str2 = "<<gtcs_2->amsBulletin.CMD300Struct.str2<<std::endl;
-    
-    AmsCMD300Struct* prt_com300 = &gtcs_2->amsBulletin.CMD300Struct;
-    std::cout<<std::to_string(sizeof(gtcs_2->amsBulletin.CMD300Struct))<<std::endl;
-    std::cout<<"Prt str2= "<<prt_com300->str2<<std::endl;
-    
-    std::string* str_1 = (std::string *)(void *)prt_com300;
-    std::cout << *str_1 <<std::endl;
-    std::string* str_2 = (std::string *)(void *)(str_1+1);
-    std::cout << *str_2 <<std::endl;
-    std::string* str_3 = (std::string *)(void *)(str_2+1);
-    std::cout << *str_3 <<std::endl;
-    std::string* str_4 = (std::string *)(void *)(str_3+1);
-    std::cout << *str_4 <<std::endl;
-    std::string* str_5 = (std::string *)(void *)(str_4+1); 
-    std::cout << *str_5 <<std::endl;
-    
+    // // Test Singleton.
+    GtcsAMSProtocol* ams = GtcsAMSProtocol::GetInstance();
+    ams->GetAMSBulletinData(AMSCMD::DATA300);
     return 0;
 }

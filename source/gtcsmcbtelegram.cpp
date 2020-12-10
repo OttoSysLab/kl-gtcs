@@ -19,25 +19,17 @@ GtcsMCBTelegram::~GtcsMCBTelegram()
 {}
 GtcsMCBTelegram* GtcsMCBTelegram::instance = 0;
 // Get Instance.
-GtcsMCBTelegram* GtcsMCBTelegram::getInstance(){
-    if(instance == 0){
+GtcsMCBTelegram* GtcsMCBTelegram::GetInstance()
+{
+    if(instance == 0)
+    {
         instance = new GtcsProtocol();
     }
     return instance;
 }
 
-void GtcsMCBTelegram::fuck(){
-    std::cout<<"FUCK!!"<<std::endl;
-}
-
-fuckyou::fuckyou(/* args */)
+// Gtcs Telegram TDD.
+int main()
 {
-}
-
-fuckyou::~fuckyou()
-{
-}
-
-fuckyou::fuck(){
-    std::cout<<"FUCK!!"<<std::endl;
+    
 }

@@ -215,18 +215,8 @@ private:
     GtcsMCBTelegram(/* args */);
 public:
     ~GtcsMCBTelegram();    
-    static GtcsMCBTelegram* getInstance();
+    static GtcsMCBTelegram* GetInstance();
     GTCSParameter gtcsParameter;
-};
-
-class fuckyou
-{
-private:
-    /* data */
-public:
-    fuckyou(/* args */);
-    ~fuckyou();
-    void fuck();
 };
 #pragma endregion
 #endif

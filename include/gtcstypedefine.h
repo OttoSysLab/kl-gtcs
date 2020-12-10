@@ -206,9 +206,9 @@ typedef struct
 #pragma endregion
 
 #pragma region GTCS AMS Protcol
-enum class AMSCMD :int{
+enum AMSCMD :int{
     // CMD 
-    CMD300,
+    CMD300 = 1,
     CMD301,
     CMD302,
     CMD303,

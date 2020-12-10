@@ -15,6 +15,7 @@
 #include <map>
 #include <iostream>
 #include <cstring>
+#include <vector>
 #include "gtcstypedefine.h"
 
 #pragma region AMS bulletin
@@ -460,7 +461,7 @@ public:
         .str2 = "yyyyMMdd HH:mm:ss",                        // str2:yyyyMMdd HH:mm:ss
         .str3 = "0",                                        // str3:check sum ,4 chars
         .str4 = "0",                                        // str4:Command_sn
-        .str5 = "6",                                        // str5:Device type
+        .str5 = "0",                                        // str5:Device type
         .str6 = "0",                                        // str6:Tool SN
         .str7 = "0",                                        // str7:Device SN
         .str8 = "0",                                        // str8:Job ID
@@ -510,14 +511,17 @@ private:
     // Constructor.
     GtcsAMSProtocol(/* args */);
     int ConvertToProtocolString(std::string* prt,std::string& result);
-    int UpdateProtocolStruct(std::string* prt,std::string& result);
+    int UpdateProtocolStruct(std::string* prt,std::vector<std::string>& ams_array);
+    int GetAMSCmdNum(std::string amscmd);
+    std::vector<std::string> SplitString(const std::string & str,const std::string& pattern);
+    std::vector<std::string> GetAMSSpliteArray(const std::string & str);
 public:    
     int cmdsn = 0; 
     ~GtcsAMSProtocol();
     static GtcsAMSProtocol* GetInstance();
     AMSBulletin amsBulletin;
     std::string GetAMSBulletin(AMSCMD amscmd);
-    int SetAMSBulletin(std::string amsstring);
+    int SetAMSBulletin(std::string ams_string);
 };
 #pragma endregion
 #endif

@@ -508,14 +508,16 @@ private:
     // SignleTon instance object.
     static GtcsAMSProtocol* instance;
     // Constructor.
-    GtcsAMSProtocol(/* args */);   
+    GtcsAMSProtocol(/* args */);
+    int ConvertToProtocolString(std::string* prt,std::string& result);
+    int UpdateProtocolStruct(std::string* prt,std::string& result);
 public:    
     int cmdsn = 0; 
     ~GtcsAMSProtocol();
     static GtcsAMSProtocol* GetInstance();
     AMSBulletin amsBulletin;
-    void ConvertToProtocolString(std::string* prt,std::string& result);
-    std::string GetAMSBulletinData(AMSCMD amscmd);
+    std::string GetAMSBulletin(AMSCMD amscmd);
+    int SetAMSBulletin(std::string amsstring);
 };
 #pragma endregion
 #endif

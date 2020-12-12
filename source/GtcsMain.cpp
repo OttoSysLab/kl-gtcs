@@ -10,7 +10,7 @@
  Programmer    	: Otto Chang
  Date	       	: 2019/08/06
 =======================================================================================*/
-#include "../include/gtcsmain.h"
+#include "../include/GtcsMain.h"
 // Set send data.
 std::array<uint8_t,48> GetTelegramData()
 {

@@ -10,7 +10,7 @@
  Programmer    	: Otto Chang                                                                   
  Date	       	: 2019/08/06                                                         
 =======================================================================================*/
-#include "database.h"
+#include "Database.h"
 
 // Initail function.
 void Database::Initial(){

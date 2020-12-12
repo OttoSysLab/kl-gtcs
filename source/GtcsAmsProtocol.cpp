@@ -11,6 +11,7 @@
  Date	       	: 2019/08/06                                                         
 =======================================================================================*/
 #include "../include/gtcsamsprotocol.h"
+
 // Signalton.
 // Constructor.
 GtcsAMSProtocol::GtcsAMSProtocol(/* args */)
@@ -47,6 +48,8 @@ int GtcsAMSProtocol::ConvertToProtocolString(std::string* prt,std::string & resu
 // Get AMS Protocol string from bulletin.
 std::string GtcsAMSProtocol::GetAMSBulletin(AMSCMD amscmd)
 {
+    GtcsBulletin* gtcsbulletin = GtcsBulletin::GetInstance();
+    AMSBulletin* amsbulletin =&gtcsbulletin->AmsBulletin;
     std::string result;      
     switch (amscmd)
     {
@@ -54,94 +57,94 @@ std::string GtcsAMSProtocol::GetAMSBulletin(AMSCMD amscmd)
     case AMSCMD::DATA300:     
         // prt_str = (std::string *)(void *)&amsBulletin.DATA300Struct;
         // ConvertToProtocolString(prt_str,result);    
-        ConvertToProtocolString((std::string *)(void *)&amsBulletin.DATA300Struct,result);
+        ConvertToProtocolString((std::string *)(void *)&amsbulletin->DATA300Struct,result);
         break; 
     case AMSCMD::DATA302:
-        ConvertToProtocolString((std::string *)(void *)&amsBulletin.DATA302Struct,result);
+        ConvertToProtocolString((std::string *)(void *)&amsbulletin->DATA302Struct,result);
         break;     
     #pragma endregion
     #pragma region REQ
     case AMSCMD::REQ300:
-        ConvertToProtocolString((std::string *)(void *)&amsBulletin.REQ300Struct,result);
+        ConvertToProtocolString((std::string *)(void *)&amsbulletin->REQ300Struct,result);
         break;
     case AMSCMD::REQ301:
-        ConvertToProtocolString((std::string *)(void *)&amsBulletin.REQ301Struct,result);
+        ConvertToProtocolString((std::string *)(void *)&amsbulletin->REQ301Struct,result);
         break;
     case AMSCMD::REQ302:
-        ConvertToProtocolString((std::string *)(void *)&amsBulletin.REQ302Struct,result);
+        ConvertToProtocolString((std::string *)(void *)&amsbulletin->REQ302Struct,result);
         break;
     #pragma endregion  
     #pragma region CMD
     case AMSCMD::CMD300:
-        ConvertToProtocolString((std::string *)(void *)&amsBulletin.CMD300Struct,result);
+        ConvertToProtocolString((std::string *)(void *)&amsbulletin->CMD300Struct,result);
         break;
     case AMSCMD::CMD301:
-        ConvertToProtocolString((std::string *)(void *)&amsBulletin.CMD301Struct,result);
+        ConvertToProtocolString((std::string *)(void *)&amsbulletin->CMD301Struct,result);
         break;
     case AMSCMD::CMD302:
-        ConvertToProtocolString((std::string *)(void *)&amsBulletin.CMD302Struct,result);
+        ConvertToProtocolString((std::string *)(void *)&amsbulletin->CMD302Struct,result);
         break;
     case AMSCMD::CMD303:
-        ConvertToProtocolString((std::string *)(void *)&amsBulletin.CMD303Struct,result);
+        ConvertToProtocolString((std::string *)(void *)&amsbulletin->CMD303Struct,result);
         break;
     case AMSCMD::CMD310:
-        ConvertToProtocolString((std::string *)(void *)&amsBulletin.CMD310Struct,result);
+        ConvertToProtocolString((std::string *)(void *)&amsbulletin->CMD310Struct,result);
         break;
     case AMSCMD::CMD311:
-        ConvertToProtocolString((std::string *)(void *)&amsBulletin.CMD311Struct,result);
+        ConvertToProtocolString((std::string *)(void *)&amsbulletin->CMD311Struct,result);
         break;
     case AMSCMD::CMD312:
-        ConvertToProtocolString((std::string *)(void *)&amsBulletin.CMD312Struct,result);
+        ConvertToProtocolString((std::string *)(void *)&amsbulletin->CMD312Struct,result);
         break;
     case AMSCMD::CMD320:
-        ConvertToProtocolString((std::string *)(void *)&amsBulletin.CMD320Struct,result);
+        ConvertToProtocolString((std::string *)(void *)&amsbulletin->CMD320Struct,result);
         break;
     case AMSCMD::CMD321:
-        ConvertToProtocolString((std::string *)(void *)&amsBulletin.CMD321Struct,result);
+        ConvertToProtocolString((std::string *)(void *)&amsbulletin->CMD321Struct,result);
         break;
     case AMSCMD::CMD322:
-        ConvertToProtocolString((std::string *)(void *)&amsBulletin.CMD322Struct,result);
+        ConvertToProtocolString((std::string *)(void *)&amsbulletin->CMD322Struct,result);
         break;
     case AMSCMD::CMD323:
-        ConvertToProtocolString((std::string *)(void *)&amsBulletin.CMD323Struct,result);
+        ConvertToProtocolString((std::string *)(void *)&amsbulletin->CMD323Struct,result);
         break;
     case AMSCMD::CMD330:
-        ConvertToProtocolString((std::string *)(void *)&amsBulletin.CMD330Struct,result);
+        ConvertToProtocolString((std::string *)(void *)&amsbulletin->CMD330Struct,result);
         break;
     case AMSCMD::CMD340:
-        ConvertToProtocolString((std::string *)(void *)&amsBulletin.CMD340Struct,result);
+        ConvertToProtocolString((std::string *)(void *)&amsbulletin->CMD340Struct,result);
         break;
     #pragma endregion
     #pragma region ANS
     case AMSCMD::ANS301:
-        ConvertToProtocolString((std::string *)(void *)&amsBulletin.ANS301Struct,result);
+        ConvertToProtocolString((std::string *)(void *)&amsbulletin->ANS301Struct,result);
         break;
     case AMSCMD::ANS302:
-        ConvertToProtocolString((std::string *)(void *)&amsBulletin.ANS302Struct,result);
+        ConvertToProtocolString((std::string *)(void *)&amsbulletin->ANS302Struct,result);
         break;
     case AMSCMD::ANS310:
-        ConvertToProtocolString((std::string *)(void *)&amsBulletin.ANS310Struct,result);
+        ConvertToProtocolString((std::string *)(void *)&amsbulletin->ANS310Struct,result);
         break;
     case AMSCMD::ANS311:
-        ConvertToProtocolString((std::string *)(void *)&amsBulletin.ANS311Struct,result);
+        ConvertToProtocolString((std::string *)(void *)&amsbulletin->ANS311Struct,result);
         break;
     case AMSCMD::ANS320:
-        ConvertToProtocolString((std::string *)(void *)&amsBulletin.ANS320Struct,result);
+        ConvertToProtocolString((std::string *)(void *)&amsbulletin->ANS320Struct,result);
         break;
     case AMSCMD::ANS321:
-        ConvertToProtocolString((std::string *)(void *)&amsBulletin.ANS321Struct,result);
+        ConvertToProtocolString((std::string *)(void *)&amsbulletin->ANS321Struct,result);
         break;
     case AMSCMD::ANS322:
-        ConvertToProtocolString((std::string *)(void *)&amsBulletin.ANS322Struct,result);
+        ConvertToProtocolString((std::string *)(void *)&amsbulletin->ANS322Struct,result);
         break;
     case AMSCMD::ANS323:
-        ConvertToProtocolString((std::string *)(void *)&amsBulletin.ANS323Struct,result);
+        ConvertToProtocolString((std::string *)(void *)&amsbulletin->ANS323Struct,result);
         break;
     case AMSCMD::ANS330:
-        ConvertToProtocolString((std::string *)(void *)&amsBulletin.ANS330Struct,result);
+        ConvertToProtocolString((std::string *)(void *)&amsbulletin->ANS330Struct,result);
         break;
     case AMSCMD::ANS340:
-        ConvertToProtocolString((std::string *)(void *)&amsBulletin.ANS340Struct,result);
+        ConvertToProtocolString((std::string *)(void *)&amsbulletin->ANS340Struct,result);
         break;
     default:
         break;
@@ -241,8 +244,8 @@ int GtcsAMSProtocol::GetAMSCmdNum(std::string amscmd)
 // 
 int GtcsAMSProtocol::UpdateProtocolStruct(std::string* prt,std::vector<std::string>& ams_array)
 {
-    std::cout << std::to_string(ams_array.size()) << std::endl;
-    std::cout << ams_array[0] << std::endl;
+    // std::cout << std::to_string(ams_array.size()) << std::endl;
+    // std::cout << ams_array[0] << std::endl;
     int index = 0;
     *prt = ams_array[index];
     while(true){
@@ -260,110 +263,112 @@ int GtcsAMSProtocol::UpdateProtocolStruct(std::string* prt,std::vector<std::stri
 // Set AMS Protocol struct to bulletin.
 int GtcsAMSProtocol::SetAMSBulletin(std::string ams_string)
 {
+    GtcsBulletin* gtcsbulletin = GtcsBulletin::GetInstance();
+    AMSBulletin* amsbulletin =& gtcsbulletin->AmsBulletin;
+
     std::vector<std::string> ams_arry = GetAMSSpliteArray(ams_string);
     int amscmd = GetAMSCmdNum(ams_arry[0]);
-    // std::string result = ams_arry[0];
     switch (amscmd)
     {
     #pragma region DATA 
     case AMSCMD::DATA300:      
-        UpdateProtocolStruct((std::string *)(void *)&amsBulletin.DATA300Struct,ams_arry);
+        UpdateProtocolStruct((std::string *)(void *)&amsbulletin->DATA300Struct,ams_arry);
         break; 
     case AMSCMD::DATA302:
-        UpdateProtocolStruct((std::string *)(void *)&amsBulletin.DATA302Struct,ams_arry);
+        UpdateProtocolStruct((std::string *)(void *)&amsbulletin->DATA302Struct,ams_arry);
         break;     
     #pragma endregion
     #pragma region REQ
     case AMSCMD::REQ300:
-        UpdateProtocolStruct((std::string *)(void *)&amsBulletin.REQ300Struct,ams_arry);
+        UpdateProtocolStruct((std::string *)(void *)&amsbulletin->REQ300Struct,ams_arry);
         break;
     case AMSCMD::REQ301:
-        UpdateProtocolStruct((std::string *)(void *)&amsBulletin.REQ301Struct,ams_arry);
+        UpdateProtocolStruct((std::string *)(void *)&amsbulletin->REQ301Struct,ams_arry);
         break;
     case AMSCMD::REQ302:
-        UpdateProtocolStruct((std::string *)(void *)&amsBulletin.REQ302Struct,ams_arry);
+        UpdateProtocolStruct((std::string *)(void *)&amsbulletin->REQ302Struct,ams_arry);
         break;
     #pragma endregion  
     #pragma region CMD
     case AMSCMD::CMD300:
-        UpdateProtocolStruct((std::string *)(void *)&amsBulletin.CMD300Struct,ams_arry);
+        UpdateProtocolStruct((std::string *)(void *)&amsbulletin->CMD300Struct,ams_arry);
         break;
     case AMSCMD::CMD301:
-        UpdateProtocolStruct((std::string *)(void *)&amsBulletin.CMD301Struct,ams_arry);
+        UpdateProtocolStruct((std::string *)(void *)&amsbulletin->CMD301Struct,ams_arry);
         break;
     case AMSCMD::CMD302:
-        UpdateProtocolStruct((std::string *)(void *)&amsBulletin.CMD302Struct,ams_arry);
+        UpdateProtocolStruct((std::string *)(void *)&amsbulletin->CMD302Struct,ams_arry);
         break;
     case AMSCMD::CMD303:
-        UpdateProtocolStruct((std::string *)(void *)&amsBulletin.CMD303Struct,ams_arry);
+        UpdateProtocolStruct((std::string *)(void *)&amsbulletin->CMD303Struct,ams_arry);
         break;
     case AMSCMD::CMD310:
-        UpdateProtocolStruct((std::string *)(void *)&amsBulletin.CMD310Struct,ams_arry);
+        UpdateProtocolStruct((std::string *)(void *)&amsbulletin->CMD310Struct,ams_arry);
         break;
     case AMSCMD::CMD311:
-        UpdateProtocolStruct((std::string *)(void *)&amsBulletin.CMD311Struct,ams_arry);
+        UpdateProtocolStruct((std::string *)(void *)&amsbulletin->CMD311Struct,ams_arry);
         break;
     case AMSCMD::CMD312:
-        UpdateProtocolStruct((std::string *)(void *)&amsBulletin.CMD312Struct,ams_arry);
+        UpdateProtocolStruct((std::string *)(void *)&amsbulletin->CMD312Struct,ams_arry);
         break;
     case AMSCMD::CMD320:
-        UpdateProtocolStruct((std::string *)(void *)&amsBulletin.CMD320Struct,ams_arry);
+        UpdateProtocolStruct((std::string *)(void *)&amsbulletin->CMD320Struct,ams_arry);
         break;
     case AMSCMD::CMD321:
-        UpdateProtocolStruct((std::string *)(void *)&amsBulletin.CMD321Struct,ams_arry);
+        UpdateProtocolStruct((std::string *)(void *)&amsbulletin->CMD321Struct,ams_arry);
         break;
     case AMSCMD::CMD322:
-        UpdateProtocolStruct((std::string *)(void *)&amsBulletin.CMD322Struct,ams_arry);
+        UpdateProtocolStruct((std::string *)(void *)&amsbulletin->CMD322Struct,ams_arry);
         break;
     case AMSCMD::CMD323:
-        UpdateProtocolStruct((std::string *)(void *)&amsBulletin.CMD323Struct,ams_arry);
+        UpdateProtocolStruct((std::string *)(void *)&amsbulletin->CMD323Struct,ams_arry);
         break;
     case AMSCMD::CMD330:
-        UpdateProtocolStruct((std::string *)(void *)&amsBulletin.CMD330Struct,ams_arry);
+        UpdateProtocolStruct((std::string *)(void *)&amsbulletin->CMD330Struct,ams_arry);
         break;
     case AMSCMD::CMD340:
-        UpdateProtocolStruct((std::string *)(void *)&amsBulletin.CMD340Struct,ams_arry);
+        UpdateProtocolStruct((std::string *)(void *)&amsbulletin->CMD340Struct,ams_arry);
         break;
     #pragma endregion
     #pragma region ANS
     case AMSCMD::ANS301:
-        UpdateProtocolStruct((std::string *)(void *)&amsBulletin.ANS301Struct,ams_arry);
+        UpdateProtocolStruct((std::string *)(void *)&amsbulletin->ANS301Struct,ams_arry);
         break;
     case AMSCMD::ANS302:
-        UpdateProtocolStruct((std::string *)(void *)&amsBulletin.ANS302Struct,ams_arry);
+        UpdateProtocolStruct((std::string *)(void *)&amsbulletin->ANS302Struct,ams_arry);
         break;
     case AMSCMD::ANS310:
-        UpdateProtocolStruct((std::string *)(void *)&amsBulletin.ANS310Struct,ams_arry);
+        UpdateProtocolStruct((std::string *)(void *)&amsbulletin->ANS310Struct,ams_arry);
         break;
     case AMSCMD::ANS311:
-        UpdateProtocolStruct((std::string *)(void *)&amsBulletin.ANS311Struct,ams_arry);
+        UpdateProtocolStruct((std::string *)(void *)&amsbulletin->ANS311Struct,ams_arry);
         break;
     case AMSCMD::ANS320:
-        UpdateProtocolStruct((std::string *)(void *)&amsBulletin.ANS320Struct,ams_arry);
+        UpdateProtocolStruct((std::string *)(void *)&amsbulletin->ANS320Struct,ams_arry);
         break;
     case AMSCMD::ANS321:
-        UpdateProtocolStruct((std::string *)(void *)&amsBulletin.ANS321Struct,ams_arry);
+        UpdateProtocolStruct((std::string *)(void *)&amsbulletin->ANS321Struct,ams_arry);
         break;
     case AMSCMD::ANS322:
-        UpdateProtocolStruct((std::string *)(void *)&amsBulletin.ANS322Struct,ams_arry);
+        UpdateProtocolStruct((std::string *)(void *)&amsbulletin->ANS322Struct,ams_arry);
         break;
     case AMSCMD::ANS323:
-        UpdateProtocolStruct((std::string *)(void *)&amsBulletin.ANS323Struct,ams_arry);
+        UpdateProtocolStruct((std::string *)(void *)&amsbulletin->ANS323Struct,ams_arry);
         break;
     case AMSCMD::ANS330:
-        UpdateProtocolStruct((std::string *)(void *)&amsBulletin.ANS330Struct,ams_arry);
+        UpdateProtocolStruct((std::string *)(void *)&amsbulletin->ANS330Struct,ams_arry);
         break;
     case AMSCMD::ANS340:
-        UpdateProtocolStruct((std::string *)(void *)&amsBulletin.ANS340Struct,ams_arry);
+        UpdateProtocolStruct((std::string *)(void *)&amsbulletin->ANS340Struct,ams_arry);
         break;
     default:
         break;
     #pragma endregion
-    }    
-    
+    }        
     return 0;
 } 
 
+#if defined(_GTCS_AMS_PROTOCOL_TEST_)
 // main.
 int main()
 {
@@ -379,3 +384,4 @@ int main()
     std::cout<<data300<<std::endl;    
     return 0;
 }
+#endif

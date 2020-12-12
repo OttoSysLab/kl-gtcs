@@ -10,7 +10,7 @@
  Programmer    	: Otto Chang                                                                   
  Date	       	: 2019/08/06                                                         
 =======================================================================================*/
-#include "crcchecker.h"
+#include "CrcChecker.h"
 
 // Initial CrcDecoder function.
 void CrcChecker::Initial(){

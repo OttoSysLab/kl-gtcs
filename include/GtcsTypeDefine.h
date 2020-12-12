@@ -15,7 +15,20 @@
 #include <string>
 
 #pragma region GTCS MCB Protcol
+#pragma region Parameter
 // Identification Parameter.(MID1)
+enum MCBMAID : int{
+    ID1 = 1,
+    ID2,
+    ID3,
+    ID4,
+    ID5,
+    ID6,
+    ID7,
+    ID8,
+    ID9,
+};
+// (MID1)
 typedef struct 
 {
     /* data */ 
@@ -25,7 +38,7 @@ typedef struct
     std::string u8DmsSWVer;   // SID = 4,Software Version DMS- Controller.
     std::string u8DmsCorel;   // SID = 5,Unique Core ID from DMS- STM32.
     std::string u8DmsSerNr;   // SID = 6,Serial Number of the DMS- Controller.
-}ID1;
+}McbID1Struct;
 // (MID2) 
 typedef struct 
 {
@@ -73,7 +86,7 @@ typedef struct
     std::string u16IGain;           // SID = 24,Integral Gain for the RPM Regulator.
     std::string u16Encoder;         // SID = 25,"0 = No Encoder (positioning with Hallsensors). 
                                     // 1 = 200p Encoder"
-}ID2;
+}McbID2Struct;
 // Step Parameter.(ID3)
 typedef struct 
 {
@@ -106,7 +119,7 @@ typedef struct
     std::string u16StepDelaytime;
     // Stepo list in porcess,SID = 8,"Screwing process step ID Number 3000 -3499"
     // "u16ProcStepId":self.u16ProcStepId,
-}ID3;
+}McbID3Struct;
 // Process Parameter.(ID4)
 typedef struct 
 {
@@ -128,7 +141,7 @@ typedef struct
                                 // (tightening right) 1 = Screwing direction of the whole process 
                                 // reverse (tightening left)"
     std::string u16NbrSteps;    // SID = 7,Number of Steps in this Process
-}ID4;
+}McbID4Struct;
 // Program Parameter.(ID5)
 typedef struct 
 {
@@ -145,7 +158,7 @@ typedef struct
     std::string u16NbrProc;     // SID = 6,Number of processes in this program.
     // SID = 1000-1199,Screwing Process ID Number 4000 - 4249.
     // "u16ProgProcessId"  : self.u16ProgProcessId 
-}ID5;
+}McbID5Struct;
 // Statistc Parameter.(ID6)
 typedef struct 
 {
@@ -155,7 +168,7 @@ typedef struct
     std::string u32IMaxCount;       // SID = 3,Counter for Overcurrent Conditions.
     std::string u32tMaxCount;       // SID = 4,"Counter for Overtemperature Conditions".
     std::string u32RevCount;        // SID = 5,Counter for Reverse Operations.
-}ID6;
+}McbID6Struct;
 // ID7
 typedef struct 
 {
@@ -173,7 +186,7 @@ typedef struct
                                     // Value of this Parameter the ID of the Process (ID4XXX)".
     std::string u16WriteProg2Flash; // SID = 6,"When receiving this Parameter the Program will be written 
                                     // to Flash Memory.Value of this Parameter is “Don't care”".
-}ID7;
+}McbID7Struct;
 // ID8
 typedef struct 
 {
@@ -182,7 +195,7 @@ typedef struct
     std::string u16ManSlope;     // SID = 2, Manual slope. Unit is [rpm/s] (after the Gearbox).
     std::string u16ManMaxCurrent;// SID = 3, Manual maximum current. Unit is [mA].
     std::string u16ManMaxTorque; // SID = 4, Maximum Torque Value is 0- 1862 (max Raw TMD Value).
-}ID8;
+}McbID8Struct;
 // ID9
 typedef struct 
 {
@@ -202,11 +215,23 @@ typedef struct
     std::string u16MaxTorqu;    // SID = 13, Maximum Torque Value is 0- 1862 (max Raw TMD Value).
     std::string u32Angle;       // SID = 14, Actual angle [0,1°].
     std::string u32Revolutions; // SID = 15, Actual revolutions [0,01 revolutions].
-}ID9;
+}McbID9Struct;
+#pragma endregion
+
+#pragma region Telegram Struct.
+// GTCS Telegram Struct. 
+typedef struct 
+{
+    std::array<uint8_t,8> header;
+    std::array<uint8_t,36> payload;
+    std::array<uint8_t,4> crc32; 
+}GtcsTelegramStruct;
+
+#pragma endregion
 #pragma endregion
 
 #pragma region GTCS AMS Protcol
-enum AMSCMD :int{
+enum AMSCMD : int {
     // CMD 
     CMD300 = 1,
     CMD301,

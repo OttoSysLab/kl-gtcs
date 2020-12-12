@@ -10,7 +10,7 @@
  Programmer    	: Otto Chang                                                                   
  Date	       	: 2019/08/06                                                         
 =======================================================================================*/
-#include "tcpsocket.h"
+#include "TcpSocket.h"
 
 // Initial CrcDecoder function.
 void TcpSocket::Initial(){

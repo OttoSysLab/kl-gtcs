@@ -1,3 +1,6 @@
+#ifndef _GTCS_AMS_PROTOCOL_
+#define _GTCS_AMS_PROTOCOL_
+// #define _GTCS_AMS_PROTOCOL_TEST_
 /*=======================================================================================
  Program Nane  	: gtcs_tlg_decoder.c     
  Subject 		: SARM Serial Port Communication Driver Process                                  
@@ -10,26 +13,34 @@
  Programmer    	: Otto Chang                                                                   
  Date	       	: 2019/08/06                                                         
 =======================================================================================*/
-#include "../include/gtcsmcbtelegram.h"
-// Constructor.
-GtcsMCBTelegram::GtcsMCBTelegram(/* args */)
-{}
-// Distructor.
-GtcsMCBTelegram::~GtcsMCBTelegram()
-{}
-GtcsMCBTelegram* GtcsMCBTelegram::instance = 0;
-// Get Instance.
-GtcsMCBTelegram* GtcsMCBTelegram::GetInstance()
-{
-    if(instance == 0)
-    {
-        instance = new GtcsProtocol();
-    }
-    return instance;
-}
+#include <map>
+#include <iostream>
+#include <cstring>
+#include <vector>
+#include "gtcstypedefine.h"
+#include "gtcsbulletin.h"
 
-// Gtcs Telegram TDD.
-int main()
+#pragma region AMS Protocol object
+// Gtcs AMS Protocol
+class GtcsAMSProtocol
 {
-    
-}
+private: 
+    // SignleTon instance object.
+    static GtcsAMSProtocol* instance;
+    // Constructor.
+    GtcsAMSProtocol(/* args */);
+    int ConvertToProtocolString(std::string* prt,std::string& result);
+    int UpdateProtocolStruct(std::string* prt,std::vector<std::string>& ams_array);
+    int GetAMSCmdNum(std::string amscmd);
+    std::vector<std::string> SplitString(const std::string & str,const std::string& pattern);
+    std::vector<std::string> GetAMSSpliteArray(const std::string & str);
+public:    
+    int cmdsn = 0; 
+    ~GtcsAMSProtocol();
+    static GtcsAMSProtocol* GetInstance();
+    // AMSBulletin amsprotocol;
+    std::string GetAMSBulletin(AMSCMD amscmd);
+    int SetAMSBulletin(std::string ams_string);
+};
+#pragma endregion
+#endif

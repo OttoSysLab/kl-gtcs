@@ -10,7 +10,7 @@
  Programmer    	: Otto Chang                                                                   
  Date	       	: 2019/08/06                                                         
 =======================================================================================*/
-#include "comport.h"
+#include "ComPort.h"
 
 // Initial. 
 void ComPort::Initial(){

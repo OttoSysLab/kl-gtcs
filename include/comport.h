@@ -35,6 +35,6 @@ public:
     // Send Char.
     int SendChar(int P_CommPort, unsigned char P_Value);
     // Read Data.
-    std::array<uint8_t,48> ReadData(int openCommPort);
+    std::array<uint8_t,48> ReadData(int openCommPort,std::array<uint8_t,48>& readbuffor);
 };
 #endif

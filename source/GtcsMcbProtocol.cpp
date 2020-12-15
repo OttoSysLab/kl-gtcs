@@ -75,45 +75,45 @@ int CtrlTelegram::EncodeTelegramArray(GtcsCtrlTelegramStrcut *ptr_ctrl_telegram,
     return result;
 }
 // GTCS 
-int StatusTelegram::DecodeTelegramArray(std::array<std::uint8_t,36> received_telegram)
+int StatusTelegram::DecodeTelegramArray()
 {   
     int result = -1;
-    status.u16Statusflags = ((uint16_t)received_telegram[0])+
-                            ((uint16_t)received_telegram[1]<<8);
-    status.u32ActError    = ((uint32_t)received_telegram[2])+
-                            ((uint32_t)received_telegram[3]<<8)+
-                            ((uint32_t)received_telegram[4]<<16)+
-                            ((uint32_t)received_telegram[5]<<24);
-    status.u16ActProcNr   = ((uint16_t)received_telegram[6])+
-                            ((uint16_t)received_telegram[7]<<8);
-    status.u16ActStepNr   = ((uint16_t)received_telegram[8])+
-                            ((uint16_t)received_telegram[9]<<8);
-    status.u16ActCurr     = ((uint16_t)received_telegram[10])+
-                            ((uint16_t)received_telegram[11]<<8);
-    status.u16ActTorque   = ((uint16_t)received_telegram[12])+
-                            ((uint16_t)received_telegram[13]<<8);
-    status.u16ActRPM      = ((uint16_t)received_telegram[14])+
-                            ((uint16_t)received_telegram[15]<<8);
-    status.u16MaxCurrent  = ((uint16_t)received_telegram[16])+
-                            ((uint16_t)received_telegram[17]<<8);
-    status.u16MaxTorque   = ((uint16_t)received_telegram[18])+
-                            ((uint16_t)received_telegram[19]<<8);
-    status.u32Angle       = ((uint32_t)received_telegram[20])+
-                            ((uint32_t)received_telegram[21]<<8)+
-                            ((uint32_t)received_telegram[22]<<16)+
-                            ((uint32_t)received_telegram[23]<<24);     
-    status.u32Revolutions = ((uint32_t)received_telegram[24])+
-                            ((uint32_t)received_telegram[25]<<8)+
-                            ((uint32_t)received_telegram[26]<<16)+
-                            ((uint32_t)received_telegram[27]<<24);
-    status.u16TMDFlags    = ((uint16_t)received_telegram[28])+
-                            ((uint16_t)received_telegram[29]<<8);
-    status.s16Debug       = ((uint16_t)received_telegram[30])+
-                            ((uint16_t)received_telegram[31]<<8);
-    status.s32Debug       = ((uint32_t)received_telegram[32])+
-                            ((uint32_t)received_telegram[33]<<8)+
-                            ((uint32_t)received_telegram[34]<<16)+
-                            ((uint32_t)received_telegram[35]<<24);
+    mcb_status.u16Statusflags = ((uint16_t)telegram_array[payload_start_index])+
+                            ((uint16_t)telegram_array[payload_start_index+1]<<8);
+    mcb_status.u32ActError    = ((uint32_t)telegram_array[payload_start_index+2])+
+                            ((uint32_t)telegram_array[payload_start_index+3]<<8)+
+                            ((uint32_t)telegram_array[payload_start_index+4]<<16)+
+                            ((uint32_t)telegram_array[payload_start_index+5]<<24);
+    mcb_status.u16ActProcNr   = ((uint16_t)telegram_array[payload_start_index+6])+
+                            ((uint16_t)telegram_array[payload_start_index+7]<<8);
+    mcb_status.u16ActStepNr   = ((uint16_t)telegram_array[payload_start_index+8])+
+                            ((uint16_t)telegram_array[payload_start_index+9]<<8);
+    mcb_status.u16ActCurr     = ((uint16_t)telegram_array[payload_start_index+10])+
+                            ((uint16_t)telegram_array[payload_start_index+11]<<8);
+    mcb_status.u16ActTorque   = ((uint16_t)telegram_array[payload_start_index+12])+
+                            ((uint16_t)telegram_array[payload_start_index+13]<<8);
+    mcb_status.u16ActRPM      = ((uint16_t)telegram_array[payload_start_index+14])+
+                            ((uint16_t)telegram_array[payload_start_index+15]<<8);
+    mcb_status.u16MaxCurrent  = ((uint16_t)telegram_array[payload_start_index+16])+
+                            ((uint16_t)telegram_array[payload_start_index+17]<<8);
+    mcb_status.u16MaxTorque   = ((uint16_t)telegram_array[payload_start_index+18])+
+                            ((uint16_t)telegram_array[payload_start_index+19]<<8);
+    mcb_status.u32Angle       = ((uint32_t)telegram_array[payload_start_index+20])+
+                            ((uint32_t)telegram_array[payload_start_index+21]<<8)+
+                            ((uint32_t)telegram_array[payload_start_index+22]<<16)+
+                            ((uint32_t)telegram_array[payload_start_index+23]<<24);     
+    mcb_status.u32Revolutions = ((uint32_t)telegram_array[payload_start_index+24])+
+                            ((uint32_t)telegram_array[payload_start_index+25]<<8)+
+                            ((uint32_t)telegram_array[payload_start_index+26]<<16)+
+                            ((uint32_t)telegram_array[payload_start_index+27]<<24);
+    mcb_status.u16TMDFlags    = ((uint16_t)telegram_array[payload_start_index+28])+
+                            ((uint16_t)telegram_array[payload_start_index+29]<<8);
+    mcb_status.s16Debug       = ((uint16_t)telegram_array[payload_start_index+30])+
+                            ((uint16_t)telegram_array[payload_start_index+31]<<8);
+    mcb_status.s32Debug       = ((uint32_t)telegram_array[payload_start_index+32])+
+                            ((uint32_t)telegram_array[payload_start_index+33]<<8)+
+                            ((uint32_t)telegram_array[payload_start_index+34]<<16)+
+                            ((uint32_t)telegram_array[payload_start_index+35]<<24);
     return result;
 }
 #pragma endregion

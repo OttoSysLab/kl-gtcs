@@ -88,9 +88,10 @@ int ComPort::SendChar(int P_CommPort, unsigned char P_Value){
     return L_BytesWritten;
 };
 // 
-std::array<uint8_t,48> ComPort::ReadData(int openCommPort){
+std::array<uint8_t,48> ComPort::ReadData(int openCommPort,std::array<uint8_t,48>& readbuffor){
     int BytesRead = 0;
-    std::array<uint8_t,48> readbuffor;
+    // std::array<uint8_t,48> readbuffor;
+    // BytesRead = read(openCommPort, &readbuffor, 48);
     BytesRead = read(openCommPort, &readbuffor, 48);
     return readbuffor;
 };

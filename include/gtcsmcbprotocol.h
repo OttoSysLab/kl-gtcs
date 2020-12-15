@@ -111,7 +111,7 @@ public:
         header.type_num  = MCB_TELEGRAM_TYPE::STATUS;
     };
     ~StatusTelegram(){};
-    GtcsStatusTelegramStrcut status = 
+    GtcsStatusTelegramStrcut mcb_status = 
     {
         .u16Statusflags = 0,   // uint16
         .u32ActError    = 0,
@@ -128,7 +128,9 @@ public:
         .s16Debug       = 0,
         .s32Debug       = 0, 
     };
-    int DecodeTelegramArray(std::array<std::uint8_t,36> received_telegram);
+    // int DecodeTelegramArray(std::array<std::uint8_t,48> received_telegram);
+    int DecodeTelegramArray();
+
 };
 // Wrie Request Telegram
 class WriteRequestTelegram : public TelegramStruct

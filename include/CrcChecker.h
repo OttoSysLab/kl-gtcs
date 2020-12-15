@@ -91,7 +91,6 @@ private:
 public:
     CrcChecker();
     ~CrcChecker();
-    void Initial();
     int checkCrc32(uint8_t* pData);
     uint8_t crc32_value[4];
     // Calculate CRC32 checksum.

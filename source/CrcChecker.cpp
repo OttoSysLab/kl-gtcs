@@ -10,13 +10,16 @@
  Programmer    	: Otto Chang                                                                   
  Date	       	: 2019/08/06                                                         
 =======================================================================================*/
-#include "CrcChecker.h"
+#include "../include/CrcChecker.h"
 
 // Initial CrcDecoder function.
-void CrcChecker::Initial(){
-}
+CrcChecker::CrcChecker()
+{}
+CrcChecker::~CrcChecker()
+{}
 // Check CRC32 .
-uint32_t CrcChecker::u32CRC32(uint32_t u32CRC, uint8_t *pData){
+uint32_t CrcChecker::u32CRC32(uint32_t u32CRC, uint8_t *pData)
+{
     uint32_t CRC32 = u32CRC;
     int i ;
     for ( i = 0; i < 4; i++)
@@ -26,7 +29,8 @@ uint32_t CrcChecker::u32CRC32(uint32_t u32CRC, uint8_t *pData){
     return CRC32;
 };
 // 
-uint32_t CrcChecker::u32Bitrevers(uint32_t dwValue){
+uint32_t CrcChecker::u32Bitrevers(uint32_t dwValue)
+{
     // uint8_t* pu8;
   	uint8_t pu8[4] ;
     // pu8 = new byte[4];
@@ -56,7 +60,8 @@ uint32_t CrcChecker::u32Bitrevers(uint32_t dwValue){
     return dwResult;
 }
 // 
-std::array<uint8_t,4> CrcChecker::u32CRC32_function(uint8_t* pData, uint32_t u32DWORDCount){
+std::array<uint8_t,4> CrcChecker::u32CRC32_function(uint8_t* pData, uint32_t u32DWORDCount)
+{
 	uint32_t u32CRC = 0xFFFFFFFF;
     uint32_t u32Data;
     int i ;

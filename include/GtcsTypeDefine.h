@@ -1,5 +1,6 @@
 #ifndef _GTCS_TYPE_DEFINE_
 #define _GTCS_TYPE_DEFINE_
+// #define _GTCS_TEST_
 /*=======================================================================================
  Program Nane  	: gtcs_tlg_decoder.c     
  Subject 		: SARM Serial Port Communication Driver Process                                  
@@ -27,6 +28,21 @@ enum MCBMAID : int{
     ID7,
     ID8,
     ID9,
+};
+enum MCB_TELEGRAM_TYPE : uint8_t{
+    CTRL             = 1,
+    STATUS           = 2,
+    W_REQUEST        = 3,
+    RW_RESPONSE      = 4,    
+    R_REQUEST        = 5,
+    TMD_REQUEST      = 6,
+    TMD_RESPONSE     = 7,
+    LOG_REQUEST      = 10, 
+    LOG_RESPONSE     = 11,
+    PROCESS_REQUST   = 12,
+    PROCESS_RESPONSE = 13,
+    STEP_REQUEST     = 14,
+    STEP_RESPONSE    = 15,
 };
 // (MID1)
 typedef struct 
@@ -220,12 +236,51 @@ typedef struct
 
 #pragma region Telegram Struct.
 // GTCS Telegram Struct. 
+// typedef struct 
+// {
+//     /* data */
+//     uint8_t type_num;
+//     uint8_t address_2;
+//     uint8_t address_3;
+//     uint8_t address_4;
+//     uint8_t address_5;
+//     uint8_t address_6;
+//     uint8_t RW_para_status;
+//     uint8_t RW_ram_status;
+// }CtcsTelegramHeaderStruct;
+
+// GTCS ctrl telegram strut.
 typedef struct 
 {
-    std::array<uint8_t,8> header;
-    std::array<uint8_t,36> payload;
-    std::array<uint8_t,4> crc32; 
-}GtcsTelegramStruct;
+    uint16_t u16Ctrlflags;             //42496,8192,9728(鎖馬達),Flag10=Cyc
+    uint16_t u16ControlMode;           //
+    uint16_t u16WorkProc ;             //
+    uint16_t u16CtrlProgram;           //
+    uint16_t u16ManRpm;                //
+    uint16_t u16ManSlope;              //
+    uint16_t u16ManMaxTorque;          //
+    uint16_t u16ManMaxCurrent;         //
+    uint16_t u16ManRpmMode;            // 
+    uint16_t u8TMDControl;             //   
+}GtcsCtrlTelegramStrcut;
+// GTCS Status telegram struct. 
+typedef struct 
+{
+    uint16_t u16Statusflags;
+    uint32_t u32ActError;
+    uint16_t u16ActProcNr;
+    uint16_t u16ActStepNr;
+    uint16_t u16ActCurr;
+    uint16_t u16ActTorque;
+    uint16_t u16ActRPM;
+    uint16_t u16MaxCurrent;
+    uint16_t u16MaxTorque;
+    uint32_t u32Angle;      
+    uint32_t u32Revolutions;
+    uint16_t u16TMDFlags;
+    uint16_t s16Debug;
+    uint32_t s32Debug; 
+}GtcsStatusTelegramStrcut;
 
 #pragma endregion
 #pragma endregion

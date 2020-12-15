@@ -1,6 +1,5 @@
 #ifndef _GTCS_AMS_PROTOCOL_
 #define _GTCS_AMS_PROTOCOL_
-// #define _GTCS_AMS_PROTOCOL_TEST_
 /*=======================================================================================
  Program Nane  	: gtcs_tlg_decoder.c     
  Subject 		: SARM Serial Port Communication Driver Process                                  
@@ -17,30 +16,30 @@
 #include <iostream>
 #include <cstring>
 #include <vector>
-#include "gtcstypedefine.h"
-#include "gtcsbulletin.h"
+#include "GtcsTypeDefine.h"
+#include "GtcsBulletin.h"
 
 #pragma region AMS Protocol object
 // Gtcs AMS Protocol
-class GtcsAMSProtocol
+class GtcsAmsProtocol
 {
 private: 
     // SignleTon instance object.
-    static GtcsAMSProtocol* instance;
+    static GtcsAmsProtocol* instance;
     // Constructor.
-    GtcsAMSProtocol(/* args */);
+    GtcsAmsProtocol(/* args */);
     int ConvertToProtocolString(std::string* prt,std::string& result);
     int UpdateProtocolStruct(std::string* prt,std::vector<std::string>& ams_array);
-    int GetAMSCmdNum(std::string amscmd);
+    int GetAmsCmdNum(std::string amscmd);
     std::vector<std::string> SplitString(const std::string & str,const std::string& pattern);
-    std::vector<std::string> GetAMSSpliteArray(const std::string & str);
+    std::vector<std::string> GetAmsSpliteArray(const std::string & str);
 public:    
     int cmdsn = 0; 
-    ~GtcsAMSProtocol();
-    static GtcsAMSProtocol* GetInstance();
+    ~GtcsAmsProtocol();
+    static GtcsAmsProtocol* GetInstance();
     // AMSBulletin amsprotocol;
-    std::string GetAMSBulletin(AMSCMD amscmd);
-    int SetAMSBulletin(std::string ams_string);
+    std::string GetAmsBulletin(AMSCMD amscmd);
+    int SetAmsBulletin(std::string ams_string);
 };
 #pragma endregion
 #endif

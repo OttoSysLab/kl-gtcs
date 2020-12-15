@@ -1,5 +1,3 @@
-#ifndef _GTCS_COMPORT_
-#define _GTCS_COMPORT_
 /*=======================================================================================
  Program Nane  	: gtcs_tlg_decoder.c     
  Subject 		: SARM Serial Port Communication Driver Process                                  
@@ -12,29 +10,22 @@
  Programmer    	: Otto Chang                                                                   
  Date	       	: 2019/08/06                                                         
 =======================================================================================*/
-#include <iostream>    // 
-#include <array>
+#include "../include/GtcsBulletin.h"
 
-// #if defined(OS_LINUX)
-#include <termios.h>   // Contains POSIX terminal control definitions.
-#include <unistd.h>    // write(), read(), close(), Unix Port System Call
-#include <fcntl.h>     // 
-// #endif
-class ComPort
+// Signalton.
+// Constructor.
+GtcsBulletin::GtcsBulletin(/* args */)
+{}
+// Distructor.
+GtcsBulletin::~GtcsBulletin()
+{}
+// SignleTon instance object.
+GtcsBulletin* GtcsBulletin::instance = 0;
+// Get Instance.
+GtcsBulletin* GtcsBulletin::GetInstance()
 {
-private:
-    /* data */
-    // char comport[] = "/dev/ttymxc3";
-public:
-    ComPort(/* args */){};             // 
-    ~ComPort(){};                      // 
-    void Initial();                    // 
-    // unsigned char readBuffor[48];      // 
-    // Initial Comm port.              //
-    int InitialComm(char *P_port_name);//
-    // Send Char.
-    int SendChar(int P_CommPort, unsigned char P_Value);
-    // Read Data.
-    std::array<uint8_t,48> ReadData(int openCommPort);
-};
-#endif
+    if(instance == 0){
+        instance = new GtcsBulletin();
+    }
+    return instance;
+}

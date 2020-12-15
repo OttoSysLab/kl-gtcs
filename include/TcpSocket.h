@@ -16,14 +16,14 @@
 #include <cstring>        // 
 #include <cerrno>         // 
 #include <unistd.h>       //  
-#if defined(OS_LINUX)
+// #if defined(OS_LINUX)
 #include <arpa/inet.h>    // 
 #include <termios.h>      // 
 #include <netinet/in.h>   //
 #include <sys/types.h>    // 
 #include <sys/socket.h>   // 
 #include <sys/stat.h>     //
-#endif
+// #endif
 
 // Class strcut.
 class TcpSocket

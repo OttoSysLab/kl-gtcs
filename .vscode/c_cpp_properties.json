@@ -3,13 +3,12 @@
         {
             "name": "Win32",
             "includePath": [
-                "${workspaceFolder}/**",
-                "${workspaceFolder}/bin",
-                "${workspaceFolder}/include",
-                "${workspaceFolder}/object",
-                "${workspaceFolder}/resource",
-                "${workspaceFolder}/source",
-                "${workspaceFolder}/testdriven"
+                "${workspaceFolder}\\**",
+                "${workspaceFolder}\\include\\**",
+                "${workspaceFolder}\\object\\**",
+                "${workspaceFolder}\\resource\\**",
+                "${workspaceFolder}\\source\\**",
+                "${workspaceFolder}\\testdriven\\**"
             ],
             "defines": [
                 "_DEBUG",

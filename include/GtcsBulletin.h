@@ -12,7 +12,7 @@
  Programmer    	: Otto Chang                                                                   
  Date	       	: 2019/08/06                                                         
 =======================================================================================*/
-#include "gtcstypedefine.h"
+#include "GtcsTypeDefine.h"
 
 #pragma region AMS bulletin
 class AMSBulletin
@@ -688,19 +688,30 @@ class GtcsBulletin
 private:
     // SignleTon instance object.
     static GtcsBulletin* instance;
-    GtcsBulletin(/* args */){};
+    GtcsBulletin(/* args */);
 public:
     // Constructor.
-    ~GtcsBulletin(){};
+    ~GtcsBulletin();
     // Get Instance.
-    static GtcsBulletin* GetInstance(){
-        if(instance == 0){
-            instance = new GtcsBulletin();
-        }
-        return instance;    
-    };
+    static GtcsBulletin* GetInstance();
     AMSBulletin AmsBulletin;
     MCBParameter McbBulletin;    
 };
-GtcsBulletin* GtcsBulletin::instance = 0;
+// // Signalton.
+// // Constructor.
+// GtcsBulletin::GtcsBulletin(/* args */)
+// {}
+// // Distructor.
+// GtcsBulletin::~GtcsBulletin()
+// {}
+// // SignleTon instance object.
+// GtcsBulletin* GtcsBulletin::instance = 0;
+// // Get Instance.
+// GtcsBulletin* GtcsBulletin::GetInstance()
+// {
+//     if(instance == 0){
+//         instance = new GtcsBulletin();
+//     }
+//     return instance;
+// }
 #endif

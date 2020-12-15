@@ -1,27 +1,35 @@
 CC = g++
 INCLUDE = -I"./include" -I"../include"
-OBJS = ./obj/gtcsmain.o ./obj/comport.o ./obj/crcchecker.o ./obj/database.o ./obj/tcpsocket.o ./obj/gtcsprotocol.o
+OBJS = ./object/GtcsMain.o ./object/ComPort.o ./object/CrcChecker.o ./object/Database.o \
+	./object/TcpSocket.o ./object/GtcsBulletin.o ./object/GtcsMcbProtocol.o ./object/GtcsAmsProtocol.o
 
-gtcs: gtcsmain.o comport.o crcchecker.o database.o tcpsocket.o gtcsprotocol.o
+GTCS: GtcsMain.o CrcChecker.o Database.o TcpSocket.o ComPort.o GtcsBulletin.o GtcsMcbProtocol.o\
+	GtcsAmsProtocol.o
 	${CC} -pthread -o $@ ${INCLUDE} ${OBJS} 
 
-gtcsmain.o : ./gtcsmain.cpp
-	${CC} ${INCLUDE} -c $< -o ./obj/gtcsmain.o
+GtcsMain.o : ./GtcsMain.cpp
+	${CC} ${INCLUDE} -c $< -o ./object/GtcsMain.o
 
-comport.o : ./src/comport.cpp 
-	${CC} ${INCLUDE} -c $< -o ./obj/comport.o
+CrcChecker.o : ./source/CrcChecker.cpp 
+	${CC} ${INCLUDE} -c $< -o ./object/CrcChecker.o
 
-crcchecker.o : ./source/crcchecker.cpp 
-	${CC} ${INCLUDE} -c $< -o ./obj/crcchecker.o
+TcpSocket.o : ./source/TcpSocket.cpp 
+	${CC} ${INCLUDE} -c $< -o ./object/TcpSocket.o
 
-database.o : ./source/database.cpp 
-	${CC} ${INCLUDE} -c $< -o ./obj/database.o
+Database.o : ./source/Database.cpp 
+	${CC} ${INCLUDE} -c $< -o ./object/Database.o
 
-tcpsocket.o : ./source/tcpsocket.cpp 
-	${CC} ${INCLUDE} -c $< -o ./obj/tcpsocket.o
+ComPort.o : ./source/ComPort.cpp 
+	${CC} ${INCLUDE} -c $< -o ./object/ComPort.o
 
-gtcsprotocol.o : ./source/gtcsprotocol.cpp 
-	${CC} ${INCLUDE} -c $< -o ./obj/gtcsprotocol.o
+GtcsBulletin.o : ./source/GtcsBulletin.cpp
+	${CC} ${INCLUDE} -c $< -o ./object/GtcsBulletin.o
+
+GtcsMcbProtocol.o : ./source/GtcsMcbProtocol.cpp 
+	${CC} ${INCLUDE} -c $< -o ./object/GtcsMcbProtocol.o
+
+GtcsAmsProtocol.o : ./source/GtcsAmsProtocol.cpp 
+	${CC} ${INCLUDE} -c $< -o ./object/GtcsAmsProtocol.o
 
 clear:
-	rm -f ./obj/*.o
+	rm -f ./object/*.o

@@ -121,7 +121,6 @@ int StatusTelegram::DecodeTelegramArray()
 std::array<uint8_t,36> WriteRequestTelegram::EncodeTelegramArray(GtcsRW16TelegramStruct *ptr_request)
 {
     std::array<uint8_t,36> result;
-    
     return result;
 }
 #pragma endregion 
@@ -142,16 +141,61 @@ GtcsMcbProtocol* GtcsMcbProtocol::GetInstance()
     }
     return instance;
 }
-// Get MCB bulletin.
-std::vector<std::string> GtcsMcbProtocol::GetMcbBulletin(MCBMAID mainid)
+#pragma region RW MCB Paramter.
+// Identification Parameter.(MainID = 1)
+int GtcsMcbProtocol::ReadIdentificationParameter()
 {
-    std::vector<std::string> result;    
+    int result = -1;
     return result;
 }
-// Set MCB Mulletin.
-int GtcsMcbProtocol::SetMcbBulletin(MCBMAID mainid)
+int GtcsMcbProtocol::WriteIdentificationParameter()
 {
-    int result = 0;
+    int result = -1;
     return result;
 }
+// Basic Parameter.(MainID = 2)
+int GtcsMcbProtocol::ReadBasicParameter()
+{
+    int result = -1;
+    
+    return result;
+}    
+int GtcsMcbProtocol::WriteBasicParameter()
+{
+    int result  = -1;
+    return result;
+}
+// Step Parameter. (Main ID = 3)
+int GtcsMcbProtocol::ReadStepParametrer()
+{
+    int result = -1;
+    return result;
+}
+int GtcsMcbProtocol::WriteStepParameter()
+{
+    int result = -1;
+    return result;
+}
+// Prcoess Parameter.(Main ID = 4)
+int GtcsMcbProtocol::ReadProcessParameter()
+{
+    int result = -1;
+    return result;
+}
+int GtcsMcbProtocol::WriteProcessParameter()
+{
+    int result = -1;
+    return result;
+}
+int GtcsMcbProtocol::ReadProcessStepList()
+{
+    int result = -1;
+    return result;
+}
+int GtcsMcbProtocol::WritePrcessStepList()
+{
+    int result = -1;
+    return result;
+}
+#pragma endregion
 #pragma endregion

@@ -320,13 +320,28 @@ private:
     /* data */
     static GtcsMcbProtocol* instance;
     GtcsMcbProtocol(/* args */);
+    
 public:
     ~GtcsMcbProtocol();    
     static GtcsMcbProtocol* GetInstance();
     // GtcsParameter parameter;
     GtcsMcbTelegram telegram;
-    std::vector<std::string> GetMcbBulletin(MCBMAID main_id);
-    int SetMcbBulletin(MCBMAID main_id);
+    #pragma region RW MCB Parameter.
+    // Identification Parameter.(MainID = 1)
+    int ReadIdentificationParameter();
+    int WriteIdentificationParameter();
+    // Basic Parameter.(MainID = 2)
+    int ReadBasicParameter();    
+    int WriteBasicParameter();
+    // Step Parameter. (Main ID = 3)
+    int ReadStepParametrer();
+    int WriteStepParameter();
+    // Prcoess Parameter.(Main ID = 4)
+    int ReadProcessParameter();
+    int WriteProcessParameter();
+    int ReadProcessStepList();
+    int WritePrcessStepList();
+    #pragma endregion
 };
 #pragma endregion
 #endif

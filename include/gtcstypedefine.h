@@ -59,10 +59,9 @@ enum MCB_RT_STATUS : int{
     IDLE       ,
 };
 
-// (MID1)
+// Identification Parameter Struct (MID1)
 typedef struct 
-{
-    /* data */ 
+{ 
     std::string u8MotSWVer;   // SID = 1,Software Version Motorcontrolle.
     std::string u8MotCoreID ; // SID = 2,Unique Core ID from Motor- STM32 Conrtroller.
     std::string u8MotSerNr;   // SID = 3,Serial Number of the Motor Controller.
@@ -73,120 +72,116 @@ typedef struct
 // (MID2) 
 typedef struct 
 {
-    /* data */
-    std::string s16MinTemp;         // SID = 1,Minimal Temperature of the motor and the motorcontroller. 
-                                    // Underneath this temperature the tool doesn’t work. Unit is [0,1 °C]."
-    std::string s16MaxTemp;         // SID = 2,Maximal Temperature of the motor and the motorcontroller. 
-                                    // Above this temperature the tool doesn’t work. Unit is [0,1 °C ].
-    std::string u16MaxCurrent;      // SID = 3,This is the absolute maximum motor current value. 
-                                    // There are also maximum current values for the specific process steps 
-                                    // (see….), but this parameter is the limit. Unit is [mA].
-    std::string u16MaxPeakCurrent;  // SID = 4,This value controls the threshold of the peak current comparator.
-                                    // The peak current detection is built in for the protection of the device 
-                                    // when a latch up situation occurs. Unit is [A].
-    std::string u16TorqueSensorType;// SID = 5, 0 = Torquesensor 5Nm, 1 = Torquesensor 4Nm,2 = No Torquesensor"
-    std::string u16MaxDutyCycle;    // SID = 6,Maximal Duty Cycle of the Motor- PWM 1 – 100%. Unit is [0.1 %]
-    std::string u16MaxTorque;       // SID = 7,"Maximum Torque Value is 0- 1862 (maxRaw TMD Value)"
-    std::string u16PWMFreq;         // SID = 8,0 = 16kHz,1 = 24kHz,2 = 32kHz,3 = 40kHz,4 = 48kHz"
-    std::string u16MaxRPM;          // SID = 9,This is the absolute maximum motor rpm value. 
-                                    // There are also rpm values for the specific process steps (see….) , 
-                                    // but this parameter is the limit. Unit is [rpm].
-    std::string u16MaxSlope;        // SID = 10,This is the absolute maximum motor rpm ramp (up/down) value.
-                                    // There are also rpm slope values for the specific process steps (see….) , 
-                                    // but this parameter is the limit. Unit is [rpm/s].
-    std::string u16MinBusVolt;      // SID = 11,Minimal Bus Voltage of the Power Supply. 
-                                    // Underneath this Voltage the tool doesn’t work. 
-                                    // Unit is [0,1V] (600 = 60V).
-    std::string u16MaxBusVolt;      // SID = 12,Maximal Bus Voltage of the Power Supply. 
-                                    // Above this Voltage the tool doesn’t work. Unit is [0,1V].
-    std::string u16StartDutyCycle;  // SID = 13,Start Duty Cycle for the RPM regulator Unit is [0,1%].
-                                    // (20 = 10%)
-    std::string u16GearBoxRatio;    // SID = 14,Gear box ratio. Unit [0,01] (1600 = 16:1)
-    std::string u32StartInp;        // SID = 15,0 = Start Switch,1 = From Displaycontroller Telegram"
-    std::string u32RevInp;          // SID = 16,0 = Reverse Switch,1 = From Displaycontroller"
-    std::string u16RevRpm;          // SID = 17,"Rpm of reverse drive. Unit is [rpm](after the Gearbox)"
-    std::string u16RevSlope;        // SID = 18,"Slope of reverse drive. Unit is [rpm/s](after the Gearbox)."
-    std::string u16RevMaxCurrent;   // SID = 19,"Maximum Current of reverse drive. Unit is [mA]."
-    std::string u16RevMaxTorque;    // SID = 20,"Maximum Torque of reverse drive. 
-                                    // Value is 0- 1862 (max TMD Raw Value)"
-    std::string u16ErrorIdleTime;   // SID = 21,"Idle time of the motor controller after a Error condition.
-                                    // Unit is [ms]."
-    std::string u16BackLash;        // SID = 22,"Backlash of the gearbox. The value depends if a Encoder or 
-                                    // Hallsensors are used for angle Positioning. Unit is [Increments]."
-    std::string u16PGain;           // SID = 23,Proportional Gain for the RPM Regulator.
-    std::string u16IGain;           // SID = 24,Integral Gain for the RPM Regulator.
-    std::string u16Encoder;         // SID = 25,"0 = No Encoder (positioning with Hallsensors). 
-                                    // 1 = 200p Encoder"
+    uint16_t s16MinTemp;         // SID = 1,Minimal Temperature of the motor and the motorcontroller. 
+                                 // Underneath this temperature the tool doesn’t work. Unit is [0,1 °C]."
+    uint16_t s16MaxTemp;         // SID = 2,Maximal Temperature of the motor and the motorcontroller. 
+                                 // Above this temperature the tool doesn’t work. Unit is [0,1 °C ].
+    uint16_t u16MaxCurrent;      // SID = 3,This is the absolute maximum motor current value. 
+                                 // There are also maximum current values for the specific process steps 
+                                 // (see….), but this parameter is the limit. Unit is [mA].
+    uint16_t u16MaxPeakCurrent;  // SID = 4,This value controls the threshold of the peak current comparator.
+                                 // The peak current detection is built in for the protection of the device 
+                                 // when a latch up situation occurs. Unit is [A].
+    uint16_t u16TorqueSensorType;// SID = 5, 0 = Torquesensor 5Nm, 1 = Torquesensor 4Nm,2 = No Torquesensor"
+    uint16_t u16MaxDutyCycle;    // SID = 6,Maximal Duty Cycle of the Motor- PWM 1 – 100%. Unit is [0.1 %]
+    uint16_t u16MaxTorque;       // SID = 7,"Maximum Torque Value is 0- 1862 (maxRaw TMD Value)"
+    uint16_t u16PWMFreq;         // SID = 8,0 = 16kHz,1 = 24kHz,2 = 32kHz,3 = 40kHz,4 = 48kHz"
+    uint16_t u16MaxRPM;          // SID = 9,This is the absolute maximum motor rpm value. 
+                                 // There are also rpm values for the specific process steps (see….) , 
+                                 // but this parameter is the limit. Unit is [rpm].
+    uint16_t u16MaxSlope;        // SID = 10,This is the absolute maximum motor rpm ramp (up/down) value.
+                                 // There are also rpm slope values for the specific process steps (see….) , 
+                                 // but this parameter is the limit. Unit is [rpm/s].
+    uint16_t u16MinBusVolt;      // SID = 11,Minimal Bus Voltage of the Power Supply. 
+                                 // Underneath this Voltage the tool doesn’t work. 
+                                 // Unit is [0,1V] (600 = 60V).
+    uint16_t u16MaxBusVolt;      // SID = 12,Maximal Bus Voltage of the Power Supply. 
+                                 // Above this Voltage the tool doesn’t work. Unit is [0,1V].
+    uint16_t u16StartDutyCycle;  // SID = 13,Start Duty Cycle for the RPM regulator Unit is [0,1%].
+                                 // (20 = 10%)
+    uint16_t u16GearBoxRatio;    // SID = 14,Gear box ratio. Unit [0,01] (1600 = 16:1)
+    uint16_t u32StartInp;        // SID = 15,0 = Start Switch,1 = From Displaycontroller Telegram"
+    uint16_t u32RevInp;          // SID = 16,0 = Reverse Switch,1 = From Displaycontroller"
+    uint16_t u16RevRpm;          // SID = 17,"Rpm of reverse drive. Unit is [rpm](after the Gearbox)"
+    uint16_t u16RevSlope;        // SID = 18,"Slope of reverse drive. Unit is [rpm/s](after the Gearbox)."
+    uint16_t u16RevMaxCurrent;   // SID = 19,"Maximum Current of reverse drive. Unit is [mA]."
+    uint16_t u16RevMaxTorque;    // SID = 20,"Maximum Torque of reverse drive. 
+                                 // Value is 0- 1862 (max TMD Raw Value)"
+    uint16_t u16ErrorIdleTime;   // SID = 21,"Idle time of the motor controller after a Error condition.
+                                 // Unit is [ms]."
+    uint16_t u16BackLash;        // SID = 22,"Backlash of the gearbox. The value depends if a Encoder or 
+                                 // Hallsensors are used for angle Positioning. Unit is [Increments]."
+    uint16_t u16PGain;           // SID = 23,Proportional Gain for the RPM Regulator.
+    uint16_t u16IGain;           // SID = 24,Integral Gain for the RPM Regulator.
+    uint16_t u16Encoder;         // SID = 25,"0 = No Encoder (positioning with Hallsensors). 
+                                 // 1 = 200p Encoder"
 }McbID2Struct;
 // Step Parameter.(ID3)
 typedef struct 
 {
     // Step name.
-    std::string u8StepID;           // 3XXX
-    std::string u8StepName;         // SID = 1,32 byte long string which contains the name of the step.
+    uint16_t u8StepID;               // 3XXX
+    std::string u8StepName;          // SID = 1,32 byte long string which contains the name of the step.
     // property.
-    std::string u16StepRpm;         // SID = 2,Rpm of this screwing step. Unit is [rpm] (after the Gearbox)
-    std::string u16StepSlope;       // SID = 3,Start slope of this screwing step. Unit is [rpm/s] (after the Gearbox).
-    std::string u16StepMaxCurrent;  // SID = 4,Maximum current of this step. Unit is [mA].
-    std::string u16StepMaxTorque;   // SID = 5,Maximum Torque Value is 0- 1862 (max Raw TMD Value)
-    std::string u16StepMaxRevol;    // SID = 6,Maximum Revolutions (after the Gearbox) of this step. 
-                                    // Unit is [0,01] (1000 = 10,00 Revolutions)
-    std::string u16StepTime;        // SID = 7,Execution Time- time. Unit is [ms].
-    std::string u16StepAngle;       // SID = 8,Position to Angle. Unit is [0,1 °] (10 = 1°)
-    std::string u16StepAngleWindow; // SID = 9,Window of the Angle Monitoring. Unit is [0,1°] (10 = 1°)
-    std::string u16StepTorqueWindow;// SID = 10,Window of the torque monitoring. 
-                                    // Unit is digits related to maximum Torque Value 1862 (max Raw TMD Value).
-    std::string u16MinDutyCycle;    // SID = 11,Minimum Duty Cycle Unit is [0,1%]. (10 = 1%)
-    std::string u16StepFlags;       // SID = 12,See description of step flags.
+    uint16_t u16StepRpm;             // SID = 2,Rpm of this screwing step. Unit is [rpm] (after the Gearbox)
+    uint16_t u16StepSlope;           // SID = 3,Start slope of this screwing step. Unit is [rpm/s] (after the Gearbox).
+    uint16_t u16StepMaxCurrent;      // SID = 4,Maximum current of this step. Unit is [mA].
+    uint16_t u16StepMaxTorque;       // SID = 5,Maximum Torque Value is 0- 1862 (max Raw TMD Value)
+    uint16_t u16StepMaxRevol;        // SID = 6,Maximum Revolutions (after the Gearbox) of this step. 
+                                     // Unit is [0,01] (1000 = 10,00 Revolutions)
+    uint16_t u16StepTime;            // SID = 7,Execution Time- time. Unit is [ms].
+    uint32_t s32StepAngle;           // SID = 8,Position to Angle. Unit is [0,1 °] (10 = 1°)
+    uint16_t u16StepAngleWindow;     // SID = 9,Window of the Angle Monitoring. Unit is [0,1°] (10 = 1°)
+    uint16_t u16StepTorqueWindow;    // SID = 10,Window of the torque monitoring. 
+                                     // Unit is digits related to maximum Torque Value 1862 (max Raw TMD Value).
+    uint16_t u16MinDutyCycle;        // SID = 11,Minimum Duty Cycle Unit is [0,1%]. (10 = 1%)
+    uint16_t u16StepFlags;           // SID = 12,See description of step flags.
 
     // New 
-    std::string u16StepAngleUpperLimit;// u16StepAngleUpperLimit
-    std::string u16StepAngleLowerLimit;
-    std::string u16StepTorqueUpperLimit;
-    std::string u16StepTorqueLowerLimit;
-    std::string u16StepMonitorType;
+    uint16_t u16WindowMode;          // SID = 13
+    uint16_t u16AngleWindow2;        // SID = 14
+    uint16_t u16TorqueWindow2;       // SID = 15
 
-    // KLS Define
-    std::string u16StepDelaytime;
     // Stepo list in porcess,SID = 8,"Screwing process step ID Number 3000 -3499"
     // "u16ProcStepId":self.u16ProcStepId,
 }McbID3Struct;
+
 // Process Parameter.(ID4)
 typedef struct 
 {
     // Process ID
-    std::string u8ProcID;       // Process ID
+    uint16_t u8ProcID;       // Process ID
     // Process name.
     std::string u8ProcName;     // SID = 1,"32 byte long string which contains the name of the 
                                 // screwing process."
     // Process parameter.
-    std::string u16ProcPGain;   // SID = 2,Proportional Gain of the screwing process.          
-    std::string u16ProcIGain;   // SID = 3,Integral Gain of the screwing process.    
-    std::string u16ProcMaxTime; // SID = 4,"0 = No maximum process time.
+    uint16_t u16ProcPGain;   // SID = 2,Proportional Gain of the screwing process.          
+    uint16_t u16ProcIGain;   // SID = 3,Integral Gain of the screwing process.    
+    uint16_t u16ProcMaxTime; // SID = 4,"0 = No maximum process time.
                                 // Every other value in [ms] is the timemonitoring of this process.
                                 // It leads to an error, when the process exceeds this time."
-    std::string u16ProcMinTime; // SID = 5,"0 = No minimum process time.
+    uint16_t u16ProcMinTime; // SID = 5,"0 = No minimum process time.
                                 // Every other value in [ms] is the time monitoring of this process. 
                                 // It leads to an error, when the process undershoots this time."
-    std::string u16ProcRevFunc; // SID = 6,"0 = Screwing direction of the whole process normal 
+    uint16_t u16ProcRevFunc; // SID = 6,"0 = Screwing direction of the whole process normal 
                                 // (tightening right) 1 = Screwing direction of the whole process 
                                 // reverse (tightening left)"
-    std::string u16NbrSteps;    // SID = 7,Number of Steps in this Process
+    uint16_t u16NbrSteps;    // SID = 7,Number of Steps in this Process
 }McbID4Struct;
 // Program Parameter.(ID5)
 typedef struct 
 {
     /* data */
-    std::string u8ProgName;     // SID = 1,32 byte long string which contains the name of the Program.
-    std::string u16ProgResFunc; // SID = 2,"0 = No Function 
-                                // 1 = a change of the reset flag resets the actual process.
-                                // 2 = a change of the reset flag resets the actual program".  
-    std::string u16ProgRevFunc; // SID = 3,"0 = No Reverse Drive
-                                // 1 = Reverse Drive is possible
-                                // 2 = Reverse Drive is possible and resets the last process".
-    std::string u16ProgRevTime; // SID = 4,Screwing Program Reverse Drive Time.
-    std::string u16ProgErrResp; // SID = 5,"0 = Wait for acknowledge, 1 = No waiting"
-    std::string u16NbrProc;     // SID = 6,Number of processes in this program.
+    std::string u8ProgName;  // SID = 1,32 byte long string which contains the name of the Program.
+    uint16_t u16ProgResFunc; // SID = 2,"0 = No Function 
+                             // 1 = a change of the reset flag resets the actual process.
+                             // 2 = a change of the reset flag resets the actual program".  
+    uint16_t u16ProgRevFunc; // SID = 3,"0 = No Reverse Drive
+                             // 1 = Reverse Drive is possible
+                             // 2 = Reverse Drive is possible and resets the last process".
+    uint16_t u16ProgRevTime; // SID = 4,Screwing Program Reverse Drive Time.
+    uint16_t u16ProgErrResp; // SID = 5,"0 = Wait for acknowledge, 1 = No waiting"
+    uint16_t u16NbrProc;     // SID = 6,Number of processes in this program.
     // SID = 1000-1199,Screwing Process ID Number 4000 - 4249.
     // "u16ProgProcessId"  : self.u16ProgProcessId 
 }McbID5Struct;
@@ -194,76 +189,62 @@ typedef struct
 typedef struct 
 {
     /* data */
-    std::string u32StartCount;      //SID = 1,Counter for Process Start.
-    std::string u32TighteningCount; // SID = 2,Counter for Process Tightening.
-    std::string u32IMaxCount;       // SID = 3,Counter for Overcurrent Conditions.
-    std::string u32tMaxCount;       // SID = 4,"Counter for Overtemperature Conditions".
-    std::string u32RevCount;        // SID = 5,Counter for Reverse Operations.
+    uint32_t u32StartCount;      //SID = 1,Counter for Process Start.
+    uint32_t u32TighteningCount; // SID = 2,Counter for Process Tightening.
+    uint32_t u32IMaxCount;       // SID = 3,Counter for Overcurrent Conditions.
+    uint32_t u32tMaxCount;       // SID = 4,"Counter for Overtemperature Conditions".
+    uint32_t u32RevCount;        // SID = 5,Counter for Reverse Operations.
 }McbID6Struct;
 // ID7
 typedef struct 
 {
     /* data */
-    std::string u16ControlMode;     // SID = 1,"0 = Manual Mode,1 = Process Mode,2 = Program Mode,
+    uint16_t u16ControlMode;     // SID = 1,"0 = Manual Mode,1 = Process Mode,2 = Program Mode,
                                     // 3= PWM Mode,4=Para Write Mode"
-    std::string u16WorkProc;        // SID = 2,It is the ID of the actual working process. 
+    uint16_t u16WorkProc;        // SID = 2,It is the ID of the actual working process. 
                                     // This is relevant when Control Mode = Process Mode.
-    std::string u16WritePara2Flash; // SID = 3,Reserved because the Parameters are stored in FRAM.
-    std::string u16WriteStep2Flash; // SID = 4,"When receiving this Parameter the selected Step will be 
+    uint16_t u16WritePara2Flash; // SID = 3,Reserved because the Parameters are stored in FRAM.
+    uint16_t u16WriteStep2Flash; // SID = 4,"When receiving this Parameter the selected Step will be 
                                     // written to Flash Memory.
                                     // Value of this Parameter the ID of the Step (ID3XXX)".
-    std::string u16WriteProc2Flash; // SID = 5,"When receiving this Parameter the selected Process will be 
+    uint16_t u16WriteProc2Flash; // SID = 5,"When receiving this Parameter the selected Process will be 
                                     // written to Flash Memory.
                                     // Value of this Parameter the ID of the Process (ID4XXX)".
-    std::string u16WriteProg2Flash; // SID = 6,"When receiving this Parameter the Program will be written 
+    uint16_t u16WriteProg2Flash; // SID = 6,"When receiving this Parameter the Program will be written 
                                     // to Flash Memory.Value of this Parameter is “Don't care”".
 }McbID7Struct;
 // ID8
 typedef struct 
 {
     /* data */
-    std::string u16ManRpm;       // SID = 1, Manual Rpm. Unit is [rpm] (after the Gearbox).
-    std::string u16ManSlope;     // SID = 2, Manual slope. Unit is [rpm/s] (after the Gearbox).
-    std::string u16ManMaxCurrent;// SID = 3, Manual maximum current. Unit is [mA].
-    std::string u16ManMaxTorque; // SID = 4, Maximum Torque Value is 0- 1862 (max Raw TMD Value).
+    uint16_t u16ManRpm;       // SID = 1, Manual Rpm. Unit is [rpm] (after the Gearbox).
+    uint16_t u16ManSlope;     // SID = 2, Manual slope. Unit is [rpm/s] (after the Gearbox).
+    uint16_t u16ManMaxCurrent;// SID = 3, Manual maximum current. Unit is [mA].
+    uint16_t u16ManMaxTorque; // SID = 4, Maximum Torque Value is 0- 1862 (max Raw TMD Value).
 }McbID8Struct;
 // ID9
 typedef struct 
 {
     /* data */
-    std::string su16ActError;   // SID = 1, Actual ErrorFlags of the Screwdriver.
-    std::string u16ActProcID;   // SID = 2, Actual working Process ID. (4000- 4199).
-    std::string u16ActProcNr;   // SID = 3, Actual working Process Number. (1- 200).
-    std::string u16ActStepID;   // SID = 4, Actual working Step ID. (3000 - 3499).
-    std::string u16ActStepNr;   // SID = 5, Actual working Step Nr. (1- 20).
-    std::string u16ActCurr;     // SID = 6, Actual motor current [mA].
-    std::string u16ActRPM;      // SID = 7, Actual motor rpm [rpm].
-    std::string u16ActTorque;   // SID = 8, Actual Torque Value is 0- 1862 (max Raw TMD Value).
-    std::string u16ActBusVolt;  // SID = 9, Actual Bus Voltage [0,01V] (6000 = 60V).
-    std::string u16ActContTemp; // SID = 10, Actual motorcontroller temperature [0,1°C].
-    std::string u16ActMotTem;   // SID = 11, Actual motor temperature [0,1°C].
-    std::string u16MaxCurrent;  // SID = 12, Actual maximum current of the process [mA].
-    std::string u16MaxTorqu;    // SID = 13, Maximum Torque Value is 0- 1862 (max Raw TMD Value).
-    std::string u32Angle;       // SID = 14, Actual angle [0,1°].
-    std::string u32Revolutions; // SID = 15, Actual revolutions [0,01 revolutions].
+    uint32_t su16ActError;   // SID = 1, Actual ErrorFlags of the Screwdriver.
+    uint16_t u16ActProcID;   // SID = 2, Actual working Process ID. (4000- 4199).
+    uint16_t u16ActProcNr;   // SID = 3, Actual working Process Number. (1- 200).
+    uint16_t u16ActStepID;   // SID = 4, Actual working Step ID. (3000 - 3499).
+    uint16_t u16ActStepNr;   // SID = 5, Actual working Step Nr. (1- 20).
+    uint16_t u16ActCurr;     // SID = 6, Actual motor current [mA].
+    uint16_t u16ActRPM;      // SID = 7, Actual motor rpm [rpm].
+    uint16_t u16ActTorque;   // SID = 8, Actual Torque Value is 0- 1862 (max Raw TMD Value).
+    uint16_t u16ActBusVolt;  // SID = 9, Actual Bus Voltage [0,01V] (6000 = 60V).
+    uint16_t u16ActContTemp; // SID = 10, Actual motorcontroller temperature [0,1°C].
+    uint16_t u16ActMotTem;   // SID = 11, Actual motor temperature [0,1°C].
+    uint16_t u16MaxCurrent;  // SID = 12, Actual maximum current of the process [mA].
+    uint16_t u16MaxTorqu;    // SID = 13, Maximum Torque Value is 0- 1862 (max Raw TMD Value).
+    uint32_t u32Angle;       // SID = 14, Actual angle [0,1°].
+    uint32_t u32Revolutions; // SID = 15, Actual revolutions [0,01 revolutions].
 }McbID9Struct;
 #pragma endregion
 
 #pragma region Telegram Struct.
-// GTCS Telegram Struct. 
-// typedef struct 
-// {
-//     /* data */
-//     uint8_t type_num;
-//     uint8_t address_2;
-//     uint8_t address_3;
-//     uint8_t address_4;
-//     uint8_t address_5;
-//     uint8_t address_6;
-//     uint8_t RW_para_status;
-//     uint8_t RW_ram_status;
-// }CtcsTelegramHeaderStruct;
-
 // GTCS ctrl telegram strut.
 typedef struct 
 {

@@ -44,6 +44,21 @@ enum MCB_TELEGRAM_TYPE : uint8_t{
     STEP_REQUEST     = 14,
     STEP_RESPONSE    = 15,
 };
+
+enum MCB_RT_STATUS : int{
+    OK          = 1,
+    OK_SEQUENCE,
+    OK_JOB     ,
+    NG_F       , 
+    NS_F       ,
+    NGQ        ,
+    NGA        ,
+    NG_MCB     ,
+    RUNNING    ,
+    REVERSE    ,
+    IDLE       ,
+};
+
 // (MID1)
 typedef struct 
 {
@@ -281,6 +296,16 @@ typedef struct
     uint16_t s16Debug;
     uint32_t s32Debug; 
 }GtcsStatusTelegramStrcut;
+// Gtcs RW uint16_t telegram struct.
+typedef struct 
+{
+    uint16_t address_data_1;
+    uint16_t address_data_2;
+    uint16_t address_data_3;
+    uint16_t address_data_4;
+    uint16_t address_data_5;
+    uint16_t address_data_6;
+}GtcsRW16TelegramStruct;
 
 #pragma endregion
 #pragma endregion
@@ -861,7 +886,8 @@ typedef struct
     std::string str25; // str25:Error Masseage
     std::string str26; // str26:Tool Count
     std::string str27; // str27:RPM
-    std::string str28;  // CL,RF
+    std::string str28; // str28:Tool status
+    std::string str29; // CL,RF
 }AmsDATA300Struct;
 // DATA301
 typedef struct 

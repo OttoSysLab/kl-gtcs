@@ -46,7 +46,7 @@ int GtcsAmsProtocol::ConvertToProtocolString(std::string* prt,std::string & resu
     return 0;
 }
 // Get AMS Protocol string from bulletin.
-std::string GtcsAmsProtocol::GetAmsBulletin(AMSCMD amscmd)
+std::string GtcsAmsProtocol::GetAmsBulletin(int amscmd)
 {
     GtcsBulletin* gtcsbulletin = GtcsBulletin::GetInstance();
     AMSBulletin* amsbulletin =&gtcsbulletin->AmsBulletin;
@@ -367,21 +367,3 @@ int GtcsAmsProtocol::SetAmsBulletin(std::string ams_string)
     }        
     return 0;
 } 
-
-// #if defined(_GTCS_TEST_)
-// // main.
-// int main()
-// {
-//     // Test Singleton.
-//     GtcsAmsProtocol* ams = GtcsAmsProtocol::GetInstance();
-//     std::string data300 = ams->GetAmsBulletin(AMSCMD::DATA300);
-//     std::cout<<data300<<std::endl;
-
-//     // Assinge new value to struct.
-//     std::string cmd = "{DATA300,yyyyMMdd HH:mm:ss,0,0,6,0,0,0,0,0,0,0,0,0,0,0,0,FUCK CPP,0,0,0,0,0,0,0,0,0}"; 
-//     ams->SetAmsBulletin(cmd);
-//     data300 = ams->GetAmsBulletin(AMSCMD::DATA300);
-//     std::cout<<data300<<std::endl;    
-//     return 0;
-// }
-// #endif

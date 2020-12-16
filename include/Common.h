@@ -1,5 +1,5 @@
-#ifndef _GTCS_AMS_PROTOCOL_
-#define _GTCS_AMS_PROTOCOL_
+#ifndef _GTCS_COMMON_
+#define _GTCS_COMMON_
 /*=======================================================================================
  Program Nane  	: gtcs_tlg_decoder.c     
  Subject 		: SARM Serial Port Communication Driver Process                                  
@@ -12,34 +12,28 @@
  Programmer    	: Otto Chang                                                                   
  Date	       	: 2019/08/06                                                         
 =======================================================================================*/
-#include <map>
-#include <iostream>
-#include <cstring>
-#include <vector>
-#include "GtcsTypeDefine.h"
-#include "GtcsBulletin.h"
-
-#pragma region AMS Protocol object
-// Gtcs AMS Protocol
-class GtcsAmsProtocol
+#include <iostream>    // 
+#include <array>       // s 
+#include <cmath>
+// #endif
+class Common
 {
-private: 
-    // SignleTon instance object.
-    static GtcsAmsProtocol* instance;
-    // Constructor.
-    GtcsAmsProtocol(/* args */);
-    int ConvertToProtocolString(std::string* prt,std::string& result);
-    int UpdateProtocolStruct(std::string* prt,std::vector<std::string>& ams_array);
-    std::vector<std::string> SplitString(const std::string & str,const std::string& pattern);
-    std::vector<std::string> GetAmsSpliteArray(const std::string & str);
-public:    
-    int cmdsn = 0; 
-    ~GtcsAmsProtocol();
-    static GtcsAmsProtocol* GetInstance();
-    // AMSBulletin amsprotocol;
-    int GetAmsCmdNum(std::string amscmd);
-    std::string GetAmsBulletin(int amscmd);
-    int SetAmsBulletin(std::string ams_string);
+private:
+    /* data */
+public:
+    Common(/* args */);             // 
+    ~Common();                      // 
+    // Send Char.
 };
-#pragma endregion
+class BitArray
+{
+private:
+    /* data */
+public:
+    BitArray(/* args */);
+    ~BitArray();
+    std::array<bool,32> To32BiteArray(int num);
+    std::array<bool,16> To16BiteArray(int num);
+    std::array<bool,8> To8BiteArray(int num);
+};
 #endif

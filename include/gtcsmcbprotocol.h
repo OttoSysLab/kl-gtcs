@@ -19,6 +19,7 @@
 #include "GtcsTypeDefine.h"
 #include "GtcsBulletin.h"
 #include "CrcChecker.h"
+#include <typeinfo>
 
 #pragma region telegram strcut define.
 class TelegramStruct
@@ -130,7 +131,6 @@ public:
     };
     // int DecodeTelegramArray(std::array<std::uint8_t,48> received_telegram);
     int DecodeTelegramArray();
-
 };
 // Wrie Request Telegram
 class WriteRequestTelegram : public TelegramStruct
@@ -143,6 +143,15 @@ public:
         header.type_num = MCB_TELEGRAM_TYPE::W_REQUEST;
     };
     ~WriteRequestTelegram(){};
+    GtcsRW16TelegramStruct payload_data = {
+        .address_data_1 = 0,
+        .address_data_2 = 0,
+        .address_data_3 = 0,
+        .address_data_4 = 0,
+        .address_data_5 = 0,
+        .address_data_6 = 0,
+    };
+    std::array<uint8_t,36> EncodeTelegramArray(GtcsRW16TelegramStruct *ptr_request);
 };
 // Response Telegram.
 class ResponseTelegram : public TelegramStruct 
@@ -155,6 +164,14 @@ public:
         header.type_num = MCB_TELEGRAM_TYPE::RW_RESPONSE;
     };
     ~ResponseTelegram(){};
+    GtcsRW16TelegramStruct payload_data = {
+        .address_data_1 = 0,
+        .address_data_2 = 0,
+        .address_data_3 = 0,
+        .address_data_4 = 0,
+        .address_data_5 = 0,
+        .address_data_6 = 0,
+    };
 };
 // Read request telegram.
 class ReadRequestTelegram : public TelegramStruct
@@ -167,6 +184,14 @@ public:
         header.type_num = MCB_TELEGRAM_TYPE::R_REQUEST;
     };
     ~ReadRequestTelegram(){};
+    GtcsRW16TelegramStruct payload_data = {
+        .address_data_1 = 0,
+        .address_data_2 = 0,
+        .address_data_3 = 0,
+        .address_data_4 = 0,
+        .address_data_5 = 0,
+        .address_data_6 = 0,
+    };
 };
 // TMD Request telegram. 
 class TMDRequestTelegram : public TelegramStruct

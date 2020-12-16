@@ -480,15 +480,16 @@ public:
         .str25 = "0",                                        // str25:Error Masseage
         .str26 = "0",                                        // str26:Tool Count
         .str27 = "0",                                        // str27:RPM
-        .str28 = "\n\r",                                     // CR,LF
+        .str28 = "0",                                        // str28:Tool Status
+        .str29 = "\n\r",                                     // CR,LF
     };// DATA300, 鎖附資料
     AmsDATA302Struct DATA302Struct = {
         .str1 = "DATA302",                                   // Header+DATA
         .str2 = "yyyyMMdd HH:mm:ss",                         // yyyyMMdd HH:mm:ss
         .str3 = "0",                                         // check sum ,4 chars        
         .str4 = "0",                                         // Command_sn
-        .str5 = "0",                                          // status
-        .str6 = "\n\r",                                     // CR,LF
+        .str5 = "0",                                         // status
+        .str6 = "\n\r",                                      // CR,LF
     };// DATA300, 鎖附資料
     #pragma endregion
     
@@ -682,7 +683,7 @@ public:
     #pragma endregion  
 };
 #pragma endregion
-// GTCS Bulletin.
+//GTCS Bulletin.
 class GtcsBulletin
 {
 private:
@@ -697,21 +698,4 @@ public:
     AMSBulletin AmsBulletin;
     MCBParameter McbBulletin;    
 };
-// // Signalton.
-// // Constructor.
-// GtcsBulletin::GtcsBulletin(/* args */)
-// {}
-// // Distructor.
-// GtcsBulletin::~GtcsBulletin()
-// {}
-// // SignleTon instance object.
-// GtcsBulletin* GtcsBulletin::instance = 0;
-// // Get Instance.
-// GtcsBulletin* GtcsBulletin::GetInstance()
-// {
-//     if(instance == 0){
-//         instance = new GtcsBulletin();
-//     }
-//     return instance;
-// }
 #endif

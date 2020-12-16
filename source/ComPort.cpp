@@ -21,12 +21,12 @@ int ComPort::InitialComm(char *P_port_name){
     struct termios	L_SerialPortSettings;	/* Create the structure                          */
     /*------------------------------- Opening the Serial Port -------------------------------*/
     L_fd = open(P_port_name , O_RDWR | O_NOCTTY | O_NONBLOCK | O_NDELAY );
-	    						/* O_RDWR   - Read/Write access to serial port       */
-								/* O_NOCTTY - No terminal will control the process   */
-								/* O_NONBLOCK - Open in non blocking mode,read will wait              */
-   	if(L_fd)											/* Error Checking */
+	    		/* O_RDWR   - Read/Write access to serial port       */
+				/* O_NOCTTY - No terminal will control the process   */
+				/* O_NONBLOCK - Open in non blocking mode,read will wait              */
+   	if(L_fd)    /* Error Checking */
     {
-	    printf("\n[%s] Opened Successfully \n", P_port_name);
+	    printf("[%s] Opened Successfully \n", P_port_name);
 	    //system("sudo systemctl stop serial-getty@ttyAMA0.service");
 	    /*---------- Setting the Attributes of the serial port using termios structure --------- */
 	    tcgetattr(L_fd, &L_SerialPortSettings);	/* Get the current attributes of the Serial port */

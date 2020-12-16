@@ -12,6 +12,27 @@
 =======================================================================================*/
 #include "../include/GtcsMain.h"
 
+#define _MCB_CS_
+// #define _MCB_RW_
+
+// Display telegram status.
+void displaymonitor(){
+    GtcsMcbProtocol* mcb = GtcsMcbProtocol::GetInstance();
+    std::cout <<"==============================================="<<std::endl;
+        std::cout <<"u16Statusflags = "<<std::to_string(mcb->telegram.status.mcb_status.u16Statusflags)<< std::endl;
+        std::cout <<"u32ActError    = "<<std::to_string(mcb->telegram.status.mcb_status.u32ActError)<< std::endl; 
+        std::cout <<"u16ActProcNr   = "<<std::to_string(mcb->telegram.status.mcb_status.u16ActProcNr)<< std::endl; 
+        std::cout <<"u16ActStepNr   = "<<std::to_string(mcb->telegram.status.mcb_status.u16ActStepNr)<< std::endl; 
+        std::cout <<"u16ActCurr     = "<<std::to_string(mcb->telegram.status.mcb_status.u16ActCurr)<< std::endl; 
+        std::cout <<"u16ActTorque   = "<<std::to_string(mcb->telegram.status.mcb_status.u16ActTorque)<< std::endl; 
+        std::cout <<"u16ActRPM      = "<<std::to_string(mcb->telegram.status.mcb_status.u16ActRPM)<< std::endl; 
+        std::cout <<"u16MaxCurrent  = "<<std::to_string(mcb->telegram.status.mcb_status.u16MaxCurrent)<< std::endl; 
+        std::cout <<"u16MaxTorque   = "<<std::to_string(mcb->telegram.status.mcb_status.u16MaxTorque)<< std::endl; 
+        std::cout <<"u32Angle       = "<<std::to_string(mcb->telegram.status.mcb_status.u32Angle)<< std::endl; 
+        std::cout <<"u16TMDFlags    = "<<std::to_string(mcb->telegram.status.mcb_status.u16TMDFlags)<< std::endl;    
+        std::cout <<"s16Debug       = "<<std::to_string(mcb->telegram.status.mcb_status.s16Debug)<< std::endl;    
+        std::cout <<"s32Debug       = "<<std::to_string(mcb->telegram.status.mcb_status.s32Debug)<< std::endl;    
+}
 // TCP socket.
 void tcpsocket()
 {
@@ -20,9 +41,7 @@ void tcpsocket()
     GtcsAmsProtocol* ams = GtcsAmsProtocol::GetInstance();
     char sockip[] = "127.0.0.1";
     int sockport= 9000;    
-    int MAXLINE = 4096;                   // Buffer size.
-    // mytcpserver.TcpSocketServer(sockip,sockport);
- 
+    int MAXLINE = 4096;                   // Buffer size. 
     // Initial parameter.
     int  listenfd, connfd;
     struct sockaddr_in  servaddr;
@@ -39,7 +58,6 @@ void tcpsocket()
     servaddr.sin_family = AF_INET;
     servaddr.sin_addr.s_addr = inet_addr(sockip);
     servaddr.sin_port = htons(sockport);
-    
     // Check and release bind.
     if(setsockopt(listenfd,SOL_SOCKET,SO_REUSEADDR,&servaddr,sizeof(servaddr))<0)
     {
@@ -66,38 +84,16 @@ void tcpsocket()
         }
         // Received daat from tcpclinet.
         n = recv(connfd, revbuff, MAXLINE, 0);
-        revbuff[n] = '\0';
-        // printf("recv msg from client: %s\n", revbuff);
-        // Send data to tcpclient. 
-        for(int index=0;index<4096;index++)
-        {
-            sendbuff[index] = revbuff[index];
-        }
+        revbuff[n] = '\0';     
+        // Send data to tcpclient.   
+        strcpy(sendbuff,ams->GetAmsBulletin(ams->GetAmsCmdNum("DATA300")).c_str());
         if (send(connfd,sendbuff,sizeof(sendbuff),0)<0)
         {
             printf("send msg error: %s(errno: %d)\n", strerror(errno), errno);
         }
-        // printf("Send data = %s\n",sendbuff);
         close(connfd);
     }
     close(listenfd);
-}
-void displaymonitor(){
-    GtcsMcbProtocol* mcb = GtcsMcbProtocol::GetInstance();
-    std::cout <<"==============================================="<<std::endl;
-        std::cout <<"u16Statusflags = "<<std::to_string(mcb->telegram.status.mcb_status.u16Statusflags)<< std::endl;
-        std::cout <<"u32ActError    = "<<std::to_string(mcb->telegram.status.mcb_status.u32ActError)<< std::endl; 
-        std::cout <<"u16ActProcNr   = "<<std::to_string(mcb->telegram.status.mcb_status.u16ActProcNr)<< std::endl; 
-        std::cout <<"u16ActStepNr   = "<<std::to_string(mcb->telegram.status.mcb_status.u16ActStepNr)<< std::endl; 
-        std::cout <<"u16ActCurr     = "<<std::to_string(mcb->telegram.status.mcb_status.u16ActCurr)<< std::endl; 
-        std::cout <<"u16ActTorque   = "<<std::to_string(mcb->telegram.status.mcb_status.u16ActTorque)<< std::endl; 
-        std::cout <<"u16ActRPM      = "<<std::to_string(mcb->telegram.status.mcb_status.u16ActRPM)<< std::endl; 
-        std::cout <<"u16MaxCurrent  = "<<std::to_string(mcb->telegram.status.mcb_status.u16MaxCurrent)<< std::endl; 
-        std::cout <<"u16MaxTorque   = "<<std::to_string(mcb->telegram.status.mcb_status.u16MaxTorque)<< std::endl; 
-        std::cout <<"u32Angle       = "<<std::to_string(mcb->telegram.status.mcb_status.u32Angle)<< std::endl; 
-        std::cout <<"u16TMDFlags    = "<<std::to_string(mcb->telegram.status.mcb_status.u16TMDFlags)<< std::endl;    
-        std::cout <<"s16Debug       = "<<std::to_string(mcb->telegram.status.mcb_status.s16Debug)<< std::endl;    
-        std::cout <<"s32Debug       = "<<std::to_string(mcb->telegram.status.mcb_status.s32Debug)<< std::endl;    
 }
 // main.
 int main()
@@ -106,16 +102,16 @@ int main()
     std::thread thread_tcpsocket = std::thread(tcpsocket);
     GtcsMcbProtocol* mcb = GtcsMcbProtocol::GetInstance();
     GtcsAmsProtocol* ams = GtcsAmsProtocol::GetInstance();
-    mcb->telegram.ctrl.EncodeTelegramArray(&mcb->telegram.ctrl.fasten,
-                                            mcb->telegram.ctrl.struct_length);
-    
+    GtcsBulletinManager manager;
     ComPort comm;
     char com_name[] = "/dev/ttymxc3"; 
     int com_num = comm.InitialComm(com_name);
-    
     // loop.
     while (true)
     {
+        #if defined(_MCB_CS_) 
+        mcb->telegram.ctrl.EncodeTelegramArray(&mcb->telegram.ctrl.fasten,
+                                            mcb->telegram.ctrl.struct_length);
         for(int index=0;index<48;index++){
             comm.SendChar(com_num,mcb->telegram.ctrl.telegram_array[index]);
         }   
@@ -124,9 +120,13 @@ int main()
         // Read data form mcb.
         comm.ReadData(com_num,mcb->telegram.status.telegram_array);
         mcb->telegram.status.DecodeTelegramArray();
-        // displaymonitor();        
+        // displaymonitor();    
+        manager.ConvertActuralData300(&mcb->telegram.status.mcb_status);    
+        #endif
+        #if defined(_MCB_RW_)
+        
+        #endif
     }
-
     // Jion thread.
     thread_tcpsocket.join();    
     return 0;

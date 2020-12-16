@@ -1,5 +1,5 @@
-#ifndef _GTCS_AMS_PROTOCOL_
-#define _GTCS_AMS_PROTOCOL_
+#ifndef _GTCS_BULLETIN_MANAGER_
+#define _GTCS_BULLETIN_MANAGER_
 /*=======================================================================================
  Program Nane  	: gtcs_tlg_decoder.c     
  Subject 		: SARM Serial Port Communication Driver Process                                  
@@ -12,34 +12,25 @@
  Programmer    	: Otto Chang                                                                   
  Date	       	: 2019/08/06                                                         
 =======================================================================================*/
-#include <map>
-#include <iostream>
-#include <cstring>
-#include <vector>
-#include "GtcsTypeDefine.h"
 #include "GtcsBulletin.h"
+#include "GtcsTypeDefine.h"
+#include "GtcsAmsProtocol.h"
+#include "GtcsMcbProtocol.h"
+#include "Common.h"
+#include <ctime>
 
-#pragma region AMS Protocol object
-// Gtcs AMS Protocol
-class GtcsAmsProtocol
-{
-private: 
-    // SignleTon instance object.
-    static GtcsAmsProtocol* instance;
-    // Constructor.
-    GtcsAmsProtocol(/* args */);
-    int ConvertToProtocolString(std::string* prt,std::string& result);
-    int UpdateProtocolStruct(std::string* prt,std::vector<std::string>& ams_array);
-    std::vector<std::string> SplitString(const std::string & str,const std::string& pattern);
-    std::vector<std::string> GetAmsSpliteArray(const std::string & str);
-public:    
-    int cmdsn = 0; 
-    ~GtcsAmsProtocol();
-    static GtcsAmsProtocol* GetInstance();
-    // AMSBulletin amsprotocol;
-    int GetAmsCmdNum(std::string amscmd);
-    std::string GetAmsBulletin(int amscmd);
-    int SetAmsBulletin(std::string ams_string);
-};
 #pragma endregion
+// GTCS Bulletin.
+class GtcsBulletinManager
+{
+private:
+    std::string GetMcbRtStatusString(MCB_RT_STATUS status);
+public:
+    // Constructor.
+    GtcsBulletinManager(/* args */);
+    // Distructor.
+    ~GtcsBulletinManager();
+    double ConvertToAmsTorque();
+    int ConvertActuralData300(GtcsStatusTelegramStrcut* ptr);
+};
 #endif

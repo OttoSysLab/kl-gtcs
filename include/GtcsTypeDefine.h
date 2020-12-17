@@ -67,6 +67,12 @@ enum MAIN_FSM : int{
     ALARM,
 };
 
+enum MCB_FSM:int {
+    POLLING = 0,
+    READ_PARA,
+    WRITE_PARA,
+};
+
 // Identification Parameter Struct (MID1)
 typedef struct 
 { 

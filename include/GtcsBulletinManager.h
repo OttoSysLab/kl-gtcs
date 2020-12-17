@@ -19,7 +19,7 @@
 #include "Common.h"
 #include <ctime>
 
-#pragma endregion
+#pragma region 
 // GTCS Bulletin.
 class GtcsBulletinManager
 {
@@ -37,4 +37,5 @@ public:
     int SetMainFSM(int main_fsm);
     int ConvertActuralData300(GtcsStatusTelegramStrcut* ptr);
 };
+#pragma endregion
 #endif

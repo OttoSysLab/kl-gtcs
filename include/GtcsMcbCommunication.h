@@ -16,6 +16,8 @@
 #include <array>             // 
 #include <cstring>           // 
 #include <vector>
+#include <thread>
+#include <ctime>
 #include "ComPort.h"
 #include "GtcsTypeDefine.h"
 #include "GtcsBulletin.h"
@@ -321,9 +323,14 @@ private:
     /* data */
     static GtcsMcbCommunication* instance;
     GtcsMcbCommunication(/* args */);
+    // Initial MCB comm.
+    ComPort comm;
+    char com_name[128];
+    int com_num = 0; 
+
     #pragma region RW MCB Parameter.
     // Polling to MCB.
-    int PollingToMcb(GtcsCtrlTelegramStrcut *ptr_ctrl_telegram);    
+    int PollingToMcb();    
     // Identification Parameter.(MainID = 1)
     int ReadIdentificationParameter();
     int WriteIdentificationParameter();
@@ -344,6 +351,10 @@ public:
     static GtcsMcbCommunication* GetInstance();
     // GtcsParameter parameter;
     GtcsMcbTelegram telegram;
+    // Initial MCB com.
+    int InitialMcbComPort(std::string com_bname);
+    // Check MCB FSM.
+    int CheckMcbFSM(int mac_fsm);
 };
 #pragma endregion
 #endif

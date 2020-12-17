@@ -30,6 +30,7 @@ uint8_t TelegramStruct::InitialTelegramArray()
     }
     return result;
 }
+// Initial .G   
 // Encode Header array.
 uint8_t TelegramStruct::EncodeHeaderArray()
 {
@@ -123,24 +124,6 @@ GtcsMcbCommunication::GtcsMcbCommunication(/* args */)
 // Distructor.
 GtcsMcbCommunication::~GtcsMcbCommunication()
 {}
-// Polling to MCB.
-int GtcsMcbCommunication::PollingToMcb(GtcsCtrlTelegramStrcut *ptr_ctrl_telegram)
-{
-    int result = -1;
-    // telegram.ctrl.EncodeTelegramArray(&mcb->telegram.ctrl.fasten,
-    //                                         mcb->telegram.ctrl.struct_length);
-    // for(int index=0;index<48;index++){
-    //     comm.SendChar(com_num,mcb->telegram.ctrl.telegram_array[index]);
-    // }   
-    // // Thread sleep 15(ms).
-    // std::this_thread::sleep_for(std::chrono::milliseconds(15));
-    // // Read data form mcb.
-    // comm.ReadData(com_num,mcb->telegram.status.telegram_array);
-    // telegram.status.DecodeTelegramArray();
-    // // displaymonitor();    
-    // manager.ConvertActuralData300(&mcb->telegram.status.mcb_status); 
-    return result;   
-}
 // SignleTon instance object.
 GtcsMcbCommunication* GtcsMcbCommunication::instance = 0;
 // Get Instance.
@@ -153,6 +136,26 @@ GtcsMcbCommunication* GtcsMcbCommunication::GetInstance()
     return instance;
 }
 #pragma region RW MCB Paramter.
+// Polling to MCB.
+int GtcsMcbCommunication::PollingToMcb()
+{
+    int result = -1;
+    telegram.ctrl.EncodeTelegramArray(&telegram.ctrl.fasten,telegram.ctrl.struct_length);
+
+    for(int index=0;index<48;index++){
+        // std::cout << " telegram idex = " <<std::to_string(index);
+        // std::cout << " data = " << std::to_string(telegram.ctrl.telegram_array[index])<<std::endl;
+        comm.SendChar(com_num,telegram.ctrl.telegram_array[index]);
+    }   
+    // Thread sleep 15(ms).
+    std::this_thread::sleep_for(std::chrono::milliseconds(15));
+    // Read data form mcb.
+    comm.ReadData(com_num,telegram.status.telegram_array);
+    telegram.status.DecodeTelegramArray();
+    // displaymonitor();    
+    // manager.ConvertActuralData300(&telegram.status.mcb_status); 
+    return result;   
+}
 // Identification Parameter.(MainID = 1)
 int GtcsMcbCommunication::ReadIdentificationParameter()
 {
@@ -209,6 +212,33 @@ int GtcsMcbCommunication::ReadProcessStepList()
 int GtcsMcbCommunication::WritePrcessStepList()
 {
     int result = -1;
+    return result;
+}
+// Initial MCB comport.
+int GtcsMcbCommunication::InitialMcbComPort(std::string com_name_string)
+{
+    int result = -1;
+    // Initial ComPort.
+    strcpy(com_name,com_name_string.c_str());
+    com_num = comm.InitialComm(com_name);
+    std::cout << "open com_num= " <<std::to_string(com_num) <<std::endl;
+    return result;    
+}
+// Check MCB FSM.
+int GtcsMcbCommunication::CheckMcbFSM(int mcb_fsm)
+{
+    int result = -1;
+    switch(mcb_fsm)
+    {
+        case MCB_FSM::POLLING:
+            PollingToMcb();
+            // std::cout << "CheckMcbFSM = " << std::to_string(mcb_fsm) << std::endl;
+            break;
+        case MCB_FSM::READ_PARA:
+            break;
+        case MCB_FSM::WRITE_PARA:
+            break;
+    }
     return result;
 }
 #pragma endregion

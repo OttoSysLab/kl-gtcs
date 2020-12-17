@@ -98,34 +98,44 @@ void tcpsocket()
 // main.
 int main()
 {
-    // Set telegram.
-    std::thread thread_tcpsocket = std::thread(tcpsocket);
+    // Initial object.
     GtcsMcbCommunication* mcb = GtcsMcbCommunication::GetInstance();
     GtcsAmsProtocol* ams = GtcsAmsProtocol::GetInstance();
     GtcsBulletinManager manager;
     ComPort comm;
-    char com_name[] = "/dev/ttymxc3"; 
-    int com_num = comm.InitialComm(com_name);
+    char com_name[] = "/dev/ttymxc3";
+    int com_num = comm.InitialComm(com_name); 
+    // Set tcpsocket thread and start.
+    std::thread thread_tcpsocket = std::thread(tcpsocket);
     // loop.
     while (true)
     {
-        #ifdef MCB_CS 
-        mcb->telegram.ctrl.EncodeTelegramArray(&mcb->telegram.ctrl.fasten,
+        switch(manager.GetMainFSM())
+        {
+            case MAIN_FSM::READY:
+                mcb->telegram.ctrl.EncodeTelegramArray(&mcb->telegram.ctrl.fasten,
                                             mcb->telegram.ctrl.struct_length);
-        for(int index=0;index<48;index++){
-            comm.SendChar(com_num,mcb->telegram.ctrl.telegram_array[index]);
-        }   
-        // Thread sleep 15(ms).
-        std::this_thread::sleep_for(std::chrono::milliseconds(15));
-        // Read data form mcb.
-        comm.ReadData(com_num,mcb->telegram.status.telegram_array);
-        mcb->telegram.status.DecodeTelegramArray();
-        // displaymonitor();    
-        manager.ConvertActuralData300(&mcb->telegram.status.mcb_status);    
-        #endif
-        #ifdef MCB_RW
-        
-        #endif
+                for(int index=0;index<48;index++){
+                    comm.SendChar(com_num,mcb->telegram.ctrl.telegram_array[index]);
+                }   
+                // Thread sleep 15(ms).
+                std::this_thread::sleep_for(std::chrono::milliseconds(15));
+                // Read data form mcb.
+                comm.ReadData(com_num,mcb->telegram.status.telegram_array);
+                mcb->telegram.status.DecodeTelegramArray();
+                // displaymonitor();    
+                manager.ConvertActuralData300(&mcb->telegram.status.mcb_status); 
+                break;
+            case MAIN_FSM::ALARM:
+                break;
+            case MAIN_FSM::SETTING:
+                break;
+            // Start System.
+            case MAIN_FSM::INITIAL:
+                break;
+            case MAIN_FSM::STATRT:
+                break;
+        }
     }
     // Jion thread.
     thread_tcpsocket.join();    

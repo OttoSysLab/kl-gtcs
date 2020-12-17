@@ -24,14 +24,17 @@
 class GtcsBulletinManager
 {
 private:
+    int MainFSM = MAIN_FSM::READY;
     std::string GetMcbRtStatusString(MCB_RT_STATUS status);
+    double ConvertToAmsTorque();
 public:
     // Constructor.
     GtcsBulletinManager(/* args */);
     // Distructor.
     ~GtcsBulletinManager();
-    int MainFSM = 0;
-    double ConvertToAmsTorque();
+    // Get & Set FSM.
+    int GetMainFSM();
+    int SetMainFSM(int main_fsm);
     int ConvertActuralData300(GtcsStatusTelegramStrcut* ptr);
 };
 #endif

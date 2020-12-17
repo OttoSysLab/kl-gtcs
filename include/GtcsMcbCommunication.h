@@ -322,6 +322,8 @@ private:
     static GtcsMcbCommunication* instance;
     GtcsMcbCommunication(/* args */);
     #pragma region RW MCB Parameter.
+    // Polling to MCB.
+    int PollingToMcb(GtcsCtrlTelegramStrcut *ptr_ctrl_telegram);    
     // Identification Parameter.(MainID = 1)
     int ReadIdentificationParameter();
     int WriteIdentificationParameter();

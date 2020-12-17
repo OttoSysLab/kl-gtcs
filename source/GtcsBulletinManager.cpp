@@ -19,6 +19,18 @@ GtcsBulletinManager::GtcsBulletinManager(/* args */)
 // Distructor.
 GtcsBulletinManager::~GtcsBulletinManager()
 {}
+// Get main FSM
+int GtcsBulletinManager::GetMainFSM()
+{
+    return MainFSM;
+}
+int GtcsBulletinManager::SetMainFSM(int main_fsm)
+{
+    int result = -1;
+    MainFSM = main_fsm;
+    return result;
+}
+// Convert To Ams Torque.
 double GtcsBulletinManager::ConvertToAmsTorque()
 {
     double result  = 0;

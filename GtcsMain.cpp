@@ -12,12 +12,12 @@
 =======================================================================================*/
 #include "../include/GtcsMain.h"
 
-#define _MCB_CS_
-// #define _MCB_RW_
+#define MCB_CS
+// #define MCB_RW
 
 // Display telegram status.
 void displaymonitor(){
-    GtcsMcbProtocol* mcb = GtcsMcbProtocol::GetInstance();
+    GtcsMcbCommunication* mcb = GtcsMcbCommunication::GetInstance();
     std::cout <<"==============================================="<<std::endl;
         std::cout <<"u16Statusflags = "<<std::to_string(mcb->telegram.status.mcb_status.u16Statusflags)<< std::endl;
         std::cout <<"u32ActError    = "<<std::to_string(mcb->telegram.status.mcb_status.u32ActError)<< std::endl; 
@@ -100,7 +100,7 @@ int main()
 {
     // Set telegram.
     std::thread thread_tcpsocket = std::thread(tcpsocket);
-    GtcsMcbProtocol* mcb = GtcsMcbProtocol::GetInstance();
+    GtcsMcbCommunication* mcb = GtcsMcbCommunication::GetInstance();
     GtcsAmsProtocol* ams = GtcsAmsProtocol::GetInstance();
     GtcsBulletinManager manager;
     ComPort comm;
@@ -109,7 +109,7 @@ int main()
     // loop.
     while (true)
     {
-        #if defined(_MCB_CS_) 
+        #ifdef MCB_CS 
         mcb->telegram.ctrl.EncodeTelegramArray(&mcb->telegram.ctrl.fasten,
                                             mcb->telegram.ctrl.struct_length);
         for(int index=0;index<48;index++){
@@ -123,7 +123,7 @@ int main()
         // displaymonitor();    
         manager.ConvertActuralData300(&mcb->telegram.status.mcb_status);    
         #endif
-        #if defined(_MCB_RW_)
+        #ifdef MCB_RW
         
         #endif
     }

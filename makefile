@@ -1,10 +1,10 @@
 CC = g++
 INCLUDE = -I"./include" -I"../include"
 OBJS = ./object/GtcsMain.o ./object/ComPort.o ./object/CrcChecker.o ./object/Database.o \
-	./object/TcpSocket.o ./object/GtcsBulletin.o ./object/GtcsBulletinManager.o ./object/GtcsMcbProtocol.o \
-	./object/GtcsAmsProtocol.o ./object/Common.o
+	./object/TcpSocket.o ./object/GtcsBulletin.o ./object/GtcsBulletinManager.o ./object/Common.o \
+	./object/GtcsAmsProtocol.o ./object/GtcsMcbCommunication.o
 
-GTCS: GtcsMain.o CrcChecker.o Database.o TcpSocket.o ComPort.o GtcsBulletin.o GtcsMcbProtocol.o\
+GTCS: GtcsMain.o CrcChecker.o Database.o TcpSocket.o ComPort.o GtcsBulletin.o GtcsMcbCommunication.o\
 	GtcsAmsProtocol.o GtcsBulletinManager.o Common.o
 	${CC} -pthread -o $@ ${INCLUDE} ${OBJS} 
 
@@ -32,8 +32,8 @@ GtcsBulletin.o : ./source/GtcsBulletin.cpp
 GtcsBulletinManager.o : ./source/GtcsBulletinManager.cpp
 	${CC} ${INCLUDE} -c $< -o ./object/GtcsBulletinManager.o
 
-GtcsMcbProtocol.o : ./source/GtcsMcbProtocol.cpp 
-	${CC} ${INCLUDE} -c $< -o ./object/GtcsMcbProtocol.o
+GtcsMcbCommunication.o : ./source/GtcsMcbCommunication.cpp 
+	${CC} ${INCLUDE} -c $< -o ./object/GtcsMcbCommunication.o
 
 GtcsAmsProtocol.o : ./source/GtcsAmsProtocol.cpp 
 	${CC} ${INCLUDE} -c $< -o ./object/GtcsAmsProtocol.o

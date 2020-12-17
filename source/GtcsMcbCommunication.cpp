@@ -10,7 +10,7 @@
  Programmer    	: Otto Chang                                                                   
  Date	       	: 2019/08/06                                                         
 =======================================================================================*/
-#include "../include/GtcsMcbProtocol.h"
+#include "../include/GtcsMcbCommunication.h"
 
 #pragma region telegram strcut define.
 // Telegram Construct.
@@ -116,83 +116,79 @@ int StatusTelegram::DecodeTelegramArray()
                             ((uint32_t)telegram_array[payload_start_index+35]<<24);
     return result;
 }
-//
-// Encode write request teldgram array.
-std::array<uint8_t,36> WriteRequestTelegram::EncodeTelegramArray(GtcsRW16TelegramStruct *ptr_request)
-{
-    std::array<uint8_t,36> result;
-    return result;
-}
 #pragma endregion 
 // Constructor.
-GtcsMcbProtocol::GtcsMcbProtocol(/* args */)
+GtcsMcbCommunication::GtcsMcbCommunication(/* args */)
 {}
 // Distructor.
-GtcsMcbProtocol::~GtcsMcbProtocol()
+GtcsMcbCommunication::~GtcsMcbCommunication()
 {}
 // SignleTon instance object.
-GtcsMcbProtocol* GtcsMcbProtocol::instance = 0;
+GtcsMcbCommunication* GtcsMcbCommunication::instance = 0;
 // Get Instance.
-GtcsMcbProtocol* GtcsMcbProtocol::GetInstance()
+GtcsMcbCommunication* GtcsMcbCommunication::GetInstance()
 {
     if(instance == 0)
     {
-        instance = new GtcsMcbProtocol();
+        instance = new GtcsMcbCommunication();
     }
     return instance;
 }
 #pragma region RW MCB Paramter.
 // Identification Parameter.(MainID = 1)
-int GtcsMcbProtocol::ReadIdentificationParameter()
+int GtcsMcbCommunication::ReadIdentificationParameter()
 {
     int result = -1;
     return result;
 }
-int GtcsMcbProtocol::WriteIdentificationParameter()
+int GtcsMcbCommunication::WriteIdentificationParameter()
 {
     int result = -1;
     return result;
 }
 // Basic Parameter.(MainID = 2)
-int GtcsMcbProtocol::ReadBasicParameter()
+int GtcsMcbCommunication::ReadBasicParameter(McbID2Struct *ptr_basic_para)
 {
     int result = -1;
-    
+    // First send.
+    // Second send.
+
+    // third send. 
     return result;
 }    
-int GtcsMcbProtocol::WriteBasicParameter()
+int GtcsMcbCommunication::WriteBasicParameter()
 {
     int result  = -1;
     return result;
 }
 // Step Parameter. (Main ID = 3)
-int GtcsMcbProtocol::ReadStepParametrer()
+int GtcsMcbCommunication::ReadStepParametrer()
 {
     int result = -1;
     return result;
 }
-int GtcsMcbProtocol::WriteStepParameter()
+int GtcsMcbCommunication::WriteStepParameter()
 {
     int result = -1;
     return result;
 }
 // Prcoess Parameter.(Main ID = 4)
-int GtcsMcbProtocol::ReadProcessParameter()
+int GtcsMcbCommunication::ReadProcessParameter()
 {
     int result = -1;
     return result;
 }
-int GtcsMcbProtocol::WriteProcessParameter()
+int GtcsMcbCommunication::WriteProcessParameter()
 {
     int result = -1;
     return result;
 }
-int GtcsMcbProtocol::ReadProcessStepList()
+int GtcsMcbCommunication::ReadProcessStepList()
 {
     int result = -1;
     return result;
 }
-int GtcsMcbProtocol::WritePrcessStepList()
+int GtcsMcbCommunication::WritePrcessStepList()
 {
     int result = -1;
     return result;

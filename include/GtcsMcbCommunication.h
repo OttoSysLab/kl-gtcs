@@ -16,6 +16,7 @@
 #include <array>             // 
 #include <cstring>           // 
 #include <vector>
+#include "ComPort.h"
 #include "GtcsTypeDefine.h"
 #include "GtcsBulletin.h"
 #include "CrcChecker.h"
@@ -314,24 +315,18 @@ public:
 };
 #pragma endregion
 #pragma region Telgram
-class GtcsMcbProtocol
+class GtcsMcbCommunication
 {
 private:
     /* data */
-    static GtcsMcbProtocol* instance;
-    GtcsMcbProtocol(/* args */);
-    
-public:
-    ~GtcsMcbProtocol();    
-    static GtcsMcbProtocol* GetInstance();
-    // GtcsParameter parameter;
-    GtcsMcbTelegram telegram;
+    static GtcsMcbCommunication* instance;
+    GtcsMcbCommunication(/* args */);
     #pragma region RW MCB Parameter.
     // Identification Parameter.(MainID = 1)
     int ReadIdentificationParameter();
     int WriteIdentificationParameter();
     // Basic Parameter.(MainID = 2)
-    int ReadBasicParameter();    
+    int ReadBasicParameter(McbID2Struct *ptr_basic_para);    
     int WriteBasicParameter();
     // Step Parameter. (Main ID = 3)
     int ReadStepParametrer();
@@ -342,6 +337,11 @@ public:
     int ReadProcessStepList();
     int WritePrcessStepList();
     #pragma endregion
+public:
+    ~GtcsMcbCommunication();    
+    static GtcsMcbCommunication* GetInstance();
+    // GtcsParameter parameter;
+    GtcsMcbTelegram telegram;
 };
 #pragma endregion
 #endif

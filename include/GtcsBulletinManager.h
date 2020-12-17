@@ -15,7 +15,7 @@
 #include "GtcsBulletin.h"
 #include "GtcsTypeDefine.h"
 #include "GtcsAmsProtocol.h"
-#include "GtcsMcbProtocol.h"
+#include "GtcsMcbCommunication.h"
 #include "Common.h"
 #include <ctime>
 
@@ -30,6 +30,7 @@ public:
     GtcsBulletinManager(/* args */);
     // Distructor.
     ~GtcsBulletinManager();
+    int MainFSM = 0;
     double ConvertToAmsTorque();
     int ConvertActuralData300(GtcsStatusTelegramStrcut* ptr);
 };

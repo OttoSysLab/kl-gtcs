@@ -59,6 +59,14 @@ enum MCB_RT_STATUS : int{
     IDLE       ,
 };
 
+enum MAIN_FSM : int{
+    STATRT = 0,
+    INITIAL,
+    READY,
+    SETTING,
+    ALARM,
+};
+
 // Identification Parameter Struct (MID1)
 typedef struct 
 { 

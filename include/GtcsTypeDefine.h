@@ -33,8 +33,8 @@ enum MCB_TELEGRAM_TYPE : uint8_t{
     CTRL             = 1,
     STATUS           = 2,
     W_REQUEST        = 3,
-    RW_RESPONSE      = 4,    
-    R_REQUEST        = 5,
+    R_REQUEST        = 4,
+    RW_RESPONSE      = 5,    
     TMD_REQUEST      = 6,
     TMD_RESPONSE     = 7,
     LOG_REQUEST      = 10, 
@@ -292,15 +292,15 @@ typedef struct
     uint32_t s32Debug; 
 }GtcsStatusTelegramStrcut;
 // Gtcs RW uint16_t telegram struct.
-typedef struct 
-{
-    uint16_t address_data_1;
-    uint16_t address_data_2;
-    uint16_t address_data_3;
-    uint16_t address_data_4;
-    uint16_t address_data_5;
-    uint16_t address_data_6;
-}GtcsRW16TelegramStruct;
+// typedef struct 
+// {
+//     uint16_t address_data_1;
+//     uint16_t address_data_2;
+//     uint16_t address_data_3;
+//     uint16_t address_data_4;
+//     uint16_t address_data_5;
+//     uint16_t address_data_6;
+// }GtcsRW16TelegramStruct;
 
 #pragma endregion
 #pragma endregion

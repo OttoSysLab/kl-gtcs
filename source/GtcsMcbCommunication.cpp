@@ -20,9 +20,9 @@ TelegramStruct::TelegramStruct()
 TelegramStruct::~TelegramStruct()
 {}
 // Initail telegram array.
-uint8_t TelegramStruct::InitialTelegramArray()
+int TelegramStruct::InitialTelegramArray()
 {
-    uint8_t result = -1;
+    int result = -1;
     int length = sizeof(telegram_array);
     for(int index = 0;index<length;index++)
     {
@@ -30,11 +30,23 @@ uint8_t TelegramStruct::InitialTelegramArray()
     }
     return result;
 }
-// Initial .G   
-// Encode Header array.
-uint8_t TelegramStruct::EncodeHeaderArray()
+// Encode Ctrl telegram payload array.
+int TelegramStruct::EncodeTelegramArray()
 {
-    uint8_t result = -1;
+    int result = -1;
+    CrcChecker crccheck;
+    // CRC checker
+    crccheck.calculateCrc32((uint8_t*)&telegram_array);
+    telegram_array[44] = crccheck.crc32_value[0];
+    telegram_array[45] = crccheck.crc32_value[1];
+    telegram_array[46] = crccheck.crc32_value[2];
+    telegram_array[47] = crccheck.crc32_value[3];
+    return result;
+}
+// Encode Header array.
+int TelegramStruct::EncodeHeaderArray()
+{
+    int result = -1;
     // Header* ptr_header = &header;
     uint8_t* ptr = &(&header)->type_num;
     int array_length = 8;
@@ -48,7 +60,7 @@ uint8_t TelegramStruct::EncodeHeaderArray()
     }
     return result;
 } 
-// Encode Ctrl teelgram payload array.
+// Encode Ctrl telegram payload array.
 int CtrlTelegram::EncodeTelegramArray(GtcsCtrlTelegramStrcut *ptr_ctrl_telegram,int length)
 {
     int result = -1;
@@ -140,20 +152,32 @@ GtcsMcbCommunication* GtcsMcbCommunication::GetInstance()
 int GtcsMcbCommunication::PollingToMcb()
 {
     int result = -1;
+    int delay_time = 20;
     telegram.ctrl.EncodeTelegramArray(&telegram.ctrl.fasten,telegram.ctrl.struct_length);
-
-    for(int index=0;index<48;index++){
-        // std::cout << " telegram idex = " <<std::to_string(index);
-        // std::cout << " data = " << std::to_string(telegram.ctrl.telegram_array[index])<<std::endl;
+    // Send to MCB.
+    for(int index=0;index<48;index++)
+    {
         comm.SendChar(com_num,telegram.ctrl.telegram_array[index]);
     }   
-    // Thread sleep 15(ms).
-    std::this_thread::sleep_for(std::chrono::milliseconds(15));
     // Read data form mcb.
-    comm.ReadData(com_num,telegram.status.telegram_array);
+    std::this_thread::sleep_for(std::chrono::milliseconds(delay_time));
+    // comm.ReadData(com_num,telegram.rw_response.telegram_array);
+    telegram.rw_response.InitialTelegramArray();
+    result = read(com_num, &telegram.rw_response.telegram_array, 1024);
     telegram.status.DecodeTelegramArray();
-    // displaymonitor();    
-    // manager.ConvertActuralData300(&telegram.status.mcb_status); 
+    std::cout <<"u16Statusflags = "<<std::to_string(telegram.status.mcb_status.u16Statusflags)<< std::endl;
+    std::cout <<"u32ActError    = "<<std::to_string(telegram.status.mcb_status.u32ActError)<< std::endl; 
+    std::cout <<"u16ActProcNr   = "<<std::to_string(telegram.status.mcb_status.u16ActProcNr)<< std::endl; 
+    std::cout <<"u16ActStepNr   = "<<std::to_string(telegram.status.mcb_status.u16ActStepNr)<< std::endl; 
+    std::cout <<"u16ActCurr     = "<<std::to_string(telegram.status.mcb_status.u16ActCurr)<< std::endl; 
+    std::cout <<"u16ActTorque   = "<<std::to_string(telegram.status.mcb_status.u16ActTorque)<< std::endl; 
+    std::cout <<"u16ActRPM      = "<<std::to_string(telegram.status.mcb_status.u16ActRPM)<< std::endl; 
+    std::cout <<"u16MaxCurrent  = "<<std::to_string(telegram.status.mcb_status.u16MaxCurrent)<< std::endl; 
+    std::cout <<"u16MaxTorque   = "<<std::to_string(telegram.status.mcb_status.u16MaxTorque)<< std::endl; 
+    std::cout <<"u32Angle       = "<<std::to_string(telegram.status.mcb_status.u32Angle)<< std::endl; 
+    std::cout <<"u16TMDFlags    = "<<std::to_string(telegram.status.mcb_status.u16TMDFlags)<< std::endl;    
+    std::cout <<"s16Debug       = "<<std::to_string(telegram.status.mcb_status.s16Debug)<< std::endl;    
+    std::cout <<"s32Debug       = "<<std::to_string(telegram.status.mcb_status.s32Debug)<< std::endl; 
     return result;   
 }
 // Identification Parameter.(MainID = 1)
@@ -168,24 +192,1084 @@ int GtcsMcbCommunication::WriteIdentificationParameter()
     return result;
 }
 // Basic Parameter.(MainID = 2)
-int GtcsMcbCommunication::ReadBasicParameter(McbID2Struct *ptr_basic_para)
+int GtcsMcbCommunication::ReadBasicParameter()
 {
     int result = -1;
-    // First send.
-    // Second send.
+    // Get 
+    GtcsBulletin *bulltein = GtcsBulletin::GetInstance();
+    McbID2Struct *basic_para = &bulltein->McbBulletin.BasicPara;
+    uint8_t main_id = 2;
+    uint8_t sub_id[6];
+    uint16_t payload_start_index = 8;
+    int delay_time = 50;
+    #pragma region First package. (SID1-6)
+    telegram.r_request.InitialTelegramArray();
+    // Initial sub id array.
+    sub_id[0]  = 1;
+    sub_id[1]  = 2;
+    sub_id[2]  = 3;
+    sub_id[3]  = 4;
+    sub_id[4]  = 5;
+    sub_id[5]  = 6;
+    // Initial header address.
+    telegram.r_request.header.address_2 = payload_start_index+6;         // 
+    telegram.r_request.header.address_3 = payload_start_index+12;        // 
+    telegram.r_request.header.address_4 = payload_start_index+18;        // 
+    telegram.r_request.header.address_5 = payload_start_index+24;        // 
+    telegram.r_request.header.address_6 = payload_start_index+30;        //      
+    telegram.r_request.EncodeHeaderArray();
+    // Package SID = 1
+    telegram.r_request.telegram_array[payload_start_index]    = main_id;     
+    telegram.r_request.telegram_array[payload_start_index+1]  = 0;
+    telegram.r_request.telegram_array[payload_start_index+2]  = sub_id[0];
+    telegram.r_request.telegram_array[payload_start_index+3]  = 0;
+    telegram.r_request.telegram_array[payload_start_index+4]  = 0;
+    telegram.r_request.telegram_array[payload_start_index+5]  = 0;
+    // Package SID = 2
+    telegram.r_request.telegram_array[payload_start_index+6]  = main_id;
+    telegram.r_request.telegram_array[payload_start_index+7]  = 0;
+    telegram.r_request.telegram_array[payload_start_index+8]  = sub_id[1];
+    telegram.r_request.telegram_array[payload_start_index+9]  = 0;
+    telegram.r_request.telegram_array[payload_start_index+10] = 0;
+    telegram.r_request.telegram_array[payload_start_index+11] = 0;
+    // Package SID = 3
+    telegram.r_request.telegram_array[payload_start_index+12] = main_id;
+    telegram.r_request.telegram_array[payload_start_index+13] = 0;
+    telegram.r_request.telegram_array[payload_start_index+14] = sub_id[2];
+    telegram.r_request.telegram_array[payload_start_index+15] = 0;
+    telegram.r_request.telegram_array[payload_start_index+16] = 0;
+    telegram.r_request.telegram_array[payload_start_index+17] = 0;
+    // Package SID = 4
+    telegram.r_request.telegram_array[payload_start_index+18] = main_id;
+    telegram.r_request.telegram_array[payload_start_index+19] = 0;
+    telegram.r_request.telegram_array[payload_start_index+20] = sub_id[3];
+    telegram.r_request.telegram_array[payload_start_index+21] = 0;
+    telegram.r_request.telegram_array[payload_start_index+22] = 0;
+    telegram.r_request.telegram_array[payload_start_index+23] = 0;
+    // Package SID = 5
+    telegram.r_request.telegram_array[payload_start_index+24] = main_id;
+    telegram.r_request.telegram_array[payload_start_index+25] = 0;
+    telegram.r_request.telegram_array[payload_start_index+26] = sub_id[4];
+    telegram.r_request.telegram_array[payload_start_index+27] = 0;
+    telegram.r_request.telegram_array[payload_start_index+28] = 0;
+    telegram.r_request.telegram_array[payload_start_index+29] = 0;
+    // Package SID = .G.?
+    telegram.r_request.telegram_array[payload_start_index+30] = main_id;
+    telegram.r_request.telegram_array[payload_start_index+31] = 0;
+    telegram.r_request.telegram_array[payload_start_index+32] = sub_id[5];
+    telegram.r_request.telegram_array[payload_start_index+33] = 0;
+    telegram.r_request.telegram_array[payload_start_index+34] = 0;
+    telegram.r_request.telegram_array[payload_start_index+35] = 0;
+    // Package.
+    telegram.r_request.EncodeTelegramArray();
+    // Send to MCB.
+    for(int index = 0;index<48;index++)
+    {
+        // std::cout << "Send index = " <<std::to_string(index);
+        // std::cout << ", data = "<<std::to_string(telegram.r_request.telegram_array[index]) << std::endl;
+        comm.SendChar(com_num,telegram.r_request.telegram_array[index]);
+    }
+    // Get Data for telegram rw request.
+    std::this_thread::sleep_for(std::chrono::milliseconds(delay_time));
+    telegram.rw_response.InitialTelegramArray();
+    // comm.ReadData(com_num,telegram.rw_response.telegram_array);
+    result = read(com_num, &telegram.rw_response.telegram_array, 1024);
+    // Get basic parameter from telegram.
+    basic_para->s16MinTemp          = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+4]+
+                                      ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+5]<<8);  // SID = 1
+    basic_para->s16MaxTemp          = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+10]+
+                                      ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+11]<<8); // SID = 2
+    basic_para->u16MaxCurrent       = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+16]+
+                                      ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+17]<<8); // SID = 3
+    basic_para->u16MaxPeakCurrent   = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+22]+
+                                      ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+23]<<8); // SID = 4
+    basic_para->u16TorqueSensorType = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+28]+
+                                      ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+29]<<8); // SID = 5
+    basic_para->u16MaxDutyCycle     = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+34]+
+                                      ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+35]<<8); // SID = 4
+    telegram.rw_response.InitialTelegramArray();
+    #pragma endregion
+    #pragma region second package. (SID7-12)
+    telegram.r_request.InitialTelegramArray();
+    // Initial sub id array.
+    sub_id[0]  = 7;
+    sub_id[1]  = 8;
+    sub_id[2]  = 9;
+    sub_id[3]  = 10;
+    sub_id[4]  = 11;
+    sub_id[5]  = 12;
+    // Initial header address.
+    telegram.r_request.header.address_2 = payload_start_index+6;         // 
+    telegram.r_request.header.address_3 = payload_start_index+12;        // 
+    telegram.r_request.header.address_4 = payload_start_index+18;        // 
+    telegram.r_request.header.address_5 = payload_start_index+24;        // 
+    telegram.r_request.header.address_6 = payload_start_index+30;        //      
+    telegram.r_request.EncodeHeaderArray();
+    // Package SID = 1
+    telegram.r_request.telegram_array[payload_start_index]    = main_id;     
+    telegram.r_request.telegram_array[payload_start_index+1]  = 0;
+    telegram.r_request.telegram_array[payload_start_index+2]  = sub_id[0];
+    telegram.r_request.telegram_array[payload_start_index+3]  = 0;
+    telegram.r_request.telegram_array[payload_start_index+4]  = 0;
+    telegram.r_request.telegram_array[payload_start_index+5]  = 0;
+    // Package SID = 2
+    telegram.r_request.telegram_array[payload_start_index+6]  = main_id;
+    telegram.r_request.telegram_array[payload_start_index+7]  = 0;
+    telegram.r_request.telegram_array[payload_start_index+8]  = sub_id[1];
+    telegram.r_request.telegram_array[payload_start_index+9]  = 0;
+    telegram.r_request.telegram_array[payload_start_index+10] = 0;
+    telegram.r_request.telegram_array[payload_start_index+11] = 0;
+    // Package SID = 3
+    telegram.r_request.telegram_array[payload_start_index+12] = main_id;
+    telegram.r_request.telegram_array[payload_start_index+13] = 0;
+    telegram.r_request.telegram_array[payload_start_index+14] = sub_id[2];
+    telegram.r_request.telegram_array[payload_start_index+15] = 0;
+    telegram.r_request.telegram_array[payload_start_index+16] = 0;
+    telegram.r_request.telegram_array[payload_start_index+17] = 0;
+    // Package SID = 4
+    telegram.r_request.telegram_array[payload_start_index+18] = main_id;
+    telegram.r_request.telegram_array[payload_start_index+19] = 0;
+    telegram.r_request.telegram_array[payload_start_index+20] = sub_id[3];
+    telegram.r_request.telegram_array[payload_start_index+21] = 0;
+    telegram.r_request.telegram_array[payload_start_index+22] = 0;
+    telegram.r_request.telegram_array[payload_start_index+23] = 0;
+    // Package SID = 5
+    telegram.r_request.telegram_array[payload_start_index+24] = main_id;
+    telegram.r_request.telegram_array[payload_start_index+25] = 0;
+    telegram.r_request.telegram_array[payload_start_index+26] = sub_id[4];
+    telegram.r_request.telegram_array[payload_start_index+27] = 0;
+    telegram.r_request.telegram_array[payload_start_index+28] = 0;
+    telegram.r_request.telegram_array[payload_start_index+29] = 0;
+    // Package SID = 6.
+    telegram.r_request.telegram_array[payload_start_index+30] = main_id;
+    telegram.r_request.telegram_array[payload_start_index+31] = 0;
+    telegram.r_request.telegram_array[payload_start_index+32] = sub_id[5];
+    telegram.r_request.telegram_array[payload_start_index+33] = 0;
+    telegram.r_request.telegram_array[payload_start_index+34] = 0;
+    telegram.r_request.telegram_array[payload_start_index+35] = 0;
+    // Package.
+    telegram.r_request.EncodeTelegramArray();
+    // Send to MCB.
+    for(int index = 0;index<48;index++)
+    {
+        comm.SendChar(com_num,telegram.r_request.telegram_array[index]);
+    }
+    // Get Data for telegram rw request.
+    std::this_thread::sleep_for(std::chrono::milliseconds(delay_time));
+    telegram.rw_response.InitialTelegramArray();
+    // comm.ReadData(com_num,telegram.rw_response.telegram_array);
+    result = read(com_num, &telegram.rw_response.telegram_array, 1024);
+    // Get basic parameter from telegram.
+    basic_para->u16MaxTorque    = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+4]+
+                                  ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+5]<<8);  // SID = 7
+    basic_para->u16PWMFreq      = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+10]+
+                                  ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+11]<<8); // SID = 8
+    basic_para->u16MaxRPM       = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+16]+
+                                  ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+17]<<8); // SID = 9
+    basic_para->u16MaxSlope     = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+22]+
+                                  ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+23]<<8); // SID = 10
+    basic_para->u16MinBusVolt   = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+28]+
+                                  ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+29]<<8); // SID = 11
+    basic_para->u16MaxBusVolt   = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+34]+
+                                  ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+35]<<8); // SID = 12
+    telegram.rw_response.InitialTelegramArray();
+    #pragma endregion
+    #pragma region third send. (SID13-18)
+     telegram.r_request.InitialTelegramArray();
+    // Initial sub id array.
+    sub_id[0]  = 13;
+    sub_id[1]  = 14;
+    sub_id[2]  = 15;
+    sub_id[3]  = 16;
+    sub_id[4]  = 17;
+    sub_id[5]  = 18;
+    // Initial header address.
+    telegram.r_request.header.address_2 = payload_start_index+6;         // 
+    telegram.r_request.header.address_3 = payload_start_index+12;        // 
+    telegram.r_request.header.address_4 = payload_start_index+18;        // 
+    telegram.r_request.header.address_5 = payload_start_index+24;        // 
+    telegram.r_request.header.address_6 = payload_start_index+30;        //      
+    telegram.r_request.EncodeHeaderArray();
+    // Package SID = 1
+    telegram.r_request.telegram_array[payload_start_index]    = main_id;     
+    telegram.r_request.telegram_array[payload_start_index+1]  = 0;
+    telegram.r_request.telegram_array[payload_start_index+2]  = sub_id[0];
+    telegram.r_request.telegram_array[payload_start_index+3]  = 0;
+    telegram.r_request.telegram_array[payload_start_index+4]  = 0;
+    telegram.r_request.telegram_array[payload_start_index+5]  = 0;
+    // Package SID = 2
+    telegram.r_request.telegram_array[payload_start_index+6]  = main_id;
+    telegram.r_request.telegram_array[payload_start_index+7]  = 0;
+    telegram.r_request.telegram_array[payload_start_index+8]  = sub_id[1];
+    telegram.r_request.telegram_array[payload_start_index+9]  = 0;
+    telegram.r_request.telegram_array[payload_start_index+10] = 0;
+    telegram.r_request.telegram_array[payload_start_index+11] = 0;
+    // Package SID = 3
+    telegram.r_request.telegram_array[payload_start_index+12] = main_id;
+    telegram.r_request.telegram_array[payload_start_index+13] = 0;
+    telegram.r_request.telegram_array[payload_start_index+14] = sub_id[2];
+    telegram.r_request.telegram_array[payload_start_index+15] = 0;
+    telegram.r_request.telegram_array[payload_start_index+16] = 0;
+    telegram.r_request.telegram_array[payload_start_index+17] = 0;
+    // Package SID = 4
+    telegram.r_request.telegram_array[payload_start_index+18] = main_id;
+    telegram.r_request.telegram_array[payload_start_index+19] = 0;
+    telegram.r_request.telegram_array[payload_start_index+20] = sub_id[3];
+    telegram.r_request.telegram_array[payload_start_index+21] = 0;
+    telegram.r_request.telegram_array[payload_start_index+22] = 0;
+    telegram.r_request.telegram_array[payload_start_index+23] = 0;
+    // Package SID = 5
+    telegram.r_request.telegram_array[payload_start_index+24] = main_id;
+    telegram.r_request.telegram_array[payload_start_index+25] = 0;
+    telegram.r_request.telegram_array[payload_start_index+26] = sub_id[4];
+    telegram.r_request.telegram_array[payload_start_index+27] = 0;
+    telegram.r_request.telegram_array[payload_start_index+28] = 0;
+    telegram.r_request.telegram_array[payload_start_index+29] = 0;
+    // Package SID = 6.
+    telegram.r_request.telegram_array[payload_start_index+30] = main_id;
+    telegram.r_request.telegram_array[payload_start_index+31] = 0;
+    telegram.r_request.telegram_array[payload_start_index+32] = sub_id[5];
+    telegram.r_request.telegram_array[payload_start_index+33] = 0;
+    telegram.r_request.telegram_array[payload_start_index+34] = 0;
+    telegram.r_request.telegram_array[payload_start_index+35] = 0;
+    // Package.
+    telegram.r_request.EncodeTelegramArray();
+    // Send to MCB. 
+    for(int index = 0;index<48;index++)
+    {
+        comm.SendChar(com_num,telegram.r_request.telegram_array[index]);
+    }
+    // Get Data for telegram rw request.
+    std::this_thread::sleep_for(std::chrono::milliseconds(delay_time));
+    telegram.rw_response.InitialTelegramArray();
+    // comm.ReadData(com_num,telegram.rw_response.telegram_array);
+    result = read(com_num, &telegram.rw_response.telegram_array, 1024);
+    // Get basic parameter from telegram.
+    basic_para->u16StartDutyCycle = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+4]+
+                                    ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+5]<<8);  // SID = 13
+    basic_para->u16GearBoxRatio   = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+10]+
+                                    ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+11]<<8); // SID = 14
+    basic_para->u32StartInp       = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+16]+
+                                    ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+17]<<8); // SID = 15
+    basic_para->u32RevInp         = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+22]+
+                                    ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+23]<<8); // SID = 16
+    basic_para->u16RevRpm         = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+28]+
+                                    ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+29]<<8); // SID = 17
+    basic_para->u16RevSlope       = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+34]+
+                                    ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+35]<<8); // SID = 18
+    telegram.rw_response.InitialTelegramArray();
+    #pragma endregion
+    #pragma region fourth package. (SID19-24)
+    telegram.r_request.InitialTelegramArray();
+    // Initial sub id array.
+    sub_id[0]  = 19;
+    sub_id[1]  = 20;
+    sub_id[2]  = 21;
+    sub_id[3]  = 22;
+    sub_id[4]  = 23;
+    sub_id[5]  = 24;
+    // Initial header address.
+    telegram.r_request.header.address_2 = payload_start_index+6;         // 
+    telegram.r_request.header.address_3 = payload_start_index+12;        // 
+    telegram.r_request.header.address_4 = payload_start_index+18;        // 
+    telegram.r_request.header.address_5 = payload_start_index+24;        // 
+    telegram.r_request.header.address_6 = payload_start_index+30;        //      
+    telegram.r_request.EncodeHeaderArray();
+    // Package SID = 1
+    telegram.r_request.telegram_array[payload_start_index]    = main_id;     
+    telegram.r_request.telegram_array[payload_start_index+1]  = 0;
+    telegram.r_request.telegram_array[payload_start_index+2]  = sub_id[0];
+    telegram.r_request.telegram_array[payload_start_index+3]  = 0;
+    telegram.r_request.telegram_array[payload_start_index+4]  = 0;
+    telegram.r_request.telegram_array[payload_start_index+5]  = 0;
+    // Package SID = 2
+    telegram.r_request.telegram_array[payload_start_index+6]  = main_id;
+    telegram.r_request.telegram_array[payload_start_index+7]  = 0;
+    telegram.r_request.telegram_array[payload_start_index+8]  = sub_id[1];
+    telegram.r_request.telegram_array[payload_start_index+9]  = 0;
+    telegram.r_request.telegram_array[payload_start_index+10] = 0;
+    telegram.r_request.telegram_array[payload_start_index+11] = 0;
+    // Package SID = 3
+    telegram.r_request.telegram_array[payload_start_index+12] = main_id;
+    telegram.r_request.telegram_array[payload_start_index+13] = 0;
+    telegram.r_request.telegram_array[payload_start_index+14] = sub_id[2];
+    telegram.r_request.telegram_array[payload_start_index+15] = 0;
+    telegram.r_request.telegram_array[payload_start_index+16] = 0;
+    telegram.r_request.telegram_array[payload_start_index+17] = 0;
+    // Package SID = 4
+    telegram.r_request.telegram_array[payload_start_index+18] = main_id;
+    telegram.r_request.telegram_array[payload_start_index+19] = 0;
+    telegram.r_request.telegram_array[payload_start_index+20] = sub_id[3];
+    telegram.r_request.telegram_array[payload_start_index+21] = 0;
+    telegram.r_request.telegram_array[payload_start_index+22] = 0;
+    telegram.r_request.telegram_array[payload_start_index+23] = 0;
+    // Package SID = 5
+    telegram.r_request.telegram_array[payload_start_index+24] = main_id;
+    telegram.r_request.telegram_array[payload_start_index+25] = 0;
+    telegram.r_request.telegram_array[payload_start_index+26] = sub_id[4];
+    telegram.r_request.telegram_array[payload_start_index+27] = 0;
+    telegram.r_request.telegram_array[payload_start_index+28] = 0;
+    telegram.r_request.telegram_array[payload_start_index+29] = 0;
+    // Package SID = 6.
+    telegram.r_request.telegram_array[payload_start_index+30] = main_id;
+    telegram.r_request.telegram_array[payload_start_index+31] = 0;
+    telegram.r_request.telegram_array[payload_start_index+32] = sub_id[5];
+    telegram.r_request.telegram_array[payload_start_index+33] = 0;
+    telegram.r_request.telegram_array[payload_start_index+34] = 0;
+    telegram.r_request.telegram_array[payload_start_index+35] = 0;
+    // Package.
+    telegram.r_request.EncodeTelegramArray();
+    // Send to MCB.
+    for(int index = 0;index<48;index++)
+    {
+        comm.SendChar(com_num,telegram.r_request.telegram_array[index]);
+    }
+    // Get Data for telegram rw request.
+    std::this_thread::sleep_for(std::chrono::milliseconds(delay_time));
+    telegram.rw_response.InitialTelegramArray();
+    // comm.ReadData(com_num,telegram.rw_response.telegram_array);
+    result = read(com_num, &telegram.rw_response.telegram_array, 1024);
+    // Get basic parameter from telegram.
+    basic_para->u16RevMaxCurrent = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+4]+
+                                   ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+5]<<8);  // SID = 13
+    basic_para->u16RevMaxTorque  = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+10]+
+                                   ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+11]<<8); // SID = 14
+    basic_para->u16ErrorIdleTime = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+16]+
+                                   ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+17]<<8); // SID = 15
+    basic_para->u16BackLash      = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+22]+
+                                   ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+23]<<8); // SID = 16
+    basic_para->u16PGain         = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+28]+
+                                   ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+29]<<8); // SID = 17
+    basic_para->u16IGain         = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+34]+
+                                   ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+35]<<8); // SID = 18
+    telegram.rw_response.InitialTelegramArray();
+    #pragma endregion
+    #pragma region fifth (SID25)
+    telegram.r_request.InitialTelegramArray();
+    // Initial sub id array.
+    sub_id[0]  = 25;
+    sub_id[1]  = 0;
+    sub_id[2]  = 0;
+    sub_id[3]  = 0;
+    sub_id[4]  = 0;
+    sub_id[5]  = 0;
+    // Initial header address.
+    telegram.r_request.header.address_2 = payload_start_index+6;         // 
+    telegram.r_request.header.address_3 = payload_start_index+12;        // 
+    telegram.r_request.header.address_4 = payload_start_index+18;        // 
+    telegram.r_request.header.address_5 = payload_start_index+24;        // 
+    telegram.r_request.header.address_6 = payload_start_index+30;        //      
+    telegram.r_request.EncodeHeaderArray();
+    // Package SID = 1
+    telegram.r_request.telegram_array[payload_start_index]    = main_id;     
+    telegram.r_request.telegram_array[payload_start_index+1]  = 0;
+    telegram.r_request.telegram_array[payload_start_index+2]  = sub_id[0];
+    telegram.r_request.telegram_array[payload_start_index+3]  = 0;
+    telegram.r_request.telegram_array[payload_start_index+4]  = 0;
+    telegram.r_request.telegram_array[payload_start_index+5]  = 0;
+    // Package SID = 2
+    telegram.r_request.telegram_array[payload_start_index+6]  = main_id;
+    telegram.r_request.telegram_array[payload_start_index+7]  = 0;
+    telegram.r_request.telegram_array[payload_start_index+8]  = sub_id[1];
+    telegram.r_request.telegram_array[payload_start_index+9]  = 0;
+    telegram.r_request.telegram_array[payload_start_index+10] = 0;
+    telegram.r_request.telegram_array[payload_start_index+11] = 0;
+    // Package SID = 3
+    telegram.r_request.telegram_array[payload_start_index+12] = main_id;
+    telegram.r_request.telegram_array[payload_start_index+13] = 0;
+    telegram.r_request.telegram_array[payload_start_index+14] = sub_id[2];
+    telegram.r_request.telegram_array[payload_start_index+15] = 0;
+    telegram.r_request.telegram_array[payload_start_index+16] = 0;
+    telegram.r_request.telegram_array[payload_start_index+17] = 0;
+    // Package SID = 4
+    telegram.r_request.telegram_array[payload_start_index+18] = main_id;
+    telegram.r_request.telegram_array[payload_start_index+19] = 0;
+    telegram.r_request.telegram_array[payload_start_index+20] = sub_id[3];
+    telegram.r_request.telegram_array[payload_start_index+21] = 0;
+    telegram.r_request.telegram_array[payload_start_index+22] = 0;
+    telegram.r_request.telegram_array[payload_start_index+23] = 0;
+    // Package SID = 5
+    telegram.r_request.telegram_array[payload_start_index+24] = main_id;
+    telegram.r_request.telegram_array[payload_start_index+25] = 0;
+    telegram.r_request.telegram_array[payload_start_index+26] = sub_id[4];
+    telegram.r_request.telegram_array[payload_start_index+27] = 0;
+    telegram.r_request.telegram_array[payload_start_index+28] = 0;
+    telegram.r_request.telegram_array[payload_start_index+29] = 0;
+    // Package SID = 6.
+    telegram.r_request.telegram_array[payload_start_index+30] = main_id;
+    telegram.r_request.telegram_array[payload_start_index+31] = 0;
+    telegram.r_request.telegram_array[payload_start_index+32] = sub_id[5];
+    telegram.r_request.telegram_array[payload_start_index+33] = 0;
+    telegram.r_request.telegram_array[payload_start_index+34] = 0;
+    telegram.r_request.telegram_array[payload_start_index+35] = 0;
+    // Package.
+    telegram.r_request.EncodeTelegramArray();
+    // Send to MCB.
+    for(int index = 0;index<48;index++)
+    {
+        comm.SendChar(com_num,telegram.r_request.telegram_array[index]);
+    }
+    // Get Data for telegram rw request.
+    std::this_thread::sleep_for(std::chrono::milliseconds(delay_time));
+    telegram.rw_response.InitialTelegramArray();
+    // comm.ReadData(com_num,telegram.rw_response.telegram_array);
+    result = read(com_num, &telegram.rw_response.telegram_array, 1024);
+    // Get basic parameter from telegram.
+    basic_para->u16Encoder = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+4]+
+                             ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+5]<<8);  // SID = 25
+    telegram.rw_response.InitialTelegramArray();
+    std::cout << "basic_para->s16MinTemp = " << std::to_string(basic_para->s16MinTemp) << std::endl;
+    std::cout << "basic_para->s16MaxTemp = " << std::to_string(basic_para->s16MaxTemp) << std::endl;
+    std::cout << "basic_para->u16MaxCurrent = " << std::to_string(basic_para->u16MaxCurrent) << std::endl;
+    std::cout << "basic_para->u16MaxPeakCurrent = " << std::to_string(basic_para->u16MaxPeakCurrent) << std::endl;
+    std::cout << "basic_para->u16TorqueSensorType = " << std::to_string(basic_para->u16TorqueSensorType) << std::endl;
+    std::cout << "basic_para->u16MaxDutyCycle = " << std::to_string(basic_para->u16MaxDutyCycle) << std::endl;
+    
+    std::cout << "basic_para->u16MaxTorque = " << std::to_string(basic_para->u16MaxTorque) << std::endl;
+    std::cout << "basic_para->u16PWMFreq = " << std::to_string(basic_para->u16PWMFreq) << std::endl;
+    std::cout << "basic_para->u16MaxRPM = " << std::to_string(basic_para->u16MaxRPM) << std::endl;
+    std::cout << "basic_para->u16MaxSlope = " << std::to_string(basic_para->u16MaxSlope) << std::endl;
+    std::cout << "basic_para->u16MinBusVolt = " << std::to_string(basic_para->u16MinBusVolt) << std::endl;
+    std::cout << "basic_para->u16MaxBusVolt = " << std::to_string(basic_para->u16MaxBusVolt) << std::endl;
 
-    // third send. 
+    std::cout << "basic_para->u16StartDutyCycle = " << std::to_string(basic_para->u16StartDutyCycle) << std::endl;
+    std::cout << "basic_para->u16GearBoxRatio = " << std::to_string(basic_para->u16GearBoxRatio) << std::endl;
+    std::cout << "basic_para->u32StartInp = " << std::to_string(basic_para->u32StartInp) << std::endl;
+    std::cout << "basic_para->u32RevInp = " << std::to_string(basic_para->u32RevInp) << std::endl;
+    std::cout << "basic_para->u16RevRpm = " << std::to_string(basic_para->u16RevRpm) << std::endl;
+    std::cout << "basic_para->u16RevSlope = " << std::to_string(basic_para->u16RevSlope) << std::endl;
+
+    std::cout << "basic_para->u16RevMaxCurrent = " << std::to_string(basic_para->u16RevMaxCurrent) << std::endl;
+    std::cout << "basic_para->u16RevMaxTorque = " << std::to_string(basic_para->u16RevMaxTorque) << std::endl;
+    std::cout << "basic_para->u16ErrorIdleTime = " << std::to_string(basic_para->u16ErrorIdleTime) << std::endl;
+    std::cout << "basic_para->u16BackLash = " << std::to_string(basic_para->u16BackLash) << std::endl;
+    std::cout << "basic_para->u16PGain = " << std::to_string(basic_para->u16PGain) << std::endl;
+    std::cout << "basic_para->u16IGain = " << std::to_string(basic_para->u16IGain) << std::endl;    
+    
+    std::cout << "basic_para->u16Encoder = " << std::to_string(basic_para->u16Encoder) << std::endl;
+    #pragma endregion
     return result;
 }    
-int GtcsMcbCommunication::WriteBasicParameter()
+int GtcsMcbCommunication::WriteBasicParameter(McbID2Struct *basic)
 {
-    int result  = -1;
+    int result = -1;
+    // Get 
+    GtcsBulletin *bulltein = GtcsBulletin::GetInstance();
+    McbID2Struct *basic_para = &bulltein->McbBulletin.BasicPara;
+    uint8_t main_id = 2;
+    uint8_t sub_id[6];
+    uint16_t payload_start_index = 8;
+    int delay_time = 50;
+    #pragma region First package. (SID1-6)
+    telegram.w_request.InitialTelegramArray();
+    // Initial sub id array.
+    sub_id[0]  = 1;
+    sub_id[1]  = 2;
+    sub_id[2]  = 3;
+    sub_id[3]  = 4;
+    sub_id[4]  = 5;
+    sub_id[5]  = 6;
+    // Initial header address.
+    telegram.w_request.header.address_2 = payload_start_index+6;         // 
+    telegram.w_request.header.address_3 = payload_start_index+12;        // 
+    telegram.w_request.header.address_4 = payload_start_index+18;        // 
+    telegram.w_request.header.address_5 = payload_start_index+24;        // 
+    telegram.w_request.header.address_6 = payload_start_index+30;        //      
+    telegram.w_request.EncodeHeaderArray();
+    // Package SID = 1
+    telegram.w_request.telegram_array[payload_start_index]    = main_id;     
+    telegram.w_request.telegram_array[payload_start_index+1]  = 0;
+    telegram.w_request.telegram_array[payload_start_index+2]  = sub_id[0];
+    telegram.w_request.telegram_array[payload_start_index+3]  = 0;
+    telegram.w_request.telegram_array[payload_start_index+4]  = (uint8_t)(basic->s16MinTemp%256);
+    telegram.w_request.telegram_array[payload_start_index+5]  = (uint8_t)(basic->s16MinTemp/256);
+    // Package SID = 2
+    telegram.w_request.telegram_array[payload_start_index+6]  = main_id;
+    telegram.w_request.telegram_array[payload_start_index+7]  = 0;
+    telegram.w_request.telegram_array[payload_start_index+8]  = sub_id[1];
+    telegram.w_request.telegram_array[payload_start_index+9]  = 0;
+    telegram.w_request.telegram_array[payload_start_index+10] = (uint8_t)(basic->s16MaxTemp%256);
+    telegram.w_request.telegram_array[payload_start_index+11] = (uint8_t)(basic->s16MaxTemp/256);
+    // Package SID = 3
+    telegram.w_request.telegram_array[payload_start_index+12] = main_id;
+    telegram.w_request.telegram_array[payload_start_index+13] = 0;
+    telegram.w_request.telegram_array[payload_start_index+14] = sub_id[2];
+    telegram.w_request.telegram_array[payload_start_index+15] = 0;
+    telegram.w_request.telegram_array[payload_start_index+16] = (uint8_t)(basic->u16MaxCurrent%256);
+    telegram.w_request.telegram_array[payload_start_index+17] = (uint8_t)(basic->u16MaxCurrent/256);
+    // Package SID = 4
+    telegram.w_request.telegram_array[payload_start_index+18] = main_id;
+    telegram.w_request.telegram_array[payload_start_index+19] = 0;
+    telegram.w_request.telegram_array[payload_start_index+20] = sub_id[3];
+    telegram.w_request.telegram_array[payload_start_index+21] = 0;
+    telegram.w_request.telegram_array[payload_start_index+22] = (uint8_t)(basic->u16MaxPeakCurrent%256);
+    telegram.w_request.telegram_array[payload_start_index+23] = (uint8_t)(basic->u16MaxPeakCurrent/256);
+    // Package SID = 5
+    telegram.w_request.telegram_array[payload_start_index+24] = main_id;
+    telegram.w_request.telegram_array[payload_start_index+25] = 0;
+    telegram.w_request.telegram_array[payload_start_index+26] = sub_id[4];
+    telegram.w_request.telegram_array[payload_start_index+27] = 0;
+    telegram.w_request.telegram_array[payload_start_index+28] = (uint8_t)(basic->u16TorqueSensorType%256);
+    telegram.w_request.telegram_array[payload_start_index+29] = (uint8_t)(basic->u16TorqueSensorType/256);
+    // Package SID = .G.?
+    telegram.w_request.telegram_array[payload_start_index+30] = main_id;
+    telegram.w_request.telegram_array[payload_start_index+31] = 0;
+    telegram.w_request.telegram_array[payload_start_index+32] = sub_id[5];
+    telegram.w_request.telegram_array[payload_start_index+33] = 0;
+    telegram.w_request.telegram_array[payload_start_index+34] = (uint8_t)(basic->u16MaxDutyCycle%256);
+    telegram.w_request.telegram_array[payload_start_index+35] = (uint8_t)(basic->u16MaxDutyCycle/256);
+    // Package.
+    telegram.w_request.EncodeTelegramArray();
+    // Send to MCB.
+    for(int index = 0;index<48;index++)
+    {
+        comm.SendChar(com_num,telegram.w_request.telegram_array[index]);
+    }
+    // Get Data for telegram rw request.
+    std::this_thread::sleep_for(std::chrono::milliseconds(delay_time));
+    telegram.rw_response.InitialTelegramArray();
+    // comm.ReadData(com_num,telegram.rw_response.telegram_array);
+    result = read(com_num, &telegram.rw_response.telegram_array, 1024);
+    // // Get basic parameter from telegram.
+    // basic_para->s16MinTemp          = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+4]+
+    //                                   ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+5]<<8);  // SID = 1
+    // basic_para->s16MaxTemp          = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+10]+
+    //                                   ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+11]<<8); // SID = 2
+    // basic_para->u16MaxCurrent       = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+16]+
+    //                                   ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+17]<<8); // SID = 3
+    // basic_para->u16MaxPeakCurrent   = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+22]+
+    //                                   ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+23]<<8); // SID = 4
+    // basic_para->u16TorqueSensorType = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+28]+
+    //                                   ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+29]<<8); // SID = 5
+    // basic_para->u16MaxDutyCycle     = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+34]+
+    //                                   ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+35]<<8); // SID = 4
+
+    #pragma endregion
+    #pragma region second package. (SID7-12)
+    telegram.w_request.InitialTelegramArray();
+    // Initial sub id array.
+    sub_id[0]  = 7;
+    sub_id[1]  = 8;
+    sub_id[2]  = 9;
+    sub_id[3]  = 10;
+    sub_id[4]  = 11;
+    sub_id[5]  = 12;
+    // Initial header address.
+    telegram.w_request.header.address_2 = payload_start_index+6;         // 
+    telegram.w_request.header.address_3 = payload_start_index+12;        // 
+    telegram.w_request.header.address_4 = payload_start_index+18;        // 
+    telegram.w_request.header.address_5 = payload_start_index+24;        // 
+    telegram.w_request.header.address_6 = payload_start_index+30;        //      
+    telegram.w_request.EncodeHeaderArray();
+    // Package SID = 1
+    telegram.w_request.telegram_array[payload_start_index]    = main_id;     
+    telegram.w_request.telegram_array[payload_start_index+1]  = 0;
+    telegram.w_request.telegram_array[payload_start_index+2]  = sub_id[0];
+    telegram.w_request.telegram_array[payload_start_index+3]  = 0;
+    telegram.w_request.telegram_array[payload_start_index+4]  = (uint8_t)(basic->u16MaxTorque%256);
+    telegram.w_request.telegram_array[payload_start_index+5]  = (uint8_t)(basic->u16MaxTorque/256);
+    // Package SID = 2
+    telegram.w_request.telegram_array[payload_start_index+6]  = main_id;
+    telegram.w_request.telegram_array[payload_start_index+7]  = 0;
+    telegram.w_request.telegram_array[payload_start_index+8]  = sub_id[1];
+    telegram.w_request.telegram_array[payload_start_index+9]  = 0;
+    telegram.w_request.telegram_array[payload_start_index+10] = (uint8_t)(basic->u16PWMFreq%256);
+    telegram.w_request.telegram_array[payload_start_index+11] = (uint8_t)(basic->u16PWMFreq/256);
+    // Package SID = 3
+    telegram.w_request.telegram_array[payload_start_index+12] = main_id;
+    telegram.w_request.telegram_array[payload_start_index+13] = 0;
+    telegram.w_request.telegram_array[payload_start_index+14] = sub_id[2];
+    telegram.w_request.telegram_array[payload_start_index+15] = 0;
+    telegram.w_request.telegram_array[payload_start_index+16] = (uint8_t)(basic->u16MaxRPM%256);
+    telegram.w_request.telegram_array[payload_start_index+17] = (uint8_t)(basic->u16MaxRPM/256);
+    // Package SID = 4
+    telegram.w_request.telegram_array[payload_start_index+18] = main_id;
+    telegram.w_request.telegram_array[payload_start_index+19] = 0;
+    telegram.w_request.telegram_array[payload_start_index+20] = sub_id[3];
+    telegram.w_request.telegram_array[payload_start_index+21] = 0;
+    telegram.w_request.telegram_array[payload_start_index+22] = (uint8_t)(basic->u16MaxSlope%256);
+    telegram.w_request.telegram_array[payload_start_index+23] = (uint8_t)(basic->u16MaxSlope/256);
+    // Package SID = 5
+    telegram.w_request.telegram_array[payload_start_index+24] = main_id;
+    telegram.w_request.telegram_array[payload_start_index+25] = 0;
+    telegram.w_request.telegram_array[payload_start_index+26] = sub_id[4];
+    telegram.w_request.telegram_array[payload_start_index+27] = 0;
+    telegram.w_request.telegram_array[payload_start_index+28] = (uint8_t)(basic->u16MinBusVolt%256);
+    telegram.w_request.telegram_array[payload_start_index+29] = (uint8_t)(basic->u16MinBusVolt/256);
+    // Package SID = 6.
+    telegram.w_request.telegram_array[payload_start_index+30] = main_id;
+    telegram.w_request.telegram_array[payload_start_index+31] = 0;
+    telegram.w_request.telegram_array[payload_start_index+32] = sub_id[5];
+    telegram.w_request.telegram_array[payload_start_index+33] = 0;
+    telegram.w_request.telegram_array[payload_start_index+34] = (uint8_t)(basic->u16MaxBusVolt%256);
+    telegram.w_request.telegram_array[payload_start_index+35] = (uint8_t)(basic->u16MaxBusVolt/256);
+    // Package.
+    telegram.w_request.EncodeTelegramArray();
+    // Send to MCB.
+    for(int index = 0;index<48;index++)
+    {
+        comm.SendChar(com_num,telegram.w_request.telegram_array[index]);
+    }
+    // Get Data for telegram rw request.
+    std::this_thread::sleep_for(std::chrono::milliseconds(delay_time));
+    telegram.rw_response.InitialTelegramArray();
+    // comm.ReadData(com_num,telegram.rw_response.telegram_array);
+    result = read(com_num, &telegram.rw_response.telegram_array, 1024);
+    // // Get basic parameter from telegram.
+    // basic_para->u16MaxTorque    = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+4]+
+    //                               ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+5]<<8);  // SID = 7
+    // basic_para->u16PWMFreq      = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+10]+
+    //                               ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+11]<<8); // SID = 8
+    // basic_para->u16MaxRPM       = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+16]+
+    //                               ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+17]<<8); // SID = 9
+    // basic_para->u16MaxSlope     = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+22]+
+    //                               ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+23]<<8); // SID = 10
+    // basic_para->u16MinBusVolt   = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+28]+
+    //                               ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+29]<<8); // SID = 11
+    // basic_para->u16MaxBusVolt   = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+34]+
+    //                               ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+35]<<8); // SID = 12
+    #pragma endregion
+    #pragma region third send. (SID13-18)
+     telegram.w_request.InitialTelegramArray();
+    // Initial sub id array.
+    sub_id[0]  = 13;
+    sub_id[1]  = 14;
+    sub_id[2]  = 15;
+    sub_id[3]  = 16;
+    sub_id[4]  = 17;
+    sub_id[5]  = 18;
+    // Initial header address.
+    telegram.w_request.header.address_2 = payload_start_index+6;         // 
+    telegram.w_request.header.address_3 = payload_start_index+12;        // 
+    telegram.w_request.header.address_4 = payload_start_index+18;        // 
+    telegram.w_request.header.address_5 = payload_start_index+24;        // 
+    telegram.w_request.header.address_6 = payload_start_index+30;        //      
+    telegram.w_request.EncodeHeaderArray();
+    // Package SID = 1
+    telegram.w_request.telegram_array[payload_start_index]    = main_id;     
+    telegram.w_request.telegram_array[payload_start_index+1]  = 0;
+    telegram.w_request.telegram_array[payload_start_index+2]  = sub_id[0];
+    telegram.w_request.telegram_array[payload_start_index+3]  = 0;
+    telegram.w_request.telegram_array[payload_start_index+4]  = (uint8_t)(basic->u16StartDutyCycle%256);
+    telegram.w_request.telegram_array[payload_start_index+5]  = (uint8_t)(basic->u16StartDutyCycle/256);
+    // Package SID = 2
+    telegram.w_request.telegram_array[payload_start_index+6]  = main_id;
+    telegram.w_request.telegram_array[payload_start_index+7]  = 0;
+    telegram.w_request.telegram_array[payload_start_index+8]  = sub_id[1];
+    telegram.w_request.telegram_array[payload_start_index+9]  = 0;
+    telegram.w_request.telegram_array[payload_start_index+10] = (uint8_t)(basic->u16GearBoxRatio%256);
+    telegram.w_request.telegram_array[payload_start_index+11] = (uint8_t)(basic->u16GearBoxRatio/256);
+    // Package SID = 3
+    telegram.w_request.telegram_array[payload_start_index+12] = main_id;
+    telegram.w_request.telegram_array[payload_start_index+13] = 0;
+    telegram.w_request.telegram_array[payload_start_index+14] = sub_id[2];
+    telegram.w_request.telegram_array[payload_start_index+15] = 0;
+    telegram.w_request.telegram_array[payload_start_index+16] = (uint8_t)(basic->u32StartInp%256);
+    telegram.w_request.telegram_array[payload_start_index+17] = (uint8_t)(basic->u32StartInp/256);
+    // Package SID = 4
+    telegram.w_request.telegram_array[payload_start_index+18] = main_id;
+    telegram.w_request.telegram_array[payload_start_index+19] = 0;
+    telegram.w_request.telegram_array[payload_start_index+20] = sub_id[3];
+    telegram.w_request.telegram_array[payload_start_index+21] = 0;
+    telegram.w_request.telegram_array[payload_start_index+22] = (uint8_t)(basic->u32RevInp%256);
+    telegram.w_request.telegram_array[payload_start_index+23] = (uint8_t)(basic->u32RevInp/256);
+    // Package SID = 5
+    telegram.w_request.telegram_array[payload_start_index+24] = main_id;
+    telegram.w_request.telegram_array[payload_start_index+25] = 0;
+    telegram.w_request.telegram_array[payload_start_index+26] = sub_id[4];
+    telegram.w_request.telegram_array[payload_start_index+27] = 0;
+    telegram.w_request.telegram_array[payload_start_index+28] = (uint8_t)(basic->u16RevRpm%256);
+    telegram.w_request.telegram_array[payload_start_index+29] = (uint8_t)(basic->u16RevRpm/256);
+    // Package SID = 6.
+    telegram.w_request.telegram_array[payload_start_index+30] = main_id;
+    telegram.w_request.telegram_array[payload_start_index+31] = 0;
+    telegram.w_request.telegram_array[payload_start_index+32] = sub_id[5];
+    telegram.w_request.telegram_array[payload_start_index+33] = 0;
+    telegram.w_request.telegram_array[payload_start_index+34] = (uint8_t)(basic->u16RevSlope%256);
+    telegram.w_request.telegram_array[payload_start_index+35] = (uint8_t)(basic->u16RevSlope/256);
+    // Package.
+    telegram.w_request.EncodeTelegramArray();
+    // Send to MCB.
+    for(int index = 0;index<48;index++)
+    {
+        comm.SendChar(com_num,telegram.w_request.telegram_array[index]);
+    }
+    // Get Data for telegram rw request.
+    std::this_thread::sleep_for(std::chrono::milliseconds(delay_time));
+    telegram.rw_response.InitialTelegramArray();
+    // comm.ReadData(com_num,telegram.rw_response.telegram_array);
+    result = read(com_num, &telegram.rw_response.telegram_array, 1024);
+    // Get basic parameter from telegram.
+    // basic_para->u16StartDutyCycle = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+4]+
+    //                                 ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+5]<<8);  // SID = 13
+    // basic_para->u16GearBoxRatio   = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+10]+
+    //                                 ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+11]<<8); // SID = 14
+    // basic_para->u32StartInp       = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+16]+
+    //                                 ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+17]<<8); // SID = 15
+    // basic_para->u32RevInp         = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+22]+
+    //                                 ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+23]<<8); // SID = 16
+    // basic_para->u16RevRpm         = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+28]+
+    //                                 ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+29]<<8); // SID = 17
+    // basic_para->u16RevSlope       = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+34]+
+    //                                 ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+35]<<8); // SID = 18
+
+    #pragma endregion
+    #pragma region fourth package. (SID19-24)
+    telegram.w_request.InitialTelegramArray();
+    // Initial sub id array.
+    sub_id[0]  = 19;
+    sub_id[1]  = 20;
+    sub_id[2]  = 21;
+    sub_id[3]  = 22;
+    sub_id[4]  = 23;
+    sub_id[5]  = 24;
+    // Initial header address.
+    telegram.w_request.header.address_2 = payload_start_index+6;         // 
+    telegram.w_request.header.address_3 = payload_start_index+12;        // 
+    telegram.w_request.header.address_4 = payload_start_index+18;        // 
+    telegram.w_request.header.address_5 = payload_start_index+24;        // 
+    telegram.w_request.header.address_6 = payload_start_index+30;        //      
+    telegram.w_request.EncodeHeaderArray();
+    // Package SID = 1
+    telegram.w_request.telegram_array[payload_start_index]    = main_id;     
+    telegram.w_request.telegram_array[payload_start_index+1]  = 0;
+    telegram.w_request.telegram_array[payload_start_index+2]  = sub_id[0];
+    telegram.w_request.telegram_array[payload_start_index+3]  = 0;
+    telegram.w_request.telegram_array[payload_start_index+4]  = (uint8_t)(basic->u16RevMaxCurrent%256);
+    telegram.w_request.telegram_array[payload_start_index+5]  = (uint8_t)(basic->u16RevMaxCurrent/256);
+    // Package SID = 2
+    telegram.w_request.telegram_array[payload_start_index+6]  = main_id;
+    telegram.w_request.telegram_array[payload_start_index+7]  = 0;
+    telegram.w_request.telegram_array[payload_start_index+8]  = sub_id[1];
+    telegram.w_request.telegram_array[payload_start_index+9]  = 0;
+    telegram.w_request.telegram_array[payload_start_index+10] = (uint8_t)(basic->u16RevMaxTorque%256);
+    telegram.w_request.telegram_array[payload_start_index+11] = (uint8_t)(basic->u16RevMaxTorque/256);
+    // Package SID = 3
+    telegram.w_request.telegram_array[payload_start_index+12] = main_id;
+    telegram.w_request.telegram_array[payload_start_index+13] = 0;
+    telegram.w_request.telegram_array[payload_start_index+14] = sub_id[2];
+    telegram.w_request.telegram_array[payload_start_index+15] = 0;
+    telegram.w_request.telegram_array[payload_start_index+16] = (uint8_t)(basic->u16ErrorIdleTime%256);
+    telegram.w_request.telegram_array[payload_start_index+17] = (uint8_t)(basic->u16ErrorIdleTime/256);
+    // Package SID = 4
+    telegram.w_request.telegram_array[payload_start_index+18] = main_id;
+    telegram.w_request.telegram_array[payload_start_index+19] = 0;
+    telegram.w_request.telegram_array[payload_start_index+20] = sub_id[3];
+    telegram.w_request.telegram_array[payload_start_index+21] = 0;
+    telegram.w_request.telegram_array[payload_start_index+22] = (uint8_t)(basic->u16BackLash%256);
+    telegram.w_request.telegram_array[payload_start_index+23] = (uint8_t)(basic->u16BackLash/256);
+    // Package SID = 5
+    telegram.w_request.telegram_array[payload_start_index+24] = main_id;
+    telegram.w_request.telegram_array[payload_start_index+25] = 0;
+    telegram.w_request.telegram_array[payload_start_index+26] = sub_id[4];
+    telegram.w_request.telegram_array[payload_start_index+27] = 0;
+    telegram.w_request.telegram_array[payload_start_index+28] = (uint8_t)(basic->u16PGain%256);
+    telegram.w_request.telegram_array[payload_start_index+29] = (uint8_t)(basic->u16PGain/256);
+    // Package SID = 6.
+    telegram.w_request.telegram_array[payload_start_index+30] = main_id;
+    telegram.w_request.telegram_array[payload_start_index+31] = 0;
+    telegram.w_request.telegram_array[payload_start_index+32] = sub_id[5];
+    telegram.w_request.telegram_array[payload_start_index+33] = 0;
+    telegram.w_request.telegram_array[payload_start_index+34] = (uint8_t)(basic->u16IGain%256);
+    telegram.w_request.telegram_array[payload_start_index+35] = (uint8_t)(basic->u16IGain/256);
+    // Package.
+    telegram.w_request.EncodeTelegramArray();
+    // 
+    for(int index = 0;index<48;index++)
+    {
+        comm.SendChar(com_num,telegram.w_request.telegram_array[index]);
+    }
+    // Get Data for telegram rw request.
+    std::this_thread::sleep_for(std::chrono::milliseconds(delay_time));
+    telegram.rw_response.InitialTelegramArray();
+    // comm.ReadData(com_num,telegram.rw_response.telegram_array);
+    result = read(com_num, &telegram.rw_response.telegram_array, 1024);
+    // // Get basic parameter from telegram.
+    // basic_para->u16RevMaxCurrent = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+4]+
+    //                                ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+5]<<8);  // SID = 13
+    // basic_para->u16RevMaxTorque  = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+10]+
+    //                                ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+11]<<8); // SID = 14
+    // basic_para->u16ErrorIdleTime = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+16]+
+    //                                ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+17]<<8); // SID = 15
+    // basic_para->u16BackLash      = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+22]+
+    //                                ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+23]<<8); // SID = 16
+    // basic_para->u16PGain         = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+28]+
+    //                                ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+29]<<8); // SID = 17
+    // basic_para->u16IGain         = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+34]+
+    //                                ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+35]<<8); // SID = 18
+
+    #pragma endregion
+    #pragma region fifth (SID25)
+    telegram.w_request.InitialTelegramArray();
+    // Initial sub id array.
+    sub_id[0]  = 25;
+    sub_id[1]  = 0;
+    sub_id[2]  = 0;
+    sub_id[3]  = 0;
+    sub_id[4]  = 0;
+    sub_id[5]  = 0;
+    // Initial header address.
+    telegram.w_request.header.address_2 = payload_start_index+6;         // 
+    telegram.w_request.header.address_3 = payload_start_index+12;        // 
+    telegram.w_request.header.address_4 = payload_start_index+18;        // 
+    telegram.w_request.header.address_5 = payload_start_index+24;        // 
+    telegram.w_request.header.address_6 = payload_start_index+30;        //      
+    telegram.w_request.EncodeHeaderArray();
+    // Package SID = 1
+    telegram.w_request.telegram_array[payload_start_index]    = main_id;     
+    telegram.w_request.telegram_array[payload_start_index+1]  = 0;
+    telegram.w_request.telegram_array[payload_start_index+2]  = sub_id[0];
+    telegram.w_request.telegram_array[payload_start_index+3]  = 0;
+    telegram.w_request.telegram_array[payload_start_index+4]  = (uint8_t)(basic->u16Encoder%256);
+    telegram.w_request.telegram_array[payload_start_index+5]  = (uint8_t)(basic->u16Encoder/256);
+    // Package SID = 2
+    telegram.w_request.telegram_array[payload_start_index+6]  = main_id;
+    telegram.w_request.telegram_array[payload_start_index+7]  = 0;
+    telegram.w_request.telegram_array[payload_start_index+8]  = sub_id[1];
+    telegram.w_request.telegram_array[payload_start_index+9]  = 0;
+    telegram.w_request.telegram_array[payload_start_index+10] = 0;
+    telegram.w_request.telegram_array[payload_start_index+11] = 0;
+    // Package SID = 3
+    telegram.w_request.telegram_array[payload_start_index+12] = main_id;
+    telegram.w_request.telegram_array[payload_start_index+13] = 0;
+    telegram.w_request.telegram_array[payload_start_index+14] = sub_id[2];
+    telegram.w_request.telegram_array[payload_start_index+15] = 0;
+    telegram.w_request.telegram_array[payload_start_index+16] = 0;
+    telegram.w_request.telegram_array[payload_start_index+17] = 0;
+    // Package SID = 4
+    telegram.w_request.telegram_array[payload_start_index+18] = main_id;
+    telegram.w_request.telegram_array[payload_start_index+19] = 0;
+    telegram.w_request.telegram_array[payload_start_index+20] = sub_id[3];
+    telegram.w_request.telegram_array[payload_start_index+21] = 0;
+    telegram.w_request.telegram_array[payload_start_index+22] = 0;
+    telegram.w_request.telegram_array[payload_start_index+23] = 0;
+    // Package SID = 5
+    telegram.w_request.telegram_array[payload_start_index+24] = main_id;
+    telegram.w_request.telegram_array[payload_start_index+25] = 0;
+    telegram.w_request.telegram_array[payload_start_index+26] = sub_id[4];
+    telegram.w_request.telegram_array[payload_start_index+27] = 0;
+    telegram.w_request.telegram_array[payload_start_index+28] = 0;
+    telegram.w_request.telegram_array[payload_start_index+29] = 0;
+    // Package SID = 6.
+    telegram.w_request.telegram_array[payload_start_index+30] = main_id;
+    telegram.w_request.telegram_array[payload_start_index+31] = 0;
+    telegram.w_request.telegram_array[payload_start_index+32] = sub_id[5];
+    telegram.w_request.telegram_array[payload_start_index+33] = 0;
+    telegram.w_request.telegram_array[payload_start_index+34] = 0;
+    telegram.w_request.telegram_array[payload_start_index+35] = 0;
+    // Package.
+    telegram.w_request.EncodeTelegramArray();
+    // 
+    for(int index = 0;index<48;index++)
+    {
+        comm.SendChar(com_num,telegram.w_request.telegram_array[index]);
+    }
+    // Get Data for telegram rw request.
+    std::this_thread::sleep_for(std::chrono::milliseconds(delay_time));
+    telegram.rw_response.InitialTelegramArray();
+    // comm.ReadData(com_num,telegram.rw_response.telegram_array);
+    result = read(com_num, &telegram.rw_response.telegram_array, 1024);
+    // Get basic parameter from telegram.
+    basic_para->u16Encoder = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+4]+
+                             ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+5]<<8);  // SID = 25
+    #pragma endregion
     return result;
 }
 // Step Parameter. (Main ID = 3)
-int GtcsMcbCommunication::ReadStepParametrer()
+int GtcsMcbCommunication::ReadStepParametrer(int mainid)
 {
     int result = -1;
+    // Get 
+    GtcsBulletin *bulltein = GtcsBulletin::GetInstance();
+    McbID3Struct *step_para = &bulltein->McbBulletin.StepPara;
+    int main_id = mainid;
+    uint8_t sub_id[6];
+    uint16_t payload_start_index = 8;
+    int delay_time = 50;
+
+    #pragma region First package. (SID2-7)
+    telegram.r_request.InitialTelegramArray();
+    // Initial sub id array.
+    sub_id[0]  = 2;
+    sub_id[1]  = 3;
+    sub_id[2]  = 4;
+    sub_id[3]  = 5;
+    sub_id[4]  = 6;
+    sub_id[5]  = 7;
+    // Initial header address.
+    telegram.r_request.header.address_2 = payload_start_index+6;         // 
+    telegram.r_request.header.address_3 = payload_start_index+12;        // 
+    telegram.r_request.header.address_4 = payload_start_index+18;        // 
+    telegram.r_request.header.address_5 = payload_start_index+24;        // 
+    telegram.r_request.header.address_6 = payload_start_index+30;        //      
+    telegram.r_request.EncodeHeaderArray();
+    // Package SID = 1
+    telegram.r_request.telegram_array[payload_start_index]    = ((uint8_t)main_id%256);     
+    telegram.r_request.telegram_array[payload_start_index+1]  = ((uint8_t)main_id/256);
+    telegram.r_request.telegram_array[payload_start_index+2]  = sub_id[0];
+    telegram.r_request.telegram_array[payload_start_index+3]  = 0;
+    telegram.r_request.telegram_array[payload_start_index+4]  = 0;
+    telegram.r_request.telegram_array[payload_start_index+5]  = 0;
+    // Package SID = 2
+    telegram.r_request.telegram_array[payload_start_index+6]  = ((uint8_t)main_id%256);
+    telegram.r_request.telegram_array[payload_start_index+7]  = ((uint8_t)main_id/256);
+    telegram.r_request.telegram_array[payload_start_index+8]  = sub_id[1];
+    telegram.r_request.telegram_array[payload_start_index+9]  = 0;
+    telegram.r_request.telegram_array[payload_start_index+10] = 0;
+    telegram.r_request.telegram_array[payload_start_index+11] = 0;
+    // Package SID = 3
+    telegram.r_request.telegram_array[payload_start_index+12] = ((uint8_t)main_id%256);
+    telegram.r_request.telegram_array[payload_start_index+13] = ((uint8_t)main_id/256);
+    telegram.r_request.telegram_array[payload_start_index+14] = sub_id[2];
+    telegram.r_request.telegram_array[payload_start_index+15] = 0;
+    telegram.r_request.telegram_array[payload_start_index+16] = 0;
+    telegram.r_request.telegram_array[payload_start_index+17] = 0;
+    // Package SID = 4
+    telegram.r_request.telegram_array[payload_start_index+18] = ((uint8_t)main_id%256);
+    telegram.r_request.telegram_array[payload_start_index+19] = ((uint8_t)main_id/256);
+    telegram.r_request.telegram_array[payload_start_index+20] = sub_id[3];
+    telegram.r_request.telegram_array[payload_start_index+21] = 0;
+    telegram.r_request.telegram_array[payload_start_index+22] = 0;
+    telegram.r_request.telegram_array[payload_start_index+23] = 0;
+    // Package SID = 5
+    telegram.r_request.telegram_array[payload_start_index+24] = ((uint8_t)main_id%256);
+    telegram.r_request.telegram_array[payload_start_index+25] = ((uint8_t)main_id/256);
+    telegram.r_request.telegram_array[payload_start_index+26] = sub_id[4];
+    telegram.r_request.telegram_array[payload_start_index+27] = 0;
+    telegram.r_request.telegram_array[payload_start_index+28] = 0;
+    telegram.r_request.telegram_array[payload_start_index+29] = 0;
+    // Package SID = .G.?
+    telegram.r_request.telegram_array[payload_start_index+30] = ((uint8_t)main_id%256);
+    telegram.r_request.telegram_array[payload_start_index+31] = ((uint8_t)main_id/256);
+    telegram.r_request.telegram_array[payload_start_index+32] = sub_id[5];
+    telegram.r_request.telegram_array[payload_start_index+33] = 0;
+    telegram.r_request.telegram_array[payload_start_index+34] = 0;
+    telegram.r_request.telegram_array[payload_start_index+35] = 0;
+    // Package.
+    telegram.r_request.EncodeTelegramArray();
+    // Send to MCB.
+    for(int index = 0;index<48;index++)
+    {
+        comm.SendChar(com_num,telegram.r_request.telegram_array[index]);
+    }
+    // Get Data for telegram rw request.
+    std::this_thread::sleep_for(std::chrono::milliseconds(delay_time));
+    telegram.rw_response.InitialTelegramArray();
+    // comm.ReadData(com_num,telegram.rw_response.telegram_array);
+    result = read(com_num, &telegram.rw_response.telegram_array, 1024);
+    // Get basic parameter from telegram.
+    step_para->u16StepRpm          = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+4]+
+                                     ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+5]<<8);  // SID = 2
+    step_para->u16StepSlope        = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+10]+
+                                     ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+11]<<8); // SID = 3
+    step_para->u16StepMaxCurrent   = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+16]+
+                                     ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+17]<<8); // SID = 4
+    step_para->u16StepMaxTorque    = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+22]+
+                                     ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+23]<<8); // SID = 5
+    step_para->u16StepMaxRevol     = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+28]+
+                                     ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+29]<<8); // SID = 6
+    step_para->u16StepTime         = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+34]+
+                                     ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+35]<<8); // SID = 7
+    // Display step parameter SID2-7.
+    std::cout << "step_para->u16StepRpm = " << std::to_string(step_para->u16StepRpm) << std::endl;
+    std::cout << "step_para->u16StepSlope = " << std::to_string(step_para->u16StepSlope) << std::endl;
+    std::cout << "step_para->u16StepMaxCurrent = " << std::to_string(step_para->u16StepMaxCurrent) << std::endl;
+    std::cout << "step_para->u16StepMaxTorque = " << std::to_string(step_para->u16StepMaxTorque) << std::endl;
+    std::cout << "step_para->u16StepMaxRevol = " << std::to_string(step_para->u16StepMaxRevol) << std::endl;
+    std::cout << "step_para->u16StepTime = " << std::to_string(step_para->u16StepTime) << std::endl;
+    #pragma endregion
+    
+    #pragma region Second package. (SID8-12)
+        telegram.r_request.InitialTelegramArray();
+    // Initial sub id array.
+    sub_id[0]  = 9;
+    sub_id[1]  = 10;
+    sub_id[2]  = 11;
+    sub_id[3]  = 12;
+    sub_id[4]  = 8;
+    sub_id[5]  = 0;
+    // Initial header address.
+    telegram.r_request.header.address_2 = payload_start_index+6;         // 
+    telegram.r_request.header.address_3 = payload_start_index+12;        // 
+    telegram.r_request.header.address_4 = payload_start_index+18;        // 
+    telegram.r_request.header.address_5 = payload_start_index+24;        // 
+    telegram.r_request.header.address_6 = payload_start_index+32;        //      
+    telegram.r_request.EncodeHeaderArray();
+    // Package SID = 1
+    telegram.r_request.telegram_array[payload_start_index]    = ((uint8_t)main_id%256);     
+    telegram.r_request.telegram_array[payload_start_index+1]  = ((uint8_t)main_id/256);
+    telegram.r_request.telegram_array[payload_start_index+2]  = sub_id[0];
+    telegram.r_request.telegram_array[payload_start_index+3]  = 0;
+    telegram.r_request.telegram_array[payload_start_index+4]  = 0;
+    telegram.r_request.telegram_array[payload_start_index+5]  = 0;
+    // Package SID = 2
+    telegram.r_request.telegram_array[payload_start_index+6]  = ((uint8_t)main_id%256);
+    telegram.r_request.telegram_array[payload_start_index+7]  = ((uint8_t)main_id/256);
+    telegram.r_request.telegram_array[payload_start_index+8]  = sub_id[1];
+    telegram.r_request.telegram_array[payload_start_index+9]  = 0;
+    telegram.r_request.telegram_array[payload_start_index+10] = 0;
+    telegram.r_request.telegram_array[payload_start_index+11] = 0;
+    // Package SID = 3
+    telegram.r_request.telegram_array[payload_start_index+12] = ((uint8_t)main_id%256);
+    telegram.r_request.telegram_array[payload_start_index+13] = ((uint8_t)main_id/256);
+    telegram.r_request.telegram_array[payload_start_index+14] = sub_id[2];
+    telegram.r_request.telegram_array[payload_start_index+15] = 0;
+    telegram.r_request.telegram_array[payload_start_index+16] = 0;
+    telegram.r_request.telegram_array[payload_start_index+17] = 0;
+    // Package SID = 4
+    telegram.r_request.telegram_array[payload_start_index+18] = ((uint8_t)main_id%256);
+    telegram.r_request.telegram_array[payload_start_index+19] = ((uint8_t)main_id/256);
+    telegram.r_request.telegram_array[payload_start_index+20] = sub_id[3];
+    telegram.r_request.telegram_array[payload_start_index+21] = 0;
+    telegram.r_request.telegram_array[payload_start_index+22] = 0;
+    telegram.r_request.telegram_array[payload_start_index+23] = 0;
+    // Package SID = 5
+    telegram.r_request.telegram_array[payload_start_index+24] = ((uint8_t)main_id%256);
+    telegram.r_request.telegram_array[payload_start_index+25] = ((uint8_t)main_id/250);
+    telegram.r_request.telegram_array[payload_start_index+26] = sub_id[4];
+    telegram.r_request.telegram_array[payload_start_index+27] = 0;
+    telegram.r_request.telegram_array[payload_start_index+28] = 0;
+    telegram.r_request.telegram_array[payload_start_index+29] = 0;
+    // Package SID = .G.?
+    telegram.r_request.telegram_array[payload_start_index+30] = ((uint8_t)main_id%250);
+    telegram.r_request.telegram_array[payload_start_index+31] = ((uint8_t)main_id/250);
+    telegram.r_request.telegram_array[payload_start_index+32] = sub_id[5];
+    telegram.r_request.telegram_array[payload_start_index+33] = 0;
+    telegram.r_request.telegram_array[payload_start_index+34] = 0;
+    telegram.r_request.telegram_array[payload_start_index+35] = 0;
+    // Package.
+    telegram.r_request.EncodeTelegramArray();
+    // Send to MCB.
+    for(int index = 0;index<48;index++)
+    {
+        comm.SendChar(com_num,telegram.r_request.telegram_array[index]);
+    }
+    // Get Data for telegram rw request.
+    std::this_thread::sleep_for(std::chrono::milliseconds(delay_time));
+    telegram.rw_response.InitialTelegramArray();
+    // comm.ReadData(com_num,telegram.rw_response.telegram_array);
+    result = read(com_num, &telegram.rw_response.telegram_array, 1024);
+    // Get basic parameter from telegram.
+    step_para->u16StepAngleWindow  = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+4]+
+                                     ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+5]<<8);  // SID = 9
+    step_para->u16StepTorqueWindow = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+10]+
+                                     ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+11]<<8); // SID = 10
+    step_para->u16MinDutyCycle     = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+16]+
+                                     ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+17]<<8); // SID = 11
+    step_para->u16StepFlags        = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+22]+
+                                     ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+23]<<8); // SID = 12
+    step_para->s32StepAngle        = (uint32_t)telegram.rw_response.telegram_array[payload_start_index+28]+
+                                     ((uint32_t)telegram.rw_response.telegram_array[payload_start_index+29]<<8); 
+                                     ((uint32_t)telegram.rw_response.telegram_array[payload_start_index+30]<<16); 
+                                     ((uint32_t)telegram.rw_response.telegram_array[payload_start_index+31]<<24); // SID = 8
+    
+    // Display step parameter SID2-7.
+    std::cout << "step_para->u16StepAngleWindow = " << std::to_string(step_para->u16StepAngleWindow) << std::endl;
+    std::cout << "step_para->u16StepTorqueWindow = " << std::to_string(step_para->u16StepTorqueWindow) << std::endl;
+    std::cout << "step_para->u16MinDutyCycle = " << std::to_string(step_para->u16MinDutyCycle) << std::endl;
+    std::cout << "step_para->u16StepFlags = " << std::to_string(step_para->u16StepFlags) << std::endl;
+    std::cout << "step_para->s32StepAngle = " << std::to_string(step_para->s32StepAngle) << std::endl;
+    #pragma endregion.
     return result;
 }
 int GtcsMcbCommunication::WriteStepParameter()
@@ -228,13 +1312,27 @@ int GtcsMcbCommunication::InitialMcbComPort(std::string com_name_string)
 int GtcsMcbCommunication::CheckMcbFSM(int mcb_fsm)
 {
     int result = -1;
+    GtcsBulletin *bulletin = GtcsBulletin::GetInstance();
+    std::cout << "================================== "<< std::endl;
     switch(mcb_fsm)
     {
         case MCB_FSM::POLLING:
-            PollingToMcb();
-            // std::cout << "CheckMcbFSM = " << std::to_string(mcb_fsm) << std::endl;
+            result = PollingToMcb();
             break;
         case MCB_FSM::READ_PARA:
+            #pragma region test basic
+            result = ReadBasicParameter();
+            // std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            // bulletin->McbBulletin.BasicPara.u16MaxRPM = 1200;
+            // result = WriteBasicParameter(&bulletin->McbBulletin.BasicPara);
+            // std::cout << "================================== "<< std::endl;
+            // std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            // result = ReadBasicParameter();
+            #pragma endregion
+
+            #pragma region step
+            // result = ReadStepParametrer(3011);
+            #pragma endregion
             break;
         case MCB_FSM::WRITE_PARA:
             break;

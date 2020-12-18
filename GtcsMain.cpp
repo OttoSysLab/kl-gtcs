@@ -15,24 +15,6 @@
 #define MCB_CS
 // #define MCB_RW
 
-// Display telegram status.
-void displaymonitor(){
-    GtcsMcbCommunication* mcb = GtcsMcbCommunication::GetInstance();
-    std::cout <<"==============================================="<<std::endl;
-        std::cout <<"u16Statusflags = "<<std::to_string(mcb->telegram.status.mcb_status.u16Statusflags)<< std::endl;
-        std::cout <<"u32ActError    = "<<std::to_string(mcb->telegram.status.mcb_status.u32ActError)<< std::endl; 
-        std::cout <<"u16ActProcNr   = "<<std::to_string(mcb->telegram.status.mcb_status.u16ActProcNr)<< std::endl; 
-        std::cout <<"u16ActStepNr   = "<<std::to_string(mcb->telegram.status.mcb_status.u16ActStepNr)<< std::endl; 
-        std::cout <<"u16ActCurr     = "<<std::to_string(mcb->telegram.status.mcb_status.u16ActCurr)<< std::endl; 
-        std::cout <<"u16ActTorque   = "<<std::to_string(mcb->telegram.status.mcb_status.u16ActTorque)<< std::endl; 
-        std::cout <<"u16ActRPM      = "<<std::to_string(mcb->telegram.status.mcb_status.u16ActRPM)<< std::endl; 
-        std::cout <<"u16MaxCurrent  = "<<std::to_string(mcb->telegram.status.mcb_status.u16MaxCurrent)<< std::endl; 
-        std::cout <<"u16MaxTorque   = "<<std::to_string(mcb->telegram.status.mcb_status.u16MaxTorque)<< std::endl; 
-        std::cout <<"u32Angle       = "<<std::to_string(mcb->telegram.status.mcb_status.u32Angle)<< std::endl; 
-        std::cout <<"u16TMDFlags    = "<<std::to_string(mcb->telegram.status.mcb_status.u16TMDFlags)<< std::endl;    
-        std::cout <<"s16Debug       = "<<std::to_string(mcb->telegram.status.mcb_status.s16Debug)<< std::endl;    
-        std::cout <<"s32Debug       = "<<std::to_string(mcb->telegram.status.mcb_status.s32Debug)<< std::endl;    
-}
 // TCP socket.
 void tcpsocket()
 {
@@ -98,25 +80,31 @@ void tcpsocket()
 // main.
 int main()
 {
+    // Set tcpsocket thread and start.    
+    std::thread thread_tcpsocket = std::thread(tcpsocket);
     // Initial object.
     GtcsMcbCommunication* mcb = GtcsMcbCommunication::GetInstance();
     GtcsAmsProtocol* ams = GtcsAmsProtocol::GetInstance();
     GtcsBulletinManager manager;
-    mcb->InitialMcbComPort("/dev/ttymxc3");
-    // Set tcpsocket thread and start.    
-    std::thread thread_tcpsocket = std::thread(tcpsocket);
+    mcb->InitialMcbComPort("/dev/ttymxc3"); 
+    for(int index=0;index<5;index++)
+    {
+        mcb->CheckMcbFSM((int)MCB_FSM::POLLING);
+    }   
+    manager.ConvertActuralData300(&mcb->telegram.status.mcb_status);
     // loop.
     while (true)
     {
         switch(manager.GetMainFSM())
         {
             case MAIN_FSM::READY: 
-                mcb->CheckMcbFSM((int)(MCB_FSM::POLLING));
+                mcb->CheckMcbFSM((int)MCB_FSM::POLLING);
                 manager.ConvertActuralData300(&mcb->telegram.status.mcb_status); 
                 break;
             case MAIN_FSM::ALARM:
                 break;
-            case MAIN_FSM::SETTING:
+            case MAIN_FSM::SETTING:                
+                mcb->CheckMcbFSM((int)MCB_FSM::READ_PARA);
                 break;
             // Start System.
             case MAIN_FSM::INITIAL:
@@ -124,6 +112,7 @@ int main()
             case MAIN_FSM::STATRT:
                 break;
         }
+        break;
     }
     // Jion thread.
     thread_tcpsocket.join();    

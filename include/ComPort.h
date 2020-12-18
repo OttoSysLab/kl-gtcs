@@ -28,13 +28,11 @@ private:
 public:
     ComPort(/* args */){};             // 
     ~ComPort(){};                      // 
-    void Initial();                    // 
-    // unsigned char readBuffor[48];      // 
     // Initial Comm port.              //
     int InitialComm(char *P_port_name);//
     // Send Char.
     int SendChar(int P_CommPort, unsigned char P_Value);
     // Read Data.
-    std::array<uint8_t,48> ReadData(int openCommPort,std::array<uint8_t,48>& readbuffor);
+    int ReadData(int openCommPort,std::array<uint8_t,1024> &read_array);
 };
 #endif

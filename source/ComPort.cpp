@@ -12,9 +12,6 @@
 =======================================================================================*/
 #include "ComPort.h"
 
-// Initial. 
-void ComPort::Initial(){
-}
 // Initial.
 int ComPort::InitialComm(char *P_port_name){
     int 			L_fd;
@@ -87,11 +84,15 @@ int ComPort::SendChar(int P_CommPort, unsigned char P_Value){
     }
     return L_BytesWritten;
 };
-// 
-std::array<uint8_t,48> ComPort::ReadData(int openCommPort,std::array<uint8_t,48>& readbuffor){
-    int BytesRead = 0;
-    // std::array<uint8_t,48> readbuffor;
-    // BytesRead = read(openCommPort, &readbuffor, 48);
-    BytesRead = read(openCommPort, &readbuffor, 48);
-    return readbuffor;
+// Read cpomport data.
+int ComPort::ReadData(int openCommPort,std::array<uint8_t,1024> &read_array)
+{
+    int BytesRead = 0;    
+    static uint8_t readbuffer[1024];
+    BytesRead = read(openCommPort, &readbuffer, 1024);
+    for(int i = 0; i < 48; i++)
+    {
+        read_array[i] = readbuffer[i];
+    }    
+    return BytesRead;
 };

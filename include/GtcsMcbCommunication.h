@@ -18,6 +18,8 @@
 #include <vector>
 #include <thread>
 #include <ctime>
+#include <chrono>
+
 #include "ComPort.h"
 #include "GtcsTypeDefine.h"
 #include "GtcsBulletin.h"
@@ -47,12 +49,12 @@ public:
     Header header;
     uint8_t header_start_index = 0;
     uint8_t payload_start_index = 8;
-    std::array<uint8_t,48> telegram_array;
+    std::array<uint8_t,1024> telegram_array;
     // Method.
-    uint8_t InitialTelegramArray();
-    uint8_t EncodeHeaderArray();
-    uint8_t EncodeTelegramArray();
-    uint8_t DecodeTelegramArray();
+    int InitialTelegramArray();
+    int EncodeHeaderArray();
+    int EncodeTelegramArray();
+    int DecodeTelegramArray();
 }; 
 // Ctrl Telegram.
 class CtrlTelegram : public TelegramStruct
@@ -146,15 +148,6 @@ public:
         header.type_num = MCB_TELEGRAM_TYPE::W_REQUEST;
     };
     ~WriteRequestTelegram(){};
-    GtcsRW16TelegramStruct payload_data = {
-        .address_data_1 = 0,
-        .address_data_2 = 0,
-        .address_data_3 = 0,
-        .address_data_4 = 0,
-        .address_data_5 = 0,
-        .address_data_6 = 0,
-    };
-    std::array<uint8_t,36> EncodeTelegramArray(GtcsRW16TelegramStruct *ptr_request);
 };
 // Response Telegram.
 class ResponseTelegram : public TelegramStruct 
@@ -167,14 +160,6 @@ public:
         header.type_num = MCB_TELEGRAM_TYPE::RW_RESPONSE;
     };
     ~ResponseTelegram(){};
-    GtcsRW16TelegramStruct payload_data = {
-        .address_data_1 = 0,
-        .address_data_2 = 0,
-        .address_data_3 = 0,
-        .address_data_4 = 0,
-        .address_data_5 = 0,
-        .address_data_6 = 0,
-    };
 };
 // Read request telegram.
 class ReadRequestTelegram : public TelegramStruct
@@ -187,14 +172,6 @@ public:
         header.type_num = MCB_TELEGRAM_TYPE::R_REQUEST;
     };
     ~ReadRequestTelegram(){};
-    GtcsRW16TelegramStruct payload_data = {
-        .address_data_1 = 0,
-        .address_data_2 = 0,
-        .address_data_3 = 0,
-        .address_data_4 = 0,
-        .address_data_5 = 0,
-        .address_data_6 = 0,
-    };
 };
 // TMD Request telegram. 
 class TMDRequestTelegram : public TelegramStruct
@@ -335,10 +312,10 @@ private:
     int ReadIdentificationParameter();
     int WriteIdentificationParameter();
     // Basic Parameter.(MainID = 2)
-    int ReadBasicParameter(McbID2Struct *ptr_basic_para);    
-    int WriteBasicParameter();
+    int ReadBasicParameter();    
+    int WriteBasicParameter(McbID2Struct *basic);
     // Step Parameter. (Main ID = 3)
-    int ReadStepParametrer();
+    int ReadStepParametrer(int mainid);
     int WriteStepParameter();
     // Prcoess Parameter.(Main ID = 4)
     int ReadProcessParameter();

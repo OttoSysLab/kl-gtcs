@@ -4,9 +4,13 @@ OBJS = ./object/GtcsMain.o ./object/ComPort.o ./object/CrcChecker.o ./object/Dat
 	./object/TcpSocket.o ./object/GtcsBulletin.o ./object/GtcsBulletinManager.o ./object/Common.o \
 	./object/GtcsAmsProtocol.o ./object/GtcsMcbCommunication.o
 
-GTCS: GtcsMain.o CrcChecker.o Database.o TcpSocket.o ComPort.o GtcsBulletin.o GtcsMcbCommunication.o\
+# GTCS: GtcsMain.o CrcChecker.o Database.o TcpSocket.o ComPort.o GtcsBulletin.o GtcsMcbCommunication.o\
+# 	GtcsAmsProtocol.o GtcsBulletinManager.o Common.o
+# 	${CC} -pthread -o $@ ${INCLUDE} ${OBJS} 
+gtcs: GtcsMain.o CrcChecker.o Database.o TcpSocket.o ComPort.o GtcsBulletin.o GtcsMcbCommunication.o\
 	GtcsAmsProtocol.o GtcsBulletinManager.o Common.o
 	${CC} -pthread -o $@ ${INCLUDE} ${OBJS} 
+
 
 GtcsMain.o : ./GtcsMain.cpp
 	${CC} ${INCLUDE} -c $< -o ./object/GtcsMain.o

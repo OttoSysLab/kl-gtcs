@@ -314,14 +314,16 @@ private:
     // Basic Parameter.(MainID = 2)
     int ReadBasicParameter();    
     int WriteBasicParameter(McbID2Struct *basic);
+    // Write to mcb flash.
+    int WriteToMcbFlash(int mainid,int subid ,int add_num); // mainid = 7 , subid = 11(step) ,subid = 12 (Process)
     // Step Parameter. (Main ID = 3)
     int ReadStepParametrer(int mainid);
-    int WriteStepParameter();
+    int WriteStepParameter(McbID3Struct *step_para,int mainid);
     // Prcoess Parameter.(Main ID = 4)
     int ReadProcessParameter();
     int WriteProcessParameter();
     int ReadProcessStepList();
-    int WritePrcessStepList();
+    int WritePrcessStepList();  
     #pragma endregion
 public:
     ~GtcsMcbCommunication();    

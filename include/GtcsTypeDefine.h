@@ -159,7 +159,6 @@ typedef struct
     // Stepo list in porcess,SID = 8,"Screwing process step ID Number 3000 -3499"
     // "u16ProcStepId":self.u16ProcStepId,
 }McbID3Struct;
-
 // Process Parameter.(ID4)
 typedef struct 
 {
@@ -181,6 +180,19 @@ typedef struct
                                 // (tightening right) 1 = Screwing direction of the whole process 
                                 // reverse (tightening left)"
     uint16_t u16NbrSteps;    // SID = 7,Number of Steps in this Process
+    // Process step list.
+    uint16_t step_id_1;      // SID = 2,Proportional Gain of the screwing process.          
+    uint16_t step_id_2;      // SID = 3,Integral Gain of the screwing process.    
+    uint16_t step_id_3;      // SID = 4,"0 = No maximum process time.
+    uint16_t step_id_4;      // SID = 5,"0 = No minimum process time.
+    uint16_t step_id_5;      // SID = 6,"0 = Screwing direction of the whole process normal 
+    uint16_t step_id_6;      // SID = 7,Number of Steps in this Process
+    uint16_t step_id_7;      // SID = 7,Number of Steps in this Process
+    uint16_t step_id_8;      // SID = 7,Number of Steps in this Process
+    uint16_t step_id_9;      // SID = 7,Number of Steps in this Process
+    uint16_t step_id_10;     // SID = 7,Number of Steps in this Process
+    uint16_t step_id_11;     // SID = 7,Number of Steps in this Process
+    uint16_t step_id_12;     // SID = 7,Number of Steps in this Process
 }McbID4Struct;
 // Program Parameter.(ID5)
 typedef struct 

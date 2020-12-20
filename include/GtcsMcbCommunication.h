@@ -320,10 +320,8 @@ private:
     int ReadStepParametrer(int mainid);
     int WriteStepParameter(McbID3Struct *step_para,int mainid);
     // Prcoess Parameter.(Main ID = 4)
-    int ReadProcessParameter();
-    int WriteProcessParameter();
-    int ReadProcessStepList();
-    int WritePrcessStepList();  
+    int ReadProcessParameter(int processnum);
+    int WriteProcessParameter(McbID4Struct *process,int processid); 
     #pragma endregion
 public:
     ~GtcsMcbCommunication();    

@@ -102,14 +102,17 @@ int main()
                 manager.ConvertActuralData300(&mcb->telegram.status.mcb_status); 
                 break;
             case MAIN_FSM::ALARM:
+                mcb->CheckMcbFSM((int)MCB_FSM::READ_PARA);
                 break;
-            case MAIN_FSM::SETTING:                
+            case MAIN_FSM::SETTING:                                
                 mcb->CheckMcbFSM((int)MCB_FSM::READ_PARA);
                 break;
             // Start System.
             case MAIN_FSM::INITIAL:
+                mcb->CheckMcbFSM((int)MCB_FSM::READ_PARA);
                 break;
             case MAIN_FSM::STATRT:
+                mcb->CheckMcbFSM((int)MCB_FSM::READ_PARA);
                 break;
         }
         break;

@@ -323,6 +323,7 @@ private:
     int ReadProcessParameter(int processnum);
     int WriteProcessParameter(McbID4Struct *process,int processid); 
     #pragma endregion
+    int TestMcbRW();
 public:
     ~GtcsMcbCommunication();    
     static GtcsMcbCommunication* GetInstance();

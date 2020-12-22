@@ -14,30 +14,32 @@
 =======================================================================================*/
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <cstring>
 #include <iostream>
-// #include <sqlite3.h>
-
-// Database struct.
-class Database
-{
-private:
-    /* data */
-public:
-    Database(/* args */){};
-    ~Database(){};
-    void Initial();
-};
+#include <sqlite3.h>
 
 // Sqlite3 construct.
-class SqliteManager: public Database
+class Sqlite3Manager
 {
 private:
     /* data */
     std::string dbname = "";
     
 public:
-    SqliteManager(/* args */){};
-    ~SqliteManager(){};
+    Sqlite3Manager(/* args */){};
+    ~Sqlite3Manager(){};
+    int test();
+};
+
+// Gtcs database struct.
+class GtcsDatabase : public Sqlite3Manager
+{
+private:
+    /* data */
+    int InitialGtcsDatbase();
+    int InitialMemoryDB();
+public:
+    GtcsDatabase(/* args */){};
+    ~GtcsDatabase(){};
 };
 #endif

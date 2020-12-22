@@ -25,7 +25,7 @@
 #include "../include/ComPort.h"
 #include "../include/TcpSocket.h"
 #include "../include/CrcChecker.h"
-#include "../include/Database.h"
+#include "../include/GtcsDatabase.h"
 #include "../include/GtcsBulletin.h"
 #include "../include/GtcsTypeDefine.h"
 #include "../include/GtcsAmsProtocol.h"

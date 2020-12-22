@@ -2304,6 +2304,46 @@ int GtcsMcbCommunication::InitialMcbComPort(std::string com_name_string)
     std::cout << "open com_num= " <<std::to_string(com_num) <<std::endl;
     return result;
 }
+int GtcsMcbCommunication::TestMcbRW()
+{
+    int result = -1;
+    GtcsBulletin *bulletin = GtcsBulletin::GetInstance();
+    #pragma region test string.
+    #pragma endregion
+    #pragma region test basic
+    std::cout << "======================================="<< std::endl;
+    result = ReadBasicParameter();
+    bulletin->McbBulletin.BasicPara.u16MaxRPM = 1200;
+    result = WriteBasicParameter(&bulletin->McbBulletin.BasicPara);
+    std::cout << "======================================="<< std::endl;
+    result = ReadBasicParameter();
+    #pragma endregion
+    
+    #pragma region test step
+    std::cout << "======================================="<< std::endl;
+    result = ReadStepParametrer(3011);
+    bulletin->McbBulletin.StepPara.u16StepRpm = 1000;
+    bulletin->McbBulletin.StepPara.u16StepTime = 5000;
+    bulletin->McbBulletin.StepPara.s32StepAngle = 100000;
+    result = WriteStepParameter(&bulletin->McbBulletin.StepPara,3011);
+    std::cout << "======================================="<< std::endl;
+    result = ReadStepParametrer(3011);
+    #pragma endregion
+    #pragma region test process
+    std::cout << "======================================="<< std::endl;
+    result = ReadProcessParameter(4000);
+    bulletin->McbBulletin.ProcessPara.u16ProcPGain = 500;
+    bulletin->McbBulletin.ProcessPara.u16ProcIGain = 600;
+    bulletin->McbBulletin.ProcessPara.step_id_1 = 3011;
+    bulletin->McbBulletin.ProcessPara.step_id_2 = 0;
+    bulletin->McbBulletin.ProcessPara.step_id_3 = 0;
+    result = WriteProcessParameter(&bulletin->McbBulletin.ProcessPara,4000);
+    std::cout << "======================================="<< std::endl;
+    result = ReadProcessParameter(4000);
+    #pragma endregion
+    
+    return result;
+}
 // Check MCB FSM.
 int GtcsMcbCommunication::CheckMcbFSM(int mcb_fsm)
 {
@@ -2316,39 +2356,9 @@ int GtcsMcbCommunication::CheckMcbFSM(int mcb_fsm)
             result = PollingToMcb();
             break;
         case MCB_FSM::READ_PARA:
-            #pragma region test string.
-            #pragma endregion
-
-            #pragma region test basic
-            // std::this_thread::sleep_for(std::chrono::milliseconds(100));
-            // result = ReadBasicParameter();
-            // bulletin->McbBulletin.BasicPara.u16MaxRPM = 1000;
-            // result = WriteBasicParameter(&bulletin->McbBulletin.BasicPara);
-            // std::cout << "======================================="<< std::endl;
-            // result = ReadBasicParameter();
-            #pragma endregion
-            #pragma region test step
-            // result = ReadStepParametrer(3011);
-            // bulletin->McbBulletin.StepPara.u16StepRpm = 500;
-            // bulletin->McbBulletin.StepPara.u16StepTime = 4000;
-            // bulletin->McbBulletin.StepPara.s32StepAngle = 100000;
-            // result = WriteStepParameter(&bulletin->McbBulletin.StepPara,3011);
-            // std::cout << "======================================="<< std::endl;
-            // result = ReadStepParametrer(3011);
-            #pragma endregion
-            #pragma region test process
-            result = ReadProcessParameter(4000);
-            bulletin->McbBulletin.ProcessPara.u16ProcPGain = 1000;
-            bulletin->McbBulletin.ProcessPara.u16ProcIGain = 800;
-            bulletin->McbBulletin.ProcessPara.step_id_1 = 3011;
-            bulletin->McbBulletin.ProcessPara.step_id_2 = 0;
-            bulletin->McbBulletin.ProcessPara.step_id_3 = 0;
-            result = WriteProcessParameter(&bulletin->McbBulletin.ProcessPara,4000);
-            std::cout << "======================================="<< std::endl;
-            result = ReadProcessParameter(4000);
-            #pragma endregion
+            // result = TestMcbRW();
             break;
-        case MCB_FSM::WRITE_PARA:
+        case MCB_FSM::WRITE_PARA:            
             break;
     }
     return result;

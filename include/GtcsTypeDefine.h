@@ -948,8 +948,7 @@ typedef struct
     std::string lever_sensitivity; // (INTEGER)
     std::string push_sensitivity;  // (INTEGER) 
     std::string motswver;          // (TEXT)
-
-    // std::string str40; // CL,RF
+    std::string end;               // CL,RF
 }GtcsDatabaseBasicStruct;
 #pragma endregion
 #endif

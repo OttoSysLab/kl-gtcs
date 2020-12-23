@@ -12,6 +12,7 @@
 =======================================================================================*/
 #include "GtcsDatabase.h"
 #include <sqlite3.h>
+#include <typeinfo>
 
 // Sqlite callback function.
 // static int callback(void *data, int argc, char **argv, char **azColName)
@@ -66,7 +67,7 @@ int GtcsDatabase::ReadDatabaseBasicTable(std::string dbPath)
     // sqlite3_close(db);
     return result;
 }
-int GtcsDatabase::ReadDatabaseBasicData(std::string dbPath)
+int GtcsDatabase::ReadDatabaseBasicData(std::string dbPath,GtcsDatabaseBasicStruct *ptr_basic)
 {
     int result = -1;
     sqlite3 *db;
@@ -111,12 +112,30 @@ int GtcsDatabase::ReadDatabaseBasicData(std::string dbPath)
         std::cout<<"customer not found"<<std::endl;
         // throw string("customer not found");
     }
-    std::cout << sqlite3_column_text(stmt, 1) << std::endl;
-    // this->id         = id;
-    // this->first_name = string(sqlite3_column_text(stmt, 0));
-    // this->last_name  = string(sqlite3_column_text(stmt, 1));
-    // this->age        =        sqlite3_column_int(stmt, 2);
+    // for(int i=0;i<35;i++)
+    // {
+    //     std::cout << sqlite3_column_text(stmt, i) << std::endl;
+    // }
+    // std::cout << sqlite3_column_text(stmt, 1) << std::endl;
+    // std::cout << typeid(sqlite3_column_text(stmt, 1)).name() << std::endl;
+    // std::cout << sqlite3_column_text(stmt, 2) << std::endl;
+    // std::cout << sqlite3_column_text(stmt, 3) << std::endl;
 
+    // ptr_basic->mintemp = sqlite3_column_text(stmt, 0);
+    ptr_basic->maxtemp = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1)));
+
+    // result = "{"+*prt;
+    // while(true){
+    //     prt = (std::string *)(void *)(prt+1);
+    //     if (*prt != "\n\r"){
+    //         result += ","+*prt;
+    //     }
+    //     else{
+    //         break;
+    //     }
+    // }
+    // result += "}";
+    
     sqlite3_finalize(stmt);
     // Close sqlite3.
     sqlite3_close(db);

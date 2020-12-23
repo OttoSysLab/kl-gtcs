@@ -85,9 +85,10 @@ int main()
     // Set tcpsocket thread and start.    
     std::thread thread_tcpsocket = std::thread(tcpsocket);
     // Initial object.
-    GtcsMcbCommunication* mcb = GtcsMcbCommunication::GetInstance();
-    GtcsAmsProtocol* ams = GtcsAmsProtocol::GetInstance();
+    GtcsMcbCommunication *mcb = GtcsMcbCommunication::GetInstance();
+    GtcsAmsProtocol *ams = GtcsAmsProtocol::GetInstance();
     GtcsBulletinManager manager;
+    GtcsBulletin *bulletin = GtcsBulletin::GetInstance();
     mcb->InitialMcbComPort("/dev/ttymxc3"); 
     for(int index=0;index<5;index++)
     {
@@ -119,10 +120,13 @@ int main()
         }
         break;        
     }
-    //
+    // Test database.
     GtcsDatabase database;
-    if (database.ReadDatabaseBasicData(db_Path)!=-1){
-        std::cout<<"Fuck database!!!"<<std::endl;
+    if (database.ReadDatabaseBasicData(db_Path,&bulletin->DbBulletin.basic)!=-1)
+    {
+        // std::cout<<bulletin->DbBulletin.basic.mintemp<<std::endl;
+        std::cout<<bulletin->DbBulletin.basic.maxtemp<<std::endl;
+        std::cout<<"Fuck sqlite database!!!"<<std::endl;
     }
     // Jion thread.
     thread_tcpsocket.join();    

@@ -751,6 +751,7 @@ public:
         .lever_sensitivity = "0",  // (INTEGER)
         .push_sensitivity  = "0",  // (INTEGER) 
         .motswver          = "0",  // (TEXT)
+        .end               = "\n\r",   // end
     };
     // DatabasteBulletin(){};
     // ~DatabasteBulletin(){};

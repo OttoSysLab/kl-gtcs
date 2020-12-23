@@ -30,7 +30,7 @@ GtcsAmsProtocol* GtcsAmsProtocol::GetInstance()
     return instance;
 }
 // Get AMS string 
-int GtcsAmsProtocol::ConvertToProtocolString(std::string* prt,std::string & result)
+int GtcsAmsProtocol::ConvertToProtocolString(std::string *prt,std::string & result)
 {
     result = "{"+*prt;
     while(true){

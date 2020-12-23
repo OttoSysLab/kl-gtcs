@@ -35,6 +35,6 @@ public:
     // int callback(void *data, int argc, char **argv, char **azColName);
     // Read basic from database.
     int ReadDatabaseBasicTable(std::string dbPath);
-    int ReadDatabaseBasicData(std::string dbPath,GtcsDatabaseBasicStruct *ptr_basic);
+    int ReadDatabaseBasicData(std::string dbPath,std::string *ptr);
 };
 #endif

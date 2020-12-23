@@ -122,9 +122,9 @@ int main()
     }
     // Test database.
     GtcsDatabase database;
-    if (database.ReadDatabaseBasicData(db_Path,&bulletin->DbBulletin.basic)!=-1)
+    if (database.ReadDatabaseBasicData(db_Path,&bulletin->DbBulletin.basic.mintemp)!=-1)
     {
-        // std::cout<<bulletin->DbBulletin.basic.mintemp<<std::endl;
+        std::cout<<bulletin->DbBulletin.basic.mintemp<<std::endl;
         std::cout<<bulletin->DbBulletin.basic.maxtemp<<std::endl;
         std::cout<<"Fuck sqlite database!!!"<<std::endl;
     }

@@ -13,32 +13,113 @@
 #include "GtcsDatabase.h"
 #include <sqlite3.h>
 
-// Initial 
-int  Sqlite3Manager::test()
+// Sqlite callback function.
+// static int callback(void *data, int argc, char **argv, char **azColName)
+// {
+//     int i;
+//     fprintf(stderr, "%s: ", (const char*)data);
+    
+//     for(i=0; i<argc; i++){
+//         printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL"); 
+//     }
+//     printf("\n");
+//     return 0;
+// }
+// Initial sqlite database.
+int GtcsDatabase::ReadDatabaseBasicTable(std::string dbPath)
 {
-	int result = -1;
-	sqlite3 *db;
-    char *zErrMsg = 0;
-    int rc;
+    // Initial return status.
+    int result = -1;
 
-    rc = sqlite3_open("test.db", &db);
+    // // Initial database parameter.
+	// sqlite3 *db;
+    // char *zErrMsg = 0;
+    // int rc;
+    // char sql[] = "";
+    // const char* data = "Callback function called";
+    // std::string sql_str = "";
 
-    if( rc ){
-		fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
-        return 0;
-    }
-	else
-	{
-      fprintf(stderr, "Opened database successfully\n");
-    }
-    sqlite3_close(db);
-	return result;
+    // // Open database. 
+    // rc = sqlite3_open(dbPath.c_str(),&db);
+    // if (rc){
+    //     std::cout<<"Can't open database : "<< sqlite3_errmsg(db) <<std::endl;
+    //     return result;
+    // }
+    // else{
+    //     std::cout<<"Opened database successfully"<<std::endl;
+    // }
+    
+    // // Create SQL statement.
+    // sql_str = "SELECT * from basic";
+    
+    // // Excute SQL statement.
+    // strcpy(sql,sql_str.c_str()); 
+    // rc = sqlite3_exec(db,sql,callback,(void*)data,&zErrMsg);
+    // if (rc != SQLITE_OK){
+    //     std::cout<<"SQL error:"<<zErrMsg<<std::endl;
+    //     sqlite3_free(zErrMsg);
+    // }
+    // else{
+    //     std::cout<<"Operation done successfully!"<<std::endl;
+    //     result = 1;
+    // }
+    // sqlite3_close(db);
+    return result;
 }
-
-// Initial memory database.
-int GtcsDatabase::InitialMemoryDB()
+int GtcsDatabase::ReadDatabaseBasicData(std::string dbPath)
 {
     int result = -1;
-    
-    return result;
+    sqlite3 *db;
+    sqlite3_stmt *stmt;
+    int rc;
+    // Open database. 
+    rc = sqlite3_open(dbPath.c_str(),&db);
+    if (rc)
+    {
+        std::cout<<"Can't open database : "<< sqlite3_errmsg(db) <<std::endl;
+        return result;
+    }
+    // Send SQL statement to db.
+    rc = sqlite3_prepare_v2(db, 
+                            "SELECT * from basic", 
+                            -1, 
+                            &stmt, 
+                            NULL);
+    if (rc != SQLITE_OK)
+        // throw string(sqlite3_errmsg(db));
+    {
+        std::cout<<"SQL error:"<<sqlite3_errmsg(db)<<std::endl;
+        sqlite3_finalize(stmt);
+    }
+
+    // rc = sqlite3_bind_int(stmt, 1, id);    // Using parameters ("?") is not
+    // if (rc != SQLITE_OK) {                 // really necessary, but recommended
+    //     string errmsg(sqlite3_errmsg(db)); // (especially for strings) to avoid
+    //     sqlite3_finalize(stmt);            // formatting problems and SQL
+    //     throw errmsg;                      // injection attacks.
+    // }
+
+    rc = sqlite3_step(stmt);
+    if (rc != SQLITE_ROW && rc != SQLITE_DONE) {
+        // string errmsg(sqlite3_errmsg(db));
+        std::cout<<"SQL error:"<<sqlite3_errmsg(db)<<std::endl;
+        sqlite3_finalize(stmt);
+        // throw errmsg;
+    }
+    if (rc == SQLITE_DONE) {
+        sqlite3_finalize(stmt);
+        std::cout<<"customer not found"<<std::endl;
+        // throw string("customer not found");
+    }
+    std::cout << sqlite3_column_text(stmt, 1) << std::endl;
+    // this->id         = id;
+    // this->first_name = string(sqlite3_column_text(stmt, 0));
+    // this->last_name  = string(sqlite3_column_text(stmt, 1));
+    // this->age        =        sqlite3_column_int(stmt, 2);
+
+    sqlite3_finalize(stmt);
+    // Close sqlite3.
+    sqlite3_close(db);
+    result = 1;
+   return result; 
 }

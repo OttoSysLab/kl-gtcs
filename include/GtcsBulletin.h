@@ -514,7 +514,7 @@ public:
 #pragma endregion
 #pragma region Gtcs Parameter.
 // Class strcut.
-class MCBParameter
+class MCBBulletin
 {
 private:
     /* data */
@@ -714,46 +714,46 @@ public:
 class DatabasteBulletin{
 private:
 public:
-    DatabasteBulletin(){};
-    ~DatabasteBulletin(){};
     GtcsDatabaseBasicStruct basic = {
-        .mintemp = "0",           // Min temperature       (REAL)
-        .maxtemp = "0",           // Max temperature       (REAL)
-        .maxcurrent = "0",        // Max current           (REAL)
-        .maxpeakcurrent = "0",    // Max peak current      (INTEGER)
-        .torquesensortype = "0",  // torque sensor type    (INTEGER)
-        .maxdutycycle = "0",      // Max duty cycle        (REAL)
-        .maxtorque = "0",         // Max torque            (REAL)
-        .pwmfreq = "0",           // PWM frequency         (INTEGER)
-        .maxrpm = "0",            // Max rpm               (INTEGER)
-        .maxslope = "0",          // Max slope             (INTEGER)
-        .minbusvolt = "0",        // Min bus voltage       (REAL)
-        .maxbusvolt = "0",        // Max bus voltage       (REAL)
-        .startdutycycle = "0",    // Start duty cycle      (REAL)
-        .gearboxratio = "0",      // Gear box ratio        (REAL)
-        .startinp = "0",          // Start input source    (INTEGER)
-        .revinp = "0",            // Reverse ipnut source  (INTEGER)
-        .revrpm = "0",            // Reverse rpm           (INTEGER)
-        .revslope = "0",          // Reverse slope         (INTEGER)
-        .revmaxcurrent = "0",     // Reverse max current   (INTEGER)
-        .revmaxtorque = "0",      // Reverse max torque    (REAL)
-        .erroridletime = "0",     // Error idle time       (INTEGER)
-        .backlash = "0",          // Bachlash              (INTEGER)
-        .pgain = "0",             // Proportional gain     (INTEGER)
-        .igain = "0",             // Integral gain         (INTEGER)
-        .encoder = "0",           // Encoder               (INTEGER)
+        .mintemp           = "0",  // Min temperature       (REAL)
+        .maxtemp           = "0",  // Max temperature       (REAL)
+        .maxcurrent        = "0",  // Max current           (REAL)
+        .maxpeakcurrent    = "0",  // Max peak current      (INTEGER)
+        .torquesensortype  = "0",  // torque sensor type    (INTEGER)
+        .maxdutycycle      = "0",  // Max duty cycle        (REAL)
+        .maxtorque         = "0",  // Max torque            (REAL)
+        .pwmfreq           = "0",  // PWM frequency         (INTEGER)
+        .maxrpm            = "0",  // Max rpm               (INTEGER)
+        .maxslope          = "0",  // Max slope             (INTEGER)
+        .minbusvolt        = "0",  // Min bus voltage       (REAL)
+        .maxbusvolt        = "0",  // Max bus voltage       (REAL)
+        .startdutycycle    = "0",  // Start duty cycle      (REAL)
+        .gearboxratio      = "0",  // Gear box ratio        (REAL)
+        .startinp          = "0",  // Start input source    (INTEGER)
+        .revinp            = "0",  // Reverse ipnut source  (INTEGER)
+        .revrpm            = "0",  // Reverse rpm           (INTEGER)
+        .revslope          = "0",  // Reverse slope         (INTEGER)
+        .revmaxcurrent     = "0",  // Reverse max current   (INTEGER)
+        .revmaxtorque      = "0",  // Reverse max torque    (REAL)
+        .erroridletime     = "0",  // Error idle time       (INTEGER)
+        .backlash          = "0",  // Bachlash              (INTEGER)
+        .pgain             = "0",  // Proportional gain     (INTEGER)
+        .igain             = "0",  // Integral gain         (INTEGER)
+        .encoder           = "0",  // Encoder               (INTEGER)
         // 
-        .mintorque = "0",         // (REAL)
-        .minrpm = "0",            // (INTEGER)
-        .revminrpm = "0",         // (INTEGER)
-        .dmsswver = "0",          // (INTEGER)
-        .dmscoreid = "0",         // (INTEGER)
-        .dmssernr = "0",          // (INTEGER)
-        .led = "0",               // (INTEGER)
-        .lever_sensitivity = "0", // (INTEGER)
-        .push_sensitivity = "0",  // (INTEGER) 
-        .motswver = "0",          // (TEXT)
+        .mintorque         = "0",  // (REAL)
+        .minrpm            = "0",  // (INTEGER)
+        .revminrpm         = "0",  // (INTEGER)
+        .dmsswver          = "0",  // (INTEGER)
+        .dmscoreid         = "0",  // (INTEGER)
+        .dmssernr          = "0",  // (INTEGER)
+        .led               = "0",  // (INTEGER)
+        .lever_sensitivity = "0",  // (INTEGER)
+        .push_sensitivity  = "0",  // (INTEGER) 
+        .motswver          = "0",  // (TEXT)
     };
+    // DatabasteBulletin(){};
+    // ~DatabasteBulletin(){};
 };
 #pragma endregion
 #pragma region bulletin
@@ -770,7 +770,8 @@ public:
     // Get Instance.
     static GtcsBulletin* GetInstance();
     AMSBulletin AmsBulletin;
-    MCBParameter McbBulletin;    
+    MCBBulletin McbBulletin;
+    DatabasteBulletin  DbBulletin;       
 };
 #pragma endregion
 #pragma endregion

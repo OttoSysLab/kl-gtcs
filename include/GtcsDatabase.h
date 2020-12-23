@@ -16,32 +16,25 @@
 #include <stdlib.h>
 #include <cstring>
 #include <sqlite3.h>
+#include <list>
 #include <iostream>
 #include "GtcsTypeDefine.h"
-
-// Sqlite3 construct.
-class Sqlite3Manager
-{
-private:
-    /* data */
-    char dbPath = "";
-	sqlite3 *db;
-public:
-    Sqlite3Manager(/* args */){};
-    ~Sqlite3Manager(){};
-    int test();
-    int InitialDatabase();
-};
+#include "GtcsBulletin.h"
 
 // Gtcs database struct.
-class GtcsDatabase : public Sqlite3Manager
+class GtcsDatabase
 {
 private:
     /* data */
-    int InitialGtcsDatbase();
-    int InitialMemoryDB();
+    std::list<std::string> data;
 public:
+    // Constructor.
     GtcsDatabase(/* args */){};
     ~GtcsDatabase(){};
+    // Call back.
+    // int callback(void *data, int argc, char **argv, char **azColName);
+    // Read basic from database.
+    int ReadDatabaseBasicTable(std::string dbPath);
+    int ReadDatabaseBasicData(std::string dbPath);
 };
 #endif

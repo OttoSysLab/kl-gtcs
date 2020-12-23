@@ -80,6 +80,8 @@ void tcpsocket()
 // main.
 int main()
 {
+    // Initial poarameter.
+    std::string db_Path = "/var/www/html/database/tcs.db";
     // Set tcpsocket thread and start.    
     std::thread thread_tcpsocket = std::thread(tcpsocket);
     // Initial object.
@@ -115,7 +117,12 @@ int main()
                 mcb->CheckMcbFSM((int)MCB_FSM::READ_PARA);
                 break;
         }
-        // break;        
+        break;        
+    }
+    //
+    GtcsDatabase database;
+    if (database.ReadDatabaseBasicData(db_Path)!=-1){
+        std::cout<<"Fuck database!!!"<<std::endl;
     }
     // Jion thread.
     thread_tcpsocket.join();    

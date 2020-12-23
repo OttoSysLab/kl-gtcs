@@ -12,6 +12,7 @@
 =======================================================================================*/
 #include "../include/GtcsBulletin.h"
 
+#pragma region bulletin
 // Signalton.
 // Constructor.
 GtcsBulletin::GtcsBulletin(/* args */)
@@ -29,3 +30,5 @@ GtcsBulletin* GtcsBulletin::GetInstance()
     }
     return instance;
 }
+#pragma endregion
+

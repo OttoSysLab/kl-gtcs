@@ -15,20 +15,22 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <cstring>
-#include <iostream>
 #include <sqlite3.h>
+#include <iostream>
+#include "GtcsTypeDefine.h"
 
 // Sqlite3 construct.
 class Sqlite3Manager
 {
 private:
     /* data */
-    std::string dbname = "";
-    
+    char dbPath = "";
+	sqlite3 *db;
 public:
     Sqlite3Manager(/* args */){};
     ~Sqlite3Manager(){};
     int test();
+    int InitialDatabase();
 };
 
 // Gtcs database struct.

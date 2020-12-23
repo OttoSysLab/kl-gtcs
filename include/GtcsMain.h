@@ -29,7 +29,7 @@
 #include "../include/GtcsBulletin.h"
 #include "../include/GtcsTypeDefine.h"
 #include "../include/GtcsAmsProtocol.h"
-#include "../include/GtcsMcbCommunication.h"
+#include "../include/GtcsMcbProtocol.h"
 #include "../include/GtcsBulletinManager.h"
 
 // #if defined(OS_WINDOWS)

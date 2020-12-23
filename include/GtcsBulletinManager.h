@@ -15,7 +15,7 @@
 #include "GtcsBulletin.h"
 #include "GtcsTypeDefine.h"
 #include "GtcsAmsProtocol.h"
-#include "GtcsMcbCommunication.h"
+#include "GtcsMcbProtocol.h"
 #include "Common.h"
 #include <ctime>
 

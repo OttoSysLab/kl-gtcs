@@ -115,7 +115,7 @@ int main()
                 mcb->CheckMcbFSM((int)MCB_FSM::READ_PARA);
                 break;
         }
-        break;
+        // break;        
     }
     // Jion thread.
     thread_tcpsocket.join();    

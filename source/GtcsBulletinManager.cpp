@@ -104,6 +104,5 @@ int GtcsBulletinManager::ConvertActuralData300(GtcsStatusTelegramStrcut *ptr)
     data300->str19 = std::to_string((ptr->u32Angle));
     data300->str20 = std::to_string(((float)ptr->u16MaxTorque/1862)*5);
     data300->str21 = std::to_string((ptr->u32Revolutions));    
-
     return result;
 }

@@ -269,7 +269,6 @@ typedef struct
     uint32_t u32Revolutions; // SID = 15, Actual revolutions [0,01 revolutions].
 }McbID9Struct;
 #pragma endregion
-
 #pragma region Telegram Struct.
 // GTCS ctrl telegram strut.
 typedef struct 
@@ -303,20 +302,8 @@ typedef struct
     uint16_t s16Debug;
     uint32_t s32Debug; 
 }GtcsStatusTelegramStrcut;
-// Gtcs RW uint16_t telegram struct.
-// typedef struct 
-// {
-//     uint16_t address_data_1;
-//     uint16_t address_data_2;
-//     uint16_t address_data_3;
-//     uint16_t address_data_4;
-//     uint16_t address_data_5;
-//     uint16_t address_data_6;
-// }GtcsRW16TelegramStruct;
-
 #pragma endregion
 #pragma endregion
-
 #pragma region GTCS AMS Protcol
 enum AMSCMD : int {
     // CMD 
@@ -841,7 +828,19 @@ typedef struct
     std::string str27; // Proportional gain
     std::string str28; // Integral gain
     std::string str29; // Encoder
-    std::string str30;  // CL,RF
+    // 
+    std::string str30; //  
+    std::string str31; // 
+    std::string str32; // 
+    std::string str33; // 
+    std::string str34; // 
+    std::string str35; // 
+    std::string str36; // 
+    std::string str37; // 
+    std::string str38; // 
+    std::string str39; // 
+
+    std::string str40; // CL,RF
 }AmsREQ301Struct;
 // REQ302
 typedef struct 
@@ -907,12 +906,50 @@ typedef struct
     std::string str5; // status
     std::string str6;  // CL,RF
 }AmsDATA302Struct;
-
-
 #pragma endregion
 #pragma endregion
-
 #pragma region GTCS Database Struct
+typedef struct 
+{
+    /* data */
+    std::string mintemp;           // Min temperature       (REAL)
+    std::string maxtemp;           // Max temperature       (REAL)
+    std::string maxcurrent;        // Max current           (REAL)
+    std::string maxpeakcurrent;    // Max peak current      (INTEGER)
+    std::string torquesensortype;  // torque sensor type    (INTEGER)
+    std::string maxdutycycle;      // Max duty cycle        (REAL)
+    std::string maxtorque;         // Max torque            (REAL)
+    std::string pwmfreq;           // PWM frequency         (INTEGER)
+    std::string maxrpm;            // Max rpm               (INTEGER)
+    std::string maxslope;          // Max slope             (INTEGER)
+    std::string minbusvolt;        // Min bus voltage       (REAL)
+    std::string maxbusvolt;        // Max bus voltage       (REAL)
+    std::string startdutycycle;    // Start duty cycle      (REAL)
+    std::string gearboxratio;      // Gear box ratio        (REAL)
+    std::string startinp;          // Start input source    (INTEGER)
+    std::string revinp;            // Reverse ipnut source  (INTEGER)
+    std::string revrpm;            // Reverse rpm           (INTEGER)
+    std::string revslope;          // Reverse slope         (INTEGER)
+    std::string revmaxcurrent;     // Reverse max current   (INTEGER)
+    std::string revmaxtorque;      // Reverse max torque    (REAL)
+    std::string erroridletime;     // Error idle time       (INTEGER)
+    std::string backlash;          // Bachlash              (INTEGER)
+    std::string pgain;             // Proportional gain     (INTEGER)
+    std::string igain;             // Integral gain         (INTEGER)
+    std::string encoder;           // Encoder               (INTEGER)
+    // 
+    std::string mintorque;         // (REAL)
+    std::string minrpm;            // (INTEGER)
+    std::string revminrpm;         // (INTEGER)
+    std::string dmsswver;          // (INTEGER)
+    std::string dmscoreid;         // (INTEGER)
+    std::string dmssernr;          // (INTEGER)
+    std::string led;               // (INTEGER)
+    std::string lever_sensitivity; // (INTEGER)
+    std::string push_sensitivity;  // (INTEGER) 
+    std::string motswver;          // (TEXT)
 
+    // std::string str40; // CL,RF
+}GtcsDatabaseBasicStruct;
 #pragma endregion
 #endif

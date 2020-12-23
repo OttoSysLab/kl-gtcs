@@ -10,7 +10,7 @@
  Programmer    	: Otto Chang
  Date	       	: 2019/08/06
 =======================================================================================*/
-#include "../include/GtcsMcbCommunication.h"
+#include "../include/GtcsMcbProtocol.h"
 
 #pragma region telegram strcut define.
 // Telegram Construct.
@@ -2365,3 +2365,5 @@ int GtcsMcbCommunication::CheckMcbFSM(int mcb_fsm)
 }
 #pragma endregion
 #pragma endregion
+
+

@@ -122,12 +122,15 @@ int main()
     }
     // Test database.
     GtcsDatabase database;
-    if (database.ReadDatabaseBasicData(db_Path,&bulletin->DbBulletin.basic.mintemp)!=-1)
+    if (database.ReadDatabase(db_Path,"basic",&bulletin->DbBulletin.basic.mintemp)!=-1)
     {
         std::cout<<bulletin->DbBulletin.basic.mintemp<<std::endl;
         std::cout<<bulletin->DbBulletin.basic.maxtemp<<std::endl;
         std::cout<<"Fuck sqlite database!!!"<<std::endl;
     }
+
+    database.WriteDatabase(db_Path,"basic",&bulletin->DbBulletin.basic.mintemp);
+    
     // Jion thread.
     thread_tcpsocket.join();    
     return 0;

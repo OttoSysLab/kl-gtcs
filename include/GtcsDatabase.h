@@ -31,10 +31,8 @@ public:
     // Constructor.
     GtcsDatabase(/* args */){};
     ~GtcsDatabase(){};
-    // Call back.
-    // int callback(void *data, int argc, char **argv, char **azColName);
     // Read basic from database.
-    int ReadDatabaseBasicTable(std::string dbPath);
-    int ReadDatabaseBasicData(std::string dbPath,std::string *ptr);
+    int ReadDatabase(std::string dbPath,std::string table,std::string *ptr);
+    int WriteDatabase(std::string dbPath,std::string table,std::string *ptr);
 };
 #endif

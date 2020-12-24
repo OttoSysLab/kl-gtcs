@@ -70,7 +70,7 @@ public:
     GtcsCtrlTelegramStrcut fasten = {
         .u16Ctrlflags     = 9216, 
         .u16ControlMode   = 1,
-        .u16WorkProc      = 4000,
+        .u16WorkProc      = 4248,
         .u16CtrlProgram   = 1,
         .u16ManRpm        = 1000,
         .u16ManSlope      = 1000,
@@ -80,9 +80,9 @@ public:
         .u8TMDControl     = 8,  
     }; 
     GtcsCtrlTelegramStrcut loosen = {
-        .u16Ctrlflags     = 26368,       // 
-        .u16ControlMode   = 0,          // Manuala mode
-        .u16WorkProc      = 4000,
+        .u16Ctrlflags     = 9216,       // 
+        .u16ControlMode   = 1,          // Manuala mode
+        .u16WorkProc      = 4249,
         .u16CtrlProgram   = 1,
         .u16ManRpm        = 1000,
         .u16ManSlope      = 1000,
@@ -155,6 +155,7 @@ public:
     int DecodeTelegramArray();
     int CheckLoosenStatus(uint16_t last_status_flags,uint16_t current_status_flags);
     bool loosen_status = false;
+    int check_loosen_cnt = 0;
 };
 // Wrie Request Telegram
 class WriteRequestTelegram : public TelegramStruct

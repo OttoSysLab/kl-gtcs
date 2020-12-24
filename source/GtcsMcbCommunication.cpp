@@ -22,7 +22,26 @@ int StatusTelegram::CheckLoosenStatus(uint16_t last_status_flags,uint16_t curren
     std::array<bool,16> current_TMD_status = bitArray.To16BiteArray(current_status_flags);
 
     // Falling edge to chang status.
-    if ((last_TMD_status[TMD_INPUT::REV_SW] == true)&(current_TMD_status[TMD_INPUT::REV_SW] == false))
+    // if (current_TMD_status[TMD_INPUT::REV_SW] == true)
+    // {
+    //     if (++check_loosen_cnt>5)
+    //     {
+    //         if (loosen_status == false)
+    //         {
+    //             loosen_status = true;
+    //         }
+    //         else
+    //         {
+    //             loosen_status = false;
+    //         }         
+    //     }
+    // }
+    // else
+    // {
+    //     check_loosen_cnt = 0;
+    // }
+
+    if ((last_TMD_status[TMD_INPUT::REV_SW] == false)&(current_TMD_status[TMD_INPUT::REV_SW] == true))
     {
         if (loosen_status == false)
         {
@@ -31,8 +50,9 @@ int StatusTelegram::CheckLoosenStatus(uint16_t last_status_flags,uint16_t curren
         else
         {
             loosen_status = false;
-        }         
+        }
     }
+    
     return result;
 }
 #pragma endregion
@@ -2144,7 +2164,7 @@ int GtcsMcbCommunication::TestMcbRW()
 int GtcsMcbCommunication::NormalPollingToMcb()
 {
     int result = -1;
-    int delay_time = 20;
+    int delay_time = 30;
     if (telegram.status.loosen_status == false)
     {
         telegram.ctrl.EncodeTelegramArray(&telegram.ctrl.fasten,telegram.ctrl.struct_length);

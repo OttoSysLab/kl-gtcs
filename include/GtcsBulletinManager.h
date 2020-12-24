@@ -24,14 +24,13 @@
 class GtcsBulletinManager
 {
 private:
-    int MainFSM = MAIN_FSM::SETTING;                         // SETTING
-    // int MainFSM = MAIN_FSM::READY;                           // SETTING
+    int MainFSM = MAIN_FSM::READY;                          // READY
+    // int MainFSM = MAIN_FSM::READY;                       // SETTING
     std::string GetMcbRtStatusString(MCB_RT_STATUS status);
     double ConvertToAmsTorque();
 public:
     // Constructor.
-    GtcsBulletinManager(/* args */);
-    
+    GtcsBulletinManager(/* args */);    
     // Distructor.
     ~GtcsBulletinManager();
     // Get & Set FSM.

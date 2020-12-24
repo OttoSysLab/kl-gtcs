@@ -30,10 +30,21 @@ class BitArray
 private:
     /* data */
 public:
-    BitArray(/* args */);
-    ~BitArray();
-    std::array<bool,32> To32BiteArray(int num);
-    std::array<bool,16> To16BiteArray(int num);
+    BitArray(/* args */){};
+    ~BitArray(){};
     std::array<bool,8> To8BiteArray(int num);
+    std::array<bool,16> To16BiteArray(int num);
+    std::array<bool,32> To32BiteArray(int num);
+};
+class BitConverter
+{
+private:
+    /* data */
+public:
+    BitConverter(/* args */){};
+    ~BitConverter(){};
+    uint8_t ToUInt8(std::array<bool,8> array);
+    uint16_t ToUInt16(std::array<bool,16> array);
+    uint32_t ToUInt32(std::array<bool,32> array);
 };
 #endif

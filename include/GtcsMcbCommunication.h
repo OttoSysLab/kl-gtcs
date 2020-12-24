@@ -77,10 +77,10 @@ public:
         .u16ManMaxTorque  = 1862,
         .u16ManMaxCurrent = 30000,
         .u16ManRpmMode    = 0,
-        .u8TMDControl     = 15,  
+        .u8TMDControl     = 8,  
     }; 
     GtcsCtrlTelegramStrcut loosen = {
-        .u16Ctrlflags     = 9216,       // 
+        .u16Ctrlflags     = 26368,       // 
         .u16ControlMode   = 0,          // Manuala mode
         .u16WorkProc      = 4000,
         .u16CtrlProgram   = 1,
@@ -89,7 +89,7 @@ public:
         .u16ManMaxTorque  = 1862,
         .u16ManMaxCurrent = 30000,
         .u16ManRpmMode    = 0,
-        .u8TMDControl     = 15,
+        .u8TMDControl     = 4,
     };
     GtcsCtrlTelegramStrcut self_leaning = {
         .u16Ctrlflags     = 9216,       // 
@@ -117,7 +117,24 @@ public:
         header.type_num  = MCB_TELEGRAM_TYPE::STATUS;
     };
     ~StatusTelegram(){};
-    GtcsStatusTelegramStrcut mcb_status = 
+    GtcsStatusTelegramStrcut last_status = 
+    {
+        .u16Statusflags = 0,   // uint16
+        .u32ActError    = 0,
+        .u16ActProcNr   = 0,
+        .u16ActStepNr   = 0,
+        .u16ActCurr     = 0,
+        .u16ActTorque   = 0,
+        .u16ActRPM      = 0,
+        .u16MaxCurrent  = 0,
+        .u16MaxTorque   = 0,
+        .u32Angle       = 0,      
+        .u32Revolutions = 0,
+        .u16TMDFlags    = 0,
+        .s16Debug       = 0,
+        .s32Debug       = 0, 
+    };
+    GtcsStatusTelegramStrcut current_status = 
     {
         .u16Statusflags = 0,   // uint16
         .u32ActError    = 0,
@@ -136,6 +153,8 @@ public:
     };
     // int DecodeTelegramArray(std::array<std::uint8_t,48> received_telegram);
     int DecodeTelegramArray();
+    int CheckLoosenStatus(uint16_t last_status_flags,uint16_t current_status_flags);
+    bool loosen_status = false;
 };
 // Wrie Request Telegram
 class WriteRequestTelegram : public TelegramStruct
@@ -270,7 +289,6 @@ public:
     ~StepDataResponseTelegram(){};
 };    
 #pragma endregion
-
 #pragma region Telegram
 class GtcsMcbTelegram
 {
@@ -293,7 +311,7 @@ public:
     StepDataResponseTelegram    step_response;   // type_num = 15
 };
 #pragma endregion
-#pragma region Telgram
+#pragma region GtcsMcbCommunication
 class GtcsMcbCommunication
 {
 private:
@@ -305,9 +323,7 @@ private:
     char com_name[128];
     int com_num = 0; 
 
-    #pragma region RW MCB Parameter.
-    // Polling to MCB.
-    int PollingToMcb();    
+    #pragma region RW MCB Parameter. 
     // Identification Parameter.(MainID = 1)
     int ReadIdentificationParameter();
     int WriteIdentificationParameter();
@@ -322,8 +338,14 @@ private:
     // Prcoess Parameter.(Main ID = 4)
     int ReadProcessParameter(int processnum);
     int WriteProcessParameter(McbID4Struct *process,int processid); 
+
     #pragma endregion
+    // Test Function.
     int TestMcbRW();
+    // Polling to MCB.
+    int CheckLoosenStatus();
+    int NormalPollingToMcb();
+    int AdvancePollingToMcb();
 public:
     ~GtcsMcbCommunication();    
     static GtcsMcbCommunication* GetInstance();

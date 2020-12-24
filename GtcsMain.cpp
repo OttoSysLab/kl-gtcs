@@ -80,21 +80,21 @@ void tcpsocket()
 // main.
 int main()
 {
-    // Initial poarameter.
-    std::string db_Path = "/var/www/html/database/tcs.db";
     // Set tcpsocket thread and start.    
     std::thread thread_tcpsocket = std::thread(tcpsocket);
+    
     // Initial object.
+    std::string db_Path = "/var/www/html/database/tcs.db";          // Initial database path.
     GtcsMcbCommunication *mcb = GtcsMcbCommunication::GetInstance();
     GtcsAmsProtocol *ams = GtcsAmsProtocol::GetInstance();
     GtcsBulletinManager manager;
     GtcsBulletin *bulletin = GtcsBulletin::GetInstance();
-    mcb->InitialMcbComPort("/dev/ttymxc3"); 
+    mcb->InitialMcbComPort("/dev/ttymxc3");
     for(int index=0;index<5;index++)
     {
         mcb->CheckMcbFSM((int)MCB_FSM::POLLING);
+        manager.ConvertActuralData300(&mcb->telegram.status.current_status);
     }   
-    manager.ConvertActuralData300(&mcb->telegram.status.mcb_status);
     // loop.
     while (true)
     {
@@ -102,36 +102,21 @@ int main()
         {
             case MAIN_FSM::READY: 
                 mcb->CheckMcbFSM((int)MCB_FSM::POLLING);
-                manager.ConvertActuralData300(&mcb->telegram.status.mcb_status); 
+                manager.ConvertActuralData300(&mcb->telegram.status.current_status); 
                 break;
             case MAIN_FSM::ALARM:
                 mcb->CheckMcbFSM((int)MCB_FSM::READ_PARA);
                 break;
             case MAIN_FSM::SETTING:                                
-                mcb->CheckMcbFSM((int)MCB_FSM::READ_PARA);
                 break;
             // Start System.
             case MAIN_FSM::INITIAL:
-                mcb->CheckMcbFSM((int)MCB_FSM::READ_PARA);
                 break;
             case MAIN_FSM::STATRT:
-                mcb->CheckMcbFSM((int)MCB_FSM::READ_PARA);
                 break;
-        }
-        break;        
-    }
-    // Test database.
-    GtcsDatabase database;
-    if (database.ReadDatabase(db_Path,"basic",&bulletin->DbBulletin.basic.mintemp)!=-1)
-    {
-        std::cout<<bulletin->DbBulletin.basic.mintemp<<std::endl;
-        std::cout<<bulletin->DbBulletin.basic.maxtemp<<std::endl;
-        std::cout<<"Fuck sqlite database!!!"<<std::endl;
-    }
-
-    database.WriteDatabase(db_Path,"basic",&bulletin->DbBulletin.basic.mintemp);
-    
+        }   
+    } 
     // Jion thread.
-    thread_tcpsocket.join();    
+    thread_tcpsocket.join();
     return 0;
 }

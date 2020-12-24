@@ -12,60 +12,114 @@
 =======================================================================================*/
 #include "Common.h"
 
-BitArray::BitArray()
-{}
-BitArray::~BitArray()
-{}
-std::array<bool,32> BitArray::To32BiteArray(int num)
-{
-    std::array<bool,32> result;
-    int length = sizeof(result);
-    for(int index=0;index<length;index++)
-    {
-        if (num &(1<<index))
-        {
-            result[index] = true;  
-        }
-        else
-        {
-            result[index] = false;
-        }
-    }
-    return result;
-}
-std::array<bool,16> BitArray::To16BiteArray(int num)
-{
-    std::array<bool,16> result;
-    int length = sizeof(result);
-    for(int index=0;index<length;index++)
-    {
-        if (num &(1<<index))
-        {
-            result[index] = true;  
-        }
-        else
-        {
-            result[index] = false;
-        }
-    }
-    return result;
-}
+// Convert int to 8 bites array.
 std::array<bool,8> BitArray::To8BiteArray(int num)
 {
     std::array<bool,8> result;
-    int length = sizeof(result);
-    for(int index=0;index<length;index++)
+    int count = sizeof(result);
+    for(int i = 0 ; i<count ; i++)
     {
-        if (num &(1<<index))
+        if (num &(1<<i))
         {
-            result[index] = true;  
+            result[i] = true;  
         }
         else
         {
-            result[index] = false;
+            result[i] = false;
         }
     }
     return result;
 }
-
-
+// Convert int to 16 bites array.
+std::array<bool,16> BitArray::To16BiteArray(int num)
+{
+    std::array<bool,16> result;
+    int count = sizeof(result);
+    for(int i = 0 ; i < count ; i++)
+    {
+        if (num &(1<<i))
+        {
+            result[i] = true;  
+        }
+        else
+        {
+            result[i] = false;
+        }
+    }
+    return result;
+}
+// Convert int to 32 bites array.
+std::array<bool,32> BitArray::To32BiteArray(int num)
+{
+    std::array<bool,32> result;
+    int count = sizeof(result);
+    for(int i=0;i<count;i++)
+    {
+        if (num &(1<<i))
+        {
+            result[i] = true;  
+        }
+        else
+        {
+            result[i] = false;
+        }
+    }
+    return result;
+}
+// Convert 8 bites array to uint8_t.
+uint8_t BitConverter::ToUInt8(std::array<bool,8> array)
+{
+    uint8_t result  = 0;
+    int count  = sizeof(array);
+    for (int i = 0; i < count; i++)
+    {
+        if (array[i] == 1)
+        {
+            result |= 1;  
+        }        
+        else
+        {
+            result |= 0;
+        }
+        result << 1;        
+    }
+    return result;
+}
+// Convert 16 bites array to uint16_t.
+uint16_t BitConverter::ToUInt16(std::array<bool,16> array)
+{
+    uint16_t result  = 0;
+    int count  = sizeof(array);
+    for (int i = 0; i < count; i++)
+    {
+        if (array[i] == 1)
+        {
+            result |= 1;  
+        }        
+        else
+        {
+            result |= 0;
+        }
+        result << 1;        
+    }
+    return result;
+}
+// Convert 32 bites array to uint32_t.
+uint32_t BitConverter::ToUInt32(std::array<bool,32> array)
+{
+    uint32_t result = 0;
+    int count  = sizeof(array);
+    for (int i = 0; i < count; i++)
+    {
+        if (array[i] == 1)
+        {
+            result |= (1<<i);  
+        }        
+        else
+        {
+            result |= (0<<i);
+        }
+        result << 1;        
+    }
+    return result;
+}

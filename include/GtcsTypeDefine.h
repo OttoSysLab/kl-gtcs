@@ -72,7 +72,20 @@ enum MCB_FSM:int {
     READ_PARA,
     WRITE_PARA,
 };
-
+// TMD OUTPUT
+enum TMD_OUTPUT:int {
+    LED_1 = 0,
+    LED_2,
+    LED_3,
+    LED_4,
+};
+// TMD INPUT
+enum TMD_INPUT:int{
+    LEVER_SW = 0,
+    PUSH_SW,
+    REV_SW,
+    TEMP_ALM,
+};
 // Identification Parameter Struct (MID1)
 typedef struct 
 { 

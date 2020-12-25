@@ -24,7 +24,7 @@
 class GtcsBulletinManager
 {
 private:
-    int MainFSM = MAIN_FSM::READY;                          // READY
+    int MainFSM = MAIN_FSM::STATRT;                          // READY
     // int MainFSM = MAIN_FSM::READY;                       // SETTING
     std::string GetMcbRtStatusString(MCB_RT_STATUS status);
     double ConvertToAmsTorque();

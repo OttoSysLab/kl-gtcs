@@ -21,7 +21,7 @@
 #include <chrono>
 
 #include "ComPort.h"
-#include "GtcsTypeDefine.h"
+#include "GtcsGloabDefine.h"
 #include "GtcsBulletin.h"
 #include "CrcChecker.h"
 #include <typeinfo>

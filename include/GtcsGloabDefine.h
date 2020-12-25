@@ -14,6 +14,8 @@
  Date	       	: 2019/08/06                                                         
 =======================================================================================*/
 #include <string>
+#include <list>
+#include <map>
 
 #pragma region GTCS MCB Protcol
 #pragma region Parameter
@@ -67,10 +69,15 @@ enum MAIN_FSM : int{
     ALARM,
 };
 
+enum DB_FSM :int {
+    R_RAM_BAIIC_PARA = 0,
+    W_RAM_BAIIC_PARA ,
+};
+// Enum MCB finite-state-machine status.
 enum MCB_FSM:int {
     POLLING = 0,
-    READ_PARA,
-    WRITE_PARA,
+    WRITE_MCB_BASIC,
+    READ_MCB_BASIC,
 };
 // TMD OUTPUT
 enum TMD_OUTPUT:int {
@@ -228,7 +235,7 @@ typedef struct
 typedef struct 
 {
     /* data */
-    uint32_t u32StartCount;      //SID = 1,Counter for Process Start.
+    uint32_t u32StartCount;      // SID = 1,Counter for Process Start.
     uint32_t u32TighteningCount; // SID = 2,Counter for Process Tightening.
     uint32_t u32IMaxCount;       // SID = 3,Counter for Overcurrent Conditions.
     uint32_t u32tMaxCount;       // SID = 4,"Counter for Overtemperature Conditions".
@@ -963,5 +970,57 @@ typedef struct
     std::string motswver;          // (TEXT)
     std::string end;               // CL,RF
 }GtcsDatabaseBasicStruct;
+
+// //
+// class GtcsDataBaseMap
+// {
+// private:
+//     /* data */
+// public:
+//     std::map<std::string,std::string> basic;
+//     GtcsDataBaseMap(GtcsDatabaseBasicStruct basic_struct)
+//     {
+//         /* data */
+//         basic["mintemp"]           = basic_struct.mintemp;  // Min temperature       (REAL)
+//         basic["maxtemp"]           = basic_struct.maxtemp;  // Max temperature       (REAL)
+//         basic["maxcurrent"]        = basic_struct.maxcurrent;  // Max current           (REAL)
+//         basic["maxpeakcurrent"]    = basic_struct.maxpeakcurrent;  // Max peak current      (INTEGER)
+//         basic["torquesensortype"]  = basic_struct.torquesensortype;  // torque sensor type    (INTEGER)
+//         basic["maxdutycycle"]      = basic_struct.maxdutycycle;  // Max duty cycle        (REAL)
+//         basic["maxtorque"]         = basic_struct.maxtorque;  // Max torque            (REAL)
+//         basic["pwmfreq"]           = basic_struct.pwmfreq;  // PWM frequency         (INTEGER)
+//         basic["maxrpm"]            = basic_struct.maxrpm;  // Max rpm               (INTEGER)
+//         basic["maxslope"]          = basic_struct.maxslope;  // Max slope             (INTEGER)
+//         basic["minbusvolt"]        = basic_struct.minbusvolt;  // Min bus voltage       (REAL)
+//         basic["maxbusvolt"]        = basic_struct.maxbusvolt;  // Max bus voltage       (REAL)
+//         basic["startdutycycle"]    = basic_struct.startdutycycle;  // Start duty cycle      (REAL)
+//         basic["gearboxratio"]      = basic_struct.gearboxratio;  // Gear box ratio        (REAL)
+//         basic["startinp"]          = basic_struct.startinp;  // Start input source    (INTEGER)
+//         basic["revinp"]            = basic_struct.revinp;  // Reverse ipnut source  (INTEGER)
+//         basic["revrpm"]            = basic_struct.revrpm;  // Reverse rpm           (INTEGER)
+//         basic["revslope"]          = basic_struct.revslope;  // Reverse slope         (INTEGER)
+//         basic["revmaxcurrent"]     = basic_struct.revmaxcurrent;  // Reverse max current   (INTEGER)
+//         basic["revmaxtorque"]      = basic_struct.revmaxtorque;  // Reverse max torque    (REAL)
+//         basic["erroridletime"]     = basic_struct.erroridletime;  // Error idle time       (INTEGER)
+//         basic["backlash"]          = basic_struct.backlash;  // Bachlash              (INTEGER)
+//         basic["pgain"]             = basic_struct.pgain;  // Proportional gain     (INTEGER)
+//         basic["igain"]             = basic_struct.igain;  // Integral gain         (INTEGER)
+//         basic["encoder"]           = basic_struct.encoder;  // Encoder               (INTEGER)
+//         // 
+//         basic["mintorque"]         = basic_struct.mintorque;  // (REAL)
+//         basic["minrpm"]            = basic_struct.minrpm;  // (INTEGER)
+//         basic["revminrpm"]         = basic_struct.revminrpm;  // (INTEGER)
+//         basic["dmsswver"]          = basic_struct.dmsswver;  // (INTEGER)
+//         basic["dmscoreid"]         = basic_struct.dmscoreid;  // (INTEGER)
+//         basic["dmssernr"]          = basic_struct.dmssernr;  // (INTEGER)
+//         basic["led"]               = basic_struct.led;  // (INTEGER)
+//         basic["lever_sensitivity"] = basic_struct.lever_sensitivity;  // (INTEGER)
+//         basic["push_sensitivity"]  = basic_struct.push_sensitivity;  // (INTEGER) 
+//         basic["motswver"]          = basic_struct.motswver;  // (TEXT)
+//         basic["end"]               = basic_struct.end;  // CL,RF
+        
+//     };
+//     ~GtcsDataBaseMap(){};
+// };
 #pragma endregion
 #endif

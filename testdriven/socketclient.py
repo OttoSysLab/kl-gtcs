@@ -97,7 +97,8 @@ def encode_ams_cmd(pdict:dict)->str:
 
 # Test socket client.
 def test_socket_client():
-    IP =  "127.0.0.1"
+    # IP =  "127.0.0.1"
+    IP =  "192.168.0.207"
     PORT = 9000
     # 載入傳送的字串
     # _ams_str = encode_ams_cmd(_CMD_302)

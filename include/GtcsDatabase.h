@@ -16,23 +16,41 @@
 #include <stdlib.h>
 #include <cstring>
 #include <sqlite3.h>
-#include <list>
 #include <iostream>
-#include "GtcsTypeDefine.h"
+#include "GtcsGloabDefine.h"
 #include "GtcsBulletin.h"
 
+#pragma region Sqlite3Manager 
 // Gtcs database struct.
+class Sqlite3Manager
+{
+private:
+    std::string db_Path = "";
+public:
+    Sqlite3Manager();
+    ~Sqlite3Manager();
+    int SetDatabasePath(std::string path);
+    std::string GetDatabasePath();
+    // int GetTableNameList(std::string table);
+    int UpdateDatabase(std::string table,std::string *ptr);
+    int ReadDatabase(std::string table,std::string *ptr);  // int SetDatabaseFilePath(std::string path);
+};
+#pragma endregion
+
+#pragma region GtcsDatabase
 class GtcsDatabase
 {
 private:
-    /* data */
+    // Attribute.
     std::list<std::string> data;
+    Sqlite3Manager db_ramdisk;
+    Sqlite3Manager db_emmc;
 public:
     // Constructor.
-    GtcsDatabase(/* args */){};
-    ~GtcsDatabase(){};
-    // Read basic from database.
-    int ReadDatabase(std::string dbPath,std::string table,std::string *ptr);
-    int WriteDatabase(std::string dbPath,std::string table,std::string *ptr);
+    GtcsDatabase(std::string ramdisk_Path,std::string emmc_Path);
+    ~GtcsDatabase(); 
+    std::string GetRamdiskDbPath();
+    std::string GetEmmcDbPath();
+    int CheckDatabaseFSM(int db_fsm);
 };
 #endif

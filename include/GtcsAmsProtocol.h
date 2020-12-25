@@ -16,7 +16,7 @@
 #include <iostream>
 #include <cstring>
 #include <vector>
-#include "GtcsTypeDefine.h"
+#include "GtcsGloabDefine.h"
 #include "GtcsBulletin.h"
 
 #pragma region AMS Protocol object

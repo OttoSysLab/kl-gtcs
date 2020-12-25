@@ -2159,7 +2159,6 @@ int GtcsMcbCommunication::TestMcbRW()
     #pragma endregion    
     return result;
 }
-
 // Normal polling to MCB.
 int GtcsMcbCommunication::NormalPollingToMcb()
 {
@@ -2240,7 +2239,7 @@ int GtcsMcbCommunication::AdvancePollingToMcb()
 // Check MCB FSM.
 int GtcsMcbCommunication::CheckMcbFSM(int mcb_fsm)
 {
-    int result = -1;
+    int result = 0;
     GtcsBulletin *bulletin = GtcsBulletin::GetInstance();
     // std::cout << "======================================= "<< std::endl;
     switch(mcb_fsm)
@@ -2248,13 +2247,14 @@ int GtcsMcbCommunication::CheckMcbFSM(int mcb_fsm)
         case MCB_FSM::POLLING:
             result = NormalPollingToMcb();
             break;
-        case MCB_FSM::READ_PARA:
-            // result = TestMcbRW();
+        case MCB_FSM::WRITE_MCB_BASIC:
+            result = WriteBasicParameter(&bulletin->McbBulletin.BasicPara);
             break;
-        case MCB_FSM::WRITE_PARA:            
+        case MCB_FSM::READ_MCB_BASIC:
+            result = ReadBasicParameter(); 
             break;
     }
-    return result;
+    return result = 0;
 }
 #pragma endregion
 #pragma endregion

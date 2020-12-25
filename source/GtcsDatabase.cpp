@@ -13,104 +13,84 @@
 #include "GtcsDatabase.h"
 #include <sqlite3.h>
 
-// Write data to sqlite.
-int GtcsDatabase::ReadDatabase(std::string dbPath,std::string table,std::string *ptr)
+#pragma region Sqlite3Manager
+#pragma region pirvate
+#pragma endregion
+#pragma region pubilc
+// Constructor.
+Sqlite3Manager::Sqlite3Manager()
+{}
+// Disturctor.
+Sqlite3Manager::~Sqlite3Manager()
+{}
+// Set database path.
+int Sqlite3Manager::SetDatabasePath(std::string path)
 {
-    int result = -1;
-    sqlite3 *db;
-    sqlite3_stmt *stmt;
-    int rc;
-    std::string sql  = "";
-    // Open database. 
-    rc = sqlite3_open(dbPath.c_str(),&db);
-    if (rc)
-    {
-        std::cout<<"Can't open database : "<< sqlite3_errmsg(db) <<std::endl;
-        return result;
-    }
-    // Send SQL statement to db.
-    sql = "SELECT * from "+table;
-    rc = sqlite3_prepare_v2(db, 
-                            sql.c_str(), 
-                            -1, 
-                            &stmt, 
-                            NULL);
-    if (rc != SQLITE_OK)
-    {
-        std::cout<<"SQL error:"<<sqlite3_errmsg(db)<<std::endl;
-        sqlite3_finalize(stmt);
-    }
-
-    // rc = sqlite3_bind_int(stmt, 1, 1;    // Using parameters ("?") is not
-    // if (rc != SQLITE_OK)                      // really necessary, but recommended 
-    // {                 
-    //     string errmsg(sqlite3_errmsg(db));    // (especially for strings) to avoid
-    //     sqlite3_finalize(stmt);               // formatting problems and SQL
-    // }
-
-    rc = sqlite3_step(stmt);
-    if (rc != SQLITE_ROW && rc != SQLITE_DONE) 
-    {
-        // string errmsg(sqlite3_errmsg(db));
-        std::cout<<"SQL error:"<<sqlite3_errmsg(db)<<std::endl;
-        sqlite3_finalize(stmt);
-    }
-    if (rc == SQLITE_DONE) {
-        sqlite3_finalize(stmt);
-        std::cout<<"customer not found"<<std::endl;
-    }
-
-    int index = 0; 
-    *ptr = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, index)));
-    std::cout << "Fuck index = "<<std::to_string(index) << " data = " <<*ptr<< std::endl;
-    
-    while(true)
-    {
-        ptr = (std::string *)(void *)(ptr+1);
-        // 
-        if (*ptr != "\n\r")
-        {
-            index++;
-            if (sqlite3_column_text(stmt, index)==NULL) // If get data == null,break the while loop. 
-            {
-                break;
-            }
-            else
-            {
-                *ptr = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, index)));
-                std::cout << "Fuck index = "<<std::to_string(index) << " data = " <<*ptr<< std::endl;
-            }
-        }
-        else
-        {
-            break;
-        }
-    }
-    
-    sqlite3_finalize(stmt);
-    // Close sqlite3.
-    sqlite3_close(db);
-    result = 1;
-    return result; 
+    int result  = 0;
+    db_Path = path;
+    return result;
 }
-// Write data to sqlite.
-int GtcsDatabase::WriteDatabase(std::string dbPath,std::string table,std::string *ptr)
+// Get database path.
+std::string Sqlite3Manager::GetDatabasePath()
 {
-    int result = -1;
+    return db_Path;
+}
+// // Get table name list.
+// int GetTableNameList(std::string table,std::list<std::string> *table_name_list )
+// {
+//     // Initial parameter.
+//     int result = 0;
+//     sqlite3 *db;
+//     // Open sql.
+//     int rc = sqlite_open(db_Path,&db);
+//     if (rc!=SQLITE_OK)
+//     {
+//         std::cout<<"Can't open database : "<< sqlite3_errmsg(db) <<std::endl;
+//         return result;
+//     }
+//     else
+//     {
+//         std::cout<<"Open database successfully! "<<std::endl;
+//     }
+//     // Read 
+//     std::string strSql = "select * from " + table; 
+//     char *errmsg;
+//     char** pResult;
+//     int nRow;
+//     int nCol;
+//     result = sqlite_get_table(db,strSql.c_str(),&pResult,&nRow,&nCol);
+//     if (result != SQLITE_OK)
+//     {
+//         sqlite3_close(db);
+//         std::cout<<errmsg<<std::endl;
+//         sqlite3_free(errmsg);
+//         return 0;
+//     }
+//     std::cout<<std::to_string(pResult)<<std::endl;
+//     return result;
+// }
+// Write data to sqlite.
+int Sqlite3Manager::UpdateDatabase(std::string table,std::string *ptr)
+{
+    int result = 0;
     sqlite3 *db;
     sqlite3_stmt *stmt;
     int rc;
     std::string sql  = "";
     // Open database. 
-    rc = sqlite3_open(dbPath.c_str(),&db);
+    rc = sqlite3_open(db_Path.c_str(),&db);
     if (rc)
     {
         std::cout<<"Can't open database : "<< sqlite3_errmsg(db) <<std::endl;
         return result;
     }
     // Send SQL statement to db.
-    sql = "SELECT * from "+table;
+    sql = "UPDATE " 
+          + table 
+          + " set %s = "
+          + " where ";
 
+    // updata database.
     rc = sqlite3_prepare_v2(db, 
                             sql.c_str(), 
                             -1, 
@@ -143,7 +123,7 @@ int GtcsDatabase::WriteDatabase(std::string dbPath,std::string table,std::string
 
     int index = 0; 
     *ptr = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, index)));
-    std::cout << "Fuck index = "<<std::to_string(index) << " data = " <<*ptr<< std::endl;
+    // std::cout << "Fuck index = "<<std::to_string(index) << " data = " <<*ptr<< std::endl;
     
     while(true)
     {
@@ -174,3 +154,131 @@ int GtcsDatabase::WriteDatabase(std::string dbPath,std::string table,std::string
     result = 1;
     return result;
 }
+// Write data to sqlite.
+int Sqlite3Manager::ReadDatabase(std::string table,std::string *ptr)
+{
+    int result = 0;
+    sqlite3 *db;
+    sqlite3_stmt *stmt;
+    int rc;
+    std::string sql  = "";
+    // Open database. 
+    rc = sqlite3_open(db_Path.c_str(),&db);
+    if (rc)
+    {
+        std::cout<<"Can't open database : "<< sqlite3_errmsg(db) <<std::endl;
+        return result;
+    }
+    // Send SQL statement to db.
+    sql = "SELECT * from "+table;
+    rc = sqlite3_prepare_v2(db, 
+                            sql.c_str(), 
+                            -1, 
+                            &stmt, 
+                            NULL);
+    if (rc != SQLITE_OK)
+    {
+        std::cout<<"SQL error:"<<sqlite3_errmsg(db)<<std::endl;
+        sqlite3_finalize(stmt);
+    }
+
+    // rc = sqlite3_bind_int(stmt, 1, 1;    // Using parameters ("?") is not
+    // if (rc != SQLITE_OK)                      // really necessary, but recommended 
+    // {                 
+    //     string errmsg(sqlite3_errmsg(db));    // (especially for strings) to avoid
+    //     sqlite3_finalize(stmt);               // formatting problems and SQL
+    // }
+
+    rc = sqlite3_step(stmt);
+    if (rc != SQLITE_ROW && rc != SQLITE_DONE) 
+    {
+        // string errmsg(sqlite3_errmsg(db));
+        std::cout<<"SQL error:"<<sqlite3_errmsg(db)<<std::endl;
+        sqlite3_finalize(stmt);
+    }
+    if (rc == SQLITE_DONE) {
+        sqlite3_finalize(stmt);
+        std::cout<<"customer not found"<<std::endl;
+    }
+
+    int index = 0; 
+    *ptr = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, index)));
+    // std::cout << "Fuck index = "<<std::to_string(index) << " data = " <<*ptr<< std::endl;
+    
+    while(true)
+    {
+        ptr = (std::string *)(void *)(ptr+1);
+        // 
+        if (*ptr != "\n\r")
+        {
+            index++;
+            if (sqlite3_column_text(stmt, index)==NULL) // If get data == null,break the while loop. 
+            {
+                break;
+            }
+            else
+            {
+                *ptr = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, index)));
+                std::cout << "Fuck index = "<<std::to_string(index) << " data = " <<*ptr<< std::endl;
+            }
+        }
+        else
+        {
+            break;
+        }
+    }
+    
+    sqlite3_finalize(stmt);
+    // Close sqlite3.
+    sqlite3_close(db);
+    result = 1;
+    return result; 
+}
+#pragma endregion 
+#pragma endregion
+
+#pragma region GtcsDatabase
+#pragma region private method.
+#pragma endregion
+#pragma region public method
+// Constructor
+GtcsDatabase::GtcsDatabase(std::string ramdisk_Path,std::string emmc_Path)
+{
+    db_ramdisk.SetDatabasePath(ramdisk_Path);
+    db_emmc.SetDatabasePath(emmc_Path);
+}
+// Distructor.
+GtcsDatabase::~GtcsDatabase()
+{}
+// Get ramdisk database file path.
+std::string GtcsDatabase::GetRamdiskDbPath()
+{
+    return db_ramdisk.GetDatabasePath();   
+}
+// Get emmc database file path.
+std::string GtcsDatabase::GetEmmcDbPath()
+{
+    return db_emmc.GetDatabasePath();   
+}
+// Check database FSM
+int GtcsDatabase::CheckDatabaseFSM(int db_fsm)
+{
+    int result = 0;
+    GtcsBulletin *bulletin = GtcsBulletin::GetInstance();
+    switch (db_fsm)
+    {
+        // Select Gtcs database. 
+        case DB_FSM::R_RAM_BAIIC_PARA:
+            result = db_ramdisk.ReadDatabase("basic",&bulletin->DbBulletin.basic.mintemp);
+            // result = db_ramdisk.GetTableNameList("basic");
+            break;
+        case DB_FSM::W_RAM_BAIIC_PARA:
+            result = db_ramdisk.UpdateDatabase("basic",&bulletin->DbBulletin.basic.mintemp);
+            break;
+        default:
+            break;
+    }
+    return result;
+}
+#pragma endregion
+#pragma endregion

@@ -21,13 +21,15 @@
 #include <vector>
 #include <ctime>
 #include <typeinfo>
+#include <stdio.h>
+#include <stdlib.h>
 
 #include "../include/ComPort.h"
 #include "../include/TcpSocket.h"
 #include "../include/CrcChecker.h"
 #include "../include/GtcsDatabase.h"
 #include "../include/GtcsBulletin.h"
-#include "../include/GtcsTypeDefine.h"
+#include "../include/GtcsGloabDefine.h"
 #include "../include/GtcsAmsProtocol.h"
 #include "../include/GtcsMcbCommunication.h"
 #include "../include/GtcsBulletinManager.h"

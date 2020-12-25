@@ -12,7 +12,7 @@
  Programmer    	: Otto Chang                                                                   
  Date	       	: 2019/08/06                                                         
 =======================================================================================*/
-#include "GtcsTypeDefine.h"
+#include "GtcsGloabDefine.h"
 #include "Common.h"
 #include <ctime>
 

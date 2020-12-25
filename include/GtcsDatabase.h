@@ -31,7 +31,6 @@ public:
     ~Sqlite3Manager();
     int SetDatabasePath(std::string path);
     std::string GetDatabasePath();
-    // int GetTableNameList(std::string table);
     int UpdateDatabase(std::string table,std::string *ptr);
     int ReadDatabase(std::string table,std::string *ptr);  // int SetDatabaseFilePath(std::string path);
 };

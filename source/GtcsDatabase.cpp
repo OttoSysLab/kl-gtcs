@@ -35,40 +35,6 @@ std::string Sqlite3Manager::GetDatabasePath()
 {
     return db_Path;
 }
-// // Get table name list.
-// int GetTableNameList(std::string table,std::list<std::string> *table_name_list )
-// {
-//     // Initial parameter.
-//     int result = 0;
-//     sqlite3 *db;
-//     // Open sql.
-//     int rc = sqlite_open(db_Path,&db);
-//     if (rc!=SQLITE_OK)
-//     {
-//         std::cout<<"Can't open database : "<< sqlite3_errmsg(db) <<std::endl;
-//         return result;
-//     }
-//     else
-//     {
-//         std::cout<<"Open database successfully! "<<std::endl;
-//     }
-//     // Read 
-//     std::string strSql = "select * from " + table; 
-//     char *errmsg;
-//     char** pResult;
-//     int nRow;
-//     int nCol;
-//     result = sqlite_get_table(db,strSql.c_str(),&pResult,&nRow,&nCol);
-//     if (result != SQLITE_OK)
-//     {
-//         sqlite3_close(db);
-//         std::cout<<errmsg<<std::endl;
-//         sqlite3_free(errmsg);
-//         return 0;
-//     }
-//     std::cout<<std::to_string(pResult)<<std::endl;
-//     return result;
-// }
 // Write data to sqlite.
 int Sqlite3Manager::UpdateDatabase(std::string table,std::string *ptr)
 {
@@ -219,7 +185,7 @@ int Sqlite3Manager::ReadDatabase(std::string table,std::string *ptr)
             else
             {
                 *ptr = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, index)));
-                std::cout << "Fuck index = "<<std::to_string(index) << " data = " <<*ptr<< std::endl;
+                // std::cout << "Fuck index = "<<std::to_string(index) << " data = " <<*ptr<< std::endl;
             }
         }
         else

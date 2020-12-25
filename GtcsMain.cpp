@@ -106,8 +106,8 @@ int main()
     // Step 1 = Read data from mcb basice parameter.
     if (mcb->CheckMcbFSM((int)MCB_FSM::READ_MCB_BASIC)!=0)
     {
-        // std::uint16_t *ptr = &bulletin->McbBulletin.BasicPara.s16MinTemp;
-        std::cout << std::to_string(bulletin->McbBulletin.BasicPara.s16MaxTemp) <<std::endl;
+        std::uint16_t *ptr = &bulletin->McbBulletin.BasicPara.s16MinTemp;
+        // std::cout << std::to_string(bulletin->McbBulletin.BasicPara.s16MaxTemp) <<std::endl;
     }   
     // Step 2 = Copy tcs.db to ramdisk.
     system(" sudo cp /var/www/html/database/tcs.db /mnt/ramdisk/tcs.db");  
@@ -148,14 +148,14 @@ int main()
             #pragma region 
             // Start System.
             case MAIN_FSM::INITIAL:
+                manager.SetMainFSM(MAIN_FSM::READY);
                 break;
             case MAIN_FSM::STATRT:
                 manager.SetMainFSM(MAIN_FSM::INITIAL);
                 break;
             #pragma endregion
         }
-    } 
-
+    }
     #pragma endregion
     // Jion thread.
     thread_tcpsocket.join();

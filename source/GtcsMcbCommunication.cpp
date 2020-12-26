@@ -17,30 +17,10 @@
 int StatusTelegram::CheckLoosenStatus(uint16_t last_status_flags,uint16_t current_status_flags)
 {
     int result = -1;
-    BitArray bitArray;
-    std::array<bool,16> last_TMD_status = bitArray.To16BiteArray(last_status_flags);
-    std::array<bool,16> current_TMD_status = bitArray.To16BiteArray(current_status_flags);
+    std::array<bool,16> last_TMD_status = BitArray::To16BiteArray(last_status_flags);
+    std::array<bool,16> current_TMD_status = BitArray::To16BiteArray(current_status_flags);
 
     // Falling edge to chang status.
-    // if (current_TMD_status[TMD_INPUT::REV_SW] == true)
-    // {
-    //     if (++check_loosen_cnt>5)
-    //     {
-    //         if (loosen_status == false)
-    //         {
-    //             loosen_status = true;
-    //         }
-    //         else
-    //         {
-    //             loosen_status = false;
-    //         }         
-    //     }
-    // }
-    // else
-    // {
-    //     check_loosen_cnt = 0;
-    // }
-
     if ((last_TMD_status[TMD_INPUT::REV_SW] == false)&(current_TMD_status[TMD_INPUT::REV_SW] == true))
     {
         if (loosen_status == false)
@@ -52,7 +32,7 @@ int StatusTelegram::CheckLoosenStatus(uint16_t last_status_flags,uint16_t curren
             loosen_status = false;
         }
     }
-    
+
     return result;
 }
 #pragma endregion
@@ -624,36 +604,36 @@ int GtcsMcbCommunication::ReadBasicParameter()
     // telegram.rw_response.InitialTelegramArray();
     #pragma endregion
     #pragma region diaplay.
-    // Display package 1.
-    std::cout << "basic_para->s16MinTemp = " << std::to_string(basic_para->s16MinTemp) << std::endl;
-    std::cout << "basic_para->s16MaxTemp = " << std::to_string(basic_para->s16MaxTemp) << std::endl;
-    std::cout << "basic_para->u16MaxCurrent = " << std::to_string(basic_para->u16MaxCurrent) << std::endl;
-    std::cout << "basic_para->u16MaxPeakCurrent = " << std::to_string(basic_para->u16MaxPeakCurrent) << std::endl;
-    std::cout << "basic_para->u16TorqueSensorType = " << std::to_string(basic_para->u16TorqueSensorType) << std::endl;
-    std::cout << "basic_para->u16MaxDutyCycle = " << std::to_string(basic_para->u16MaxDutyCycle) << std::endl;
-    // Display package 2.
-    std::cout << "basic_para->u16MaxTorque = " << std::to_string(basic_para->u16MaxTorque) << std::endl;
-    std::cout << "basic_para->u16PWMFreq = " << std::to_string(basic_para->u16PWMFreq) << std::endl;
-    std::cout << "basic_para->u16MaxRPM = " << std::to_string(basic_para->u16MaxRPM) << std::endl;
-    std::cout << "basic_para->u16MaxSlope = " << std::to_string(basic_para->u16MaxSlope) << std::endl;
-    std::cout << "basic_para->u16MinBusVolt = " << std::to_string(basic_para->u16MinBusVolt) << std::endl;
-    std::cout << "basic_para->u16MaxBusVolt = " << std::to_string(basic_para->u16MaxBusVolt) << std::endl;
-    // Display package 3.
-    std::cout << "basic_para->u16StartDutyCycle = " << std::to_string(basic_para->u16StartDutyCycle) << std::endl;
-    std::cout << "basic_para->u16GearBoxRatio = " << std::to_string(basic_para->u16GearBoxRatio) << std::endl;
-    std::cout << "basic_para->u32StartInp = " << std::to_string(basic_para->u32StartInp) << std::endl;
-    std::cout << "basic_para->u32RevInp = " << std::to_string(basic_para->u32RevInp) << std::endl;
-    std::cout << "basic_para->u16RevRpm = " << std::to_string(basic_para->u16RevRpm) << std::endl;
-    std::cout << "basic_para->u16RevSlope = " << std::to_string(basic_para->u16RevSlope) << std::endl;
-    // Display package 4.
-    std::cout << "basic_para->u16RevMaxCurrent = " << std::to_string(basic_para->u16RevMaxCurrent) << std::endl;
-    std::cout << "basic_para->u16RevMaxTorque = " << std::to_string(basic_para->u16RevMaxTorque) << std::endl;
-    std::cout << "basic_para->u16ErrorIdleTime = " << std::to_string(basic_para->u16ErrorIdleTime) << std::endl;
-    std::cout << "basic_para->u16BackLash = " << std::to_string(basic_para->u16BackLash) << std::endl;
-    std::cout << "basic_para->u16PGain = " << std::to_string(basic_para->u16PGain) << std::endl;
-    std::cout << "basic_para->u16IGain = " << std::to_string(basic_para->u16IGain) << std::endl;
+    // // Display package 1.
+    // std::cout << "basic_para->s16MinTemp = " << std::to_string(basic_para->s16MinTemp) << std::endl;
+    // std::cout << "basic_para->s16MaxTemp = " << std::to_string(basic_para->s16MaxTemp) << std::endl;
+    // std::cout << "basic_para->u16MaxCurrent = " << std::to_string(basic_para->u16MaxCurrent) << std::endl;
+    // std::cout << "basic_para->u16MaxPeakCurrent = " << std::to_string(basic_para->u16MaxPeakCurrent) << std::endl;
+    // std::cout << "basic_para->u16TorqueSensorType = " << std::to_string(basic_para->u16TorqueSensorType) << std::endl;
+    // std::cout << "basic_para->u16MaxDutyCycle = " << std::to_string(basic_para->u16MaxDutyCycle) << std::endl;
+    // // Display package 2.
+    // std::cout << "basic_para->u16MaxTorque = " << std::to_string(basic_para->u16MaxTorque) << std::endl;
+    // std::cout << "basic_para->u16PWMFreq = " << std::to_string(basic_para->u16PWMFreq) << std::endl;
+    // std::cout << "basic_para->u16MaxRPM = " << std::to_string(basic_para->u16MaxRPM) << std::endl;
+    // std::cout << "basic_para->u16MaxSlope = " << std::to_string(basic_para->u16MaxSlope) << std::endl;
+    // std::cout << "basic_para->u16MinBusVolt = " << std::to_string(basic_para->u16MinBusVolt) << std::endl;
+    // std::cout << "basic_para->u16MaxBusVolt = " << std::to_string(basic_para->u16MaxBusVolt) << std::endl;
+    // // Display package 3.
+    // std::cout << "basic_para->u16StartDutyCycle = " << std::to_string(basic_para->u16StartDutyCycle) << std::endl;
+    // std::cout << "basic_para->u16GearBoxRatio = " << std::to_string(basic_para->u16GearBoxRatio) << std::endl;
+    // std::cout << "basic_para->u32StartInp = " << std::to_string(basic_para->u32StartInp) << std::endl;
+    // std::cout << "basic_para->u32RevInp = " << std::to_string(basic_para->u32RevInp) << std::endl;
+    // std::cout << "basic_para->u16RevRpm = " << std::to_string(basic_para->u16RevRpm) << std::endl;
+    // std::cout << "basic_para->u16RevSlope = " << std::to_string(basic_para->u16RevSlope) << std::endl;
+    // // Display package 4.
+    // std::cout << "basic_para->u16RevMaxCurrent = " << std::to_string(basic_para->u16RevMaxCurrent) << std::endl;
+    // std::cout << "basic_para->u16RevMaxTorque = " << std::to_string(basic_para->u16RevMaxTorque) << std::endl;
+    // std::cout << "basic_para->u16ErrorIdleTime = " << std::to_string(basic_para->u16ErrorIdleTime) << std::endl;
+    // std::cout << "basic_para->u16BackLash = " << std::to_string(basic_para->u16BackLash) << std::endl;
+    // std::cout << "basic_para->u16PGain = " << std::to_string(basic_para->u16PGain) << std::endl;
+    // std::cout << "basic_para->u16IGain = " << std::to_string(basic_para->u16IGain) << std::endl;
     // Display package 5.
-    std::cout << "basic_para->u16Encoder = " << std::to_string(basic_para->u16Encoder) << std::endl;
+    // std::cout << "basic_para->u16Encoder = " << std::to_string(basic_para->u16Encoder) << std::endl;
     #pragma endregion
     return result;
 }
@@ -2163,7 +2143,7 @@ int GtcsMcbCommunication::TestMcbRW()
 int GtcsMcbCommunication::NormalPollingToMcb()
 {
     int result = -1;
-    int delay_time = 30;
+    int delay_time = 25;
     if (telegram.status.loosen_status == false)
     {
         telegram.ctrl.EncodeTelegramArray(&telegram.ctrl.fasten,telegram.ctrl.struct_length);

@@ -81,8 +81,8 @@ public:
     }; 
     GtcsCtrlTelegramStrcut loosen = {
         .u16Ctrlflags     = 9216,       // 
-        .u16ControlMode   = 1,          // Manuala mode
-        .u16WorkProc      = 4249,
+        .u16ControlMode   = 0,          // Manuala mode
+        .u16WorkProc      = 4000,       // 4000
         .u16CtrlProgram   = 1,
         .u16ManRpm        = 1000,
         .u16ManSlope      = 1000,
@@ -156,6 +156,7 @@ public:
     int CheckLoosenStatus(uint16_t last_status_flags,uint16_t current_status_flags);
     bool loosen_status = false;
     int check_loosen_cnt = 0;
+    std::string last_rt_status = "-";
 };
 // Wrie Request Telegram
 class WriteRequestTelegram : public TelegramStruct

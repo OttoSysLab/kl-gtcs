@@ -93,6 +93,19 @@ enum TMD_INPUT:int{
     REV_SW,
     TEMP_ALM,
 };
+
+// MCB status flags.
+enum STATUS_FlAGS_IDX:int{
+    TORQUE_MCU_PRSESENT     = 7,         // Flag 7
+    REVERVED                = 8,         // Flag 8
+    TORQUE_MCU_CYCLIC_OFF   = 9,         // Flag 9
+    CYCLIC_TIMEOUT_ENABLE   = 10,        // Flag 10
+    ERROR_OCCURED           = 11,        // Flag 11
+    PROG_STATUS             = 12,        // Flag 12 
+    PROC_STATUS             = 13,        // Flag 13
+    TOOL_REVERSE            = 14,        // Flag 14
+    TOOL_START              = 15,        // Flag 15
+};
 // Identification Parameter Struct (MID1)
 typedef struct 
 { 
@@ -885,35 +898,35 @@ typedef struct
 typedef struct 
 {
     /* data */
-    std::string str1; // str1:Header+DATA
-    std::string str2; // str2:yyyyMMdd HH:mm:ss
-    std::string str3; // str3:check sum ,4 chars
-    std::string str4; // str4:Command_sn
-    std::string str5; // str5:Device type
-    std::string str6; // str6:Tool SN
-    std::string str7; // str7:Device SN
-    std::string str8; // str8:Job ID
-    std::string str9; // str9:Sequence ID
-    std::string str10; // str10:Program ID
-    std::string str11; // str11:Step ID
-    std::string str12; // str12:Direction
-    std::string str13;  // str13:Torque unit
-    std::string str14; // str14:INC/DEC
-    std::string str15; // str15:Last_screw_count
-    std::string str16; // str16:Max_screw_count
-    std::string str17; // str17:Fastening time
-    std::string str18; // str18:Torque
-    std::string str19; // str19:Angle
-    std::string str20; // str20:Max Torque
-    std::string str21; // str21:Revolutions
-    std::string str22; // str22:Status
-    std::string str23; // str23:Inputio
-    std::string str24; // str24:Outputio
-    std::string str25; // str25:Error Masseage
-    std::string str26; // str26:Tool Count
-    std::string str27; // str27:RPM
-    std::string str28; // str28:Tool status
-    std::string str29; // CL,RF
+    std::string header;      // str1:Header+DATA
+    std::string datetime;    // str2:yyyyMMdd HH:mm:ss
+    std::string checksum;    // str3:check sum ,4 chars
+    std::string cmdsn;       // str4:Command_sn
+    std::string dervicetype; // str5:Device type
+    std::string toolsn;      // str6:Tool SN
+    std::string dervicesn;   // str7:Device SN
+    std::string jobid;       // str8:Job ID
+    std::string seqid;       // str9:Sequence ID
+    std::string progid;      // str10:Program ID
+    std::string stepid;      // str11:Step ID
+    std::string dircetion;   // str12:Direction
+    std::string torqueuint;    // str13:Torque unit
+    std::string inc_dec;       // str14:INC/DEC
+    std::string last_screwcnt; // str15:Last_screw_count
+    std::string max_screwcnd;  // str16:Max_screw_count
+    std::string fasteningtime; // str17:Fastening time
+    std::string acttorque;     // str18:Torque
+    std::string actangle;      // str19:Angle
+    std::string maxtorque;     // str20:Max Torque
+    std::string revolutions;   // str21:Revolutions
+    std::string status;        // str22:Status
+    std::string inputio;       // str23:Inputio
+    std::string outputio;      // str24:Outputio
+    std::string errmsg;        // str25:Error Masseage
+    std::string toolcnt;       // str26:Tool Count
+    std::string actrpm;        // str27:RPM
+    std::string toolstatus;    // str28:Tool status
+    std::string clrf;          // CL,RF
 }AmsDATA300Struct;
 // DATA301
 typedef struct 

@@ -13,9 +13,9 @@
  Date	       	: 2019/08/06                                                         
 =======================================================================================*/
 #include "GtcsBulletin.h"
-#include "GtcsTypeDefine.h"
+#include "GtcsGloabDefine.h"
 #include "GtcsAmsProtocol.h"
-#include "GtcsMcbProtocol.h"
+#include "GtcsMcbCommunication.h"
 #include "Common.h"
 #include <ctime>
 
@@ -28,15 +28,16 @@ private:
     // int MainFSM = MAIN_FSM::READY;                       // SETTING
     std::string GetMcbRtStatusString(MCB_RT_STATUS status);
     double ConvertToAmsTorque();
+    std::string GetToolRunTimeStatus();
 public:
     // Constructor.
-    GtcsBulletinManager(/* args */);    
+    GtcsBulletinManager(/* args */);
     // Distructor.
     ~GtcsBulletinManager();
     // Get & Set FSM.
     int GetMainFSM();
     int SetMainFSM(int main_fsm);
-    int ConvertActuralData300(GtcsStatusTelegramStrcut* ptr);
+    int ConvertActuralData300();
 };
 #pragma endregion
 #endif

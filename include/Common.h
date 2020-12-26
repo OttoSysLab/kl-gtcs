@@ -15,6 +15,9 @@
 #include <iostream>    // 
 #include <array>       // s 
 #include <cmath>
+
+
+
 // #endif
 class Common
 {
@@ -25,6 +28,7 @@ public:
     ~Common();                      // 
     // Send Char.
 };
+
 class BitArray
 {
 private:
@@ -32,9 +36,9 @@ private:
 public:
     BitArray(/* args */){};
     ~BitArray(){};
-    std::array<bool,8> To8BiteArray(int num);
-    std::array<bool,16> To16BiteArray(int num);
-    std::array<bool,32> To32BiteArray(int num);
+    static std::array<bool,8> To8BiteArray(int num);
+    static std::array<bool,16> To16BiteArray(int num);
+    static std::array<bool,32> To32BiteArray(int num);
 };
 class BitConverter
 {
@@ -43,8 +47,8 @@ private:
 public:
     BitConverter(/* args */){};
     ~BitConverter(){};
-    uint8_t ToUInt8(std::array<bool,8> array);
-    uint16_t ToUInt16(std::array<bool,16> array);
-    uint32_t ToUInt32(std::array<bool,32> array);
+    static uint8_t ToUInt8(std::array<bool,8> array);
+    static uint16_t ToUInt16(std::array<bool,16> array);
+    static uint32_t ToUInt32(std::array<bool,32> array);
 };
 #endif

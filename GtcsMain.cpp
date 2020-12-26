@@ -22,10 +22,10 @@ void tcpsocket()
     // Socket.
     TcpSocket mytcpserver;
     GtcsAmsProtocol* ams = GtcsAmsProtocol::GetInstance();
-    // char sockip[] = "127.0.0.1";
-    char sockip[] = "192.168.0.207";
+    char sockip[] = "127.0.0.1";
+    // char sockip[] = "192.168.0.207";
     int sockport= 9000;    
-    int MAXLINE = 256;                   // Buffer size. 
+    int MAXLINE = 256;                                         // Buffer size. 
     // Initial parameter.
     int  listenfd, connfd;
     struct sockaddr_in  servaddr;
@@ -96,7 +96,7 @@ int main()
     for(int index=0;index<5;index++)
     {
         mcb->CheckMcbFSM((int)MCB_FSM::POLLING);
-        manager.ConvertActuralData300(&mcb->telegram.status.current_status);
+        manager.ConvertActuralData300();
     }   
     // Ste 3 = Set tcpsocket thread and start.    
     std::thread thread_tcpsocket = std::thread(tcpsocket);
@@ -111,24 +111,23 @@ int main()
     }   
     // Step 2 = Copy tcs.db to ramdisk.
     system(" sudo cp /var/www/html/database/tcs.db /mnt/ramdisk/tcs.db");  
-    
-    // Step 3 = Write basic parameter to tcs.db whoch in ramdisk.
-    
-    // Step 4 = Compare data bwtweem ramdisk and emmc database basic table.
-
-    #ifdef GTCS_TEST_INITIAL
-
-    #endif
-    #pragma endregion
-
     // Test.
     std::string db_ramdisk_Path = "/mnt/ramdisk/tcs.db";          // Initial database path.
-    std::string db_emmc_Path = "/var/www/html/database/tcs.db";          // Initial database path.
+    std::string db_emmc_Path = "/var/www/html/database/tcs.db";   // Initial database path.
     GtcsDatabase database(db_ramdisk_Path,db_emmc_Path);
     database.CheckDatabaseFSM((int)DB_FSM::R_RAM_BAIIC_PARA);    
     std::cout << database.GetRamdiskDbPath() << std::endl;
     std::cout << database.GetEmmcDbPath() << std::endl;
+    
+    // Step 3 = Write basic parameter to tcs.db whoch in ramdisk.
+    
+    // Step 4 = Compare data bwtweem ramdisk and emmc database basic table.
+    
 
+    #ifdef GTCS_TEST_INITIAL
+    #endif
+    #pragma endregion
+    std::cout <<"Gear = "<<std::to_string(bulletin->McbBulletin.BasicPara.u16GearBoxRatio)<<std::endl;
     #pragma region loop
     // loop.
     while (true)
@@ -137,14 +136,13 @@ int main()
         {
             case MAIN_FSM::READY: 
                 mcb->CheckMcbFSM((int)MCB_FSM::POLLING);
-                manager.ConvertActuralData300(&mcb->telegram.status.current_status); 
+                manager.ConvertActuralData300(); 
                 break;
             case MAIN_FSM::ALARM:    
                 break;
             case MAIN_FSM::SETTING:  
                 mcb->CheckMcbFSM((int)MCB_FSM::WRITE_MCB_BASIC);                                              
                 break;
-
             #pragma region 
             // Start System.
             case MAIN_FSM::INITIAL:

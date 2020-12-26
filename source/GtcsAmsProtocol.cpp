@@ -153,32 +153,7 @@ std::string GtcsAmsProtocol::GetAmsBulletin(int amscmd)
     //  std::cout<<result<<std::endl;
     return result;
 }
-
-#pragma region  not used
-// Calaculate hash code.
-// Tdd.
-// typedef std::uint64_t hash_t;
-// constexpr hash_t prime = 0x100000001B3ull;  
-// constexpr hash_t basis = 0xCBF29CE484222325ull;  
-// hash_t hash_(char const* str)  
-// {  
-//     hash_t ret{basis};  
-   
-//     while(*str){  
-//         ret ^= *str;  
-//         ret *= prime;  
-//         str++;  
-//     }  
-//     return ret;  
-// }  
-
-// constexpr hash_t hash_compile_time(char const* str, hash_t last_value = basis)  
-// {  
-//     return *str ? hash_compile_time(str+1, (*str ^ last_value) * prime) : last_value;  
-// }
-#pragma endregion
-
-// 
+// Split String.
 std::vector<std::string> GtcsAmsProtocol::SplitString(const std::string & str,const std::string& pattern)
 {
     std::vector<std::string> result;
@@ -206,7 +181,7 @@ std::vector<std::string> GtcsAmsProtocol::SplitString(const std::string & str,co
   	}
   	return result; 
 }
-//
+// Get Ams SpliteArray.
 std::vector<std::string> GtcsAmsProtocol::GetAmsSpliteArray(const std::string & str)
 {
     std::vector<std::string> splite_1,splite_2,splite_3, result;
@@ -241,7 +216,7 @@ int GtcsAmsProtocol::GetAmsCmdNum(std::string amscmd)
 
     return result;    
 }
-// 
+// Update Protocol Struct.
 int GtcsAmsProtocol::UpdateProtocolStruct(std::string* prt,std::vector<std::string>& ams_array)
 {
     // std::cout << std::to_string(ams_array.size()) << std::endl;

@@ -124,12 +124,13 @@ int main()
     if (mcb->CheckMcbFSM((int)MCB_FSM::READ_MCB_BASIC)!=0)
     {
         std::uint16_t *ptr = &bulletin->McbBulletin.BasicPara.s16MinTemp;
-        // std::cout << std::to_string(bulletin->McbBulletin.BasicPara.s16MaxTemp) <<std::endl;
+        std::cout << std::to_string(bulletin->McbBulletin.BasicPara.s16MaxTemp) <<std::endl;
     }   
     // Step 2 = Copy tcs.db to ramdisk.
-    std::string db_ramdisk_Path = "/mnt/ramdisk/tcs.db";          // Initial database path.
+    
     std::string db_emmc_Path = "/var/www/html/database/tcs.db";   // Initial database path.
-    std::string systemcmd = "sudo " + db_ramdisk_Path + " " + db_emmc_Path;
+    std::string db_ramdisk_Path = "/mnt/ramdisk/tcs.db";          // Initial database path.
+    std::string systemcmd = "sudo cp " + db_emmc_Path + " " + db_ramdisk_Path;
     system(systemcmd.c_str());  
     
     // Step 3 = Write basic parameter to tcs.db which is in ramdisk.
@@ -166,8 +167,6 @@ int main()
                 {
                     manager.SetMainFSM(MAIN_FSM::SETTING);
                 }                
-                // mcb->CheckMcbFSM((int)MCB_FSM::POLLING);
-                // manager.ConvertActuralData300();
                 break;
             case MAIN_FSM::ALARM:    
                 break;

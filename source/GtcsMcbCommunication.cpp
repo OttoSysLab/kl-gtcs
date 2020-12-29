@@ -21,7 +21,7 @@ int StatusTelegram::CheckLoosenStatus(uint16_t last_status_flags,uint16_t curren
     std::array<bool,16> current_TMD_status = BitArray::To16BiteArray(current_status_flags);
 
     // Falling edge to chang status.
-    if ((last_TMD_status[TMD_INPUT::REV_SW] == true)&(current_TMD_status[TMD_INPUT::REV_SW] == false))
+    if ((last_TMD_status[TMD_INPUT::REV_SW] == false)&(current_TMD_status[TMD_INPUT::REV_SW] == true))
     {
         if (loosen_status == false)
         {

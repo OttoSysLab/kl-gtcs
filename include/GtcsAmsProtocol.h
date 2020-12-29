@@ -1,5 +1,8 @@
 #ifndef _GTCS_AMS_PROTOCOL_
 #define _GTCS_AMS_PROTOCOL_
+
+#pragma once
+
 /*=======================================================================================
  Program Nane  	: gtcs_tlg_decoder.c     
  Subject 		: SARM Serial Port Communication Driver Process                                  
@@ -28,10 +31,11 @@ private:
     static GtcsAmsProtocol* instance;
     // Constructor.
     GtcsAmsProtocol(/* args */);
-    int ConvertToProtocolString(std::string* prt,std::string& result);
-    int UpdateProtocolStruct(std::string* prt,std::vector<std::string>& ams_array);
+    int ConvertToProtocolString(std::string* ptr,std::string& result);
+    int UpdateProtocolStruct(std::string* ptr,std::vector<std::string>& ams_array);
     std::vector<std::string> SplitString(const std::string & str,const std::string& pattern);
     std::vector<std::string> GetAmsSpliteArray(const std::string & str);
+    int SetAmsBulletin(std::string ams_string);
 public:    
     int cmdsn = 0; 
     ~GtcsAmsProtocol();
@@ -39,7 +43,7 @@ public:
     // AMSBulletin amsprotocol;
     int GetAmsCmdNum(std::string amscmd);
     std::string GetAmsBulletin(int amscmd);
-    int SetAmsBulletin(std::string ams_string);
+    int CheckRequestStatus(std::string requestcmd);
 };
 #pragma endregion
 #endif

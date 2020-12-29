@@ -30,13 +30,13 @@ GtcsAmsProtocol* GtcsAmsProtocol::GetInstance()
     return instance;
 }
 // Get AMS string 
-int GtcsAmsProtocol::ConvertToProtocolString(std::string *prt,std::string & result)
+int GtcsAmsProtocol::ConvertToProtocolString(std::string *ptr,std::string & result)
 {
-    result = "{"+*prt;
+    result = "{"+*ptr;
     while(true){
-        prt = (std::string *)(void *)(prt+1);
-        if (*prt != "\n\r"){
-            result += ","+*prt;
+        ptr = (std::string *)(void *)(ptr+1);
+        if (*ptr != "\n\r"){
+            result += ","+*ptr;
         }
         else{
             break;
@@ -55,8 +55,8 @@ std::string GtcsAmsProtocol::GetAmsBulletin(int amscmd)
     {
     #pragma region DATA 
     case AMSCMD::DATA300:     
-        // prt_str = (std::string *)(void *)&amsBulletin.DATA300Struct;
-        // ConvertToProtocolString(prt_str,result);    
+        // ptr_str = (std::string *)(void *)&amsBulletin.DATA300Struct;
+        // ConvertToProtocolString(ptr_str,result);    
         ConvertToProtocolString((std::string *)(void *)&amsbulletin->DATA300Struct,result);
         break; 
     case AMSCMD::DATA302:
@@ -217,17 +217,17 @@ int GtcsAmsProtocol::GetAmsCmdNum(std::string amscmd)
     return result;    
 }
 // Update Protocol Struct.
-int GtcsAmsProtocol::UpdateProtocolStruct(std::string* prt,std::vector<std::string>& ams_array)
+int GtcsAmsProtocol::UpdateProtocolStruct(std::string* ptr,std::vector<std::string>& ams_array)
 {
     // std::cout << std::to_string(ams_array.size()) << std::endl;
     // std::cout << ams_array[0] << std::endl;
     int index = 0;
-    *prt = ams_array[index];
+    *ptr = ams_array[index];
     while(true){
         index += 1;
-        prt = (std::string *)(void *)(prt+1);
-        if (*prt!="\n\r"){
-            *prt = ams_array[index];
+        ptr = (std::string *)(void *)(ptr+1);
+        if (*ptr!="\n\r"){
+            *ptr = ams_array[index];
         }
         else{
             break;
@@ -238,6 +238,7 @@ int GtcsAmsProtocol::UpdateProtocolStruct(std::string* prt,std::vector<std::stri
 // Set AMS Protocol struct to bulletin.
 int GtcsAmsProtocol::SetAmsBulletin(std::string ams_string)
 {
+    int result = 1;
     GtcsBulletin* gtcsbulletin = GtcsBulletin::GetInstance();
     AMSBulletin* amsbulletin =& gtcsbulletin->AmsBulletin;
 
@@ -256,6 +257,7 @@ int GtcsAmsProtocol::SetAmsBulletin(std::string ams_string)
     #pragma region REQ
     case AMSCMD::REQ300:
         UpdateProtocolStruct((std::string *)(void *)&amsbulletin->REQ300Struct,ams_arry);
+        result = 0;
         break;
     case AMSCMD::REQ301:
         UpdateProtocolStruct((std::string *)(void *)&amsbulletin->REQ301Struct,ams_arry);
@@ -340,5 +342,11 @@ int GtcsAmsProtocol::SetAmsBulletin(std::string ams_string)
         break;
     #pragma endregion
     }        
-    return 0;
+    return result;
 } 
+// Check gtcs Ams Protocol.
+int GtcsAmsProtocol::CheckRequestStatus(std::string requestcmd)
+{
+    return SetAmsBulletin(requestcmd);
+}
+

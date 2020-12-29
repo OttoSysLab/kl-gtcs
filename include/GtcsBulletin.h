@@ -1,5 +1,6 @@
 #ifndef _GTCS_BULLETIN_
 #define _GTCS_BULLETIN_
+#pragma once
 /*=======================================================================================
  Program Nane  	: gtcs_tlg_decoder.c     
  Subject 		: SARM Serial Port Communication Driver Process                                  
@@ -772,7 +773,9 @@ public:
     static GtcsBulletin* GetInstance();
     AMSBulletin AmsBulletin;
     MCBBulletin McbBulletin;
-    DatabasteBulletin  DbBulletin;       
+    DatabasteBulletin  DbBulletin;  
+    bool uisetting = false;  
+    std::string sockrevcmd = "";    
 };
 #pragma endregion
 #pragma endregion

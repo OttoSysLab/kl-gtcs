@@ -1,5 +1,6 @@
 #ifndef _GTCS_CRC_DECODER_
 #define _GTCS_CRC_DECODER_
+#pragma once
 /*=======================================================================================
  Program Nane  	: gtcs_tlg_decoder.c     
  Subject 		: SARM Serial Port Communication Driver Process                                  

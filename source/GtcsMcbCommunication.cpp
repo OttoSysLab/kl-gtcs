@@ -16,12 +16,12 @@
 // Check TMS status.
 int StatusTelegram::CheckLoosenStatus(uint16_t last_status_flags,uint16_t current_status_flags)
 {
-    int result = -1;
+    int result = 0;
     std::array<bool,16> last_TMD_status = BitArray::To16BiteArray(last_status_flags);
     std::array<bool,16> current_TMD_status = BitArray::To16BiteArray(current_status_flags);
 
     // Falling edge to chang status.
-    if ((last_TMD_status[TMD_INPUT::REV_SW] == false)&(current_TMD_status[TMD_INPUT::REV_SW] == true))
+    if ((last_TMD_status[TMD_INPUT::REV_SW] == true)&(current_TMD_status[TMD_INPUT::REV_SW] == false))
     {
         if (loosen_status == false)
         {
@@ -41,7 +41,7 @@ int StatusTelegram::CheckLoosenStatus(uint16_t last_status_flags,uint16_t curren
 // Telegram Construct.
 TelegramStruct::TelegramStruct()
 {}
-// Telegram Distruct
+// Telegram Distruct.
 TelegramStruct::~TelegramStruct()
 {}
 // Initail telegram array.
@@ -85,6 +85,19 @@ int TelegramStruct::EncodeHeaderArray()
     }
     return result;
 }
+// Ctrl telegram flags configuration.
+int CtrlTelegram::InitialCtrlFlags(GtcsCtrlTelegramStrcut *telegram)
+{
+    int result = 0;
+    telegram->u16Ctrlflags = 0;
+    return result;
+}
+int CtrlTelegram::SetCtrlFlags(GtcsCtrlTelegramStrcut *telegram,int flagIdx)
+{
+    int result = 0;
+    telegram->u16Ctrlflags |= 1<<flagIdx;
+    return result;
+}
 // Encode Ctrl telegram payload array.
 int CtrlTelegram::EncodeTelegramArray(GtcsCtrlTelegramStrcut *ptr_ctrl_telegram,int length)
 {
@@ -117,45 +130,44 @@ int StatusTelegram::DecodeTelegramArray()
 {
     int result = -1;
     current_status.u16Statusflags = ((uint16_t)telegram_array[payload_start_index])+
-                            ((uint16_t)telegram_array[payload_start_index+1]<<8);
+                                    ((uint16_t)telegram_array[payload_start_index+1]<<8);
     current_status.u32ActError    = ((uint32_t)telegram_array[payload_start_index+2])+
-                            ((uint32_t)telegram_array[payload_start_index+3]<<8)+
-                            ((uint32_t)telegram_array[payload_start_index+4]<<16)+
-                            ((uint32_t)telegram_array[payload_start_index+5]<<24);
+                                    ((uint32_t)telegram_array[payload_start_index+3]<<8)+
+                                    ((uint32_t)telegram_array[payload_start_index+4]<<16)+
+                                    ((uint32_t)telegram_array[payload_start_index+5]<<24);
     current_status.u16ActProcNr   = ((uint16_t)telegram_array[payload_start_index+6])+
-                            ((uint16_t)telegram_array[payload_start_index+7]<<8);
+                                    ((uint16_t)telegram_array[payload_start_index+7]<<8);
     current_status.u16ActStepNr   = ((uint16_t)telegram_array[payload_start_index+8])+
-                            ((uint16_t)telegram_array[payload_start_index+9]<<8);
+                                    ((uint16_t)telegram_array[payload_start_index+9]<<8);
     current_status.u16ActCurr     = ((uint16_t)telegram_array[payload_start_index+10])+
-                            ((uint16_t)telegram_array[payload_start_index+11]<<8);
+                                    ((uint16_t)telegram_array[payload_start_index+11]<<8);
     current_status.u16ActTorque   = ((uint16_t)telegram_array[payload_start_index+12])+
-                            ((uint16_t)telegram_array[payload_start_index+13]<<8);
+                                    ((uint16_t)telegram_array[payload_start_index+13]<<8);
     current_status.u16ActRPM      = ((uint16_t)telegram_array[payload_start_index+14])+
-                            ((uint16_t)telegram_array[payload_start_index+15]<<8);
+                                    ((uint16_t)telegram_array[payload_start_index+15]<<8);
     current_status.u16MaxCurrent  = ((uint16_t)telegram_array[payload_start_index+16])+
-                            ((uint16_t)telegram_array[payload_start_index+17]<<8);
+                                    ((uint16_t)telegram_array[payload_start_index+17]<<8);
     current_status.u16MaxTorque   = ((uint16_t)telegram_array[payload_start_index+18])+
-                            ((uint16_t)telegram_array[payload_start_index+19]<<8);
+                                    ((uint16_t)telegram_array[payload_start_index+19]<<8);
     current_status.u32Angle       = ((uint32_t)telegram_array[payload_start_index+20])+
-                            ((uint32_t)telegram_array[payload_start_index+21]<<8)+
-                            ((uint32_t)telegram_array[payload_start_index+22]<<16)+
-                            ((uint32_t)telegram_array[payload_start_index+23]<<24);
+                                    ((uint32_t)telegram_array[payload_start_index+21]<<8)+
+                                    ((uint32_t)telegram_array[payload_start_index+22]<<16)+
+                                    ((uint32_t)telegram_array[payload_start_index+23]<<24);
     current_status.u32Revolutions = ((uint32_t)telegram_array[payload_start_index+24])+
-                            ((uint32_t)telegram_array[payload_start_index+25]<<8)+
-                            ((uint32_t)telegram_array[payload_start_index+26]<<16)+
-                            ((uint32_t)telegram_array[payload_start_index+27]<<24);
+                                    ((uint32_t)telegram_array[payload_start_index+25]<<8)+
+                                    ((uint32_t)telegram_array[payload_start_index+26]<<16)+
+                                    ((uint32_t)telegram_array[payload_start_index+27]<<24);
     current_status.u16TMDFlags    = ((uint16_t)telegram_array[payload_start_index+28])+
-                            ((uint16_t)telegram_array[payload_start_index+29]<<8);
+                                    ((uint16_t)telegram_array[payload_start_index+29]<<8);
     current_status.s16Debug       = ((uint16_t)telegram_array[payload_start_index+30])+
-                            ((uint16_t)telegram_array[payload_start_index+31]<<8);
+                                    ((uint16_t)telegram_array[payload_start_index+31]<<8);
     current_status.s32Debug       = ((uint32_t)telegram_array[payload_start_index+32])+
-                            ((uint32_t)telegram_array[payload_start_index+33]<<8)+
-                            ((uint32_t)telegram_array[payload_start_index+34]<<16)+
-                            ((uint32_t)telegram_array[payload_start_index+35]<<24);
+                                    ((uint32_t)telegram_array[payload_start_index+33]<<8)+
+                                    ((uint32_t)telegram_array[payload_start_index+34]<<16)+
+                                    ((uint32_t)telegram_array[payload_start_index+35]<<24);
     return result;
 }
 #pragma endregion
-
 // Constructor.
 GtcsMcbCommunication::GtcsMcbCommunication(/* args */)
 {}
@@ -2088,11 +2100,12 @@ int GtcsMcbCommunication::WriteProcessParameter(McbID4Struct *process, int proce
     return result;
 }
 #pragma endregion
+
 #pragma region FSM method.
 // Initial MCB comport.
 int GtcsMcbCommunication::InitialMcbComPort(std::string com_name_string)
 {
-    int result = -1;
+    int result = 0;
     // Initial ComPort.
     strcpy(com_name,com_name_string.c_str());
     com_num = comm.InitialComm(com_name);
@@ -2102,7 +2115,7 @@ int GtcsMcbCommunication::InitialMcbComPort(std::string com_name_string)
 // Test Function.
 int GtcsMcbCommunication::TestMcbRW()
 {
-    int result = -1;
+    int result = 0;
     GtcsBulletin *bulletin = GtcsBulletin::GetInstance();
     #pragma region test string.
     #pragma endregion
@@ -2142,14 +2155,28 @@ int GtcsMcbCommunication::TestMcbRW()
 // Normal polling to MCB.
 int GtcsMcbCommunication::NormalPollingToMcb()
 {
-    int result = -1;
+    int result = 0;
     int delay_time = 25;
+    int MAX_READ = 1024;
     if (telegram.status.loosen_status == false)
     {
+        // Configure fasten ctrl telegram.
+        telegram.ctrl.InitialCtrlFlags(&telegram.ctrl.fasten);
+        telegram.ctrl.SetCtrlFlags(&telegram.ctrl.fasten,CTRL_FLAGS_IDX::SHORT_UVW);
+        telegram.ctrl.SetCtrlFlags(&telegram.ctrl.fasten,CTRL_FLAGS_IDX::EN_TIMEOUT_200MS);
+        telegram.ctrl.SetCtrlFlags(&telegram.ctrl.fasten,CTRL_FLAGS_IDX::SC_ENABLE);
+        // Encode ctrl telegram array.
         telegram.ctrl.EncodeTelegramArray(&telegram.ctrl.fasten,telegram.ctrl.struct_length);
     }
     else
     {
+        // Config loosen ctrl telegram.
+        telegram.ctrl.InitialCtrlFlags(&telegram.ctrl.loosen);
+        telegram.ctrl.SetCtrlFlags(&telegram.ctrl.loosen,CTRL_FLAGS_IDX::SHORT_UVW);
+        telegram.ctrl.SetCtrlFlags(&telegram.ctrl.loosen,CTRL_FLAGS_IDX::EN_TIMEOUT_200MS);
+        telegram.ctrl.SetCtrlFlags(&telegram.ctrl.loosen,CTRL_FLAGS_IDX::SC_REVERSE);
+        telegram.ctrl.SetCtrlFlags(&telegram.ctrl.loosen,CTRL_FLAGS_IDX::SC_ENABLE);
+        // Encode ctrl telegram array.
         telegram.ctrl.EncodeTelegramArray(&telegram.ctrl.loosen,telegram.ctrl.struct_length);   
     }
     // Send to MCB.
@@ -2160,7 +2187,7 @@ int GtcsMcbCommunication::NormalPollingToMcb()
     // Read data form mcb.
     std::this_thread::sleep_for(std::chrono::milliseconds(delay_time));
     telegram.status.InitialTelegramArray();
-    result = read(com_num, &telegram.status.telegram_array, 1024);
+    result = read(com_num, &telegram.status.telegram_array, MAX_READ);
     telegram.status.DecodeTelegramArray();
     telegram.status.CheckLoosenStatus(telegram.status.last_status.u16TMDFlags,
                                     telegram.status.current_status.u16TMDFlags);
@@ -2186,7 +2213,7 @@ int GtcsMcbCommunication::NormalPollingToMcb()
 // Advance polling to MCB.
 int GtcsMcbCommunication::AdvancePollingToMcb()
 {
-    int result = -1;
+    int result = 0;
     int delay_time = 20;
     telegram.ctrl.EncodeTelegramArray(&telegram.ctrl.fasten,telegram.ctrl.struct_length);
     // Send to MCB.
@@ -2231,7 +2258,7 @@ int GtcsMcbCommunication::CheckMcbFSM(int mcb_fsm)
             result = WriteBasicParameter(&bulletin->McbBulletin.BasicPara);
             break;
         case MCB_FSM::READ_MCB_BASIC:
-            result = ReadBasicParameter(); 
+            result = ReadBasicParameter();  
             break;
     }
     return result = 0;

@@ -1,9 +1,9 @@
 CC = g++
 INCLUDE = -I"./include" -I"../include"
 OBJS = ./object/GtcsMain.o ./object/ComPort.o ./object/CrcChecker.o ./object/GtcsDatabase.o \
-	./object/TcpSocket.o ./object/GtcsBulletin.o ./object/Common.o \
-	./object/GtcsAmsProtocol.o ./object/GtcsMcbCommunication.o \
-	./object/GtcsBulletinManager.o
+		./object/TcpSocket.o ./object/GtcsBulletin.o ./object/Common.o \
+		./object/GtcsAmsProtocol.o ./object/GtcsMcbCommunication.o \
+		./object/GtcsBulletinManager.o
 LIBS = -lpthread -lsqlite3
 
 gtcs: GtcsMain.o \

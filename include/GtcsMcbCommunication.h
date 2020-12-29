@@ -1,5 +1,6 @@
 #ifndef _GTCS_MCB_TELEGRAM_
 #define _GTCS_MCB_TELEGRAM_
+#pragma once
 /*=======================================================================================
  Program Nane  	: gtcs_tlg_decoder.c     
  Subject 		: SARM Serial Port Communication Driver Process                                  
@@ -68,7 +69,7 @@ public:
     };
     ~CtrlTelegram(){};
     GtcsCtrlTelegramStrcut fasten = {
-        .u16Ctrlflags     = 9216, 
+        .u16Ctrlflags     = 0, 
         .u16ControlMode   = 1,
         .u16WorkProc      = 4248,
         .u16CtrlProgram   = 1,
@@ -80,9 +81,9 @@ public:
         .u8TMDControl     = 8,  
     }; 
     GtcsCtrlTelegramStrcut loosen = {
-        .u16Ctrlflags     = 9216,       // 
-        .u16ControlMode   = 0,          // Manuala mode
-        .u16WorkProc      = 4000,       // 4000
+        .u16Ctrlflags     = 0,          // 
+        .u16ControlMode   = 0,          // Manuala mode = 0,Process mode = 1,
+        .u16WorkProc      = 4249,       
         .u16CtrlProgram   = 1,
         .u16ManRpm        = 1000,
         .u16ManSlope      = 1000,
@@ -92,8 +93,8 @@ public:
         .u8TMDControl     = 4,
     };
     GtcsCtrlTelegramStrcut self_leaning = {
-        .u16Ctrlflags     = 9216,       // 
-        .u16ControlMode   = 0,          // Manuala mode
+        .u16Ctrlflags     = 0,       // 
+        .u16ControlMode   = 1,          // Manuala mode
         .u16WorkProc      = 4000,
         .u16CtrlProgram   = 1,
         .u16ManRpm        = 1000,
@@ -104,6 +105,12 @@ public:
         .u8TMDControl     = 15,
     };
     int struct_length = 10;
+    int screw_enable = false;
+    // Ctrl telegram flags configuration.
+    int InitialCtrlFlags(GtcsCtrlTelegramStrcut *telegram);
+    int SetCtrlFlags(GtcsCtrlTelegramStrcut *telegram,int flagIdx);
+
+    // Encode Telegram array.
     int EncodeTelegramArray(GtcsCtrlTelegramStrcut *ptr_ctrl_telegram,int length);
 };
 // Status Telegram.

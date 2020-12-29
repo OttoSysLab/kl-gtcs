@@ -1,5 +1,6 @@
 #ifndef _TCP_SOCKET_
 #define _TCP_SOCKET_
+#pragma once
 /*=======================================================================================
  Program Nane  	: gtcs_tlg_decoder.c     
  Subject 		: SARM Serial Port Communication Driver Process                                  

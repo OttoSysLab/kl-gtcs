@@ -1,5 +1,6 @@
 #ifndef _GTCS_COMMON_
 #define _GTCS_COMMON_
+#pragma once
 /*=======================================================================================
  Program Nane  	: gtcs_tlg_decoder.c     
  Subject 		: SARM Serial Port Communication Driver Process                                  

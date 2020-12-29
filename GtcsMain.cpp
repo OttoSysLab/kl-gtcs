@@ -21,9 +21,10 @@ void tcpsocket()
 {
     // Socket.
     TcpSocket mytcpserver;
-    GtcsAmsProtocol* ams = GtcsAmsProtocol::GetInstance();
-    char sockip[] = "127.0.0.1";
-    // char sockip[] = "192.168.0.207";
+    GtcsAmsProtocol *ams = GtcsAmsProtocol::GetInstance();
+    GtcsBulletin *bulletin = GtcsBulletin::GetInstance();
+    // char sockip[] = "127.0.0.1";
+    char sockip[] = "192.168.0.207";
     int sockport= 9000;    
     int MAXLINE = 256;                                         // Buffer size. 
     // Initial parameter.
@@ -66,9 +67,27 @@ void tcpsocket()
             printf("accept socket error: %s(errno: %d)\n",strerror(errno),errno);
             continue;
         }
-        // Received daat from tcpclinet.
+        // Received data from tcpclinet.
         n = recv(connfd, revbuff, MAXLINE, 0);
         revbuff[n] = '\0';     
+        bulletin->sockrevcmd  = revbuff;
+        // std::cout << bulletin->sockrevcmd << std::endl;
+        
+        // Decoder CMD dn check request.
+        if (ams->CheckRequestStatus(bulletin->sockrevcmd))
+        {
+            bulletin->uisetting = false;
+        }
+        else
+        {
+            bulletin->uisetting = true;
+        }
+        // Waiting for app to process CMD.
+        while(bulletin->uisetting)
+        {
+            std::cout << bulletin->sockrevcmd << std::endl;
+        } 
+        
         // Send data to tcpclient.   
         strcpy(sendbuff,ams->GetAmsBulletin(ams->GetAmsCmdNum("DATA300")).c_str());
         if (send(connfd,sendbuff,sizeof(sendbuff),0)<0)
@@ -79,11 +98,9 @@ void tcpsocket()
     }
     close(listenfd);
 }
-// 
 // main.
 int main()
 {
-   
     #pragma region Start system. 
     // Step 1 = Initial object.
     GtcsMcbCommunication *mcb = GtcsMcbCommunication::GetInstance();
@@ -110,24 +127,29 @@ int main()
         // std::cout << std::to_string(bulletin->McbBulletin.BasicPara.s16MaxTemp) <<std::endl;
     }   
     // Step 2 = Copy tcs.db to ramdisk.
-    system(" sudo cp /var/www/html/database/tcs.db /mnt/ramdisk/tcs.db");  
-    // Test.
     std::string db_ramdisk_Path = "/mnt/ramdisk/tcs.db";          // Initial database path.
     std::string db_emmc_Path = "/var/www/html/database/tcs.db";   // Initial database path.
+    std::string systemcmd = "sudo " + db_ramdisk_Path + " " + db_emmc_Path;
+    system(systemcmd.c_str());  
+    
+    // Step 3 = Write basic parameter to tcs.db which is in ramdisk.
     GtcsDatabase database(db_ramdisk_Path,db_emmc_Path);
     database.CheckDatabaseFSM((int)DB_FSM::R_RAM_BAIIC_PARA);    
     std::cout << database.GetRamdiskDbPath() << std::endl;
     std::cout << database.GetEmmcDbPath() << std::endl;
     
-    // Step 3 = Write basic parameter to tcs.db whoch in ramdisk.
-    
     // Step 4 = Compare data bwtweem ramdisk and emmc database basic table.
     
-
+    // Step 5 = Jump to selected MAIN_FSM. 
     #ifdef GTCS_TEST_INITIAL
     #endif
     #pragma endregion
-    std::cout <<"Gear = "<<std::to_string(bulletin->McbBulletin.BasicPara.u16GearBoxRatio)<<std::endl;
+    
+    #pragma region 
+    // Display some informaiton. 
+    std::cout <<"Gear Ratio = "<<std::to_string(bulletin->McbBulletin.BasicPara.u16GearBoxRatio)<<std::endl;
+    #pragma endregion
+
     #pragma region loop
     // loop.
     while (true)
@@ -135,13 +157,27 @@ int main()
         switch(manager.GetMainFSM())
         {
             case MAIN_FSM::READY: 
-                mcb->CheckMcbFSM((int)MCB_FSM::POLLING);
-                manager.ConvertActuralData300(); 
+                if (bulletin->uisetting==false)
+                {
+                    mcb->CheckMcbFSM((int)MCB_FSM::POLLING);
+                    manager.ConvertActuralData300();
+                } 
+                else // MAIN_FSM Jump to setting mode. 
+                {
+                    manager.SetMainFSM(MAIN_FSM::SETTING);
+                }                
+                // mcb->CheckMcbFSM((int)MCB_FSM::POLLING);
+                // manager.ConvertActuralData300();
                 break;
             case MAIN_FSM::ALARM:    
                 break;
-            case MAIN_FSM::SETTING:  
-                mcb->CheckMcbFSM((int)MCB_FSM::WRITE_MCB_BASIC);                                              
+            case MAIN_FSM::SETTING:
+                // 
+                if (bulletin->uisetting==true)
+                {
+                    std::cout<< "MAIN_FSM::SETTING bulletin->uisetting = true" << std::endl;
+                }
+                // mcb->CheckMcbFSM((int)MCB_FSM::WRITE_MCB_BASIC);                                              
                 break;
             #pragma region 
             // Start System.

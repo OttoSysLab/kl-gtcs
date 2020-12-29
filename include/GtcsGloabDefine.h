@@ -1,6 +1,7 @@
 #ifndef _GTCS_TYPE_DEFINE_
 #define _GTCS_TYPE_DEFINE_
 // #define _GTCS_TEST_
+#pragma once
 /*=======================================================================================
  Program Nane  	: gtcs_tlg_decoder.c     
  Subject 		: SARM Serial Port Communication Driver Process                                  
@@ -19,18 +20,19 @@
 
 #pragma region GTCS MCB Protcol
 #pragma region Parameter
-// Identification Parameter.(MID1)
-enum MCBMAID : int{
-    ID1 = 1,
-    ID2,
-    ID3,
-    ID4,
-    ID5,
-    ID6,
-    ID7,
-    ID8,
-    ID9,
-};
+// // Identification Parameter.(MID1)
+// enum MCBMAID : int{
+//     ID1 = 1,
+//     ID2,
+//     ID3,
+//     ID4,
+//     ID5,
+//     ID6,
+//     ID7,
+//     ID8,
+//     ID9,
+// };
+// 
 enum MCB_TELEGRAM_TYPE : uint8_t{
     CTRL             = 1,
     STATUS           = 2,
@@ -92,6 +94,23 @@ enum TMD_INPUT:int{
     PUSH_SW,
     REV_SW,
     TEMP_ALM,
+};
+
+// MCB ctrl flags.
+enum CTRL_FLAGS_IDX:int{
+    SL_AUTO_TURNBLOCK = 0,
+    SL_WAIT_START     = 1,
+    SL_ANGLE          = 2,
+    SL_ANGLE_MONITOR  = 3,
+    TMD_OSF_300       = 7,
+    NAM_NO_TRQERR     = 8,
+    SHORT_UVW         = 9,
+    EN_TIMEOUT_200MS  = 10,
+    ERR_ACK           = 11,
+    RESET             = 12,
+    SC_ENABLE         = 13,
+    SC_REVERSE        = 14,
+    SC_START          = 15,      
 };
 
 // MCB status flags.

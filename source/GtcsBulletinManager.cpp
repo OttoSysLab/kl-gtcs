@@ -24,11 +24,9 @@ int GtcsBulletinManager::GetMainFSM()
 {
     return MainFSM;
 }
-int GtcsBulletinManager::SetMainFSM(int main_fsm)
+void GtcsBulletinManager::SetMainFSM(int main_fsm)
 {
-    int result = -1;
     MainFSM = main_fsm;
-    return result;
 }
 // Convert To Ams Torque.
 double GtcsBulletinManager::ConvertToAmsTorque()

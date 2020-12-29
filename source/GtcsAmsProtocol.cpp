@@ -197,6 +197,10 @@ int GtcsAmsProtocol::GetAmsCmdNum(std::string amscmd)
     if (amscmd == "DATA300"){
         result = AMSCMD::DATA300;
     }
+    else if (amscmd == "REQ300")
+    {
+        result = AMSCMD::REQ300;
+    }
     else if (amscmd =="CMD300")
     {
         result = AMSCMD::CMD300;
@@ -236,9 +240,9 @@ int GtcsAmsProtocol::UpdateProtocolStruct(std::string* ptr,std::vector<std::stri
     return 0;
 }
 // Set AMS Protocol struct to bulletin.
-int GtcsAmsProtocol::SetAmsBulletin(std::string ams_string)
+std::string GtcsAmsProtocol::SetAmsBulletin(std::string ams_string)
 {
-    int result = 1;
+    std::string result = "-";
     GtcsBulletin* gtcsbulletin = GtcsBulletin::GetInstance();
     AMSBulletin* amsbulletin =& gtcsbulletin->AmsBulletin;
 
@@ -257,7 +261,6 @@ int GtcsAmsProtocol::SetAmsBulletin(std::string ams_string)
     #pragma region REQ
     case AMSCMD::REQ300:
         UpdateProtocolStruct((std::string *)(void *)&amsbulletin->REQ300Struct,ams_arry);
-        result = 0;
         break;
     case AMSCMD::REQ301:
         UpdateProtocolStruct((std::string *)(void *)&amsbulletin->REQ301Struct,ams_arry);
@@ -342,10 +345,11 @@ int GtcsAmsProtocol::SetAmsBulletin(std::string ams_string)
         break;
     #pragma endregion
     }        
+    result = ams_arry[0];
     return result;
 } 
 // Check gtcs Ams Protocol.
-int GtcsAmsProtocol::CheckRequestStatus(std::string requestcmd)
+std::string GtcsAmsProtocol::CheckRequestStatus(std::string requestcmd)
 {
     return SetAmsBulletin(requestcmd);
 }

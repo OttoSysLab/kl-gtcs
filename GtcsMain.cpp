@@ -70,22 +70,24 @@ void tcpsocket()
         // Received data from tcpclinet.
         n = recv(connfd, revbuff, MAXLINE, 0);
         revbuff[n] = '\0';     
-        bulletin->sockrevcmd  = revbuff;
-        // std::cout << bulletin->sockrevcmd << std::endl;
-        
+        std::cout << revbuff << std::endl;
+
         // Decoder CMD dn check request.
-        if (ams->CheckRequestStatus(bulletin->sockrevcmd))
+        bulletin->sockrevcmd = ams->CheckRequestStatus(revbuff);
+        if (bulletin->sockrevcmd=="REQ300")
         {
             bulletin->uisetting = false;
         }
         else
         {
-            bulletin->uisetting = true;
+            bulletin->uisetting = true;            
         }
+        
         // Waiting for app to process CMD.
         while(bulletin->uisetting)
         {
-            std::cout << bulletin->sockrevcmd << std::endl;
+            // std::cout << bulletin->sockrevcmd << std::endl;
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
         } 
         
         // Send data to tcpclient.   
@@ -132,6 +134,8 @@ int main()
     std::string db_ramdisk_Path = "/mnt/ramdisk/tcs.db";          // Initial database path.
     std::string systemcmd = "sudo cp " + db_emmc_Path + " " + db_ramdisk_Path;
     system(systemcmd.c_str());  
+    systemcmd = "sudo chmod -R 777 " + db_ramdisk_Path;
+    system(systemcmd.c_str());
     
     // Step 3 = Write basic parameter to tcs.db which is in ramdisk.
     GtcsDatabase database(db_ramdisk_Path,db_emmc_Path);
@@ -141,6 +145,7 @@ int main()
     
     // Step 4 = Compare data bwtweem ramdisk and emmc database basic table.
     
+
     // Step 5 = Jump to selected MAIN_FSM. 
     #ifdef GTCS_TEST_INITIAL
     #endif
@@ -161,22 +166,22 @@ int main()
                 if (bulletin->uisetting==false)
                 {
                     mcb->CheckMcbFSM((int)MCB_FSM::POLLING);
-                    manager.ConvertActuralData300();
+                    manager.ConvertActuralData300();                    
                 } 
-                else // MAIN_FSM Jump to setting mode. 
+                else 
                 {
                     manager.SetMainFSM(MAIN_FSM::SETTING);
-                }                
+                } // MAIN_FSM Jump to setting mode.             
                 break;
             case MAIN_FSM::ALARM:    
                 break;
             case MAIN_FSM::SETTING:
-                // 
                 if (bulletin->uisetting==true)
                 {
                     std::cout<< "MAIN_FSM::SETTING bulletin->uisetting = true" << std::endl;
+                    bulletin->uisetting = false;
                 }
-                // mcb->CheckMcbFSM((int)MCB_FSM::WRITE_MCB_BASIC);                                              
+                manager.SetMainFSM(MAIN_FSM::READY);                                              
                 break;
             #pragma region 
             // Start System.

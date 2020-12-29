@@ -21,8 +21,9 @@ int StatusTelegram::CheckLoosenStatus(uint16_t last_status_flags,uint16_t curren
     std::array<bool,16> current_TMD_status = BitArray::To16BiteArray(current_status_flags);
 
     // Falling edge to chang status.
-    if ((last_TMD_status[TMD_INPUT::REV_SW] == false)&(current_TMD_status[TMD_INPUT::REV_SW] == true))
+    if ((last_TMD_status[TMD_INPUT::REV_SW] == true)&(current_TMD_status[TMD_INPUT::REV_SW] == false))
     {
+        // std::this_thread::sleep_for(std::chrono::milliseconds(200));
         if (loosen_status == false)
         {
             loosen_status = true;
@@ -32,7 +33,6 @@ int StatusTelegram::CheckLoosenStatus(uint16_t last_status_flags,uint16_t curren
             loosen_status = false;
         }
     }
-
     return result;
 }
 #pragma endregion
@@ -2156,29 +2156,27 @@ int GtcsMcbCommunication::TestMcbRW()
 int GtcsMcbCommunication::NormalPollingToMcb()
 {
     int result = 0;
-    int delay_time = 25;
+    int delay_time = 100;
     int MAX_READ = 1024;
+    
+    GtcsCtrlTelegramStrcut *ctrltelegram;
     if (telegram.status.loosen_status == false)
     {
-        // Configure fasten ctrl telegram.
-        telegram.ctrl.InitialCtrlFlags(&telegram.ctrl.fasten);
-        telegram.ctrl.SetCtrlFlags(&telegram.ctrl.fasten,CTRL_FLAGS_IDX::SHORT_UVW);
-        telegram.ctrl.SetCtrlFlags(&telegram.ctrl.fasten,CTRL_FLAGS_IDX::EN_TIMEOUT_200MS);
-        telegram.ctrl.SetCtrlFlags(&telegram.ctrl.fasten,CTRL_FLAGS_IDX::SC_ENABLE);
-        // Encode ctrl telegram array.
-        telegram.ctrl.EncodeTelegramArray(&telegram.ctrl.fasten,telegram.ctrl.struct_length);
+        ctrltelegram = &telegram.ctrl.fasten;   // Configure fasten ctrl telegram.
     }
     else
     {
-        // Config loosen ctrl telegram.
-        telegram.ctrl.InitialCtrlFlags(&telegram.ctrl.loosen);
-        telegram.ctrl.SetCtrlFlags(&telegram.ctrl.loosen,CTRL_FLAGS_IDX::SHORT_UVW);
-        telegram.ctrl.SetCtrlFlags(&telegram.ctrl.loosen,CTRL_FLAGS_IDX::EN_TIMEOUT_200MS);
-        telegram.ctrl.SetCtrlFlags(&telegram.ctrl.loosen,CTRL_FLAGS_IDX::SC_REVERSE);
-        telegram.ctrl.SetCtrlFlags(&telegram.ctrl.loosen,CTRL_FLAGS_IDX::SC_ENABLE);
-        // Encode ctrl telegram array.
-        telegram.ctrl.EncodeTelegramArray(&telegram.ctrl.loosen,telegram.ctrl.struct_length);   
+        ctrltelegram = &telegram.ctrl.loosen;   // Config loosen ctrl telegram.
     }
+
+    // Configur .
+    telegram.ctrl.SetCtrlFlags(ctrltelegram,CTRL_FLAGS_IDX::SHORT_UVW);
+    telegram.ctrl.SetCtrlFlags(ctrltelegram,CTRL_FLAGS_IDX::EN_TIMEOUT_200MS);
+    telegram.ctrl.SetCtrlFlags(ctrltelegram,CTRL_FLAGS_IDX::SC_ENABLE);
+    
+    // Encode ctrl telegram array.
+    telegram.ctrl.EncodeTelegramArray(ctrltelegram,telegram.ctrl.struct_length);
+    
     // Send to MCB.
     for(int index=0;index<48;index++)
     {
@@ -2189,8 +2187,8 @@ int GtcsMcbCommunication::NormalPollingToMcb()
     telegram.status.InitialTelegramArray();
     result = read(com_num, &telegram.status.telegram_array, MAX_READ);
     telegram.status.DecodeTelegramArray();
-    telegram.status.CheckLoosenStatus(telegram.status.last_status.u16TMDFlags,
-                                    telegram.status.current_status.u16TMDFlags);
+    telegram.status.CheckLoosenStatus(telegram.status.last_status.u16TMDFlags,telegram.status.current_status.u16TMDFlags);
+    
     #pragma region not used
     // std::cout <<"u16Statusflags = "<<std::to_string(telegram.status.current_status.u16Statusflags)<< std::endl;
     // std::cout <<"u32ActError    = "<<std::to_string(telegram.status.current_status.u32ActError)<< std::endl;

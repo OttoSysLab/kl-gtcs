@@ -68,6 +68,7 @@ public:
         header.type_num = MCB_TELEGRAM_TYPE::CTRL;
     };
     ~CtrlTelegram(){};
+    
     GtcsCtrlTelegramStrcut fasten = {
         .u16Ctrlflags     = 0, 
         .u16ControlMode   = 1,
@@ -82,7 +83,7 @@ public:
     }; 
     GtcsCtrlTelegramStrcut loosen = {
         .u16Ctrlflags     = 0,          // 
-        .u16ControlMode   = 0,          // Manuala mode = 0,Process mode = 1,
+        .u16ControlMode   = 1,          // Manuala mode = 0,Process mode = 1,
         .u16WorkProc      = 4249,       
         .u16CtrlProgram   = 1,
         .u16ManRpm        = 1000,

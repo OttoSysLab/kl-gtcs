@@ -37,7 +37,7 @@ public:
     ~GtcsBulletinManager();
     // Get & Set FSM.
     int GetMainFSM();
-    int SetMainFSM(int main_fsm);
+    void SetMainFSM(int main_fsm);
     int ConvertActuralData300();
 };
 #pragma endregion

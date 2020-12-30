@@ -64,11 +64,11 @@ enum MCB_RT_STATUS : int{
 };
 
 enum MAIN_FSM : int{
-    STATRT = 0,
-    INITIAL,
-    READY,
+    READY = 0,
     SETTING,
     ALARM,
+    CHECK_SYS,
+    INITIAL,
 };
 
 enum DB_FSM :int {
@@ -77,7 +77,9 @@ enum DB_FSM :int {
 };
 // Enum MCB finite-state-machine status.
 enum MCB_FSM:int {
-    POLLING = 0,
+    NORMAL_POLLING = 0,
+    ADVANCE_POLLING,
+    SETTING_CTRL_TELEGRAM,
     WRITE_MCB_BASIC,
     READ_MCB_BASIC,
 };

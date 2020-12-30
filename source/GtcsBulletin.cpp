@@ -12,8 +12,7 @@
 =======================================================================================*/
 #include "../include/GtcsBulletin.h"
 
-#pragma region bulletin
-// Signalton.
+#pragma region Signalton.
 // Constructor.
 GtcsBulletin::GtcsBulletin(/* args */)
 {}

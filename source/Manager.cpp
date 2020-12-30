@@ -10,32 +10,43 @@
  Programmer    	: Otto Chang                                                                   
  Date	       	: 2019/08/06                                                         
 =======================================================================================*/
-#include "../include/GtcsBulletinManager.h"
+#include "../include/Manager.h"
 
-// Signalton.
+#pragma region manager
 // Constructor.
-GtcsBulletinManager::GtcsBulletinManager(/* args */)
+Manager::Manager(/* args */)
 {}
 // Distructor.
-GtcsBulletinManager::~GtcsBulletinManager()
+Manager::~Manager()
 {}
 // Get main FSM
-int GtcsBulletinManager::GetMainFSM()
+int Manager::GetMainFSM()
 {
     return MainFSM;
 }
-void GtcsBulletinManager::SetMainFSM(int main_fsm)
+// Set Miain fsm.
+void Manager::SetMainFSM(int main_fsm)
 {
     MainFSM = main_fsm;
 }
-// Convert To Ams Torque.
-double GtcsBulletinManager::ConvertToAmsTorque()
-{
-    double result  = 0;
-    return result;
-}
+#pragma endregion
+
+#pragma region NTCS manager
+NtcsManager::NtcsManager()
+{}
+NtcsManager::~NtcsManager()
+{}
+#pragma endregion
+
+#pragma region GTCS manager
+// Constructor
+GtcsManager::GtcsManager()
+{}
+// Distructor
+GtcsManager::~GtcsManager()
+{}
 // Get MCB realy time status string.
-std::string GtcsBulletinManager::GetMcbRtStatusString(MCB_RT_STATUS status)
+std::string GtcsManager::GetMcbRtStatusString(MCB_RT_STATUS status)
 {
     std::string result = "";
     switch(status)
@@ -77,10 +88,8 @@ std::string GtcsBulletinManager::GetMcbRtStatusString(MCB_RT_STATUS status)
     return result;
 }
 // Get real time tool status
-std::string GtcsBulletinManager::GetToolRunTimeStatus()
+std::string GtcsManager::GetToolRunTimeStatus()
 {
-    GtcsBulletin *bulletin = GtcsBulletin::GetInstance();  
-    GtcsMcbCommunication *mcb = GtcsMcbCommunication::GetInstance();
     // Checl flags
     std::array<bool,16> current_status_flags
         = BitArray::To16BiteArray(mcb->telegram.status.current_status.u16Statusflags);
@@ -141,11 +150,11 @@ std::string GtcsBulletinManager::GetToolRunTimeStatus()
     return result;
 }
 // Get MCB realy time status string.
-int GtcsBulletinManager::ConvertActuralData300()
+int GtcsManager::ConvertActuralData300()
 {
-    int result = -1;
-    GtcsBulletin *bulletin = GtcsBulletin::GetInstance();  
-    GtcsMcbCommunication *mcb = GtcsMcbCommunication::GetInstance();
+    int result = 0;
+    // GtcsBulletin *bulletin = GtcsBulletin::GetInstance();  
+    // GtcsMcbComm *mcb = GtcsMcbComm::GetInstance();
     AmsDATA300Struct *data300 = &bulletin->AmsBulletin.DATA300Struct;
     GtcsStatusTelegramStrcut *mcb_status = &mcb->telegram.status.current_status;
     
@@ -205,5 +214,120 @@ int GtcsBulletinManager::ConvertActuralData300()
     data300->toolcnt       = std::to_string(0); // str26:Tool Count
     data300->actrpm        = std::to_string(mcb_status->u16ActRPM); // str27:RPM
     data300->toolstatus    = std::to_string(0); // str28:Tool status
+    return result;
+}
+// Initial Gtcs System.
+int GtcsManager::InitialGtcsSystem()
+{
+    int result = 0;
+    // Initial MCB Com.
+    mcb->InitialMcbComPort("/dev/ttymxc3");
+    for(int index=0;index<5;index++)
+    {
+        mcb->CheckMcbFSM((int)MCB_FSM::NORMAL_POLLING);
+        ConvertActuralData300();
+    }   
+    SetMainFSM(MAIN_FSM::CHECK_SYS);
+    return result;
+} 
+// Initial Gtcs System.
+int GtcsManager::CheckGtcsSystem()
+{
+    int result = 0;
+    // Step 1 = Read data from mcb basice parameter.
+    if (mcb->CheckMcbFSM((int)MCB_FSM::READ_MCB_BASIC)!=0)
+    {
+        std::uint16_t *ptr = &bulletin->McbBulletin.BasicPara.s16MinTemp;
+        std::cout << std::to_string(bulletin->McbBulletin.BasicPara.s16MaxTemp) <<std::endl;
+    }   
+    // Step 2 = Copy tcs.db to ramdisk.    
+    std::string db_emmc_Path = "/var/www/html/database/tcs.db";   // Initial database path.
+    std::string db_ramdisk_Path = "/mnt/ramdisk/tcs.db";          // Initial database path.
+    std::string systemcmd = "sudo cp " + db_emmc_Path + " " + db_ramdisk_Path;
+    system(systemcmd.c_str());  
+    systemcmd = "sudo chmod -R 777 " + db_ramdisk_Path;
+    system(systemcmd.c_str());
+    
+    // Step 3 = Write basic parameter to tcs.db which is in ramdisk.
+    GtcsDatabase database(db_ramdisk_Path,db_emmc_Path);
+    database.CheckDatabaseFSM((int)DB_FSM::R_RAM_BAIIC_PARA);    
+    std::cout << database.GetRamdiskDbPath() << std::endl;
+    std::cout << database.GetEmmcDbPath() << std::endl;
+    
+    // Step 4 = Compare data bwtweem ramdisk and emmc database basic table.
+    
+    // Step 5 = Jump to selected MAIN_FSM. 
+
+    // Display some informaiton. 
+    std::cout <<"Gear Ratio = "<<std::to_string(bulletin->McbBulletin.BasicPara.u16GearBoxRatio)<<std::endl;
+    SetMainFSM(MAIN_FSM::READY);
+    return result;
+}
+// Initial Gtcs System.
+int GtcsManager::RunGtcsSystem()
+{
+    int result = 0;
+    if (bulletin->uisetting==false)
+    {
+        mcb->CheckMcbFSM((int)MCB_FSM::NORMAL_POLLING);
+        ConvertActuralData300();                    
+    } 
+    else 
+    {
+        SetMainFSM(MAIN_FSM::SETTING);
+    } // MAIN_FSM Jump to setting mode.    
+    return result;
+}
+// Clear Gtcs System Alarm.
+int GtcsManager::ClearGtcsSystemAlarm()
+{
+    int result = 0;
+    return result;
+}
+// Setting Gtcs System.
+int GtcsManager::SettingGtcsSystem()
+{
+    int result = 0;
+    if (bulletin->uisetting==true)
+    {
+        std::cout<< "MAIN_FSM::SETTING bulletin->uisetting = true" << std::endl;
+        mcb->CheckMcbFSM((int)MCB_FSM::WRITE_MCB_BASIC);
+        bulletin->uisetting = false;
+    }
+    return result;
+}
+// Check Request Status.
+std::string GtcsManager::CheckUiCmdRequest(std::string reqest_string)
+{
+    return ams->SetAmsBulletin(reqest_string);
+}
+std::string GtcsManager::GetUiCmdResponse()
+{
+    std::string result = ams->GetAmsBulletin(ams->GetAmsCmdNum("DATA300"));
+    return result;
+}
+// Check ui request status.
+int GtcsManager::CheckMainFSM(int main_fsm)
+{
+    int result = 0;
+    // Check gtcs Ams Protocol.
+    switch (main_fsm)
+    {
+    case MAIN_FSM::READY:
+        result = RunGtcsSystem();
+        break;
+    case MAIN_FSM::SETTING:
+        result = SettingGtcsSystem();
+        break;
+    case MAIN_FSM::ALARM:
+        result = ClearGtcsSystemAlarm();
+        break;
+    case MAIN_FSM::CHECK_SYS:
+        result = CheckGtcsSystem();
+        break;
+    case MAIN_FSM::INITIAL:
+        result = InitialGtcsSystem();
+        break;
+    }
     return result;
 }

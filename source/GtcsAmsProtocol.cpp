@@ -11,8 +11,7 @@
  Date	       	: 2019/08/06                                                         
 =======================================================================================*/
 #include "../include/GtcsAmsProtocol.h"
-
-// Signalton.
+#pragma region Signalton.
 // Constructor.
 GtcsAmsProtocol::GtcsAmsProtocol(/* args */)
 {}
@@ -29,6 +28,8 @@ GtcsAmsProtocol* GtcsAmsProtocol::GetInstance()
     }
     return instance;
 }
+#pragma endregion
+
 // Get AMS string 
 int GtcsAmsProtocol::ConvertToProtocolString(std::string *ptr,std::string & result)
 {
@@ -348,9 +349,4 @@ std::string GtcsAmsProtocol::SetAmsBulletin(std::string ams_string)
     result = ams_arry[0];
     return result;
 } 
-// Check gtcs Ams Protocol.
-std::string GtcsAmsProtocol::CheckRequestStatus(std::string requestcmd)
-{
-    return SetAmsBulletin(requestcmd);
-}
 

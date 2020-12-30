@@ -321,13 +321,13 @@ public:
     StepDataResponseTelegram    step_response;   // type_num = 15
 };
 #pragma endregion
-#pragma region GtcsMcbCommunication
-class GtcsMcbCommunication
+#pragma region GtcsMcbComm
+class GtcsMcbComm
 {
 private:
     /* data */
-    static GtcsMcbCommunication* instance;
-    GtcsMcbCommunication(/* args */);
+    static GtcsMcbComm* instance;
+    GtcsMcbComm(/* args */);
     // Initial MCB comm.
     ComPort comm;
     char com_name[128];
@@ -357,8 +357,8 @@ private:
     int NormalPollingToMcb();
     int AdvancePollingToMcb();
 public:
-    ~GtcsMcbCommunication();    
-    static GtcsMcbCommunication* GetInstance();
+    ~GtcsMcbComm();    
+    static GtcsMcbComm* GetInstance();
     // GtcsParameter parameter;
     GtcsMcbTelegram telegram;
     // Initial MCB com.

@@ -16,29 +16,73 @@
 #include "GtcsBulletin.h"
 #include "GtcsGloabDefine.h"
 #include "GtcsAmsProtocol.h"
-#include "GtcsMcbCommunication.h"
+#include "GtcsMcbComm.h"
+#include "GtcsDatabase.h"
 #include "Common.h"
+#include <iostream>
+#include <string.h>
 #include <ctime>
+// #include <array>
 
 #pragma region 
-// GTCS Bulletin.
-class GtcsBulletinManager
+class Manager
 {
 private:
-    int MainFSM = MAIN_FSM::STATRT;                          // READY
-    // int MainFSM = MAIN_FSM::READY;                       // SETTING
-    std::string GetMcbRtStatusString(MCB_RT_STATUS status);
-    double ConvertToAmsTorque();
-    std::string GetToolRunTimeStatus();
+    /* data */
 public:
-    // Constructor.
-    GtcsBulletinManager(/* args */);
-    // Distructor.
-    ~GtcsBulletinManager();
-    // Get & Set FSM.
+    Manager(/* args */);
+    ~Manager();
+    // 
+    int MainFSM = MAIN_FSM::INITIAL;                         // READY    
+    // Get & Set MAIN FSM.
     int GetMainFSM();
     void SetMainFSM(int main_fsm);
+    // virtual int CheckMainFSM(int main_fsm){}=0;
+    // virtual int CheckMainFSM(int main_fsm){};
+    int CheckMainFSM(int main_fsm);
+};
+
+// NTCS manager.
+class NtcsManager : public Manager
+{
+private:
+    /* data */
+public:
+    NtcsManager(/* args */);
+    ~NtcsManager();
+    // int CheckMainFSM(int main_fsm);
+};
+
+// GTCS manager.
+class GtcsManager : public Manager
+{
+private:
+    #pragma region 
+    // Attribute.
+    GtcsBulletin *bulletin = GtcsBulletin::GetInstance(); 
+    GtcsMcbComm *mcb       = GtcsMcbComm::GetInstance(); 
+    GtcsAmsProtocol *ams = GtcsAmsProtocol::GetInstance();
+    // method.
+    std::string GetMcbRtStatusString(MCB_RT_STATUS status);
+    std::string GetToolRunTimeStatus();
     int ConvertActuralData300();
+    #pragma endregion
+    
+    // Gtcs System Main state.
+    int InitialGtcsSystem();
+    int CheckGtcsSystem();
+    int RunGtcsSystem();
+    int ClearGtcsSystemAlarm();
+    int SettingGtcsSystem();
+public:
+    // Constructor.
+    GtcsManager(/* args */);
+    // Distructor.
+    ~GtcsManager();
+    std::string CheckRequestStatus(std::string reqest_string);
+    std::string CheckUiCmdRequest(std::string reqest_string);
+    std::string GetUiCmdResponse();
+    int CheckMainFSM(int main_fsm);
 };
 #pragma endregion
 #endif

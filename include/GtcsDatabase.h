@@ -38,7 +38,7 @@ public:
 #pragma endregion
 
 #pragma region GtcsDatabase
-class GtcsDatabase
+class GtcsDatabase 
 {
 private:
     // Attribute.

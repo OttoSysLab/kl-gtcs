@@ -10,7 +10,7 @@
  Programmer    	: Otto Chang
  Date	       	: 2019/08/06
 =======================================================================================*/
-#include "../include/GtcsMcbCommunication.h"
+#include "../include/GtcsMcbComm.h"
 
 #pragma region Status
 // Check TMS status.
@@ -169,36 +169,36 @@ int StatusTelegram::DecodeTelegramArray()
 }
 #pragma endregion
 // Constructor.
-GtcsMcbCommunication::GtcsMcbCommunication(/* args */)
+GtcsMcbComm::GtcsMcbComm(/* args */)
 {}
 // Distructor.
-GtcsMcbCommunication::~GtcsMcbCommunication()
+GtcsMcbComm::~GtcsMcbComm()
 {}
 // SignleTon instance object.
-GtcsMcbCommunication* GtcsMcbCommunication::instance = 0;
+GtcsMcbComm* GtcsMcbComm::instance = 0;
 // Get Instance.
-GtcsMcbCommunication* GtcsMcbCommunication::GetInstance()
+GtcsMcbComm* GtcsMcbComm::GetInstance()
 {
     if(instance == 0)
     {
-        instance = new GtcsMcbCommunication();
+        instance = new GtcsMcbComm();
     }
     return instance;
 }
 #pragma region RW MCB Paramter.
 // Identification Parameter.(MainID = 1)
-int GtcsMcbCommunication::ReadIdentificationParameter()
+int GtcsMcbComm::ReadIdentificationParameter()
 {
     int result = -1;
     return result;
 }
-int GtcsMcbCommunication::WriteIdentificationParameter()
+int GtcsMcbComm::WriteIdentificationParameter()
 {
     int result = -1;
     return result;
 }
 // Basic Parameter.(MainID = 2)
-int GtcsMcbCommunication::ReadBasicParameter()
+int GtcsMcbComm::ReadBasicParameter()
 {
     int result = -1;
     // Get
@@ -649,7 +649,7 @@ int GtcsMcbCommunication::ReadBasicParameter()
     #pragma endregion
     return result;
 }
-int GtcsMcbCommunication::WriteBasicParameter(McbID2Struct *basic)
+int GtcsMcbComm::WriteBasicParameter(McbID2Struct *basic)
 {
     // Initial local paramter.
     int result = -1;
@@ -1012,7 +1012,7 @@ int GtcsMcbCommunication::WriteBasicParameter(McbID2Struct *basic)
     return result;
 }
 // Write to mcb flash.
-int GtcsMcbCommunication::WriteToMcbFlash(int mainid,int subid,int addr_num)
+int GtcsMcbComm::WriteToMcbFlash(int mainid,int subid,int addr_num)
 {
     int result = -1;
     int main_id = mainid;
@@ -1092,7 +1092,7 @@ int GtcsMcbCommunication::WriteToMcbFlash(int mainid,int subid,int addr_num)
     return result;
 }
 // Step Parameter. (Main ID = 3XXX)
-int GtcsMcbCommunication::ReadStepParametrer(int mainid)
+int GtcsMcbComm::ReadStepParametrer(int mainid)
 {
     int result = -1;
     // Get
@@ -1365,7 +1365,7 @@ int GtcsMcbCommunication::ReadStepParametrer(int mainid)
     return result;
 }
 // Write Step Parameter. (Main ID = 3XXX)
-int GtcsMcbCommunication::WriteStepParameter(McbID3Struct *step, int mainid)
+int GtcsMcbComm::WriteStepParameter(McbID3Struct *step, int mainid)
 {
     int result = -1;
     // Get
@@ -1589,7 +1589,7 @@ int GtcsMcbCommunication::WriteStepParameter(McbID3Struct *step, int mainid)
     return result;
 }
 // Prcoess Parameter.(Main ID = 4XXX)
-int GtcsMcbCommunication::ReadProcessParameter(int processnum)
+int GtcsMcbComm::ReadProcessParameter(int processnum)
 { 
     // Initial local parameter.
     int result = -1;
@@ -1874,7 +1874,7 @@ int GtcsMcbCommunication::ReadProcessParameter(int processnum)
     #pragma endregion
     return result;
 }
-int GtcsMcbCommunication::WriteProcessParameter(McbID4Struct *process, int processid)
+int GtcsMcbComm::WriteProcessParameter(McbID4Struct *process, int processid)
 {
     // Initial local parameter.
     int result = -1;
@@ -2103,7 +2103,7 @@ int GtcsMcbCommunication::WriteProcessParameter(McbID4Struct *process, int proce
 
 #pragma region FSM method.
 // Initial MCB comport.
-int GtcsMcbCommunication::InitialMcbComPort(std::string com_name_string)
+int GtcsMcbComm::InitialMcbComPort(std::string com_name_string)
 {
     int result = 0;
     // Initial ComPort.
@@ -2113,7 +2113,7 @@ int GtcsMcbCommunication::InitialMcbComPort(std::string com_name_string)
     return result;
 }
 // Test Function.
-int GtcsMcbCommunication::TestMcbRW()
+int GtcsMcbComm::TestMcbRW()
 {
     int result = 0;
     GtcsBulletin *bulletin = GtcsBulletin::GetInstance();
@@ -2153,7 +2153,7 @@ int GtcsMcbCommunication::TestMcbRW()
     return result;
 }
 // Normal polling to MCB.
-int GtcsMcbCommunication::NormalPollingToMcb()
+int GtcsMcbComm::NormalPollingToMcb()
 {
     int result = 0;
     int delay_time = 100;
@@ -2209,7 +2209,7 @@ int GtcsMcbCommunication::NormalPollingToMcb()
     return result;
 }
 // Advance polling to MCB.
-int GtcsMcbCommunication::AdvancePollingToMcb()
+int GtcsMcbComm::AdvancePollingToMcb()
 {
     int result = 0;
     int delay_time = 20;
@@ -2242,17 +2242,23 @@ int GtcsMcbCommunication::AdvancePollingToMcb()
     return result;
 }
 // Check MCB FSM.
-int GtcsMcbCommunication::CheckMcbFSM(int mcb_fsm)
+int GtcsMcbComm::CheckMcbFSM(int mcb_fsm)
 {
     int result = 0;
     GtcsBulletin *bulletin = GtcsBulletin::GetInstance();
     // std::cout << "======================================= "<< std::endl;
     switch(mcb_fsm)
     {
-        case MCB_FSM::POLLING:
+        case MCB_FSM::NORMAL_POLLING:
             result = NormalPollingToMcb();
             break;
-        case MCB_FSM::WRITE_MCB_BASIC:
+        case MCB_FSM::ADVANCE_POLLING:
+            result = AdvancePollingToMcb();
+            break;
+        case MCB_FSM::SETTING_CTRL_TELEGRAM:
+            result = 0;
+            break;
+        case MCB_FSM::WRITE_MCB_BASIC: 
             result = WriteBasicParameter(&bulletin->McbBulletin.BasicPara);
             break;
         case MCB_FSM::READ_MCB_BASIC:

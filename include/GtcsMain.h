@@ -17,28 +17,19 @@
 =======================================================================================*/
 #include <iostream>
 #include <thread>
+#include <pthread.h>
 #include <string>
 #include <array>
-#include <vector>
 #include <ctime>
-#include <typeinfo>
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "../include/ComPort.h"
+#include "../include/Manager.h"
 #include "../include/TcpSocket.h"
-#include "../include/CrcChecker.h"
-#include "../include/GtcsDatabase.h"
-#include "../include/GtcsBulletin.h"
-#include "../include/GtcsGloabDefine.h"
-#include "../include/GtcsAmsProtocol.h"
-#include "../include/GtcsMcbCommunication.h"
-#include "../include/GtcsBulletinManager.h"
 
 // #if defined(OS_WINDOWS)
 //     #include <windows.h>
 // #endif
 // #if defined(OS_LINUX)
-#include <pthread.h>
 // #endif
 #endif

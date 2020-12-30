@@ -35,9 +35,9 @@ private:
     // char tcpserverIP[] = "127.0.0.1";  // Socket IP & Port.  
     
 public:
-    TcpSocket(/* args */){};
-    ~TcpSocket(){};
-    void Initial();
-    int TcpSocketServer(char *IP,int Port);
+    TcpSocket(/* args */);
+    ~TcpSocket();
+    //void Initial();
+    //int TcpSocketServer(char *IP,int Port);
 };
 #endif

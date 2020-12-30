@@ -14,9 +14,6 @@
 #include <sqlite3.h>
 
 #pragma region Sqlite3Manager
-#pragma region pirvate
-#pragma endregion
-#pragma region pubilc
 // Constructor.
 Sqlite3Manager::Sqlite3Manager()
 {}
@@ -136,7 +133,7 @@ int Sqlite3Manager::ReadDatabase(std::string table,std::string *ptr)
         return result;
     }
     // Send SQL statement to db.
-    sql = "SELECT * from " + table;
+    sql = "SELECT * from "+table;
     rc = sqlite3_prepare_v2(db, 
                             sql.c_str(), 
                             -1, 
@@ -167,7 +164,7 @@ int Sqlite3Manager::ReadDatabase(std::string table,std::string *ptr)
         std::cout<<"customer not found"<<std::endl;
     }
 
-    int index = 0;
+    int index = 0; 
     *ptr = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, index)));
     // std::cout << "Fuck index = "<<std::to_string(index) << " data = " <<*ptr<< std::endl;
     
@@ -185,7 +182,7 @@ int Sqlite3Manager::ReadDatabase(std::string table,std::string *ptr)
             else
             {
                 *ptr = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, index)));
-                std::cout << "Fuck index = "<<std::to_string(index) << " data = " <<*ptr<< std::endl;
+                // std::cout << "Fuck index = "<<std::to_string(index) << " data = " <<*ptr<< std::endl;
             }
         }
         else
@@ -200,13 +197,9 @@ int Sqlite3Manager::ReadDatabase(std::string table,std::string *ptr)
     result = 1;
     return result; 
 }
-#pragma endregion 
 #pragma endregion
 
 #pragma region GtcsDatabase
-#pragma region private method.
-#pragma endregion
-#pragma region public method
 // Constructor
 GtcsDatabase::GtcsDatabase(std::string ramdisk_Path,std::string emmc_Path)
 {
@@ -246,5 +239,4 @@ int GtcsDatabase::CheckDatabaseFSM(int db_fsm)
     }
     return result;
 }
-#pragma endregion
 #pragma endregion

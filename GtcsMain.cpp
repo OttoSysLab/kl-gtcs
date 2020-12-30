@@ -12,17 +12,13 @@
 =======================================================================================*/
 #include "../include/GtcsMain.h"
 
-#define MCB_CS
-#define GTCS_TEST_INITIAL
-// #define MCB_RW
-
 // TCP socket.
 void tcpsocket()
 {
     // Socket.
     TcpSocket mytcpserver;
-    GtcsAmsProtocol *ams = GtcsAmsProtocol::GetInstance();
     GtcsBulletin *bulletin = GtcsBulletin::GetInstance();
+    GtcsManager manager;
     // char sockip[] = "127.0.0.1";
     char sockip[] = "192.168.0.207";
     int sockport= 9000;    
@@ -73,7 +69,7 @@ void tcpsocket()
         std::cout << revbuff << std::endl;
 
         // Decoder CMD dn check request.
-        bulletin->sockrevcmd = ams->CheckRequestStatus(revbuff);
+        bulletin->sockrevcmd = manager.CheckUiCmdRequest(revbuff);
         if (bulletin->sockrevcmd=="REQ300")
         {
             bulletin->uisetting = false;
@@ -81,17 +77,17 @@ void tcpsocket()
         else
         {
             bulletin->uisetting = true;            
-        }
-        
+        }        
         // Waiting for app to process CMD.
         while(bulletin->uisetting)
         {
             // std::cout << bulletin->sockrevcmd << std::endl;
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
-        } 
+        }
         
         // Send data to tcpclient.   
-        strcpy(sendbuff,ams->GetAmsBulletin(ams->GetAmsCmdNum("DATA300")).c_str());
+        strcpy(sendbuff,manager.GetUiCmdResponse().c_str());
+        // strcpy(sendbuff,bulletin->sockrevcmd.c_str());
         if (send(connfd,sendbuff,sizeof(sendbuff),0)<0)
         {
             printf("send msg error: %s(errno: %d)\n", strerror(errno), errno);
@@ -100,102 +96,45 @@ void tcpsocket()
     }
     close(listenfd);
 }
+
 // main.
 int main()
 {
-    #pragma region Start system. 
-    // Step 1 = Initial object.
-    GtcsMcbCommunication *mcb = GtcsMcbCommunication::GetInstance();
-    GtcsAmsProtocol *ams = GtcsAmsProtocol::GetInstance();
-    GtcsBulletin *bulletin = GtcsBulletin::GetInstance();
-    GtcsBulletinManager manager;
+    // Initial GtcsManager object.s;
+    GtcsManager manager;
 
-    // Step 2 = First polling to MBC.
-    mcb->InitialMcbComPort("/dev/ttymxc3");
-    for(int index=0;index<5;index++)
-    {
-        mcb->CheckMcbFSM((int)MCB_FSM::POLLING);
-        manager.ConvertActuralData300();
-    }   
+    // Initial GTCS system.
+    manager.CheckMainFSM(MAIN_FSM::INITIAL);
+    // Check GTCS System. 
+    manager.CheckMainFSM(MAIN_FSM::CHECK_SYS);
+
     // Ste 3 = Set tcpsocket thread and start.    
     std::thread thread_tcpsocket = std::thread(tcpsocket);
-    #pragma endregion
-    
-    #pragma region Check System   
-    // Step 1 = Read data from mcb basice parameter.
-    if (mcb->CheckMcbFSM((int)MCB_FSM::READ_MCB_BASIC)!=0)
-    {
-        std::uint16_t *ptr = &bulletin->McbBulletin.BasicPara.s16MinTemp;
-        std::cout << std::to_string(bulletin->McbBulletin.BasicPara.s16MaxTemp) <<std::endl;
-    }   
-    // Step 2 = Copy tcs.db to ramdisk.
-    
-    std::string db_emmc_Path = "/var/www/html/database/tcs.db";   // Initial database path.
-    std::string db_ramdisk_Path = "/mnt/ramdisk/tcs.db";          // Initial database path.
-    std::string systemcmd = "sudo cp " + db_emmc_Path + " " + db_ramdisk_Path;
-    system(systemcmd.c_str());  
-    systemcmd = "sudo chmod -R 777 " + db_ramdisk_Path;
-    system(systemcmd.c_str());
-    
-    // Step 3 = Write basic parameter to tcs.db which is in ramdisk.
-    GtcsDatabase database(db_ramdisk_Path,db_emmc_Path);
-    database.CheckDatabaseFSM((int)DB_FSM::R_RAM_BAIIC_PARA);    
-    std::cout << database.GetRamdiskDbPath() << std::endl;
-    std::cout << database.GetEmmcDbPath() << std::endl;
-    
-    // Step 4 = Compare data bwtweem ramdisk and emmc database basic table.
-    
 
-    // Step 5 = Jump to selected MAIN_FSM. 
-    #ifdef GTCS_TEST_INITIAL
-    #endif
-    #pragma endregion
-    
-    #pragma region 
-    // Display some informaiton. 
-    std::cout <<"Gear Ratio = "<<std::to_string(bulletin->McbBulletin.BasicPara.u16GearBoxRatio)<<std::endl;
-    #pragma endregion
-
-    #pragma region loop
     // loop.
     while (true)
     {
         switch(manager.GetMainFSM())
         {
             case MAIN_FSM::READY: 
-                if (bulletin->uisetting==false)
-                {
-                    mcb->CheckMcbFSM((int)MCB_FSM::POLLING);
-                    manager.ConvertActuralData300();                    
-                } 
-                else 
-                {
-                    manager.SetMainFSM(MAIN_FSM::SETTING);
-                } // MAIN_FSM Jump to setting mode.             
+                manager.CheckMainFSM(MAIN_FSM::READY);
                 break;
             case MAIN_FSM::ALARM:    
+                manager.CheckMainFSM(MAIN_FSM::ALARM);
                 break;
             case MAIN_FSM::SETTING:
-                if (bulletin->uisetting==true)
-                {
-                    std::cout<< "MAIN_FSM::SETTING bulletin->uisetting = true" << std::endl;
-                    bulletin->uisetting = false;
-                }
-                manager.SetMainFSM(MAIN_FSM::READY);                                              
+                manager.CheckMainFSM(MAIN_FSM::SETTING);   
                 break;
-            #pragma region 
-            // Start System.
+            case MAIN_FSM::CHECK_SYS:
+                manager.CheckMainFSM(MAIN_FSM::CHECK_SYS);   
+                break;
             case MAIN_FSM::INITIAL:
-                manager.SetMainFSM(MAIN_FSM::READY);
+                manager.CheckMainFSM(MAIN_FSM::INITIAL);   
                 break;
-            case MAIN_FSM::STATRT:
-                manager.SetMainFSM(MAIN_FSM::INITIAL);
-                break;
-            #pragma endregion
         }
     }
-    #pragma endregion
-    // Jion thread.
+    
+    // Join thread.
     thread_tcpsocket.join();
     return 0;
 }

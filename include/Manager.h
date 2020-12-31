@@ -67,6 +67,10 @@ private:
     std::string GetToolRunTimeStatus();
     int ConvertActuralData300();
     #pragma endregion
+
+    #pragma region uisetting
+    int CheckUiSettingFSM(int uicmd);
+    #pragma endregion
     
     // Gtcs System Main state.
     int InitialGtcsSystem();
@@ -81,7 +85,7 @@ public:
     ~GtcsManager();
     std::string CheckRequestStatus(std::string reqest_string);
     std::string CheckUiCmdRequest(std::string reqest_string);
-    std::string GetUiCmdResponse();
+    std::string GetUiCmdResponse(std::string uicmd_string);
     int CheckMainFSM(int main_fsm);
 };
 #pragma endregion

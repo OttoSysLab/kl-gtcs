@@ -35,16 +35,15 @@ private:
     int UpdateProtocolStruct(std::string* ptr,std::vector<std::string>& ams_array);
     std::vector<std::string> SplitString(const std::string & str,const std::string& pattern);
     std::vector<std::string> GetAmsSpliteArray(const std::string & str);
-    // std::string SetAmsBulletin(std::string ams_string);
 public:    
     int cmdsn = 0; 
     ~GtcsAmsProtocol();
     static GtcsAmsProtocol* GetInstance();
     // AMSBulletin amsprotocol;
     int GetAmsCmdNum(std::string amscmd);
+    int GetAmsCmdResponse(int amscmd);
     std::string GetAmsBulletin(int amscmd);
     std::string SetAmsBulletin(std::string ams_string);
-    //std::string CheckRequestStatus(std::string requestcmd);
 };
 #pragma endregion
 #endif

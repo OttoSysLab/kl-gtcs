@@ -773,7 +773,8 @@ public:
     static GtcsBulletin* GetInstance();
     AMSBulletin AmsBulletin;
     MCBBulletin McbBulletin;
-    DatabasteBulletin  DbBulletin;  
+    DatabasteBulletin  DbBulletin;
+    bool checksysok = true;  
     bool uisetting = false;  
     std::string sockrevcmd = "";    
 };

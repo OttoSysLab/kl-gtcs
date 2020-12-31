@@ -46,6 +46,54 @@ int GtcsAmsProtocol::ConvertToProtocolString(std::string *ptr,std::string & resu
     result += "}";
     return 0;
 }
+int GtcsAmsProtocol::GetAmsCmdResponse(int amscmd)
+{
+    int result = 0;
+    switch (amscmd)
+    {
+    #pragma region REQ
+    case AMSCMD::REQ300:      
+        break;
+    #pragma endregion  
+
+    #pragma region CMD
+    case AMSCMD::CMD301:
+        result = AMSCMD::ANS301;
+        break;
+    case AMSCMD::CMD302:
+        result = AMSCMD::ANS302;
+        break;
+    case AMSCMD::CMD310:
+        result = AMSCMD::ANS310;
+        break;
+    case AMSCMD::CMD311:
+        result = AMSCMD::ANS311;
+        break;
+    case AMSCMD::CMD312:
+        result = AMSCMD::ANS312;
+        break;
+    case AMSCMD::CMD320:
+        result = AMSCMD::ANS320;
+        break;
+    case AMSCMD::CMD321:
+        result = AMSCMD::ANS321;
+        break;
+    case AMSCMD::CMD322:
+        result = AMSCMD::ANS322;
+        break;
+    case AMSCMD::CMD323:
+        result = AMSCMD::ANS323;
+        break;
+    case AMSCMD::CMD330:
+        result = AMSCMD::ANS330;
+        break;
+    case AMSCMD::CMD340:
+        result = AMSCMD::ANS340;
+        break;
+    #pragma endregion
+    }
+    return result;
+}
 // Get AMS Protocol string from bulletin.
 std::string GtcsAmsProtocol::GetAmsBulletin(int amscmd)
 {
@@ -172,7 +220,7 @@ std::vector<std::string> GtcsAmsProtocol::SplitString(const std::string & str,co
   			//壓入起始位置為left，長度為（right-left）的字串 
     		result.push_back(str.substr(left, right-left)); 
   		}	
-    	left = right + pattern.size();   //右邊界右移分割依據的長度，作為新的左邊界 
+    	left = right + pattern.size();     //右邊界右移分割依據的長度，作為新的左邊界 
     	right = str.find(pattern, left);   //從left這個位置開始find 
   	}  	
   	//退出迴圈時，左邊界不是最後一個元素 
@@ -195,18 +243,14 @@ std::vector<std::string> GtcsAmsProtocol::GetAmsSpliteArray(const std::string & 
 int GtcsAmsProtocol::GetAmsCmdNum(std::string amscmd)
 {
     int result = -1;
-    if (amscmd == "DATA300"){
-        result = AMSCMD::DATA300;
-    }
-    else if (amscmd == "REQ300")
-    {
+    if (amscmd == "REQ300"){
         result = AMSCMD::REQ300;
     }
-    else if (amscmd =="CMD300")
+    else if (amscmd == "DATA300")
     {
-        result = AMSCMD::CMD300;
-    }
-    else if(amscmd == "CMD301")
+        result = AMSCMD::DATA300;
+    }    
+    else if (amscmd =="CMD301")
     {
         result = AMSCMD::CMD301;
     }
@@ -214,10 +258,14 @@ int GtcsAmsProtocol::GetAmsCmdNum(std::string amscmd)
     {
         result = AMSCMD::CMD302;
     }
-    else
+    else if(amscmd == "CMD303")
     {
-        result = -1;
-    }   
+        result = AMSCMD::CMD303;
+    }
+    else if(amscmd == "CMD340")
+    {
+        result = AMSCMD::CMD340;
+    }
 
     return result;    
 }

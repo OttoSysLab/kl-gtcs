@@ -14,7 +14,6 @@
  Date	       	: 2019/08/06                                                         
 =======================================================================================*/
 #include <iostream>          // 
-#include <array>             // 
 #include <cstring>           // 
 #include <vector>
 #include <thread>
@@ -25,7 +24,7 @@
 #include "GtcsGloabDefine.h"
 #include "GtcsBulletin.h"
 #include "CrcChecker.h"
-#include <typeinfo>
+// #include <typeinfo>
 
 #pragma region telegram strcut define.
 class TelegramStruct
@@ -105,8 +104,8 @@ public:
         .u16ManRpmMode    = 0,
         .u8TMDControl     = 15,
     };
+    bool IsEnable = false;
     int struct_length = 10;
-    int screw_enable = false;
     // Ctrl telegram flags configuration.
     int InitialCtrlFlags(GtcsCtrlTelegramStrcut *telegram);
     int SetCtrlFlags(GtcsCtrlTelegramStrcut *telegram,int flagIdx);

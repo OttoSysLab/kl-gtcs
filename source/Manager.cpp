@@ -213,8 +213,61 @@ int GtcsManager::ConvertActuralData300()
     data300->errmsg        = current_mcb_err; // str25:Error Masseage
     data300->toolcnt       = std::to_string(0); // str26:Tool Count
     data300->actrpm        = std::to_string(mcb_status->u16ActRPM); // str27:RPM
-    data300->toolstatus    = std::to_string(0); // str28:Tool status
+    // data300->toolstatus    = std::to_string(0); // str28:Tool status
     return result;
+}
+// Check Ui Setting FSM.
+int GtcsManager::CheckUiSettingFSM(int uicmd)
+{
+    int result = 0;
+    switch (uicmd)
+    {
+    case AMSCMD::CMD302:
+        if(bulletin->AmsBulletin.CMD302Struct.str5 == "0")
+        {
+            mcb->telegram.ctrl.IsEnable = true;
+            bulletin->AmsBulletin.ANS302Struct.str5 = "0";
+            bulletin->AmsBulletin.DATA300Struct.toolstatus = "0";
+        }
+        else if (bulletin->AmsBulletin.CMD302Struct.str5 == "1")
+        {
+            mcb->telegram.ctrl.IsEnable = false;
+            bulletin->AmsBulletin.ANS302Struct.str5 = "1";
+            bulletin->AmsBulletin.DATA300Struct.toolstatus = "1";
+        }
+        else if (bulletin->AmsBulletin.CMD302Struct.str5 == "2")
+        {
+            bulletin->AmsBulletin.ANS302Struct.str5 = "2";
+        }
+        else if (bulletin->AmsBulletin.CMD302Struct.str5 == "3")
+        {
+            bulletin->AmsBulletin.ANS302Struct.str5 = "3";
+        }
+        break;
+    case AMSCMD::REQ302:
+        break;
+    }
+    return result;
+}
+// Get Ui Cmd Response.
+std::string GtcsManager::GetUiCmdResponse(std::string uicmd_string)
+{
+    int uiresponsecmd = 0;
+    if(uicmd_string == "REQ300")
+    {
+        if(bulletin->checksysok==true)
+        {
+            uiresponsecmd = AMSCMD::DATA300;
+        }
+        else
+        {
+            uiresponsecmd = AMSCMD::REQ301;
+        }
+    }
+    else{
+        uiresponsecmd = ams->GetAmsCmdResponse(ams->GetAmsCmdNum(uicmd_string));
+    }    
+    return ams->GetAmsBulletin(uiresponsecmd);
 }
 // Initial Gtcs System.
 int GtcsManager::InitialGtcsSystem()
@@ -227,6 +280,7 @@ int GtcsManager::InitialGtcsSystem()
         mcb->CheckMcbFSM((int)MCB_FSM::NORMAL_POLLING);
         ConvertActuralData300();
     }   
+    mcb->telegram.ctrl.IsEnable = true;
     SetMainFSM(MAIN_FSM::CHECK_SYS);
     return result;
 } 
@@ -274,8 +328,8 @@ int GtcsManager::RunGtcsSystem()
     } 
     else 
     {
-        SetMainFSM(MAIN_FSM::SETTING);
-    } // MAIN_FSM Jump to setting mode.    
+        SetMainFSM(MAIN_FSM::SETTING); // MAIN_FSM Jump to setting mode.
+    }     
     return result;
 }
 // Clear Gtcs System Alarm.
@@ -290,22 +344,21 @@ int GtcsManager::SettingGtcsSystem()
     int result = 0;
     if (bulletin->uisetting==true)
     {
-        std::cout<< "MAIN_FSM::SETTING bulletin->uisetting = true" << std::endl;
-        mcb->CheckMcbFSM((int)MCB_FSM::WRITE_MCB_BASIC);
+        CheckUiSettingFSM(ams->GetAmsCmdNum(bulletin->sockrevcmd));
         bulletin->uisetting = false;
     }
+    // CheckUiSettingFSM(ams->GetAmsCmdNum(bulletin->sockrevcmd));
+    SetMainFSM(MAIN_FSM::READY);
     return result;
 }
-// Check Request Status.
+#pragma region UI 
+// Check Request Status from UI.
 std::string GtcsManager::CheckUiCmdRequest(std::string reqest_string)
 {
     return ams->SetAmsBulletin(reqest_string);
 }
-std::string GtcsManager::GetUiCmdResponse()
-{
-    std::string result = ams->GetAmsBulletin(ams->GetAmsCmdNum("DATA300"));
-    return result;
-}
+#pragma endregion
+
 // Check ui request status.
 int GtcsManager::CheckMainFSM(int main_fsm)
 {
@@ -318,6 +371,9 @@ int GtcsManager::CheckMainFSM(int main_fsm)
         break;
     case MAIN_FSM::SETTING:
         result = SettingGtcsSystem();
+        #ifdef _DEBUG_MODE_
+        std::cout<<"SETTING = "<<bulletin->AmsBulletin.CMD302Struct.str5 << std::endl;
+        #endif
         break;
     case MAIN_FSM::ALARM:
         result = ClearGtcsSystemAlarm();

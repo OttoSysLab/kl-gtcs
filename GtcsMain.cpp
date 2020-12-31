@@ -10,6 +10,7 @@
  Programmer    	: Otto Chang
  Date	       	: 2019/08/06
 =======================================================================================*/
+// #define _DEBUG_MODE_
 #include "../include/GtcsMain.h"
 
 // TCP socket.
@@ -19,8 +20,8 @@ void tcpsocket()
     TcpSocket mytcpserver;
     GtcsBulletin *bulletin = GtcsBulletin::GetInstance();
     GtcsManager manager;
-    // char sockip[] = "127.0.0.1";
-    char sockip[] = "192.168.0.207";
+    char sockip[] = "127.0.0.1";
+    // char sockip[] = "192.168.0.207";
     int sockport= 9000;    
     int MAXLINE = 256;                                         // Buffer size. 
     // Initial parameter.
@@ -66,7 +67,10 @@ void tcpsocket()
         // Received data from tcpclinet.
         n = recv(connfd, revbuff, MAXLINE, 0);
         revbuff[n] = '\0';     
+        
+        #ifdef _DEBUG_MODE_
         std::cout << revbuff << std::endl;
+        #endif
 
         // Decoder CMD dn check request.
         bulletin->sockrevcmd = manager.CheckUiCmdRequest(revbuff);
@@ -86,7 +90,7 @@ void tcpsocket()
         }
         
         // Send data to tcpclient.   
-        strcpy(sendbuff,manager.GetUiCmdResponse().c_str());
+        strcpy(sendbuff,manager.GetUiCmdResponse(bulletin->sockrevcmd).c_str());
         // strcpy(sendbuff,bulletin->sockrevcmd.c_str());
         if (send(connfd,sendbuff,sizeof(sendbuff),0)<0)
         {
@@ -103,6 +107,7 @@ int main()
     // Initial GtcsManager object.s;
     GtcsManager manager;
 
+    #pragma region  step 1
     // Initial GTCS system.
     manager.CheckMainFSM(MAIN_FSM::INITIAL);
     // Check GTCS System. 
@@ -110,13 +115,15 @@ int main()
 
     // Ste 3 = Set tcpsocket thread and start.    
     std::thread thread_tcpsocket = std::thread(tcpsocket);
+    #pragma endregion
 
+    #pragma region step 2
     // loop.
     while (true)
     {
         switch(manager.GetMainFSM())
         {
-            case MAIN_FSM::READY: 
+            case MAIN_FSM::READY:                       
                 manager.CheckMainFSM(MAIN_FSM::READY);
                 break;
             case MAIN_FSM::ALARM:    
@@ -125,15 +132,10 @@ int main()
             case MAIN_FSM::SETTING:
                 manager.CheckMainFSM(MAIN_FSM::SETTING);   
                 break;
-            case MAIN_FSM::CHECK_SYS:
-                manager.CheckMainFSM(MAIN_FSM::CHECK_SYS);   
-                break;
-            case MAIN_FSM::INITIAL:
-                manager.CheckMainFSM(MAIN_FSM::INITIAL);   
-                break;
         }
     }
-    
+    #pragma endregion
+
     // Join thread.
     thread_tcpsocket.join();
     return 0;

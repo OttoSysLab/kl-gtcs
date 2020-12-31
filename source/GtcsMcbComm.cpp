@@ -2169,11 +2169,15 @@ int GtcsMcbComm::NormalPollingToMcb()
         ctrltelegram = &telegram.ctrl.loosen;   // Config loosen ctrl telegram.
     }
 
-    // Configur .
+    // Configur.
+    telegram.ctrl.InitialCtrlFlags(ctrltelegram);
     telegram.ctrl.SetCtrlFlags(ctrltelegram,CTRL_FLAGS_IDX::SHORT_UVW);
     telegram.ctrl.SetCtrlFlags(ctrltelegram,CTRL_FLAGS_IDX::EN_TIMEOUT_200MS);
-    telegram.ctrl.SetCtrlFlags(ctrltelegram,CTRL_FLAGS_IDX::SC_ENABLE);
-    
+    if(telegram.ctrl.IsEnable == true)
+    {
+        telegram.ctrl.SetCtrlFlags(ctrltelegram,CTRL_FLAGS_IDX::SC_ENABLE);
+    }
+
     // Encode ctrl telegram array.
     telegram.ctrl.EncodeTelegramArray(ctrltelegram,telegram.ctrl.struct_length);
     

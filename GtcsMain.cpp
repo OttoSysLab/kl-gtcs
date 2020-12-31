@@ -121,9 +121,13 @@ int main()
     #pragma endregion
 
     // test.
-    DatabaseBasicInfo dbBasic;
-    std::cout << dbBasic.data["mintemp"]<<std::endl;
-    // std::cout << std::to_string(dbBasic.data.find("mintemp"))<<std::endl;
+    GtcsBulletin *bulletin = GtcsBulletin::GetInstance();
+    DatabaseBasicInfo dbBasic;     
+    std::cout << dbBasic.columnnames[dbBasic.columnnames.size()-1]<<std::endl;
+    std::cout << "motswver = " <<dbBasic.data["motswver"]<<std::endl;
+    dbBasic.SetDataValue(&bulletin->DbBulletin.basic.mintemp);
+    std::cout << "motswver = " <<dbBasic.data["motswver"]<<std::endl;
+
 
     #pragma region step 2
     // loop.

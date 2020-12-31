@@ -13,8 +13,8 @@
  Programmer    	: Otto Chang                                                                   
  Date	       	: 2019/08/06                                                         
 =======================================================================================*/
-#include <stdio.h>
-#include <stdlib.h>
+// #include <stdio.h>
+// #include <stdlib.h>
 #include <cstring>
 #include <sqlite3.h>
 #include <iostream>
@@ -42,7 +42,6 @@ class GtcsDatabase
 {
 private:
     // Attribute.
-    std::list<std::string> data;
     Sqlite3Manager db_ramdisk;
     Sqlite3Manager db_emmc;
 public:

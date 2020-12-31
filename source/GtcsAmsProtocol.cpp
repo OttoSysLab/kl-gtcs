@@ -34,12 +34,15 @@ GtcsAmsProtocol* GtcsAmsProtocol::GetInstance()
 int GtcsAmsProtocol::ConvertToProtocolString(std::string *ptr,std::string & result)
 {
     result = "{"+*ptr;
-    while(true){
+    while(true)
+    {
         ptr = (std::string *)(void *)(ptr+1);
-        if (*ptr != "\n\r"){
+        if (*ptr != "\n\r")
+        {
             result += ","+*ptr;
         }
-        else{
+        else
+        {
             break;
         }
     }
@@ -276,13 +279,16 @@ int GtcsAmsProtocol::UpdateProtocolStruct(std::string* ptr,std::vector<std::stri
     // std::cout << ams_array[0] << std::endl;
     int index = 0;
     *ptr = ams_array[index];
-    while(true){
+    while(true)
+    {
         index += 1;
         ptr = (std::string *)(void *)(ptr+1);
-        if (*ptr!="\n\r"){
+        if (*ptr!="\n\r")
+        {
             *ptr = ams_array[index];
         }
-        else{
+        else
+        {
             break;
         }
     }

@@ -1,3 +1,4 @@
+#define _BDEBUG_DB_
 /*=======================================================================================
  Program Nane  	: gtcs_tlg_decoder.c     
  Subject 		: SARM Serial Port Communication Driver Process                                  
@@ -39,7 +40,7 @@ int Sqlite3Manager::UpdateDatabase(std::string table,std::string *ptr)
     sqlite3 *db;
     sqlite3_stmt *stmt;
     int rc;
-    std::string sql  = "";
+    std::string sqlcmd  = "";
     // Open database. 
     rc = sqlite3_open(db_Path.c_str(),&db);
     if (rc)
@@ -47,15 +48,21 @@ int Sqlite3Manager::UpdateDatabase(std::string table,std::string *ptr)
         std::cout<<"Can't open database : "<< sqlite3_errmsg(db) <<std::endl;
         return result;
     }
+    
+    // Send.
+    sqlcmd = "set = ";    
+
+    /*
     // Send SQL statement to db.
     sql = "UPDATE " 
           + table 
-          + " set %s = "
+          + " set = "
           + " where ";
-
+    */
+    
     // updata database.
     rc = sqlite3_prepare_v2(db, 
-                            sql.c_str(), 
+                            sqlcmd.c_str(), 
                             -1, 
                             &stmt, 
                             NULL);
@@ -133,7 +140,7 @@ int Sqlite3Manager::ReadDatabase(std::string table,std::string *ptr)
         return result;
     }
     // Send SQL statement to db.
-    sql = "SELECT * from "+table;
+    sql = "SELECT * from "+ table;
     rc = sqlite3_prepare_v2(db, 
                             sql.c_str(), 
                             -1, 
@@ -166,8 +173,11 @@ int Sqlite3Manager::ReadDatabase(std::string table,std::string *ptr)
 
     int index = 0; 
     *ptr = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, index)));
-    // std::cout << "Fuck index = "<<std::to_string(index) << " data = " <<*ptr<< std::endl;
-    
+    #ifdef _BDEBUG_DB_
+    std::cout << "========================Start DB READ============================="<< std::endl;
+    std::cout << "DB index = "<<std::to_string(index) << " data = " <<*ptr<< std::endl;
+    #endif
+
     while(true)
     {
         ptr = (std::string *)(void *)(ptr+1);
@@ -182,7 +192,9 @@ int Sqlite3Manager::ReadDatabase(std::string table,std::string *ptr)
             else
             {
                 *ptr = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, index)));
-                // std::cout << "Fuck index = "<<std::to_string(index) << " data = " <<*ptr<< std::endl;
+                #ifdef _BDEBUG_DB_
+                std::cout << "DB index = "<<std::to_string(index) << " data = " <<*ptr<< std::endl;
+                #endif
             }
         }
         else
@@ -229,12 +241,10 @@ int GtcsDatabase::CheckDatabaseFSM(int db_fsm)
         // Select Gtcs database. 
         case DB_FSM::R_RAM_BAIIC_PARA:
             result = db_ramdisk.ReadDatabase("basic",&bulletin->DbBulletin.basic.mintemp);
-            // result = db_ramdisk.GetTableNameList("basic");
+            //result = db_ramdisk.GetTableNameList("basic");
             break;
         case DB_FSM::W_RAM_BAIIC_PARA:
             result = db_ramdisk.UpdateDatabase("basic",&bulletin->DbBulletin.basic.mintemp);
-            break;
-        default:
             break;
     }
     return result;

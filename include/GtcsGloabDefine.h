@@ -15,8 +15,10 @@
  Date	       	: 2019/08/06                                                         
 =======================================================================================*/
 #include <string>
-#include <list>
+#include <vector>
 #include <map>
+
+// using namespace std;
 
 #pragma region GTCS MCB Protcol
 #pragma region Parameter
@@ -279,19 +281,19 @@ typedef struct
 typedef struct 
 {
     /* data */
-    uint16_t u16ControlMode;     // SID = 1,"0 = Manual Mode,1 = Process Mode,2 = Program Mode,
-                                    // 3= PWM Mode,4=Para Write Mode"
-    uint16_t u16WorkProc;        // SID = 2,It is the ID of the actual working process. 
-                                    // This is relevant when Control Mode = Process Mode.
-    uint16_t u16WritePara2Flash; // SID = 3,Reserved because the Parameters are stored in FRAM.
-    uint16_t u16WriteStep2Flash; // SID = 4,"When receiving this Parameter the selected Step will be 
-                                    // written to Flash Memory.
-                                    // Value of this Parameter the ID of the Step (ID3XXX)".
-    uint16_t u16WriteProc2Flash; // SID = 5,"When receiving this Parameter the selected Process will be 
-                                    // written to Flash Memory.
-                                    // Value of this Parameter the ID of the Process (ID4XXX)".
-    uint16_t u16WriteProg2Flash; // SID = 6,"When receiving this Parameter the Program will be written 
-                                    // to Flash Memory.Value of this Parameter is “Don't care”".
+    uint16_t u16ControlMode;    // SID = 1,"0 = Manual Mode,1 = Process Mode,2 = Program Mode,
+                                // 3= PWM Mode,4=Para Write Mode"
+    uint16_t u16WorkProc;       // SID = 2,It is the ID of the actual working process. 
+                                // This is relevant when Control Mode = Process Mode.
+    uint16_t u16WritePara2Flash;// SID = 3,Reserved because the Parameters are stored in FRAM.
+    uint16_t u16WriteStep2Flash;// SID = 4,"When receiving this Parameter the selected Step will be 
+                                // written to Flash Memory.
+                                // Value of this Parameter the ID of the Step (ID3XXX)".
+    uint16_t u16WriteProc2Flash;// SID = 5,"When receiving this Parameter the selected Process will be 
+                                // written to Flash Memory.
+                                // Value of this Parameter the ID of the Process (ID4XXX)".
+    uint16_t u16WriteProg2Flash;// SID = 6,"When receiving this Parameter the Program will be written 
+                                // to Flash Memory.Value of this Parameter is “Don't care”".
 }McbID7Struct;
 // ID8
 typedef struct 
@@ -1005,56 +1007,81 @@ typedef struct
     std::string end;               // CL,RF
 }GtcsDatabaseBasicStruct;
 
-//
-class GtcsDataBaseMap
+// Database.
+class DatabaseBaseInfo
 {
 private:
     /* data */
 public:
-    std::map<std::string,std::string> basic;
-    GtcsDataBaseMap(GtcsDatabaseBasicStruct basic_struct)
-    {
-        /* data */
-        basic["mintemp"]           = basic_struct.mintemp;  // Min temperature       (REAL)
-        basic["maxtemp"]           = basic_struct.maxtemp;  // Max temperature       (REAL)
-        basic["maxcurrent"]        = basic_struct.maxcurrent;  // Max current           (REAL)
-        basic["maxpeakcurrent"]    = basic_struct.maxpeakcurrent;  // Max peak current      (INTEGER)
-        basic["torquesensortype"]  = basic_struct.torquesensortype;  // torque sensor type    (INTEGER)
-        basic["maxdutycycle"]      = basic_struct.maxdutycycle;  // Max duty cycle        (REAL)
-        basic["maxtorque"]         = basic_struct.maxtorque;  // Max torque            (REAL)
-        basic["pwmfreq"]           = basic_struct.pwmfreq;  // PWM frequency         (INTEGER)
-        basic["maxrpm"]            = basic_struct.maxrpm;  // Max rpm               (INTEGER)
-        basic["maxslope"]          = basic_struct.maxslope;  // Max slope             (INTEGER)
-        basic["minbusvolt"]        = basic_struct.minbusvolt;  // Min bus voltage       (REAL)
-        basic["maxbusvolt"]        = basic_struct.maxbusvolt;  // Max bus voltage       (REAL)
-        basic["startdutycycle"]    = basic_struct.startdutycycle;  // Start duty cycle      (REAL)
-        basic["gearboxratio"]      = basic_struct.gearboxratio;  // Gear box ratio        (REAL)
-        basic["startinp"]          = basic_struct.startinp;  // Start input source    (INTEGER)
-        basic["revinp"]            = basic_struct.revinp;  // Reverse ipnut source  (INTEGER)
-        basic["revrpm"]            = basic_struct.revrpm;  // Reverse rpm           (INTEGER)
-        basic["revslope"]          = basic_struct.revslope;  // Reverse slope         (INTEGER)
-        basic["revmaxcurrent"]     = basic_struct.revmaxcurrent;  // Reverse max current   (INTEGER)
-        basic["revmaxtorque"]      = basic_struct.revmaxtorque;  // Reverse max torque    (REAL)
-        basic["erroridletime"]     = basic_struct.erroridletime;  // Error idle time       (INTEGER)
-        basic["backlash"]          = basic_struct.backlash;  // Bachlash              (INTEGER)
-        basic["pgain"]             = basic_struct.pgain;  // Proportional gain     (INTEGER)
-        basic["igain"]             = basic_struct.igain;  // Integral gain         (INTEGER)
-        basic["encoder"]           = basic_struct.encoder;  // Encoder               (INTEGER)
-        // 
-        basic["mintorque"]         = basic_struct.mintorque;  // (REAL)
-        basic["minrpm"]            = basic_struct.minrpm;  // (INTEGER)
-        basic["revminrpm"]         = basic_struct.revminrpm;  // (INTEGER)
-        basic["dmsswver"]          = basic_struct.dmsswver;  // (INTEGER)
-        basic["dmscoreid"]         = basic_struct.dmscoreid;  // (INTEGER)
-        basic["dmssernr"]          = basic_struct.dmssernr;  // (INTEGER)
-        basic["led"]               = basic_struct.led;  // (INTEGER)
-        basic["lever_sensitivity"] = basic_struct.lever_sensitivity;  // (INTEGER)
-        basic["push_sensitivity"]  = basic_struct.push_sensitivity;  // (INTEGER) 
-        basic["motswver"]          = basic_struct.motswver;  // (TEXT)
-        basic["end"]               = basic_struct.end;  // CL,RF
-        
+    DatabaseBaseInfo(/* args */){};
+    ~DatabaseBaseInfo(){};
+    std::string dbfilePath = "";
+    std::string dbtablename  = "";
+    std::map<std::string,std::string> data;
+    virtual void InitialDataStruct(){};
+
+    int GetDataLebgth(){
+        return data.size();
     };
-    ~GtcsDataBaseMap(){};
+    void SetDataValue(std::vector<std::string> pData);
+    // virtual void GetDataVector();
 };
+
+class DatabaseBasicInfo : public DatabaseBaseInfo
+{
+private:
+    /* data */
+public:
+    DatabaseBasicInfo(/* args */)
+    {
+        InitialDataStruct();   
+    };
+    ~DatabaseBasicInfo(){};
+    std::string dbtablename = "basic";
+    void InitialDataStruct(){
+        data.insert(std::pair<std::string,std::string>("mintemp","FUCK!!!!"));         // Min temperature       (REAL)
+        data.insert(std::pair<std::string,std::string>("maxtemp","-"));         // Max temperature       (REAL)
+        data.insert(std::pair<std::string,std::string>("maxcurrent","-"));      // Max temperature       (REAL)
+        data.insert(std::pair<std::string,std::string>("maxcurrent","-"));      // Max current           (REAL)
+        data.insert(std::pair<std::string,std::string>("maxpeakcurrent","-"));  // Max peak current      (INTEGER)
+        data.insert(std::pair<std::string,std::string>("torquesensortype","-"));// torque sensor type    (INTEGER)
+        data.insert(std::pair<std::string,std::string>("maxdutycycle","-"));    // Max duty cycle        (REAL)
+        data.insert(std::pair<std::string,std::string>("maxtorque","-"));       // Max torque            (REAL)
+        data.insert(std::pair<std::string,std::string>("pwmfreq","-"));         // PWM frequency         (INTEGER)
+        data.insert(std::pair<std::string,std::string>("maxrpm","-"));          // Max rpm               (INTEGER)
+        data.insert(std::pair<std::string,std::string>("maxslope","-"));        // Max slope             (INTEGER)
+        data.insert(std::pair<std::string,std::string>("minbusvolt","-"));      // Min bus voltage       (REAL)
+        data.insert(std::pair<std::string,std::string>("maxbusvolt","-"));      // Max bus voltage       (REAL)
+        data.insert(std::pair<std::string,std::string>("startdutycycle","-"));  // Start duty cycle      (REAL)
+        data.insert(std::pair<std::string,std::string>("gearboxratio","-"));    // Gear box ratio        (REAL)
+        data.insert(std::pair<std::string,std::string>("startinp","-"));        // Start input source    (INTEGER)
+        data.insert(std::pair<std::string,std::string>("revinp","-"));          // Reverse ipnut source  (INTEGER)
+        data.insert(std::pair<std::string,std::string>("revrpm","-"));          // Reverse rpm           (INTEGER)
+        data.insert(std::pair<std::string,std::string>("revslope","-"));        // Reverse slope         (INTEGER)
+        data.insert(std::pair<std::string,std::string>("revmaxcurrent","-"));   // Reverse max current   (INTEGER)
+        data.insert(std::pair<std::string,std::string>("revmaxtorque","-"));    // Reverse max torque    (REAL)
+        data.insert(std::pair<std::string,std::string>("erroridletime","-"));   // Error idle time       (INTEGER)
+        data.insert(std::pair<std::string,std::string>("backlash","-"));        // Bachlash              (INTEGER)
+        data.insert(std::pair<std::string,std::string>("pgain","-"));           // Proportional gain     (INTEGER)
+        data.insert(std::pair<std::string,std::string>("igain","-"));           // Integral gain         (INTEGER)
+        data.insert(std::pair<std::string,std::string>("encoder","-"));         // Encoder               (INTEGER)
+        // 
+        data.insert(std::pair<std::string,std::string>("mintorque","-"));        // (REAL)
+        data.insert(std::pair<std::string,std::string>("minrpm","-"));           // (INTEGER)
+        data.insert(std::pair<std::string,std::string>("revminrpm","-"));        // (INTEGER)
+        data.insert(std::pair<std::string,std::string>("dmsswver","-"));         // (INTEGER)
+        data.insert(std::pair<std::string,std::string>("dmscoreid","-"));        // (INTEGER)
+        data.insert(std::pair<std::string,std::string>("dmssernr","-"));         // (INTEGER)
+        data.insert(std::pair<std::string,std::string>("led","-"));              // (INTEGER)
+        data.insert(std::pair<std::string,std::string>("lever_sensitivity","-"));// (INTEGER)
+        data.insert(std::pair<std::string,std::string>("push_sensitivity","-")); // (INTEGER) 
+        data.insert(std::pair<std::string,std::string>("motswver","-"));         // (TEXT)
+        data.insert(std::pair<std::string,std::string>("end","-"));              // CL,RF        
+    };
+    void SetDataValue(std::vector<std::string> pData){
+        ;
+    };
+};
+
 #pragma endregion
 #endif

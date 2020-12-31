@@ -307,10 +307,12 @@ int GtcsManager::CheckGtcsSystem()
     database.CheckDatabaseFSM((int)DB_FSM::R_RAM_BAIIC_PARA);    
     std::cout << database.GetRamdiskDbPath() << std::endl;
     std::cout << database.GetEmmcDbPath() << std::endl;
-    
+    std::cout << database.GetEmmcDbPath() << std::endl;
+
     // Step 4 = Compare data bwtweem ramdisk and emmc database basic table.
     
     // Step 5 = Jump to selected MAIN_FSM. 
+    
 
     // Display some informaiton. 
     std::cout <<"Gear Ratio = "<<std::to_string(bulletin->McbBulletin.BasicPara.u16GearBoxRatio)<<std::endl;
@@ -372,7 +374,7 @@ int GtcsManager::CheckMainFSM(int main_fsm)
     case MAIN_FSM::SETTING:
         result = SettingGtcsSystem();
         #ifdef _DEBUG_MODE_
-        std::cout<<"SETTING = "<<bulletin->AmsBulletin.CMD302Struct.str5 << std::endl;
+        std::cout<<"SETTING CMD = "<<bulletin->sockrevcmd << std::endl;
         #endif
         break;
     case MAIN_FSM::ALARM:

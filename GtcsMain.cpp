@@ -10,7 +10,6 @@
  Programmer    	: Otto Chang
  Date	       	: 2019/08/06
 =======================================================================================*/
-// #define _DEBUG_MODE_
 #include "../include/GtcsMain.h"
 
 // TCP socket.
@@ -20,10 +19,14 @@ void tcpsocket()
     TcpSocket mytcpserver;
     GtcsBulletin *bulletin = GtcsBulletin::GetInstance();
     GtcsManager manager;
-    char sockip[] = "127.0.0.1";
-    // char sockip[] = "192.168.0.207";
-    int sockport= 9000;    
-    int MAXLINE = 256;                                         // Buffer size. 
+    #ifdef _DEBUG_MODE_
+        char sockip[] = "192.168.0.207";
+    #else
+        char sockip[] = "127.0.0.1";
+    #endif
+
+    int sockport= 9000;
+    int MAXLINE = 256;                                         // Buffer size.
     // Initial parameter.
     int  listenfd, connfd;
     struct sockaddr_in  servaddr;
@@ -55,7 +58,7 @@ void tcpsocket()
     {
         printf("listen socket error: %s(errno: %d)\n",strerror(errno),errno);
     }
-    printf("======waiting for client‘s request======\n");
+    printf("====== waiting for client‘s request ======\n");
     // Loop.
     while(true){
         // Accept connected.
@@ -66,8 +69,8 @@ void tcpsocket()
         }
         // Received data from tcpclinet.
         n = recv(connfd, revbuff, MAXLINE, 0);
-        revbuff[n] = '\0';     
-        
+        revbuff[n] = '\0';
+
         #ifdef _DEBUG_MODE_
         std::cout << revbuff << std::endl;
         #endif
@@ -80,16 +83,16 @@ void tcpsocket()
         }
         else
         {
-            bulletin->uisetting = true;            
-        }        
+            bulletin->uisetting = true;
+        }
         // Waiting for app to process CMD.
         while(bulletin->uisetting)
         {
             // std::cout << bulletin->sockrevcmd << std::endl;
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
-        
-        // Send data to tcpclient.   
+
+        // Send data to tcpclient.
         strcpy(sendbuff,manager.GetUiCmdResponse(bulletin->sockrevcmd).c_str());
         // strcpy(sendbuff,bulletin->sockrevcmd.c_str());
         if (send(connfd,sendbuff,sizeof(sendbuff),0)<0)
@@ -110,12 +113,17 @@ int main()
     #pragma region  step 1
     // Initial GTCS system.
     manager.CheckMainFSM(MAIN_FSM::INITIAL);
-    // Check GTCS System. 
+    // Check GTCS System.
     manager.CheckMainFSM(MAIN_FSM::CHECK_SYS);
 
-    // Ste 3 = Set tcpsocket thread and start.    
+    // Ste 3 = Set tcpsocket thread and start.
     std::thread thread_tcpsocket = std::thread(tcpsocket);
     #pragma endregion
+
+    // test.
+    DatabaseBasicInfo dbBasic;
+    std::cout << dbBasic.data["mintemp"]<<std::endl;
+    // std::cout << std::to_string(dbBasic.data.find("mintemp"))<<std::endl;
 
     #pragma region step 2
     // loop.
@@ -123,14 +131,14 @@ int main()
     {
         switch(manager.GetMainFSM())
         {
-            case MAIN_FSM::READY:                       
+            case MAIN_FSM::READY:
                 manager.CheckMainFSM(MAIN_FSM::READY);
                 break;
-            case MAIN_FSM::ALARM:    
+            case MAIN_FSM::ALARM:
                 manager.CheckMainFSM(MAIN_FSM::ALARM);
                 break;
             case MAIN_FSM::SETTING:
-                manager.CheckMainFSM(MAIN_FSM::SETTING);   
+                manager.CheckMainFSM(MAIN_FSM::SETTING);
                 break;
         }
     }

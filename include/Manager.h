@@ -1,5 +1,6 @@
 #ifndef _GTCS_BULLETIN_MANAGER_
 #define _GTCS_BULLETIN_MANAGER_
+#define _DEBUG_MODE_
 #pragma once
 /*=======================================================================================
  Program Nane  	: gtcs_tlg_decoder.c     
@@ -22,7 +23,6 @@
 #include <iostream>
 #include <string.h>
 #include <ctime>
-// #include <array>
 
 #pragma region 
 class Manager

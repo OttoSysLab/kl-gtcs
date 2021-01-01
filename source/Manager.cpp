@@ -280,7 +280,8 @@ int GtcsManager::InitialGtcsSystem()
         mcb->CheckMcbFSM((int)MCB_FSM::NORMAL_POLLING);
         ConvertActuralData300();
     }   
-    mcb->telegram.ctrl.IsEnable = true;
+    mcb->telegram.ctrl.IsEnable = false;
+    
     SetMainFSM(MAIN_FSM::CHECK_SYS);
     return result;
 } 
@@ -308,9 +309,11 @@ int GtcsManager::CheckGtcsSystem()
     std::cout << database.GetRamdiskDbPath() << std::endl;
     std::cout << database.GetEmmcDbPath() << std::endl;
     std::cout << database.GetEmmcDbPath() << std::endl;
+    
+    database.CheckDatabaseFSM((int)DB_FSM::W_RAM_BAIIC_PARA);
 
     // Step 4 = Compare data bwtweem ramdisk and emmc database basic table.
-    
+
     // Step 5 = Jump to selected MAIN_FSM. 
     
 
@@ -349,7 +352,7 @@ int GtcsManager::SettingGtcsSystem()
         CheckUiSettingFSM(ams->GetAmsCmdNum(bulletin->sockrevcmd));
         bulletin->uisetting = false;
     }
-    // CheckUiSettingFSM(ams->GetAmsCmdNum(bulletin->sockrevcmd));
+    CheckUiSettingFSM(ams->GetAmsCmdNum(bulletin->sockrevcmd));
     SetMainFSM(MAIN_FSM::READY);
     return result;
 }

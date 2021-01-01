@@ -11,6 +11,7 @@
  Date	       	: 2019/08/06
 =======================================================================================*/
 #include "../include/GtcsMain.h"
+// #define _TEST_
 
 // TCP socket.
 void tcpsocket()
@@ -121,13 +122,40 @@ int main()
     #pragma endregion
 
     // test.
+    #pragma region 
+    #ifdef _TEST_
     GtcsBulletin *bulletin = GtcsBulletin::GetInstance();
-    DatabaseBasicInfo dbBasic;     
+    GtcsDatabaseBasicInfo dbBasic;     
     std::cout << dbBasic.columnnames[dbBasic.columnnames.size()-1]<<std::endl;
     std::cout << "motswver = " <<dbBasic.data["motswver"]<<std::endl;
     dbBasic.SetDataValue(&bulletin->DbBulletin.basic.mintemp);
     std::cout << "motswver = " <<dbBasic.data["motswver"]<<std::endl;
 
+    std::cout << "=======================test=================="<<std::endl;
+    std::cout << "Map size: " << dbBasic.data.size() << std::endl;  
+    for(std::map<std::string, std::string>::iterator i=dbBasic.data.begin(); i!=dbBasic.data.end(); i++) 
+    {  
+        std::cout << (*i).first << ": " << (*i).second << std::endl;  
+        std::cout << i->first << ": " << i->second << std::endl;  
+    }
+    
+    for( auto & x : dbBasic.data)
+    {
+        std::cout << x.first << ": " << x.second << std::endl;
+    }  
+    
+    std::string table   = "basic";
+    std::string sqlcmd = "Updat " +table + " set ";
+    for (auto i = dbBasic.data.begin(); i != dbBasic.data.end(); i++)
+    {
+        sqlcmd += i->first+"="+i->second+",";
+    }    
+    // std::cout << "string lenght = " << std::to_string(sqlcmd.length()) << std::endl;
+    sqlcmd = sqlcmd.replace(sqlcmd.end()-1,sqlcmd.end()," ");
+    sqlcmd += "where rowid=1;" ;    
+    std::cout << sqlcmd << std::endl;
+    #endif
+    #pragma endregion
 
     #pragma region step 2
     // loop.

@@ -34,7 +34,7 @@ std::string Sqlite3Manager::GetDatabasePath()
     return db_Path;
 }
 // Write data to sqlite.
-int Sqlite3Manager::UpdateDatabase(std::string table,std::string *ptr)
+int Sqlite3Manager::UpdateDatabase(std::string table,std::map<std::string,std::string> *ptr_data)
 {
     int result = 0;
     sqlite3 *db;
@@ -48,18 +48,22 @@ int Sqlite3Manager::UpdateDatabase(std::string table,std::string *ptr)
         std::cout<<"Can't open database : "<< sqlite3_errmsg(db) <<std::endl;
         return result;
     }
-    
-    // Send.
-    sqlcmd = "set = ";    
 
-    /*
-    // Send SQL statement to db.
-    sql = "UPDATE " 
-          + table 
-          + " set = "
-          + " where ";
-    */
+    // Combine sql update command.
+    sqlcmd = "update " + table + " set ";
+    for (std::map<std::string, std::string>::iterator i = ptr_data->begin(); i != ptr_data->end(); i++)
+    {
+        if (i->first == "motswver"){
+            sqlcmd += i->first + " = " +'"' +i->second +'"' +",";   
+        }
+        else{
+            sqlcmd += i->first + " = " + i->second + ",";   
+        }
+    }
+    sqlcmd = sqlcmd.replace(sqlcmd.end()-1,sqlcmd.end()," ");
+    sqlcmd += "where rowid = 1;";
     
+    std::cout << "sqlcmd = " << sqlcmd <<std::endl;
     // updata database.
     rc = sqlite3_prepare_v2(db, 
                             sqlcmd.c_str(), 
@@ -90,36 +94,8 @@ int Sqlite3Manager::UpdateDatabase(std::string table,std::string *ptr)
         sqlite3_finalize(stmt);
         std::cout<<"customer not found"<<std::endl;
     }
-
-    int index = 0; 
-    *ptr = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, index)));
-    // std::cout << "Fuck index = "<<std::to_string(index) << " data = " <<*ptr<< std::endl;
-    
-    while(true)
-    {
-        ptr = (std::string *)(void *)(ptr+1);
-        // 
-        if (*ptr != "\n\r")
-        {
-            index++;
-            if (sqlite3_column_text(stmt, index)==NULL) // If get data == null,break the while loop. 
-            {
-                break;
-            }
-            else
-            {
-                *ptr = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, index)));
-                std::cout << "Fuck index = "<<std::to_string(index) << " data = " <<*ptr<< std::endl;
-            }
-        }
-        else
-        {
-            break;
-        }
-    }
-    
+    // Finialize process.    
     sqlite3_finalize(stmt);
-    // Close sqlite3.
     sqlite3_close(db);
     result = 1;
     return result;
@@ -236,6 +212,7 @@ int GtcsDatabase::CheckDatabaseFSM(int db_fsm)
 {
     int result = 0;
     GtcsBulletin *bulletin = GtcsBulletin::GetInstance();
+    GtcsDatabaseBasicInfo basic;
     switch (db_fsm)
     {
         // Select Gtcs database. 
@@ -244,7 +221,10 @@ int GtcsDatabase::CheckDatabaseFSM(int db_fsm)
             //result = db_ramdisk.GetTableNameList("basic");
             break;
         case DB_FSM::W_RAM_BAIIC_PARA:
-            result = db_ramdisk.UpdateDatabase("basic",&bulletin->DbBulletin.basic.mintemp);
+
+            basic.SetDataValue(&bulletin->DbBulletin.basic.mintemp);     
+            basic.data["motswver"] = "3890";
+            result = db_ramdisk.UpdateDatabase("basic",&basic.data);
             break;
     }
     return result;

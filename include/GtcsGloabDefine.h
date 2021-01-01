@@ -1009,13 +1009,13 @@ typedef struct
 }GtcsDatabaseBasicStruct;
 
 // Database.
-class DatabaseBaseInfo
+class GtcsDatabaseBaseInfo
 {
 private:
     /* data */
 public:
-    DatabaseBaseInfo(/* args */){};
-    ~DatabaseBaseInfo(){};
+    GtcsDatabaseBaseInfo(/* args */){};
+    ~GtcsDatabaseBaseInfo(){};
     std::string dbfilePath = "";
     std::string dbtablename  = "";
     std::vector<std::string> columnnames;
@@ -1035,30 +1035,30 @@ public:
         std::cout << "======================SetDataValue====================" << std::endl;
 
         data[columnnames[0]] = *ptr;
-        std::cout<<"Index = "<< "0 " << columnnames[0] << " = " <<*ptr<< std::endl;
+        // std::cout<<"Index = "<< "0 " << columnnames[0] << " = " <<*ptr<< std::endl;
         int columnnames_size = columnnames.size();
 
         ptr = (std::string *)(void *)(ptr+1);
         for (int i = 1; i < columnnames_size; i++)
         {
             data[columnnames[i]] = *ptr;
-            std::cout <<"Index = "<<i<<" "<< columnnames[i] << " = " <<*ptr<< std::endl;
+            // std::cout <<"Index = "<<i<<" "<< columnnames[i] << " = " <<*ptr<< std::endl;
             ptr = (std::string *)(void *)(ptr+1);
         }        
     };
 };
 
-class DatabaseBasicInfo : public DatabaseBaseInfo
+class GtcsDatabaseBasicInfo : public GtcsDatabaseBaseInfo
 {
 private:
     /* data */
 public:
-    DatabaseBasicInfo(/* args */)
+    GtcsDatabaseBasicInfo(/* args */)
     {
         InitialColumnName();
         InitialDataStruct();   
     };
-    ~DatabaseBasicInfo(){};
+    ~GtcsDatabaseBasicInfo(){};
     
     std::string dbtablename = "basic";    
     void InitialColumnName()

@@ -32,7 +32,8 @@ public:
     ~Sqlite3Manager();
     int SetDatabasePath(std::string path);
     std::string GetDatabasePath();
-    int UpdateDatabase(std::string table,std::string *ptr);
+    // int UpdateDatabase(std::string table,std::string *ptr);
+    int UpdateDatabase(std::string table,std::map<std::string,std::string> *ptr_data);
     int ReadDatabase(std::string table,std::string *ptr);  // int SetDatabaseFilePath(std::string path);
 };
 #pragma endregion

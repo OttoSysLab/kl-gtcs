@@ -269,7 +269,7 @@ int GtcsAmsProtocol::GetAmsCmdNum(std::string amscmd)
     {
         result = AMSCMD::CMD340;
     }
-
+    
     return result;    
 }
 // Update Protocol Struct.

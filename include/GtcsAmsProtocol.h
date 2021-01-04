@@ -33,6 +33,9 @@ private:
     GtcsAmsProtocol(/* args */);
     int ConvertToProtocolString(std::string* ptr,std::string& result);
     int UpdateProtocolStruct(std::string* ptr,std::vector<std::string>& ams_array);
+    
+    // int CopyAmsStructData(std::string  );
+
     std::vector<std::string> SplitString(const std::string & str,const std::string& pattern);
     std::vector<std::string> GetAmsSpliteArray(const std::string & str);
 public:    
@@ -41,7 +44,7 @@ public:
     static GtcsAmsProtocol* GetInstance();
     // AMSBulletin amsprotocol;
     int GetAmsCmdNum(std::string amscmd);
-    int GetAmsCmdResponse(int amscmd);
+    int GetAmsSymmetryCmdNumver(int amscmd);
     std::string GetAmsBulletin(int amscmd);
     std::string SetAmsBulletin(std::string ams_string);
 };

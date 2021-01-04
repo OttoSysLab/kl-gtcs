@@ -49,7 +49,7 @@ int GtcsAmsProtocol::ConvertToProtocolString(std::string *ptr,std::string & resu
     result += "}";
     return 0;
 }
-int GtcsAmsProtocol::GetAmsCmdResponse(int amscmd)
+int GtcsAmsProtocol::GetAmsSymmetryCmdNumver(int amscmd)
 {
     int result = 0;
     switch (amscmd)

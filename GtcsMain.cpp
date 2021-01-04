@@ -23,7 +23,7 @@ void tcpsocket()
     #ifdef _DEBUG_MODE_
         char sockip[] = "192.168.0.207";
     #else
-        char sockip[] = "127.0.0.1";
+        // char sockip[] = "127.0.0.1";
     #endif
 
     int sockport= 9000;
@@ -77,8 +77,8 @@ void tcpsocket()
         #endif
 
         // Decoder CMD dn check request.
-        bulletin->sockrevcmd = manager.CheckUiCmdRequest(revbuff);
-        if (bulletin->sockrevcmd=="REQ300")
+        bulletin->uisockrevcmd = manager.CheckUiCmdRequest(revbuff);
+        if (bulletin->uisockrevcmd=="REQ300")
         {
             bulletin->uisetting = false;
         }
@@ -89,13 +89,13 @@ void tcpsocket()
         // Waiting for app to process CMD.
         while(bulletin->uisetting)
         {
-            // std::cout << bulletin->sockrevcmd << std::endl;
+            // std::cout << bulletin->uisockrevcmd << std::endl;
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
 
         // Send data to tcpclient.
-        strcpy(sendbuff,manager.GetUiCmdResponse(bulletin->sockrevcmd).c_str());
-        // strcpy(sendbuff,bulletin->sockrevcmd.c_str());
+        strcpy(sendbuff,manager.GetUiCmdResponse(bulletin->uisockrevcmd).c_str());
+        // strcpy(sendbuff,bulletin->uisockrevcmd.c_str());
         if (send(connfd,sendbuff,sizeof(sendbuff),0)<0)
         {
             printf("send msg error: %s(errno: %d)\n", strerror(errno), errno);
@@ -122,7 +122,7 @@ int main()
     #pragma endregion
 
     // test.
-    #pragma region 
+    #pragma region test code 
     #ifdef _TEST_
     GtcsBulletin *bulletin = GtcsBulletin::GetInstance();
     GtcsDatabaseBasicInfo dbBasic;     

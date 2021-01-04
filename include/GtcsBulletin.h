@@ -741,7 +741,7 @@ public:
         .pgain             = "0",  // Proportional gain     (INTEGER)
         .igain             = "0",  // Integral gain         (INTEGER)
         .encoder           = "0",  // Encoder               (INTEGER)
-        // 
+        // New.
         .mintorque         = "0",  // (REAL)
         .minrpm            = "0",  // (INTEGER)
         .revminrpm         = "0",  // (INTEGER)
@@ -776,7 +776,7 @@ public:
     DatabasteBulletin  DbBulletin;
     bool checksysok = true;  
     bool uisetting = false;  
-    std::string sockrevcmd = "";    
+    std::string uisockrevcmd = ""; 
 };
 #pragma endregion
 #pragma endregion

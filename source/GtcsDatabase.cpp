@@ -34,7 +34,7 @@ std::string Sqlite3Manager::GetDatabasePath()
     return db_Path;
 }
 // Write data to sqlite.
-int Sqlite3Manager::UpdateDatabase(std::string table,std::map<std::string,std::string> *ptr_data)
+int Sqlite3Manager::UpdateDatabase(std::string table,std::map<std::string,std::string> ptr_data)
 {
     int result = 0;
     sqlite3 *db;
@@ -51,7 +51,7 @@ int Sqlite3Manager::UpdateDatabase(std::string table,std::map<std::string,std::s
 
     // Combine sql update command.
     sqlcmd = "update " + table + " set ";
-    for (std::map<std::string, std::string>::iterator i = ptr_data->begin(); i != ptr_data->end(); i++)
+    for (std::map<std::string, std::string>::iterator i = ptr_data.begin(); i != ptr_data.end(); i++)
     {
         if (i->first == "motswver"){
             sqlcmd += i->first + " = " +'"' +i->second +'"' +",";   
@@ -90,10 +90,11 @@ int Sqlite3Manager::UpdateDatabase(std::string table,std::map<std::string,std::s
         std::cout<<"SQL error:"<<sqlite3_errmsg(db)<<std::endl;
         sqlite3_finalize(stmt);
     }
-    if (rc == SQLITE_DONE) {
-        sqlite3_finalize(stmt);
-        std::cout<<"customer not found"<<std::endl;
-    }
+    // if (rc == SQLITE_DONE) {
+    //     sqlite3_finalize(stmt);
+    //     std::cout<<"customer not found"<<std::endl;
+    // }
+
     // Finialize process.    
     sqlite3_finalize(stmt);
     sqlite3_close(db);
@@ -197,36 +198,17 @@ GtcsDatabase::GtcsDatabase(std::string ramdisk_Path,std::string emmc_Path)
 // Distructor.
 GtcsDatabase::~GtcsDatabase()
 {}
-// Get ramdisk database file path.
-std::string GtcsDatabase::GetRamdiskDbPath()
-{
-    return db_ramdisk.GetDatabasePath();   
-}
-// Get emmc database file path.
-std::string GtcsDatabase::GetEmmcDbPath()
-{
-    return db_emmc.GetDatabasePath();   
-}
-// Check database FSM
-int GtcsDatabase::CheckDatabaseFSM(int db_fsm)
-{
-    int result = 0;
-    GtcsBulletin *bulletin = GtcsBulletin::GetInstance();
-    GtcsDatabaseBasicInfo basic;
-    switch (db_fsm)
-    {
-        // Select Gtcs database. 
-        case DB_FSM::R_RAM_BAIIC_PARA:
-            result = db_ramdisk.ReadDatabase("basic",&bulletin->DbBulletin.basic.mintemp);
-            //result = db_ramdisk.GetTableNameList("basic");
-            break;
-        case DB_FSM::W_RAM_BAIIC_PARA:
 
-            basic.SetDataValue(&bulletin->DbBulletin.basic.mintemp);     
-            basic.data["motswver"] = "3890";
-            result = db_ramdisk.UpdateDatabase("basic",&basic.data);
-            break;
-    }
+// Read data from Gtcs sqlite database.
+int GtcsDatabase::ReadFromSqliteDatabase(Sqlite3Manager db,std::string table,std::string *ptr_start)
+{
+    int result = db.ReadDatabase(table,ptr_start);
+    return result;
+}
+// Update gtcs sqlite database.
+int GtcsDatabase::UpdateSqliteDatabase(Sqlite3Manager db,std::string table, const std::map<std::string,std::string> writedata)
+{
+    int result = db.UpdateDatabase(table,writedata);
     return result;
 }
 #pragma endregion

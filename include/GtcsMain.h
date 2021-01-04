@@ -1,5 +1,6 @@
 #ifndef _GTCS_MAIN_
 #define _GTCS_MAIN_
+#define _DEBUG_MODE_
 #pragma once
 // #define OS_WINDOWS
 // #define OS_LINUX

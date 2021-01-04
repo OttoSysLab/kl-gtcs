@@ -1,9 +1,9 @@
 CC = g++
 INCLUDE = -I"./include" -I"../include"
 OBJS = ./object/GtcsMain.o ./object/ComPort.o ./object/CrcChecker.o ./object/GtcsDatabase.o \
-		./object/TcpSocket.o ./object/GtcsBulletin.o ./object/Common.o \
+		./object/TcpSocket.o ./object/GtcsGloabDefine.o ./object/GtcsBulletin.o ./object/Common.o \
 		./object/GtcsAmsProtocol.o ./object/GtcsMcbComm.o \
-		./object/Manager.o
+		./object/Manager.o 
 
 LIBS = -lpthread -lsqlite3
 
@@ -12,6 +12,7 @@ gtcs: GtcsMain.o \
 	  GtcsDatabase.o \
 	  TcpSocket.o \
 	  ComPort.o \
+	  GtcsGloabDefine.o \
 	  GtcsBulletin.o \
 	  Common.o \
 	  Manager.o \
@@ -37,6 +38,9 @@ Common.o : ./source/Common.cpp
 
 ComPort.o : ./source/ComPort.cpp 
 	${CC} ${INCLUDE} -c $< -o ./object/ComPort.o
+
+GtcsGloabDefine.o : ./source/GtcsGloabDefine.cpp
+	${CC} ${INCLUDE} -c $< -o ./object/GtcsGloabDefine.o
 
 GtcsBulletin.o : ./source/GtcsBulletin.cpp
 	${CC} ${INCLUDE} -c $< -o ./object/GtcsBulletin.o

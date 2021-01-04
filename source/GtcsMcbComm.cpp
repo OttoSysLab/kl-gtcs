@@ -2228,21 +2228,6 @@ int GtcsMcbComm::AdvancePollingToMcb()
     telegram.status.InitialTelegramArray();
     result = read(com_num, &telegram.status.telegram_array, 1024);
     telegram.status.DecodeTelegramArray();
-    #pragma region not used
-    // std::cout <<"u16Statusflags = "<<std::to_string(telegram.status.current_status.u16Statusflags)<< std::endl;
-    // std::cout <<"u32ActError    = "<<std::to_string(telegram.status.current_status.u32ActError)<< std::endl;
-    // std::cout <<"u16ActProcNr   = "<<std::to_string(telegram.status.current_status.u16ActProcNr)<< std::endl;
-    // std::cout <<"u16ActStepNr   = "<<std::to_string(telegram.status.current_status.u16ActStepNr)<< std::endl;
-    // std::cout <<"u16ActCurr     = "<<std::to_string(telegram.status.current_status.u16ActCurr)<< std::endl;
-    // std::cout <<"u16ActTorque   = "<<std::to_string(telegram.status.current_status.u16ActTorque)<< std::endl;
-    // std::cout <<"u16ActRPM      = "<<std::to_string(telegram.status.current_status.u16ActRPM)<< std::endl;
-    // std::cout <<"u16MaxCurrent  = "<<std::to_string(telegram.status.current_status.u16MaxCurrent)<< std::endl;
-    // std::cout <<"u16MaxTorque   = "<<std::to_string(telegram.status.current_status.u16MaxTorque)<< std::endl;
-    // std::cout <<"u32Angle       = "<<std::to_string(telegram.status.current_status.u32Angle)<< std::endl;
-    // std::cout <<"u16TMDFlags    = "<<std::to_string(telegram.status.current_status.u16TMDFlags)<< std::endl;
-    // std::cout <<"s16Debug       = "<<std::to_string(telegram.status.current_status.s16Debug)<< std::endl;
-    // std::cout <<"s32Debug       = "<<std::to_string(telegram.status.current_status.s32Debug)<< std::endl;
-    #pragma endregion
     return result;
 }
 // Check MCB FSM.

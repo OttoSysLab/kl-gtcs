@@ -300,7 +300,7 @@ int GtcsManager::CheckGtcsSystem()
     if (mcb->CheckMcbFSM((int)MCB_FSM::READ_MCB_BASIC)!=0)
     {
         std::uint16_t *ptr = &bulletin->McbBulletin.BasicPara.s16MinTemp;
-        std::cout << std::to_string(bulletin->McbBulletin.BasicPara.s16MaxTemp) <<std::endl;
+        // std::cout << std::to_string(bulletin->McbBulletin.BasicPara.s16MaxTemp) <<std::endl;
     }
     // Step 2 = Copy tcs.db to ramdisk.
     std::string db_emmc_Path = "/var/www/html/database/tcs.db";   // Initial database path.
@@ -349,7 +349,9 @@ int GtcsManager::CheckGtcsSystem()
     ram_basic.data["igain"]            = std::to_string(bulletin->McbBulletin.BasicPara.u16IGain);           // Integral gain         (INTEGER) 
     ram_basic.data["encoder"]          = std::to_string(bulletin->McbBulletin.BasicPara.u16Encoder);         // Encoder               (INTEGER) 
 
-    database.UpdateSqliteDatabase(database.db_ramdisk,"basic",ram_basic.data);    //
+    // database.UpdateSqliteDatabase(database.db_ramdisk,"basic",ram_basic.data);    //
+    database.UpdateSqliteDatabase(database.db_ramdisk,ram_basic.dbtablename,ram_basic.GetUpdateSqlCommand());
+    // std::cout << ram_basic.GetUpdateSqlCommand() << std::endl;
 
     // Step 4 = Compare data bwtweem ramdisk and emmc database basic table.
     GtcsDatabaseBasicInfo emmc_basic;
@@ -366,9 +368,9 @@ int GtcsManager::CheckGtcsSystem()
         {
             bulletin->checksysok = false;
         }
-        // std::cout << "check key = " << ram_basic.columnnames[i] ;
-        // std::cout << " ram_value = " << ram_basic.data[ram_basic.columnnames[i]];
-        // std::cout << " basic_value = " << emmc_basic.data[emmc_basic.columnnames[i]] << std::endl;
+        std::cout << "check key = " << ram_basic.columnnames[i] ;
+        std::cout << " ram_value = " << ram_basic.data[ram_basic.columnnames[i]];
+        std::cout << " basic_value = " << emmc_basic.data[emmc_basic.columnnames[i]] << std::endl;
     }    
     std::cout << " bulletin->checksysok = " << bulletin->checksysok << std::endl;     
     if (bulletin->checksysok == true)
@@ -379,6 +381,7 @@ int GtcsManager::CheckGtcsSystem()
     }
     else
     {
+        #pragma region
         // Setting REQ301 value.
         bulletin->AmsBulletin.REQ301Struct.str5  = ram_basic.data["mintemp"],          // Min temperature 
         bulletin->AmsBulletin.REQ301Struct.str6  = ram_basic.data["maxtemp"],          // Max temperature
@@ -415,8 +418,9 @@ int GtcsManager::CheckGtcsSystem()
         bulletin->AmsBulletin.REQ301Struct.str36 = ram_basic.data["led"];              // Led
         bulletin->AmsBulletin.REQ301Struct.str37 = ram_basic.data["lever_sensitivity"];// Lever Sensitivity
         bulletin->AmsBulletin.REQ301Struct.str38 = ram_basic.data["push_sensitivity"]; // Push Sensitivity
-        bulletin->AmsBulletin.REQ301Struct.str39 = ram_basic.data["motswver"];         // MotSWVer 
+        bulletin->AmsBulletin.REQ301Struct.str39 = ram_basic.data["[motswver ]"];         // MotSWVer 
         SetMainFSM(MAIN_FSM::SETTING);
+        #pragma endregion
     }
     return result;
 }

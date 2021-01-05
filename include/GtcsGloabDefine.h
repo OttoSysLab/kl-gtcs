@@ -14,7 +14,7 @@
  Programmer    	: Otto Chang                                                                   
  Date	       	: 2019/08/06                                                         
 =======================================================================================*/
-#include <string>
+#include <cstring>
 #include <vector>
 #include <map>
 #include <iostream>
@@ -23,18 +23,6 @@
 
 #pragma region GTCS MCB Protcol
 #pragma region Parameter
-// // Identification Parameter.(MID1)
-// enum MCBMAID : int{
-//     ID1 = 1,
-//     ID2,
-//     ID3,
-//     ID4,
-//     ID5,
-//     ID6,
-//     ID7,
-//     ID8,
-//     ID9,
-// };
 // 
 enum MCB_TELEGRAM_TYPE : uint8_t{
     CTRL             = 1,
@@ -1019,10 +1007,11 @@ public:
     std::string dbfilePath = "";
     std::string dbtablename  = "";
     std::vector<std::string> columnnames;
+    std::map<std::string,std::string> type;
     std::map<std::string,std::string> data;
     virtual void InitialColumnName(){};
+    virtual void InitilaTypeList(){}; 
     void InitialDataStruct();
-    // virtual void SetDataValue(){};
     void SetDataValue(std::string *ptr);
 };
 // Gtcs database basic information.
@@ -1035,6 +1024,8 @@ public:
     ~GtcsDatabaseBasicInfo();
     std::string dbtablename = "basic";    
     void InitialColumnName();
+    void InitialTypeList();
+    std::string GetUpdateSqlCommand();
 };
 
 #pragma endregion

@@ -27,7 +27,7 @@ void GtcsDatabaseBaseInfo::InitialDataStruct()
 }
 void GtcsDatabaseBaseInfo::SetDataValue(std::string *ptr)
 {
-    std::cout << "======================SetDataValue====================" << std::endl;
+    // std::cout << "======================SetDataValue====================" << std::endl;
     data[columnnames[0]] = *ptr;
     // std::cout<<"Index = "<< "0 " << columnnames[0] << " = " <<*ptr<< std::endl;
     int columnnames_size = columnnames.size();
@@ -48,6 +48,7 @@ GtcsDatabaseBasicInfo::GtcsDatabaseBasicInfo()
 {
     InitialColumnName();
     InitialDataStruct();
+    InitialTypeList();
 }
 // Distructor.
 GtcsDatabaseBasicInfo::~GtcsDatabaseBasicInfo()
@@ -90,7 +91,66 @@ void GtcsDatabaseBasicInfo::InitialColumnName()
     columnnames.push_back("led");              // (INTEGER)
     columnnames.push_back("lever_sensitivity");// (INTEGER)
     columnnames.push_back("push_sensitivity"); // (INTEGER) 
-    columnnames.push_back("motswver");         // (TEXT)
+    columnnames.push_back("[motswver ]");         // (TEXT)
     // columnnames.push_back("end");           // CL,RF  
+}
+void GtcsDatabaseBasicInfo::InitialTypeList()
+{    
+    type.insert(std::pair<std::string,std::string>("mintemp","REAL"));            // Min temperature       (REAL)
+    type.insert(std::pair<std::string,std::string>("maxtemp","REAL"));            // Max temperature       (REAL)
+    type.insert(std::pair<std::string,std::string>("maxcurrent","INTEGER"));      // Max current           (REAL)
+    type.insert(std::pair<std::string,std::string>("maxpeakcurrent","INTEGER"));  // Max peak current      (INTEGER)
+    type.insert(std::pair<std::string,std::string>("torquesensortype","INTEGER"));// torque sensor type    (INTEGER)
+    type.insert(std::pair<std::string,std::string>("maxdutycycle","REAL"));    // Max duty cycle        (REAL)
+    type.insert(std::pair<std::string,std::string>("maxtorque","REAL"));       // Max torque            (REAL)
+    type.insert(std::pair<std::string,std::string>("pwmfreq","INTEGER"));         // PWM frequency         (INTEGER)
+    type.insert(std::pair<std::string,std::string>("maxrpm","INTEGER"));          // Max rpm               (INTEGER)
+    type.insert(std::pair<std::string,std::string>("maxslope","INTEGER"));        // Max slope             (INTEGER)
+    type.insert(std::pair<std::string,std::string>("minbusvolt","REAL"));      // Min bus voltage       (REAL)
+    type.insert(std::pair<std::string,std::string>("maxbusvolt","REAL"));      // Max bus voltage       (REAL)
+    type.insert(std::pair<std::string,std::string>("startdutycycle","REAL"));  // Start duty cycle      (REAL)
+    type.insert(std::pair<std::string,std::string>("gearboxratio","REAL"));    // Gear box ratio        (REAL)
+    type.insert(std::pair<std::string,std::string>("startinp","INTEGER"));        // Start input source    (INTEGER)
+    type.insert(std::pair<std::string,std::string>("revinp","INTEGER"));          // Reverse ipnut source  (INTEGER)
+    type.insert(std::pair<std::string,std::string>("revrpm","INTEGER"));          // Reverse rpm           (INTEGER)
+    type.insert(std::pair<std::string,std::string>("revslope","INTEGER"));        // Reverse slope         (INTEGER)
+    type.insert(std::pair<std::string,std::string>("revmaxcurrent","INTEGER"));   // Reverse max current   (INTEGER)
+    type.insert(std::pair<std::string,std::string>("revmaxtorque","REAL"));    // Reverse max torque    (REAL)
+    type.insert(std::pair<std::string,std::string>("erroridletime","INTEGER"));   // Error idle time       (INTEGER)
+    type.insert(std::pair<std::string,std::string>("backlash","INTEGER"));        // Bachlash              (INTEGER)
+    type.insert(std::pair<std::string,std::string>("pgain","INTEGER"));           // Proportional gain     (INTEGER)
+    type.insert(std::pair<std::string,std::string>("igain","INTEGER"));           // Integral gain         (INTEGER)
+    type.insert(std::pair<std::string,std::string>("encoder","INTEGER"));         // Encoder               (INTEGER)
+    // New add
+    type.insert(std::pair<std::string,std::string>("mintorque","REAL"));        // (REAL)
+    type.insert(std::pair<std::string,std::string>("minrpm","INTEGER"));           // (INTEGER)
+    type.insert(std::pair<std::string,std::string>("revminrpm","INTEGER"));        // (INTEGER)
+    type.insert(std::pair<std::string,std::string>("dmsswver","INTEGER"));         // (INTEGER)
+    type.insert(std::pair<std::string,std::string>("dmscoreid","INTEGER"));        // (INTEGER)
+    type.insert(std::pair<std::string,std::string>("dmssernr","INTEGER"));         // (INTEGER)
+    type.insert(std::pair<std::string,std::string>("led","INTEGER"));              // (INTEGER)
+    type.insert(std::pair<std::string,std::string>("lever_sensitivity","INTEGER"));// (INTEGER)
+    type.insert(std::pair<std::string,std::string>("push_sensitivity","INTEGER")); // (INTEGER) 
+    type.insert(std::pair<std::string,std::string>("[motswver ]","TEXT"));         // (TEXT)
+}
+std::string GtcsDatabaseBasicInfo::GetUpdateSqlCommand()
+{
+    std::string sqlcmd = "";
+    sqlcmd = "update " + dbtablename + " set ";
+    int columnnames_size  = columnnames.size();
+    for (int i = 0; i < columnnames_size; i++)
+    {
+        if (type[columnnames[i]]!="TEXT")
+        {
+            sqlcmd += columnnames[i] + " = " + data[columnnames[i]] + ",";   
+        }   
+        else
+        {
+            sqlcmd += columnnames[i] + " = " + "'" + data[columnnames[i]] + "'" +",";   
+        }
+    }
+    sqlcmd = sqlcmd.replace(sqlcmd.end()-1,sqlcmd.end()," ");
+    sqlcmd += "where rowid = 1;";
+    return sqlcmd;
 }
 #pragma endregion

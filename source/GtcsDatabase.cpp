@@ -33,14 +33,81 @@ std::string Sqlite3Manager::GetDatabasePath()
 {
     return db_Path;
 }
+// // Write data to sqlite.
+// int Sqlite3Manager::UpdateDatabase(std::string table,std::map<std::string,std::string> ptr_data)
+// {
+//     int result = 0;
+//     sqlite3 *db;
+//     sqlite3_stmt *stmt;
+//     int rc;
+//     std::string sqlcmd  = "";
+//     // Open database. 
+//     rc = sqlite3_open(db_Path.c_str(),&db);
+//     if (rc)
+//     {
+//         std::cout<<"Can't open database : "<< sqlite3_errmsg(db) <<std::endl;
+//         return result;
+//     }
+
+//     // Combine sql update command.
+//     sqlcmd = "update " + table + " set ";
+//     for (std::map<std::string, std::string>::iterator i = ptr_data.begin(); i != ptr_data.end(); i++)
+//     {
+//         if (i->first == "motswver"){
+//             sqlcmd += i->first + " = " +'"' +i->second +'"' +",";   
+//         }
+//         else{
+//             sqlcmd += i->first + " = " + i->second + ",";   
+//         }
+//     }
+//     sqlcmd = sqlcmd.replace(sqlcmd.end()-1,sqlcmd.end()," ");
+//     sqlcmd += "where rowid = 1;";
+    
+//     std::cout << "sqlcmd = " << sqlcmd <<std::endl;
+//     // updata database.
+//     rc = sqlite3_prepare_v2(db, 
+//                             sqlcmd.c_str(), 
+//                             -1, 
+//                             &stmt, 
+//                             NULL);
+//     if (rc != SQLITE_OK)
+//     {
+//         std::cout<<"SQL error:"<<sqlite3_errmsg(db)<<std::endl;
+//         sqlite3_finalize(stmt);
+//     }
+
+//     // rc = sqlite3_bind_int(stmt, 1, 1;    // Using parameters ("?") is not
+//     // if (rc != SQLITE_OK)                      // really necessary, but recommended 
+//     // {                 
+//     //     string errmsg(sqlite3_errmsg(db));    // (especially for strings) to avoid
+//     //     sqlite3_finalize(stmt);               // formatting problems and SQL
+//     // }
+
+//     rc = sqlite3_step(stmt);
+//     if (rc != SQLITE_ROW && rc != SQLITE_DONE) 
+//     {
+//         // string errmsg(sqlite3_errmsg(db));
+//         std::cout<<"SQL error:"<<sqlite3_errmsg(db)<<std::endl;
+//         sqlite3_finalize(stmt);
+//     }
+//     // if (rc == SQLITE_DONE) {
+//     //     sqlite3_finalize(stmt);
+//     //     std::cout<<"customer not found"<<std::endl;
+//     // }
+
+//     // Finialize process.    
+//     sqlite3_finalize(stmt);
+//     sqlite3_close(db);
+//     result = 1;
+//     return result;
+// }
 // Write data to sqlite.
-int Sqlite3Manager::UpdateDatabase(std::string table,std::map<std::string,std::string> ptr_data)
+int Sqlite3Manager::UpdateDatabase(std::string table,std::string sqlcmd)
 {
     int result = 0;
     sqlite3 *db;
     sqlite3_stmt *stmt;
     int rc;
-    std::string sqlcmd  = "";
     // Open database. 
     rc = sqlite3_open(db_Path.c_str(),&db);
     if (rc)
@@ -49,20 +116,6 @@ int Sqlite3Manager::UpdateDatabase(std::string table,std::map<std::string,std::s
         return result;
     }
 
-    // Combine sql update command.
-    sqlcmd = "update " + table + " set ";
-    for (std::map<std::string, std::string>::iterator i = ptr_data.begin(); i != ptr_data.end(); i++)
-    {
-        if (i->first == "motswver"){
-            sqlcmd += i->first + " = " +'"' +i->second +'"' +",";   
-        }
-        else{
-            sqlcmd += i->first + " = " + i->second + ",";   
-        }
-    }
-    sqlcmd = sqlcmd.replace(sqlcmd.end()-1,sqlcmd.end()," ");
-    sqlcmd += "where rowid = 1;";
-    
     std::cout << "sqlcmd = " << sqlcmd <<std::endl;
     // updata database.
     rc = sqlite3_prepare_v2(db, 
@@ -72,29 +125,18 @@ int Sqlite3Manager::UpdateDatabase(std::string table,std::map<std::string,std::s
                             NULL);
     if (rc != SQLITE_OK)
     {
-        std::cout<<"SQL error:"<<sqlite3_errmsg(db)<<std::endl;
+        std::cout<<"Write SQL error:"<<sqlite3_errmsg(db)<<std::endl;
         sqlite3_finalize(stmt);
+        return result;
     }
-
-    // rc = sqlite3_bind_int(stmt, 1, 1;    // Using parameters ("?") is not
-    // if (rc != SQLITE_OK)                      // really necessary, but recommended 
-    // {                 
-    //     string errmsg(sqlite3_errmsg(db));    // (especially for strings) to avoid
-    //     sqlite3_finalize(stmt);               // formatting problems and SQL
-    // }
 
     rc = sqlite3_step(stmt);
     if (rc != SQLITE_ROW && rc != SQLITE_DONE) 
     {
-        // string errmsg(sqlite3_errmsg(db));
-        std::cout<<"SQL error:"<<sqlite3_errmsg(db)<<std::endl;
+        std::cout<<"Write SQL error:"<<sqlite3_errmsg(db)<<std::endl;
         sqlite3_finalize(stmt);
     }
-    // if (rc == SQLITE_DONE) {
-    //     sqlite3_finalize(stmt);
-    //     std::cout<<"customer not found"<<std::endl;
-    // }
-
+    
     // Finialize process.    
     sqlite3_finalize(stmt);
     sqlite3_close(db);
@@ -125,7 +167,7 @@ int Sqlite3Manager::ReadDatabase(std::string table,std::string *ptr)
                             NULL);
     if (rc != SQLITE_OK)
     {
-        std::cout<<"SQL error:"<<sqlite3_errmsg(db)<<std::endl;
+        std::cout<<"Read SQL error:"<<sqlite3_errmsg(db)<<std::endl;
         sqlite3_finalize(stmt);
     }
 
@@ -140,7 +182,7 @@ int Sqlite3Manager::ReadDatabase(std::string table,std::string *ptr)
     if (rc != SQLITE_ROW && rc != SQLITE_DONE) 
     {
         // string errmsg(sqlite3_errmsg(db));
-        std::cout<<"SQL error:"<<sqlite3_errmsg(db)<<std::endl;
+        std::cout<<" Read SQL error:"<<sqlite3_errmsg(db)<<std::endl;
         sqlite3_finalize(stmt);
     }
     if (rc == SQLITE_DONE) {
@@ -151,8 +193,8 @@ int Sqlite3Manager::ReadDatabase(std::string table,std::string *ptr)
     int index = 0; 
     *ptr = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, index)));
     #ifdef _BDEBUG_DB_
-    std::cout << "========================Start DB READ============================="<< std::endl;
-    std::cout << "DB index = "<<std::to_string(index) << " data = " <<*ptr<< std::endl;
+    // std::cout << "========================Start DB READ============================="<< std::endl;
+    // std::cout << "DB index = "<<std::to_string(index) << " data = " <<*ptr<< std::endl;
     #endif
 
     while(true)
@@ -170,7 +212,7 @@ int Sqlite3Manager::ReadDatabase(std::string table,std::string *ptr)
             {
                 *ptr = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, index)));
                 #ifdef _BDEBUG_DB_
-                std::cout << "DB index = "<<std::to_string(index) << " data = " <<*ptr<< std::endl;
+                // std::cout << "DB index = "<<std::to_string(index) << " data = " <<*ptr<< std::endl;
                 #endif
             }
         }
@@ -206,9 +248,14 @@ int GtcsDatabase::ReadFromSqliteDatabase(Sqlite3Manager db,std::string table,std
     return result;
 }
 // Update gtcs sqlite database.
-int GtcsDatabase::UpdateSqliteDatabase(Sqlite3Manager db,std::string table, const std::map<std::string,std::string> writedata)
+// int GtcsDatabase::UpdateSqliteDatabase(Sqlite3Manager db,std::string table, const std::map<std::string,std::string> writedata)
+// {
+//     int result = db.UpdateDatabase(table,writedata);
+//     return result;
+// }
+int GtcsDatabase::UpdateSqliteDatabase(Sqlite3Manager db,std::string table, std::string sqlcmd)
 {
-    int result = db.UpdateDatabase(table,writedata);
+    int result = db.UpdateDatabase(table,sqlcmd); 
     return result;
 }
 #pragma endregion

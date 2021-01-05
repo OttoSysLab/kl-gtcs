@@ -23,7 +23,7 @@ void tcpsocket()
     #ifdef _DEBUG_MODE_
         char sockip[] = "192.168.0.207";
     #else
-        // char sockip[] = "127.0.0.1";
+        char sockip[] = "127.0.0.1";
     #endif
 
     int sockport= 9000;

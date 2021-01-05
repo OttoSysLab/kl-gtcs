@@ -32,7 +32,8 @@ public:
     ~Sqlite3Manager();
     int SetDatabasePath(std::string path);
     std::string GetDatabasePath();
-    int UpdateDatabase(std::string table,std::map<std::string,std::string> data);
+    // int UpdateDatabase(std::string table,std::map<std::string,std::string> data);
+    int UpdateDatabase(std::string table,std::string sqlcmd);
     int ReadDatabase(std::string table,std::string *ptr);  // int SetDatabaseFilePath(std::string path);
 };
 #pragma endregion
@@ -51,7 +52,8 @@ public:
     Sqlite3Manager db_emmc;
     
     int ReadFromSqliteDatabase(Sqlite3Manager database,std::string table,std::string *ptr_start);
-    int UpdateSqliteDatabase(Sqlite3Manager database,std::string table,const std::map<std::string,std::string> writedata);
+    // int UpdateSqliteDatabase(Sqlite3Manager database,std::string table,const std::map<std::string,std::string> writedata);
+    int UpdateSqliteDatabase(Sqlite3Manager database,std::string table,const std::string sqlcmd);
     // int CheckDatabaseFSM(int db_fsm);
 };
 #endif

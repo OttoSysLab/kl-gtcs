@@ -13,11 +13,9 @@
  Programmer    	: Otto Chang                                                                   
  Date	       	: 2019/08/06                                                         
 =======================================================================================*/
-#include <iostream>    // 
-#include <array>       // s 
-#include <cmath>
-
-
+#include "GtcsGloabDefine.h"
+#include <array>
+// #include <iostream>
 
 // #endif
 class Common
@@ -51,5 +49,13 @@ public:
     static uint8_t ToUInt8(std::array<bool,8> array);
     static uint16_t ToUInt16(std::array<bool,16> array);
     static uint32_t ToUInt32(std::array<bool,32> array);
+};
+
+class DataSorter
+{
+public:
+    DataSorter(){};
+    ~DataSorter(){};
+    static std::string GetFloatScaleSortString(float src,int scalenum);
 };
 #endif

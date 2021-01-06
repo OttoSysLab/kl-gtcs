@@ -1,6 +1,6 @@
 #ifndef _GTCS_MAIN_
 #define _GTCS_MAIN_
-// #define _DEBUG_MODE_
+#define _DEBUG_MODE_
 #pragma once
 // #define OS_WINDOWS
 // #define OS_LINUX
@@ -22,8 +22,6 @@
 #include <string>
 #include <array>
 #include <ctime>
-#include <stdio.h>
-#include <stdlib.h>
 
 #include "../include/Manager.h"
 #include "../include/TcpSocket.h"

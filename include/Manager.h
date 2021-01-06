@@ -1,5 +1,5 @@
-#ifndef _GTCS_BULLETIN_MANAGER_
-#define _GTCS_BULLETIN_MANAGER_
+#ifndef _GTCS_MANAGER_
+#define _GTCS_MANAGER_
 #pragma once
 /*=======================================================================================
  Program Nane  	: gtcs_tlg_decoder.c     
@@ -18,10 +18,14 @@
 #include "GtcsAmsProtocol.h"
 #include "GtcsMcbComm.h"
 #include "GtcsDatabase.h"
-#include "Common.h"
-#include <iostream>
-#include <string.h>
-#include <ctime>
+// #include "Common.h"
+// #include <iostream>
+// #include <string.h>
+// #include <ctime>
+
+#define SETTING_READY -1
+#define SETTING_OK 0
+#define SETTING_NG 1
 
 #pragma region 
 class Manager
@@ -77,6 +81,7 @@ private:
     int RunGtcsSystem();
     int ClearGtcsSystemAlarm();
     int SettingGtcsSystem();
+    int CopyDatabase(std::string source ,std::string destination); 
 public:
     // Constructor.
     GtcsManager(/* args */);

@@ -14,8 +14,6 @@
  Date	       	: 2019/08/06                                                         
 =======================================================================================*/
 #include "GtcsGloabDefine.h"
-#include "Common.h"
-#include <ctime>
 
 #pragma region bulletin
 #pragma region Gtcs AMS bulletin
@@ -438,7 +436,7 @@ public:
         .str27 = "0",                                        // Proportional gain
         .str28 = "0",                                        // Integral gain
         .str29 = "0",                                        // Encoder
-        // 
+        // New
         .str30 = "0",                                        // Min Torque
         .str31 = "0",                                        // Min RPM
         .str32 = "0",                                        // Reverse Min RPM
@@ -449,7 +447,6 @@ public:
         .str37 = "0",                                        // Lever Sensitivity
         .str38 = "0",                                        // Push Sensitivity
         .str39 = "0",                                        // MotSWVer 
-
         .str40 = "\n\r",                                     // CR,LF
     };// REQ301, 開機啟動MCB狀態.
     AmsREQ302Struct REQ302Struct = {

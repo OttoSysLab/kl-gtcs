@@ -14,10 +14,15 @@
  Programmer    	: Otto Chang                                                                   
  Date	       	: 2019/08/06                                                         
 =======================================================================================*/
+// #include <stdio.h>
+// #include <stdlib.h>
+#include "Common.h"
 #include <cstring>
 #include <vector>
 #include <map>
 #include <iostream>
+#include <cmath>
+#include <ctime>
 
 // using namespace std;
 

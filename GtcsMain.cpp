@@ -11,7 +11,6 @@
  Date	       	: 2019/08/06
 =======================================================================================*/
 #include "../include/GtcsMain.h"
-// #define _TEST_
 
 // TCP socket.
 void tcpsocket()
@@ -27,7 +26,7 @@ void tcpsocket()
     #endif
 
     int sockport= 9000;
-    int MAXLINE = 256;                                         // Buffer size.
+    int MAXLINE = 512;                                         // Buffer size.
     // Initial parameter.
     int  listenfd, connfd;
     struct sockaddr_in  servaddr;
@@ -94,6 +93,7 @@ void tcpsocket()
         }
 
         // Send data to tcpclient.
+        std::fill_n(sendbuff,sizeof(sendbuff),0);   
         strcpy(sendbuff,manager.GetUiCmdResponse(bulletin->uisockrevcmd).c_str());
         // strcpy(sendbuff,bulletin->uisockrevcmd.c_str());
         if (send(connfd,sendbuff,sizeof(sendbuff),0)<0)

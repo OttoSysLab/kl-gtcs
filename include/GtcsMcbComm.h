@@ -333,6 +333,33 @@ private:
     int com_num = 0; 
 
     #pragma region RW MCB Parameter. 
+    // // Identification Parameter.(MainID = 1)
+    // int ReadIdentificationParameter();
+    // int WriteIdentificationParameter();
+    // // Basic Parameter.(MainID = 2)
+    // int ReadBasicParameter();    
+    // int WriteBasicParameter(McbID2Struct *basic);
+    // // Write to mcb flash.
+    // int WriteToMcbFlash(int mainid,int subid ,int add_num); // mainid = 7 , subid = 11(step) ,subid = 12 (Process)
+    // // Step Parameter. (Main ID = 3)
+    // int ReadStepParametrer(int mainid);
+    // int WriteStepParameter(McbID3Struct *step_para,int mainid);
+    // // Prcoess Parameter.(Main ID = 4)
+    // int ReadProcessParameter(int processnum);
+    // int WriteProcessParameter(McbID4Struct *process,int processid); 
+    #pragma endregion
+
+public:
+    ~GtcsMcbComm();    
+    static GtcsMcbComm* GetInstance();
+    // GtcsParameter parameter;
+    GtcsMcbTelegram telegram;
+    // Initial MCB com.
+    int InitialMcbComPort(std::string com_bname);
+    // Check MCB FSM.
+    int CheckMcbFSM(int mac_fsm);
+
+    #pragma region RW MCB Parameter. 
     // Identification Parameter.(MainID = 1)
     int ReadIdentificationParameter();
     int WriteIdentificationParameter();
@@ -346,24 +373,15 @@ private:
     int WriteStepParameter(McbID3Struct *step_para,int mainid);
     // Prcoess Parameter.(Main ID = 4)
     int ReadProcessParameter(int processnum);
-    int WriteProcessParameter(McbID4Struct *process,int processid); 
-
+    int WriteProcessParameter(McbID4Struct *process,int processid);
     #pragma endregion
+
     // Test Function.
     int TestMcbRW();
     // Polling to MCB.
     int CheckLoosenStatus();
     int NormalPollingToMcb();
     int AdvancePollingToMcb();
-public:
-    ~GtcsMcbComm();    
-    static GtcsMcbComm* GetInstance();
-    // GtcsParameter parameter;
-    GtcsMcbTelegram telegram;
-    // Initial MCB com.
-    int InitialMcbComPort(std::string com_bname);
-    // Check MCB FSM.
-    int CheckMcbFSM(int mac_fsm);
 };
 #pragma endregion
 #endif

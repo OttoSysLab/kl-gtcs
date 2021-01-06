@@ -123,3 +123,14 @@ uint32_t BitConverter::ToUInt32(std::array<bool,32> array)
     }
     return result;
 }
+
+// Get scale sort string.
+std::string DataSorter::GetFloatScaleSortString(float src,int scalenum)
+{
+    char strbuff[20];
+    std::fill_n(strbuff,sizeof(strbuff),0);   
+    std::string cmd = "%."+ std::to_string(scalenum) + "f";
+    // std::cout << "GetFloatScaleSortString  = " << src << ",cmd = " << cmd <<std::endl;
+    snprintf(strbuff,sizeof(strbuff),cmd.c_str(),src);    
+    return strbuff;
+}

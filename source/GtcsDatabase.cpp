@@ -36,7 +36,7 @@ bool Sqlite3Manager::UpdateDatabase(std::string db_Path,std::string table,std::s
         std::cout<<"Can't open database : "<< sqlite3_errmsg(db) <<std::endl;
         return false;
     }
-    std::cout << "sqlcmd = " << sqlcmd <<std::endl;
+    // std::cout << "sqlcmd = " << sqlcmd <<std::endl;
     // updata database.
     rc = sqlite3_prepare_v2(db,
                             sqlcmd.c_str(),

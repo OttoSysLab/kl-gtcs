@@ -216,88 +216,152 @@ bool GtcsManager::ConvertReadlTimeActuralValue()
     
     return true;
 }
-bool GtcsManager::ConvertAmsBasicToMcbBulletin(AmsCMD340Struct &amscmd)
+bool GtcsManager::ConvertAmsBasicToMcbStruct(AmsCMD340Struct &amscmd,McbID2Struct &mcb_basic)
 {
-    GtcsBulletin *bulletin = GtcsBulletin::GetInstance();
     // 
-    bulletin->McbBulletin.BasicPara.s16MinTemp
+    mcb_basic.s16MinTemp
         = (uint16_t)(std::stof(amscmd.str5)*10);// SID = 1,Minimal Temperature of the motor and the motorcontroller. 
                                                 // Underneath this temperature the tool doesn’t work. Unit is [0,1 °C]."
-    bulletin->McbBulletin.BasicPara.s16MaxTemp
+    mcb_basic.s16MaxTemp
         = (uint16_t)(std::stof(amscmd.str6)*10);// SID = 2,Maximal Temperature of the motor and the motorcontroller. 
                                                 // Above this temperature the tool doesn’t work. Unit is [0,1 °C ].
-    bulletin->McbBulletin.BasicPara.u16MaxCurrent
+    mcb_basic.u16MaxCurrent
         = (uint16_t)std::stoi(amscmd.str7);     // SID = 3,This is the absolute maximum motor current value. 
                                                 // There are also maximum current values for the specific process steps 
                                                 // (see….), but this parameter is the limit. Unit is [mA].
-    bulletin->McbBulletin.BasicPara.u16MaxPeakCurrent
+    mcb_basic.u16MaxPeakCurrent
         = (uint16_t)std::stoi(amscmd.str8);     // SID = 4,This value controls the threshold of the peak current comparator.
                                                 // The peak current detection is built in for the protection of the device 
                                                 // when a latch up situation occurs. Unit is [A].
-    bulletin->McbBulletin.BasicPara.u16TorqueSensorType
+    mcb_basic.u16TorqueSensorType
         = (uint16_t)std::stoi(amscmd.str9);    // SID = 5, 0 = Torquesensor 5Nm, 1 = Torquesensor 4Nm,2 = No Torquesensor"
-    bulletin->McbBulletin.BasicPara.u16MaxDutyCycle     
+    mcb_basic.u16MaxDutyCycle     
         = (uint16_t)(std::stof(amscmd.str10)*10);// SID = 6,Maximal Duty Cycle of the Motor- PWM 1 – 100%. Unit is [0.1 %]
 
-    //bulletin->McbBulletin.BasicPara.u16MaxTorque        
+    //mcb_basic.u16MaxTorque        
     //   = (uint16_t)std::stoi(amscmd.str11);   // SID = 7,"Maximum Torque Value is 0- 1862 (maxRaw TMD Value)"
     
-    bulletin->McbBulletin.BasicPara.u16PWMFreq
+    mcb_basic.u16PWMFreq
         = (uint16_t)std::stoi(amscmd.str12);   // SID = 8,0 = 16kHz,1 = 24kHz,2 = 32kHz,3 = 40kHz,4 = 48kHz"
-    bulletin->McbBulletin.BasicPara.u16MaxRPM
+    mcb_basic.u16MaxRPM
         = (uint16_t)std::stoi(amscmd.str13);    // SID = 9,This is the absolute maximum motor rpm value. 
                                                 // There are also rpm values for the specific process steps (see….) , 
                                                 // but this parameter is the limit. Unit is [rpm].
-    bulletin->McbBulletin.BasicPara.u16MaxSlope 
+    mcb_basic.u16MaxSlope 
         = (uint16_t)std::stoi(amscmd.str14);    // SID = 10,This is the absolute maximum motor rpm ramp (up/down) value.
                                                 // There are also rpm slope values for the specific process steps (see….) , 
                                                 // but this parameter is the limit. Unit is [rpm/s].
-    bulletin->McbBulletin.BasicPara.u16MinBusVolt       
+    mcb_basic.u16MinBusVolt       
         = (uint16_t)(std::stof(amscmd.str15)*10);// SID = 11,Minimal Bus Voltage of the Power Supply. 
                                                 // Underneath this Voltage the tool doesn’t work. 
                                                 // Unit is [0,1V] (600 = 60V).
-    bulletin->McbBulletin.BasicPara.u16MaxBusVolt
+    mcb_basic.u16MaxBusVolt
         = (uint16_t)(std::stof(amscmd.str16)*10);    // SID = 12,Maximal Bus Voltage of the Power Supply. 
                                                 // Above this Voltage the tool doesn’t work. Unit is [0,1V].
-    bulletin->McbBulletin.BasicPara.u16StartDutyCycle   
+    mcb_basic.u16StartDutyCycle   
         = (uint16_t)std::stoi(amscmd.str17);    // SID = 13,Start Duty Cycle for the RPM regulator Unit is [0,1%].(20 = 10%)
 
-    bulletin->McbBulletin.BasicPara.u16GearBoxRatio     
+    mcb_basic.u16GearBoxRatio     
         = (uint16_t)(std::stof(amscmd.str18)*100);    // SID = 14,Gear box ratio. Unit [0,01] (1600 = 16:1)
-    bulletin->McbBulletin.BasicPara.u32StartInp 
+    mcb_basic.u32StartInp 
         = (uint16_t)std::stoi(amscmd.str19);    // SID = 15,0 = Start Switch,1 = From Displaycontroller Telegram"
-    bulletin->McbBulletin.BasicPara.u32RevInp           
+    mcb_basic.u32RevInp           
         = (uint16_t)std::stoi(amscmd.str20);   // SID = 16,0 = Reverse Switch,1 = From Displaycontroller"
-    bulletin->McbBulletin.BasicPara.u16RevRpm  
+    mcb_basic.u16RevRpm  
         = (uint16_t)std::stoi(amscmd.str21);   // SID = 17,"Rpm of reverse drive. Unit is [rpm](after the Gearbox)"
-    bulletin->McbBulletin.BasicPara.u16RevSlope      
+    mcb_basic.u16RevSlope      
         = (uint16_t)std::stoi(amscmd.str22);   // SID = 18,"Slope of reverse drive. Unit is [rpm/s](after the Gearbox)."
-    bulletin->McbBulletin.BasicPara.u16RevMaxCurrent    
+    mcb_basic.u16RevMaxCurrent    
         = (uint16_t)std::stoi(amscmd.str23);   // SID = 19,"Maximum Current of reverse drive. Unit is [mA]."
 
-    //bulletin->McbBulletin.BasicPara.u16RevMaxTorque     
+    //mcb_basic.u16RevMaxTorque     
     // = (uint16_t)std::stoi(amscmd.str24);   // SID = 20,"Maximum Torque of reverse drive. 
     //                                         // Value is 0- 1862 (max TMD Raw Value)"
-    bulletin->McbBulletin.BasicPara.u16ErrorIdleTime
+    mcb_basic.u16ErrorIdleTime
         = (uint16_t)std::stoi(amscmd.str25);   // SID = 21,"Idle time of the motor controller after a Error condition.Unit is [ms]."
-    bulletin->McbBulletin.BasicPara.u16BackLash         
+    mcb_basic.u16BackLash         
         = (uint16_t)std::stoi(amscmd.str26);   // SID = 22,"Backlash of the gearbox. The value depends if a Encoder or 
                                                 // Hallsensors are used for angle Positioning. Unit is [Increments]."
-    bulletin->McbBulletin.BasicPara.u16PGain            
+    mcb_basic.u16PGain            
         = (uint16_t)std::stoi(amscmd.str27);   // SID = 23,Proportional Gain for the RPM Regulator.
-    bulletin->McbBulletin.BasicPara.u16IGain            
+    mcb_basic.u16IGain            
         = (uint16_t)std::stoi(amscmd.str28);   // SID = 24,Integral Gain for the RPM Regulator.
-    bulletin->McbBulletin.BasicPara.u16Encoder          
+    mcb_basic.u16Encoder          
         = (uint16_t)std::stoi(amscmd.str29);   // SID = 25,"0 = No Encoder (positioning with Hallsensors).
     
     return true;
 }
-
-// Check Ui Setting FSM.
-int GtcsManager::CheckUiSettingFSM(int uicmd)
+// bool GtcsManager::ConvertAmsBasicToDBStruct(AmsCMD340Struct &amscmd,GtcsDatabaseBasicStruct &db_basic)
+// {   
+//     return true;
+// }
+// 
+bool GtcsManager::SetSystemBasicParameter(AmsCMD340Struct &amscmd,GtcsDatabaseBasicStruct &db_basic,McbID2Struct &mcb_basic)
 {
-    int result = 0;
+    // Initial value.
+    GtcsDatabase db_emmc(db_emmc_Path);
+    GtcsDatabase db_ramdisk(db_ramdisk_Path);                     
+    GtcsDatabaseBasicInfo basic_emmc;     
+    GtcsDatabaseBasicInfo basic_ramdisk;
 
+    // step 1 : Convert AMS cmd340 to mcb struct and update MCB basic paramater.
+    ConvertAmsBasicToMcbStruct(amscmd,mcb_basic);
+    if (mcb->WriteBasicParameter(mcb_basic)==false)
+    {
+        return false;
+    }     
+    
+    // Step 2 : Read basic data from emmc database to dbstruct.
+    if (db_emmc.ReadDatabase(db_emmc.GetDatabasePath(),"basic",(std::string *)(void* )&bulletin->DbBulletin.basic.mintemp)==false)
+    {
+        std::cout << "Step 2 : Read basic data from emmc database to dbstruct." << std::endl;
+        return false;
+    }
+    else
+    {
+        basic_emmc.SetDataValue(&bulletin->DbBulletin.basic.mintemp);
+    }
+    // step 3 : Update Mcb struct to emmc basic datatbase.
+    if (UpdateMcbBasicParaToDB(db_emmc,basic_emmc,bulletin->McbBulletin.BasicPara)==false)
+    {
+        std::cout << "Step 3 : Update MCB basic parameter to database." << std::endl;
+        return false;
+    }
+    // step 4 : Cpoy emmc database to ramdisk.
+    CopyDatabase(db_ramdisk_Path,db_emmc_Path);
+
+    // step 5 : Set ANS340
+    bulletin->AmsBulletin.ANS340Struct.str5 = bulletin->AmsBulletin.CMD340Struct.str5;
+    bulletin->AmsBulletin.ANS340Struct.str6 = bulletin->AmsBulletin.CMD340Struct.str6;
+    bulletin->AmsBulletin.ANS340Struct.str7 = bulletin->AmsBulletin.CMD340Struct.str7;
+    bulletin->AmsBulletin.ANS340Struct.str8 = bulletin->AmsBulletin.CMD340Struct.str8;
+    bulletin->AmsBulletin.ANS340Struct.str9 = bulletin->AmsBulletin.CMD340Struct.str9;
+    bulletin->AmsBulletin.ANS340Struct.str10 = bulletin->AmsBulletin.CMD340Struct.str10;
+    bulletin->AmsBulletin.ANS340Struct.str11 = bulletin->AmsBulletin.CMD340Struct.str11;
+    bulletin->AmsBulletin.ANS340Struct.str12 = bulletin->AmsBulletin.CMD340Struct.str12;
+    bulletin->AmsBulletin.ANS340Struct.str13 = bulletin->AmsBulletin.CMD340Struct.str13;
+    bulletin->AmsBulletin.ANS340Struct.str14 = bulletin->AmsBulletin.CMD340Struct.str14;
+    bulletin->AmsBulletin.ANS340Struct.str15 = bulletin->AmsBulletin.CMD340Struct.str15;
+    bulletin->AmsBulletin.ANS340Struct.str16 = bulletin->AmsBulletin.CMD340Struct.str16;
+    bulletin->AmsBulletin.ANS340Struct.str17 = bulletin->AmsBulletin.CMD340Struct.str17;
+    bulletin->AmsBulletin.ANS340Struct.str18 = bulletin->AmsBulletin.CMD340Struct.str18;
+    bulletin->AmsBulletin.ANS340Struct.str19 = bulletin->AmsBulletin.CMD340Struct.str19;
+    bulletin->AmsBulletin.ANS340Struct.str20 = bulletin->AmsBulletin.CMD340Struct.str20;
+    bulletin->AmsBulletin.ANS340Struct.str21 = bulletin->AmsBulletin.CMD340Struct.str21;
+    bulletin->AmsBulletin.ANS340Struct.str22 = bulletin->AmsBulletin.CMD340Struct.str22;
+    bulletin->AmsBulletin.ANS340Struct.str23 = bulletin->AmsBulletin.CMD340Struct.str23;
+    bulletin->AmsBulletin.ANS340Struct.str24 = bulletin->AmsBulletin.CMD340Struct.str24;
+    bulletin->AmsBulletin.ANS340Struct.str25 = bulletin->AmsBulletin.CMD340Struct.str25;
+    bulletin->AmsBulletin.ANS340Struct.str26 = bulletin->AmsBulletin.CMD340Struct.str26;
+    bulletin->AmsBulletin.ANS340Struct.str27 = bulletin->AmsBulletin.CMD340Struct.str27;
+    bulletin->AmsBulletin.ANS340Struct.str28 = bulletin->AmsBulletin.CMD340Struct.str28;
+    bulletin->AmsBulletin.ANS340Struct.str29 = bulletin->AmsBulletin.CMD340Struct.str29;
+
+    return true;
+}
+// Check Ui Setting FSM.
+bool GtcsManager::CheckUiSettingFSM(int uicmd)
+{
     switch (uicmd)
     {
     case AMSCMD::CMD302:
@@ -323,31 +387,18 @@ int GtcsManager::CheckUiSettingFSM(int uicmd)
             bulletin->AmsBulletin.ANS302Struct.str5 = "3";
         }
         #pragma endregion
-        result = 0;
         break;
     case AMSCMD::CMD340:
-        #pragma region cmd340 sequence
-        // step 1 : Convert cmd340 to mcb command.
-        ConvertAmsBasicToMcbBulletin(bulletin->AmsBulletin.CMD340Struct);
-        // step 2 : Update MCB basic paramater.
-        mcb->WriteBasicParameter(&bulletin->McbBulletin.BasicPara);
-        // step 3 : Read MCB basic parameeter. 
-        
-        // step 4 : Update ramdisk database.
-        
-        // step 5 : Compare basic data btweem ramdisk database and emmc database.
-
-        // step 6 : Update ans cmd.            
-        // ams->GetAmsBulletin(AMSCMD::ANS340);     
-           
-        #pragma endregion
-        result = 0;
+        if(SetSystemBasicParameter(bulletin->AmsBulletin.CMD340Struct,bulletin->DbBulletin.basic,bulletin->McbBulletin.BasicPara)==false)
+        {
+            return false;
+        }
         break;
     default:
-        result = 0;
+        return false;
         break;
     }
-    return result;
+    return true;    
 }
 // Get Ui Cmd Response.
 std::string GtcsManager::GetUiCmdResponse(std::string uicmd_string)
@@ -379,7 +430,8 @@ bool GtcsManager::InitialGtcsSystem()
     mcb->InitialMcbComPort(comport_name);
     for(int index=0;index<5;index++)
     {
-        mcb->CheckMcbFSM((int)MCB_FSM::NORMAL_POLLING);
+        mcb->NormalPollingToMcb();
+        // mcb->CheckMcbFSM((int)MCB_FSM::NORMAL_POLLING);
         ConvertReadlTimeActuralValue();
     }
     mcb->telegram.ctrl.IsEnable = false;
@@ -435,7 +487,7 @@ bool GtcsManager::UpdateMcbBasicParaToDB(GtcsDatabase &db,GtcsDatabaseBasicInfo 
     db.UpdateDatabase(db.GetDatabasePath(),"basic",db_basic.GetUpdateSqlCommand());
     return true;
 }
-
+// Compare Basic Struct.
 bool GtcsManager::CompareBasicStruct(GtcsDatabaseBasicInfo &emmc,GtcsDatabaseBasicInfo &ramdisk)
 {
     bool result = true;
@@ -452,7 +504,7 @@ bool GtcsManager::CompareBasicStruct(GtcsDatabaseBasicInfo &emmc,GtcsDatabaseBas
     }    
     return result;
 }
-// 
+// Set AMS Bulletin Basic Parameter.
 bool GtcsManager::SetAmsBulletinBasicPara(GtcsDatabaseBasicInfo &basic)
 {
     GtcsBulletin *bulletin = GtcsBulletin::GetInstance();
@@ -500,15 +552,17 @@ bool GtcsManager::CheckGtcsSystem()
 {
     // Initial value.
     GtcsBulletin *bulletin = GtcsBulletin::GetInstance();
-    // std::string db_emmc_Path = "/var/www/html/database/tcs.db";   // Initial database path.
-    // std::string db_ramdisk_Path = "/mnt/ramdisk/tcs.db";          // Initial database path.
     GtcsDatabase db_emmc(db_emmc_Path);
     GtcsDatabase db_ramdisk(db_ramdisk_Path);                     
     GtcsDatabaseBasicInfo basic_emmc;     
     GtcsDatabaseBasicInfo basic_ramdisk;
 
     // Step 1 : Read data from mcb basice parameter.
-    mcb->ReadBasicParameter();    
+    if (mcb->ReadBasicParameter(bulletin->McbBulletin.BasicPara) == false)
+    {
+        std::cout << "Step 1 : Read data from mcb basice parameter." << std::endl;
+        return false;
+    }    
 
     // Step 2 : Copy tcs.db from emmc to ramdisk.
     CopyDatabase(db_ramdisk_Path,db_emmc_Path);
@@ -575,7 +629,8 @@ bool GtcsManager::RunGtcsSystem()
 {
     if (bulletin->uisetting==false)
     {
-        mcb->CheckMcbFSM((int)MCB_FSM::NORMAL_POLLING);
+        mcb->NormalPollingToMcb();
+        // mcb->CheckMcbFSM((int)MCB_FSM::NORMAL_POLLING);
         ConvertReadlTimeActuralValue();
     }
     else
@@ -615,7 +670,7 @@ std::string GtcsManager::CheckUiCmdRequest(std::string reqest_string)
 }
 #pragma endregion
 
-//
+// Set Initial value.
 void GtcsManager::SetMcbPortName(std::string com_name)
 {
     comport_name = com_name;

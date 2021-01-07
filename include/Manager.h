@@ -67,7 +67,7 @@ private:
     // method.
     std::string GetMcbRtStatusString(MCB_RT_STATUS status);
     std::string GetToolRunTimeStatus();
-    int CheckUiSettingFSM(int uicmd);    
+    bool CheckUiSettingFSM(int uicmd);    
 
     std::string comport_name = "";
     std::string db_emmc_Path = "";     // Initial database path.
@@ -83,11 +83,13 @@ private:
     bool CopyDatabase(std::string destination ,std::string source);
     bool UpdateMcbBasicParaToDB(GtcsDatabase &db,GtcsDatabaseBasicInfo &db_basic,McbID2Struct &mcb_basic); 
     bool CompareBasicStruct(GtcsDatabaseBasicInfo &emmc,GtcsDatabaseBasicInfo &ramdisk);
+    bool SetSystemBasicParameter(AmsCMD340Struct &amscmd,GtcsDatabaseBasicStruct &db_basic,McbID2Struct &mcb_basic);
     
     // AMS Protocol.
     bool SetAmsBulletinBasicPara(GtcsDatabaseBasicInfo &basic);   // GTCS AMS REQ301 
     bool ConvertReadlTimeActuralValue();                          // GTCS AMS DATA300  
-    bool ConvertAmsBasicToMcbBulletin(AmsCMD340Struct &amscmd);                                  // 
+    bool ConvertAmsBasicToMcbStruct(AmsCMD340Struct &amscmd,McbID2Struct &basic_para);//
+    // bool ConvertAmsBasicToDBStruct(AmsCMD340Struct &amscmd,GtcsDatabaseBasicStruct &db_basic); 
 public:
     // Constructor.
     GtcsManager(/* args */);

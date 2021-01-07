@@ -72,13 +72,13 @@ enum MAIN_FSM : int{
 //     W_RAM_BAIIC_PARA ,
 // };
 // Enum MCB finite-state-machine status.
-enum MCB_FSM:int {
-    NORMAL_POLLING = 0,
-    ADVANCE_POLLING,
-    SETTING_CTRL_TELEGRAM,
-    WRITE_MCB_BASIC,
-    READ_MCB_BASIC,
-};
+// enum MCB_FSM:int {
+//     NORMAL_POLLING = 0,
+//     ADVANCE_POLLING,
+//     SETTING_CTRL_TELEGRAM,
+//     WRITE_MCB_BASIC,
+//     READ_MCB_BASIC,
+// };
 // TMD OUTPUT
 enum TMD_OUTPUT:int {
     LED_1 = 0,

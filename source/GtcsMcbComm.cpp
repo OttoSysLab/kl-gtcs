@@ -198,12 +198,12 @@ int GtcsMcbComm::WriteIdentificationParameter()
     return result;
 }
 // Basic Parameter.(MainID = 2)
-int GtcsMcbComm::ReadBasicParameter()
+int GtcsMcbComm::ReadBasicParameter(McbID2Struct &basic_para)
 {
     int result = -1;
     // Get
-    GtcsBulletin *bulltein = GtcsBulletin::GetInstance();
-    McbID2Struct *basic_para = &bulltein->McbBulletin.BasicPara;
+    // GtcsBulletin *bulltein = GtcsBulletin::GetInstance();
+    // McbID2Struct *basic_para = &bulltein->McbBulletin.BasicPara;
     uint8_t main_id = 2;
     uint8_t sub_id[6];
     uint16_t payload_start_index = 8;
@@ -278,17 +278,17 @@ int GtcsMcbComm::ReadBasicParameter()
     telegram.rw_response.InitialTelegramArray();
     result = read(com_num, &telegram.rw_response.telegram_array, 1024);
     // Get basic parameter from telegram.
-    basic_para->s16MinTemp          = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+4]+
+    basic_para.s16MinTemp          = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+4]+
                                       ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+5]<<8);  // SID = 1
-    basic_para->s16MaxTemp          = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+10]+
+    basic_para.s16MaxTemp          = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+10]+
                                       ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+11]<<8); // SID = 2
-    basic_para->u16MaxCurrent       = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+16]+
+    basic_para.u16MaxCurrent       = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+16]+
                                       ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+17]<<8); // SID = 3
-    basic_para->u16MaxPeakCurrent   = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+22]+
+    basic_para.u16MaxPeakCurrent   = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+22]+
                                       ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+23]<<8); // SID = 4
-    basic_para->u16TorqueSensorType = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+28]+
+    basic_para.u16TorqueSensorType = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+28]+
                                       ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+29]<<8); // SID = 5
-    basic_para->u16MaxDutyCycle     = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+34]+
+    basic_para.u16MaxDutyCycle     = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+34]+
                                       ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+35]<<8); // SID = 4
     #pragma endregion
     #pragma region second package. (SID7-12)
@@ -361,17 +361,17 @@ int GtcsMcbComm::ReadBasicParameter()
     telegram.rw_response.InitialTelegramArray();
     result = read(com_num, &telegram.rw_response.telegram_array, 1024);
     // Get basic parameter from telegram.
-    basic_para->u16MaxTorque    = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+4]+
+    basic_para.u16MaxTorque    = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+4]+
                                   ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+5]<<8);  // SID = 7
-    basic_para->u16PWMFreq      = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+10]+
+    basic_para.u16PWMFreq      = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+10]+
                                   ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+11]<<8); // SID = 8
-    basic_para->u16MaxRPM       = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+16]+
+    basic_para.u16MaxRPM       = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+16]+
                                   ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+17]<<8); // SID = 9
-    basic_para->u16MaxSlope     = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+22]+
+    basic_para.u16MaxSlope     = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+22]+
                                   ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+23]<<8); // SID = 10
-    basic_para->u16MinBusVolt   = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+28]+
+    basic_para.u16MinBusVolt   = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+28]+
                                   ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+29]<<8); // SID = 11
-    basic_para->u16MaxBusVolt   = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+34]+
+    basic_para.u16MaxBusVolt   = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+34]+
                                   ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+35]<<8); // SID = 12
     #pragma endregion
     #pragma region third send. (SID13-18)
@@ -444,17 +444,17 @@ int GtcsMcbComm::ReadBasicParameter()
     telegram.rw_response.InitialTelegramArray();
     result = read(com_num, &telegram.rw_response.telegram_array, 1024);
     // Get basic parameter from telegram.
-    basic_para->u16StartDutyCycle = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+4]+
+    basic_para.u16StartDutyCycle = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+4]+
                                     ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+5]<<8);  // SID = 13
-    basic_para->u16GearBoxRatio   = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+10]+
+    basic_para.u16GearBoxRatio   = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+10]+
                                     ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+11]<<8); // SID = 14
-    basic_para->u32StartInp       = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+16]+
+    basic_para.u32StartInp       = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+16]+
                                     ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+17]<<8); // SID = 15
-    basic_para->u32RevInp         = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+22]+
+    basic_para.u32RevInp         = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+22]+
                                     ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+23]<<8); // SID = 16
-    basic_para->u16RevRpm         = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+28]+
+    basic_para.u16RevRpm         = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+28]+
                                     ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+29]<<8); // SID = 17
-    basic_para->u16RevSlope       = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+34]+
+    basic_para.u16RevSlope       = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+34]+
                                     ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+35]<<8); // SID = 18
     #pragma endregion
     #pragma region fourth package. (SID19-24)
@@ -527,17 +527,17 @@ int GtcsMcbComm::ReadBasicParameter()
     telegram.rw_response.InitialTelegramArray();
     result = read(com_num, &telegram.rw_response.telegram_array, 1024);
     // Get basic parameter from telegram.
-    basic_para->u16RevMaxCurrent = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+4]+
+    basic_para.u16RevMaxCurrent = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+4]+
                                    ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+5]<<8);  // SID = 13
-    basic_para->u16RevMaxTorque  = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+10]+
+    basic_para.u16RevMaxTorque  = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+10]+
                                    ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+11]<<8); // SID = 14
-    basic_para->u16ErrorIdleTime = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+16]+
+    basic_para.u16ErrorIdleTime = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+16]+
                                    ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+17]<<8); // SID = 15
-    basic_para->u16BackLash      = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+22]+
+    basic_para.u16BackLash      = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+22]+
                                    ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+23]<<8); // SID = 16
-    basic_para->u16PGain         = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+28]+
+    basic_para.u16PGain         = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+28]+
                                    ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+29]<<8); // SID = 17
-    basic_para->u16IGain         = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+34]+
+    basic_para.u16IGain         = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+34]+
                                    ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+35]<<8); // SID = 18
     // telegram.rw_response.InitialTelegramArray();
     #pragma endregion
@@ -611,41 +611,41 @@ int GtcsMcbComm::ReadBasicParameter()
     telegram.rw_response.InitialTelegramArray();
     result = read(com_num, &telegram.rw_response.telegram_array, 1024);
     // Get basic parameter from telegram.
-    basic_para->u16Encoder = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+4]+
+    basic_para.u16Encoder = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+4]+
                              ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+5]<<8);  // SID = 25
     // telegram.rw_response.InitialTelegramArray();
     #pragma endregion
     #pragma region diaplay.
     // // Display package 1.
-    // std::cout << "basic_para->s16MinTemp = " << std::to_string(basic_para->s16MinTemp) << std::endl;
-    // std::cout << "basic_para->s16MaxTemp = " << std::to_string(basic_para->s16MaxTemp) << std::endl;
-    // std::cout << "basic_para->u16MaxCurrent = " << std::to_string(basic_para->u16MaxCurrent) << std::endl;
-    // std::cout << "basic_para->u16MaxPeakCurrent = " << std::to_string(basic_para->u16MaxPeakCurrent) << std::endl;
-    // std::cout << "basic_para->u16TorqueSensorType = " << std::to_string(basic_para->u16TorqueSensorType) << std::endl;
-    // std::cout << "basic_para->u16MaxDutyCycle = " << std::to_string(basic_para->u16MaxDutyCycle) << std::endl;
+    // std::cout << "basic_para.s16MinTemp = " << std::to_string(basic_para.s16MinTemp) << std::endl;
+    // std::cout << "basic_para.s16MaxTemp = " << std::to_string(basic_para.s16MaxTemp) << std::endl;
+    // std::cout << "basic_para.u16MaxCurrent = " << std::to_string(basic_para.u16MaxCurrent) << std::endl;
+    // std::cout << "basic_para.u16MaxPeakCurrent = " << std::to_string(basic_para.u16MaxPeakCurrent) << std::endl;
+    // std::cout << "basic_para.u16TorqueSensorType = " << std::to_string(basic_para.u16TorqueSensorType) << std::endl;
+    // std::cout << "basic_para.u16MaxDutyCycle = " << std::to_string(basic_para.u16MaxDutyCycle) << std::endl;
     // // Display package 2.
-    // std::cout << "basic_para->u16MaxTorque = " << std::to_string(basic_para->u16MaxTorque) << std::endl;
-    // std::cout << "basic_para->u16PWMFreq = " << std::to_string(basic_para->u16PWMFreq) << std::endl;
-    // std::cout << "basic_para->u16MaxRPM = " << std::to_string(basic_para->u16MaxRPM) << std::endl;
-    // std::cout << "basic_para->u16MaxSlope = " << std::to_string(basic_para->u16MaxSlope) << std::endl;
-    // std::cout << "basic_para->u16MinBusVolt = " << std::to_string(basic_para->u16MinBusVolt) << std::endl;
-    // std::cout << "basic_para->u16MaxBusVolt = " << std::to_string(basic_para->u16MaxBusVolt) << std::endl;
+    // std::cout << "basic_para.u16MaxTorque = " << std::to_string(basic_para.u16MaxTorque) << std::endl;
+    // std::cout << "basic_para.u16PWMFreq = " << std::to_string(basic_para.u16PWMFreq) << std::endl;
+    // std::cout << "basic_para.u16MaxRPM = " << std::to_string(basic_para.u16MaxRPM) << std::endl;
+    // std::cout << "basic_para.u16MaxSlope = " << std::to_string(basic_para.u16MaxSlope) << std::endl;
+    // std::cout << "basic_para.u16MinBusVolt = " << std::to_string(basic_para.u16MinBusVolt) << std::endl;
+    // std::cout << "basic_para.u16MaxBusVolt = " << std::to_string(basic_para.u16MaxBusVolt) << std::endl;
     // // Display package 3.
-    // std::cout << "basic_para->u16StartDutyCycle = " << std::to_string(basic_para->u16StartDutyCycle) << std::endl;
-    // std::cout << "basic_para->u16GearBoxRatio = " << std::to_string(basic_para->u16GearBoxRatio) << std::endl;
-    // std::cout << "basic_para->u32StartInp = " << std::to_string(basic_para->u32StartInp) << std::endl;
-    // std::cout << "basic_para->u32RevInp = " << std::to_string(basic_para->u32RevInp) << std::endl;
-    // std::cout << "basic_para->u16RevRpm = " << std::to_string(basic_para->u16RevRpm) << std::endl;
-    // std::cout << "basic_para->u16RevSlope = " << std::to_string(basic_para->u16RevSlope) << std::endl;
+    // std::cout << "basic_para.u16StartDutyCycle = " << std::to_string(basic_para.u16StartDutyCycle) << std::endl;
+    // std::cout << "basic_para.u16GearBoxRatio = " << std::to_string(basic_para.u16GearBoxRatio) << std::endl;
+    // std::cout << "basic_para.u32StartInp = " << std::to_string(basic_para.u32StartInp) << std::endl;
+    // std::cout << "basic_para.u32RevInp = " << std::to_string(basic_para.u32RevInp) << std::endl;
+    // std::cout << "basic_para.u16RevRpm = " << std::to_string(basic_para.u16RevRpm) << std::endl;
+    // std::cout << "basic_para.u16RevSlope = " << std::to_string(basic_para.u16RevSlope) << std::endl;
     // // Display package 4.
-    // std::cout << "basic_para->u16RevMaxCurrent = " << std::to_string(basic_para->u16RevMaxCurrent) << std::endl;
-    // std::cout << "basic_para->u16RevMaxTorque = " << std::to_string(basic_para->u16RevMaxTorque) << std::endl;
-    // std::cout << "basic_para->u16ErrorIdleTime = " << std::to_string(basic_para->u16ErrorIdleTime) << std::endl;
-    // std::cout << "basic_para->u16BackLash = " << std::to_string(basic_para->u16BackLash) << std::endl;
-    // std::cout << "basic_para->u16PGain = " << std::to_string(basic_para->u16PGain) << std::endl;
-    // std::cout << "basic_para->u16IGain = " << std::to_string(basic_para->u16IGain) << std::endl;
+    // std::cout << "basic_para.u16RevMaxCurrent = " << std::to_string(basic_para.u16RevMaxCurrent) << std::endl;
+    // std::cout << "basic_para.u16RevMaxTorque = " << std::to_string(basic_para.u16RevMaxTorque) << std::endl;
+    // std::cout << "basic_para.u16ErrorIdleTime = " << std::to_string(basic_para.u16ErrorIdleTime) << std::endl;
+    // std::cout << "basic_para.u16BackLash = " << std::to_string(basic_para.u16BackLash) << std::endl;
+    // std::cout << "basic_para.u16PGain = " << std::to_string(basic_para.u16PGain) << std::endl;
+    // std::cout << "basic_para.u16IGain = " << std::to_string(basic_para.u16IGain) << std::endl;
     // Display package 5.
-    // std::cout << "basic_para->u16Encoder = " << std::to_string(basic_para->u16Encoder) << std::endl;
+    // std::cout << "basic_para.u16Encoder = " << std::to_string(basic_para.u16Encoder) << std::endl;
     #pragma endregion
     return result;
 }
@@ -667,11 +667,11 @@ int GtcsMcbComm::WriteBasicParameter(McbID2Struct &basic)
     sub_id[4]  = 5;
     sub_id[5]  = 6;
     // Initial header address.
-    telegram.w_request.header.address_2 = payload_start_index+6;         //
-    telegram.w_request.header.address_3 = payload_start_index+12;        //
-    telegram.w_request.header.address_4 = payload_start_index+18;        //
-    telegram.w_request.header.address_5 = payload_start_index+24;        //
-    telegram.w_request.header.address_6 = payload_start_index+30;        //
+    telegram.w_request.header.address_2 = payload_start_index+6;         // 
+    telegram.w_request.header.address_3 = payload_start_index+12;        // 
+    telegram.w_request.header.address_4 = payload_start_index+18;        // 
+    telegram.w_request.header.address_5 = payload_start_index+24;        // 
+    telegram.w_request.header.address_6 = payload_start_index+30;        // 
     telegram.w_request.EncodeHeaderArray();
     // Package SID = 1
     telegram.w_request.telegram_array[payload_start_index]    = main_id;
@@ -2112,46 +2112,6 @@ int GtcsMcbComm::InitialMcbComPort(std::string com_name_string)
     std::cout << "open com_num= " <<std::to_string(com_num) <<std::endl;
     return result;
 }
-// Test Function.
-int GtcsMcbComm::TestMcbRW()
-{
-    int result = 0;
-    GtcsBulletin *bulletin = GtcsBulletin::GetInstance();
-    #pragma region test string.
-    #pragma endregion
-    #pragma region test basic
-    std::cout << "======================================="<< std::endl;
-    result = ReadBasicParameter();
-    bulletin->McbBulletin.BasicPara.u16MaxRPM = 1200;
-    result = WriteBasicParameter(&bulletin->McbBulletin.BasicPara);
-    std::cout << "======================================="<< std::endl;
-    result = ReadBasicParameter();
-    #pragma endregion
-    
-    #pragma region test step
-    std::cout << "======================================="<< std::endl;
-    result = ReadStepParametrer(3011);
-    bulletin->McbBulletin.StepPara.u16StepRpm = 1000;
-    bulletin->McbBulletin.StepPara.u16StepTime = 5000;
-    bulletin->McbBulletin.StepPara.s32StepAngle = 100000;
-    result = WriteStepParameter(&bulletin->McbBulletin.StepPara,3011);
-    std::cout << "======================================="<< std::endl;
-    result = ReadStepParametrer(3011);
-    #pragma endregion
-    #pragma region test process
-    std::cout << "======================================="<< std::endl;
-    result = ReadProcessParameter(4000);
-    bulletin->McbBulletin.ProcessPara.u16ProcPGain = 500;
-    bulletin->McbBulletin.ProcessPara.u16ProcIGain = 600;
-    bulletin->McbBulletin.ProcessPara.step_id_1 = 3011;
-    bulletin->McbBulletin.ProcessPara.step_id_2 = 0;
-    bulletin->McbBulletin.ProcessPara.step_id_3 = 0;
-    result = WriteProcessParameter(&bulletin->McbBulletin.ProcessPara,4000);
-    std::cout << "======================================="<< std::endl;
-    result = ReadProcessParameter(4000);
-    #pragma endregion    
-    return result;
-}
 // Normal polling to MCB.
 int GtcsMcbComm::NormalPollingToMcb()
 {
@@ -2230,32 +2190,32 @@ int GtcsMcbComm::AdvancePollingToMcb()
     telegram.status.DecodeTelegramArray();
     return result;
 }
-// Check MCB FSM.
-int GtcsMcbComm::CheckMcbFSM(int mcb_fsm)
-{
-    int result = 0;
-    GtcsBulletin *bulletin = GtcsBulletin::GetInstance();
-    // std::cout << "======================================= "<< std::endl;
-    switch(mcb_fsm)
-    {
-        case MCB_FSM::NORMAL_POLLING:
-            result = NormalPollingToMcb();
-            break;
-        case MCB_FSM::ADVANCE_POLLING:
-            result = AdvancePollingToMcb();
-            break;
-        case MCB_FSM::SETTING_CTRL_TELEGRAM:
-            result = 0;
-            break;
-        case MCB_FSM::WRITE_MCB_BASIC: 
-            result = WriteBasicParameter(&bulletin->McbBulletin.BasicPara);
-            break;
-        case MCB_FSM::READ_MCB_BASIC:
-            result = ReadBasicParameter();  
-            break;
-    }
-    return result = 0;
-}
+// // Check MCB FSM.
+// int GtcsMcbComm::CheckMcbFSM(int mcb_fsm)
+// {
+//     int result = 0;
+//     GtcsBulletin *bulletin = GtcsBulletin::GetInstance();
+//     // std::cout << "======================================= "<< std::endl;
+//     switch(mcb_fsm)
+//     {
+//         case MCB_FSM::NORMAL_POLLING:
+//             result = NormalPollingToMcb();
+//             break;
+//         case MCB_FSM::ADVANCE_POLLING:
+//             result = AdvancePollingToMcb();
+//             break;
+//         case MCB_FSM::SETTING_CTRL_TELEGRAM:
+//             result = 0;
+//             break;
+//         case MCB_FSM::WRITE_MCB_BASIC: 
+//             result = WriteBasicParameter(bulletin->McbBulletin.BasicPara);
+//             break;
+//         case MCB_FSM::READ_MCB_BASIC:
+//             result = ReadBasicParameter(bulletin->McbBulletin.BasicPara);  
+//             break;
+//     }
+//     return result = 0;
+// }
 #pragma endregion
 #pragma endregion
 

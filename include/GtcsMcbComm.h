@@ -357,15 +357,15 @@ public:
     // Initial MCB com.
     int InitialMcbComPort(std::string com_bname);
     // Check MCB FSM.
-    int CheckMcbFSM(int mac_fsm);
+    // int CheckMcbFSM(int mac_fsm);
 
     #pragma region RW MCB Parameter. 
     // Identification Parameter.(MainID = 1)
     int ReadIdentificationParameter();
     int WriteIdentificationParameter();
     // Basic Parameter.(MainID = 2)
-    int ReadBasicParameter();    
-    int WriteBasicParameter(McbID2Struct *basic);
+    int ReadBasicParameter(McbID2Struct &basic_para);    
+    int WriteBasicParameter(McbID2Struct &basic);
     // Write to mcb flash.
     int WriteToMcbFlash(int mainid,int subid ,int add_num); // mainid = 7 , subid = 11(step) ,subid = 12 (Process)
     // Step Parameter. (Main ID = 3)
@@ -376,8 +376,6 @@ public:
     int WriteProcessParameter(McbID4Struct *process,int processid);
     #pragma endregion
 
-    // Test Function.
-    int TestMcbRW();
     // Polling to MCB.
     int CheckLoosenStatus();
     int NormalPollingToMcb();

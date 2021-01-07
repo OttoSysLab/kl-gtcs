@@ -23,9 +23,9 @@
 // #include <string.h>
 // #include <ctime>
 
-#define SETTING_READY -1
-#define SETTING_OK 0
-#define SETTING_NG 1
+// #define SETTING_READY -1
+// #define SETTING_OK 0
+// #define SETTING_NG 1
 
 #pragma region 
 class Manager
@@ -60,7 +60,6 @@ public:
 class GtcsManager : public Manager
 {
 private:
-    #pragma region 
     // Attribute.
     GtcsBulletin *bulletin = GtcsBulletin::GetInstance(); 
     GtcsMcbComm *mcb       = GtcsMcbComm::GetInstance(); 
@@ -68,28 +67,41 @@ private:
     // method.
     std::string GetMcbRtStatusString(MCB_RT_STATUS status);
     std::string GetToolRunTimeStatus();
-    int ConvertActuralData300();
-    #pragma endregion
+    int CheckUiSettingFSM(int uicmd);    
 
-    #pragma region uisetting
-    int CheckUiSettingFSM(int uicmd);
-    #pragma endregion
+    std::string comport_name = "";
+    std::string db_emmc_Path = "";     // Initial database path.
+    std::string db_ramdisk_Path = "";  // Initial database path.
     
     // Gtcs System Main state.
-    int InitialGtcsSystem();
-    int CheckGtcsSystem();
-    int RunGtcsSystem();
-    int ClearGtcsSystemAlarm();
-    int SettingGtcsSystem();
-    int CopyDatabase(std::string source ,std::string destination); 
+    bool InitialGtcsSystem();
+    bool CheckGtcsSystem();
+    bool RunGtcsSystem();
+    bool ClearGtcsSystemAlarm();
+    bool SettingGtcsSystem();
+    // 
+    bool CopyDatabase(std::string destination ,std::string source);
+    bool UpdateMcbBasicParaToDB(GtcsDatabase &db,GtcsDatabaseBasicInfo &db_basic,McbID2Struct &mcb_basic); 
+    bool CompareBasicStruct(GtcsDatabaseBasicInfo &emmc,GtcsDatabaseBasicInfo &ramdisk);
+    
+    // AMS Protocol.
+    bool SetAmsBulletinBasicPara(GtcsDatabaseBasicInfo &basic);   // GTCS AMS REQ301 
+    bool ConvertReadlTimeActuralValue();                          // GTCS AMS DATA300  
+    bool ConvertAmsBasicToMcbBulletin(AmsCMD340Struct &amscmd);                                  // 
 public:
     // Constructor.
     GtcsManager(/* args */);
     // Distructor.
     ~GtcsManager();
+    // 
+    void SetMcbPortName(std::string comname);
+    void SetEmmcDatabasePath(std::string Path);
+    void SetRamdiskDatabasePath(std::string Path);
+    
     std::string CheckRequestStatus(std::string reqest_string);
     std::string CheckUiCmdRequest(std::string reqest_string);
     std::string GetUiCmdResponse(std::string uicmd_string);
+
     int CheckMainFSM(int main_fsm);
 };
 #pragma endregion

@@ -58,7 +58,7 @@ void GtcsDatabaseBasicInfo::InitialColumnName()
 {
     columnnames.push_back("mintemp");         // Min temperature       (REAL)
     columnnames.push_back("maxtemp");         // Max temperature       (REAL)
-    columnnames.push_back("maxcurrent");      // Max current           (REAL)
+    columnnames.push_back("maxcurrent");      // Max current           (INTEGER)
     columnnames.push_back("maxpeakcurrent");  // Max peak current      (INTEGER)
     columnnames.push_back("torquesensortype");// torque sensor type    (INTEGER)
     columnnames.push_back("maxdutycycle");    // Max duty cycle        (REAL)

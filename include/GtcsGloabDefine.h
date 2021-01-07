@@ -1,6 +1,6 @@
 #ifndef _GTCS_TYPE_DEFINE_
 #define _GTCS_TYPE_DEFINE_
-// #define _GTCS_TEST_
+#define _GTCS_TEST_
 #pragma once
 /*=======================================================================================
  Program Nane  	: gtcs_tlg_decoder.c     
@@ -964,7 +964,7 @@ typedef struct
     /* data */
     std::string mintemp;           // Min temperature       (REAL)
     std::string maxtemp;           // Max temperature       (REAL)
-    std::string maxcurrent;        // Max current           (REAL)
+    std::string maxcurrent;        // Max current           (INTEGER)
     std::string maxpeakcurrent;    // Max peak current      (INTEGER)
     std::string torquesensortype;  // torque sensor type    (INTEGER)
     std::string maxdutycycle;      // Max duty cycle        (REAL)

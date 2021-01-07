@@ -113,6 +113,9 @@ int main()
 
     #pragma region  step 1
     // Initial GTCS system.
+    manager.SetMcbPortName("/dev/ttymxc3");
+    manager.SetEmmcDatabasePath("/var/www/html/database/tcs.db");
+    manager.SetRamdiskDatabasePath("/mnt/ramdisk/tcs.db");
     manager.CheckMainFSM(MAIN_FSM::INITIAL);
     // Check GTCS System.
     manager.CheckMainFSM(MAIN_FSM::CHECK_SYS);

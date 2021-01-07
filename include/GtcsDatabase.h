@@ -21,48 +21,31 @@
 #include "GtcsGloabDefine.h"
 #include "GtcsBulletin.h"
 
-// enum SQL_READ_STATUS:int {
-//     NONE = -1,
-//     OK = 0,
-//     NG =1,
-// };
-
-// enum SQL_WRITE_STATUS:int {
-//     NONE = -1,
-//     OK = 0,
-//     NG  = 1,
-// };
 #pragma region Sqlite3Manager 
 // Gtcs database struct.
 class Sqlite3Manager
 {
 private:
-    std::string db_Path = "";
 public:
     Sqlite3Manager();
     ~Sqlite3Manager();
-    int SetDatabasePath(std::string path);
-    std::string GetDatabasePath();
-    // int UpdateDatabase(std::string table,std::map<std::string,std::string> data);
-    int UpdateDatabase(std::string table,std::string sqlcmd);
-    int ReadDatabase(std::string table,std::string *ptr);       // int SetDatabaseFilePath(std::string path);
+    bool UpdateDatabase(std::string db_path,std::string table,std::string sqlcmd);
+    bool ReadDatabase(std::string db_path,std::string table,std::string *ptr);       // int SetDatabaseFilePath(std::string path);
 };
 #pragma endregion
 
 #pragma region GtcsDatabase
-class GtcsDatabase 
+class GtcsDatabase : public Sqlite3Manager
 {
 private:
+    std::string dbPath = "";
 public:
     // Constructor.
-    GtcsDatabase(std::string ramdisk_Path,std::string emmc_Path);
-    ~GtcsDatabase(); 
-
-    // Gtcs database..
-    Sqlite3Manager db_ramdisk;
-    Sqlite3Manager db_emmc;
+    GtcsDatabase(std::string Path);
+    ~GtcsDatabase();
+    // Get database path.
+    // int SetDatabasePath(std::string dbPath);
+    std::string GetDatabasePath();
     
-    int ReadFromSqliteDatabase(Sqlite3Manager database,std::string table,std::string *ptr_start);
-    int UpdateSqliteDatabase(Sqlite3Manager database,std::string table,const std::string sqlcmd);
 };
 #endif

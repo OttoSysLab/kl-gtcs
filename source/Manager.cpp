@@ -150,9 +150,8 @@ std::string GtcsManager::GetToolRunTimeStatus()
     return result;
 }
 // Get MCB realy time status string.
-int GtcsManager::ConvertActuralData300()
+bool GtcsManager::ConvertReadlTimeActuralValue()
 {
-    int result = 0;
     // GtcsBulletin *bulletin = GtcsBulletin::GetInstance();
     // GtcsMcbComm *mcb = GtcsMcbComm::GetInstance();
     AmsDATA300Struct *data300 = &bulletin->AmsBulletin.DATA300Struct;
@@ -169,10 +168,10 @@ int GtcsManager::ConvertActuralData300()
 
     // Calcuate angle & revalution.
     double gear     = (double)bulletin->McbBulletin.BasicPara.u16GearBoxRatio/100; // Get gear box.
-    double acttorque  = ((double)mcb_status->u16ActTorque/1862) * toolmaxtorque; // Calculate Act torque.
-    double angle      = (double)mcb_status->u32Angle/(gear*200) * 360;           // Calculate revalution.
-    double maxtorque  = ((double)mcb_status->u16MaxTorque/1862) * toolmaxtorque; // Calculate Act torque.
-    double revolution = (double)mcb_status->u32Revolutions/(gear * 200) * 360;   // Calculate revalution.
+    double acttorque  = ((double)mcb_status->u16ActTorque/1862) * toolmaxtorque;   // Calculate Act torque.
+    double angle      = (double)mcb_status->u32Angle/(gear*200) * 360;             // Calculate revalution.
+    double maxtorque  = ((double)mcb_status->u16MaxTorque/1862) * toolmaxtorque;   // Calculate Act torque.
+    double revolution = (double)mcb_status->u32Revolutions/(gear * 200) * 360;     // Calculate revalution.
     std::string current_rt_status = GetToolRunTimeStatus();
     std::string current_mcb_err = "NO-ERR______________";
     // data300->header = std::to_string(0);      // str1:Header+DATA
@@ -214,15 +213,91 @@ int GtcsManager::ConvertActuralData300()
     data300->toolcnt       = std::to_string(0); // str26:Tool Count
     data300->actrpm        = std::to_string(mcb_status->u16ActRPM); // str27:RPM
     // data300->toolstatus    = std::to_string(0); // str28:Tool status
-    return result;
+    
+    return true;
 }
+bool GtcsManager::ConvertAmsBasicToMcbBulletin(AmsCMD340Struct &amscmd)
+{
+    GtcsBulletin *bulletin = GtcsBulletin::GetInstance();
+    // 
+    bulletin->McbBulletin.BasicPara.s16MinTemp
+        = (uint16_t)(std::stof(amscmd.str5)*10);// SID = 1,Minimal Temperature of the motor and the motorcontroller. 
+                                                // Underneath this temperature the tool doesn’t work. Unit is [0,1 °C]."
+    bulletin->McbBulletin.BasicPara.s16MaxTemp
+        = (uint16_t)(std::stof(amscmd.str6)*10);// SID = 2,Maximal Temperature of the motor and the motorcontroller. 
+                                                // Above this temperature the tool doesn’t work. Unit is [0,1 °C ].
+    bulletin->McbBulletin.BasicPara.u16MaxCurrent
+        = (uint16_t)std::stoi(amscmd.str7);     // SID = 3,This is the absolute maximum motor current value. 
+                                                // There are also maximum current values for the specific process steps 
+                                                // (see….), but this parameter is the limit. Unit is [mA].
+    bulletin->McbBulletin.BasicPara.u16MaxPeakCurrent
+        = (uint16_t)std::stoi(amscmd.str8);     // SID = 4,This value controls the threshold of the peak current comparator.
+                                                // The peak current detection is built in for the protection of the device 
+                                                // when a latch up situation occurs. Unit is [A].
+    bulletin->McbBulletin.BasicPara.u16TorqueSensorType
+        = (uint16_t)std::stoi(amscmd.str9);    // SID = 5, 0 = Torquesensor 5Nm, 1 = Torquesensor 4Nm,2 = No Torquesensor"
+    bulletin->McbBulletin.BasicPara.u16MaxDutyCycle     
+        = (uint16_t)(std::stof(amscmd.str10)*10);// SID = 6,Maximal Duty Cycle of the Motor- PWM 1 – 100%. Unit is [0.1 %]
+
+    //bulletin->McbBulletin.BasicPara.u16MaxTorque        
+    //   = (uint16_t)std::stoi(amscmd.str11);   // SID = 7,"Maximum Torque Value is 0- 1862 (maxRaw TMD Value)"
+    
+    bulletin->McbBulletin.BasicPara.u16PWMFreq
+        = (uint16_t)std::stoi(amscmd.str12);   // SID = 8,0 = 16kHz,1 = 24kHz,2 = 32kHz,3 = 40kHz,4 = 48kHz"
+    bulletin->McbBulletin.BasicPara.u16MaxRPM
+        = (uint16_t)std::stoi(amscmd.str13);    // SID = 9,This is the absolute maximum motor rpm value. 
+                                                // There are also rpm values for the specific process steps (see….) , 
+                                                // but this parameter is the limit. Unit is [rpm].
+    bulletin->McbBulletin.BasicPara.u16MaxSlope 
+        = (uint16_t)std::stoi(amscmd.str14);    // SID = 10,This is the absolute maximum motor rpm ramp (up/down) value.
+                                                // There are also rpm slope values for the specific process steps (see….) , 
+                                                // but this parameter is the limit. Unit is [rpm/s].
+    bulletin->McbBulletin.BasicPara.u16MinBusVolt       
+        = (uint16_t)(std::stof(amscmd.str15)*10);// SID = 11,Minimal Bus Voltage of the Power Supply. 
+                                                // Underneath this Voltage the tool doesn’t work. 
+                                                // Unit is [0,1V] (600 = 60V).
+    bulletin->McbBulletin.BasicPara.u16MaxBusVolt
+        = (uint16_t)(std::stof(amscmd.str16)*10);    // SID = 12,Maximal Bus Voltage of the Power Supply. 
+                                                // Above this Voltage the tool doesn’t work. Unit is [0,1V].
+    bulletin->McbBulletin.BasicPara.u16StartDutyCycle   
+        = (uint16_t)std::stoi(amscmd.str17);    // SID = 13,Start Duty Cycle for the RPM regulator Unit is [0,1%].(20 = 10%)
+
+    bulletin->McbBulletin.BasicPara.u16GearBoxRatio     
+        = (uint16_t)(std::stof(amscmd.str18)*100);    // SID = 14,Gear box ratio. Unit [0,01] (1600 = 16:1)
+    bulletin->McbBulletin.BasicPara.u32StartInp 
+        = (uint16_t)std::stoi(amscmd.str19);    // SID = 15,0 = Start Switch,1 = From Displaycontroller Telegram"
+    bulletin->McbBulletin.BasicPara.u32RevInp           
+        = (uint16_t)std::stoi(amscmd.str20);   // SID = 16,0 = Reverse Switch,1 = From Displaycontroller"
+    bulletin->McbBulletin.BasicPara.u16RevRpm  
+        = (uint16_t)std::stoi(amscmd.str21);   // SID = 17,"Rpm of reverse drive. Unit is [rpm](after the Gearbox)"
+    bulletin->McbBulletin.BasicPara.u16RevSlope      
+        = (uint16_t)std::stoi(amscmd.str22);   // SID = 18,"Slope of reverse drive. Unit is [rpm/s](after the Gearbox)."
+    bulletin->McbBulletin.BasicPara.u16RevMaxCurrent    
+        = (uint16_t)std::stoi(amscmd.str23);   // SID = 19,"Maximum Current of reverse drive. Unit is [mA]."
+
+    //bulletin->McbBulletin.BasicPara.u16RevMaxTorque     
+    // = (uint16_t)std::stoi(amscmd.str24);   // SID = 20,"Maximum Torque of reverse drive. 
+    //                                         // Value is 0- 1862 (max TMD Raw Value)"
+    bulletin->McbBulletin.BasicPara.u16ErrorIdleTime
+        = (uint16_t)std::stoi(amscmd.str25);   // SID = 21,"Idle time of the motor controller after a Error condition.Unit is [ms]."
+    bulletin->McbBulletin.BasicPara.u16BackLash         
+        = (uint16_t)std::stoi(amscmd.str26);   // SID = 22,"Backlash of the gearbox. The value depends if a Encoder or 
+                                                // Hallsensors are used for angle Positioning. Unit is [Increments]."
+    bulletin->McbBulletin.BasicPara.u16PGain            
+        = (uint16_t)std::stoi(amscmd.str27);   // SID = 23,Proportional Gain for the RPM Regulator.
+    bulletin->McbBulletin.BasicPara.u16IGain            
+        = (uint16_t)std::stoi(amscmd.str28);   // SID = 24,Integral Gain for the RPM Regulator.
+    bulletin->McbBulletin.BasicPara.u16Encoder          
+        = (uint16_t)std::stoi(amscmd.str29);   // SID = 25,"0 = No Encoder (positioning with Hallsensors).
+    
+    return true;
+}
+
 // Check Ui Setting FSM.
 int GtcsManager::CheckUiSettingFSM(int uicmd)
 {
-    int result = SETTING_READY;
-    std::string *ptr_cmd340 = &bulletin->AmsBulletin.CMD340Struct.str2;
-    std::string *ptr_and340 = &bulletin->AmsBulletin.ANS340Struct.str2;
-        
+    int result = 0;
+
     switch (uicmd)
     {
     case AMSCMD::CMD302:
@@ -248,58 +323,14 @@ int GtcsManager::CheckUiSettingFSM(int uicmd)
             bulletin->AmsBulletin.ANS302Struct.str5 = "3";
         }
         #pragma endregion
-        result = SETTING_OK;
+        result = 0;
         break;
     case AMSCMD::CMD340:
         #pragma region cmd340 sequence
         // step 1 : Convert cmd340 to mcb command.
-        #pragma region 
-        // uint16_t s16MinTemp;         // SID = 1,Minimal Temperature of the motor and the motorcontroller. 
-        //                                 // Underneath this temperature the tool doesn’t work. Unit is [0,1 °C]."
-        // uint16_t s16MaxTemp;         // SID = 2,Maximal Temperature of the motor and the motorcontroller. 
-        //                                 // Above this temperature the tool doesn’t work. Unit is [0,1 °C ].
-        // uint16_t u16MaxCurrent;      // SID = 3,This is the absolute maximum motor current value. 
-        //                                 // There are also maximum current values for the specific process steps 
-        //                                 // (see….), but this parameter is the limit. Unit is [mA].
-        // uint16_t u16MaxPeakCurrent;  // SID = 4,This value controls the threshold of the peak current comparator.
-        //                                 // The peak current detection is built in for the protection of the device 
-        //                                 // when a latch up situation occurs. Unit is [A].
-        // uint16_t u16TorqueSensorType;// SID = 5, 0 = Torquesensor 5Nm, 1 = Torquesensor 4Nm,2 = No Torquesensor"
-        // uint16_t u16MaxDutyCycle;    // SID = 6,Maximal Duty Cycle of the Motor- PWM 1 – 100%. Unit is [0.1 %]
-        // uint16_t u16MaxTorque;       // SID = 7,"Maximum Torque Value is 0- 1862 (maxRaw TMD Value)"
-        // uint16_t u16PWMFreq;         // SID = 8,0 = 16kHz,1 = 24kHz,2 = 32kHz,3 = 40kHz,4 = 48kHz"
-        // uint16_t u16MaxRPM;          // SID = 9,This is the absolute maximum motor rpm value. 
-        //                                 // There are also rpm values for the specific process steps (see….) , 
-        //                                 // but this parameter is the limit. Unit is [rpm].
-        // uint16_t u16MaxSlope;        // SID = 10,This is the absolute maximum motor rpm ramp (up/down) value.
-        //                                 // There are also rpm slope values for the specific process steps (see….) , 
-        //                                 // but this parameter is the limit. Unit is [rpm/s].
-        // uint16_t u16MinBusVolt;      // SID = 11,Minimal Bus Voltage of the Power Supply. 
-        //                                 // Underneath this Voltage the tool doesn’t work. 
-        //                                 // Unit is [0,1V] (600 = 60V).
-        // uint16_t u16MaxBusVolt;      // SID = 12,Maximal Bus Voltage of the Power Supply. 
-        //                                 // Above this Voltage the tool doesn’t work. Unit is [0,1V].
-        // uint16_t u16StartDutyCycle;  // SID = 13,Start Duty Cycle for the RPM regulator Unit is [0,1%].
-        //                                 // (20 = 10%)
-        // uint16_t u16GearBoxRatio;    // SID = 14,Gear box ratio. Unit [0,01] (1600 = 16:1)
-        // uint16_t u32StartInp;        // SID = 15,0 = Start Switch,1 = From Displaycontroller Telegram"
-        // uint16_t u32RevInp;          // SID = 16,0 = Reverse Switch,1 = From Displaycontroller"
-        // uint16_t u16RevRpm;          // SID = 17,"Rpm of reverse drive. Unit is [rpm](after the Gearbox)"
-        // uint16_t u16RevSlope;        // SID = 18,"Slope of reverse drive. Unit is [rpm/s](after the Gearbox)."
-        // uint16_t u16RevMaxCurrent;   // SID = 19,"Maximum Current of reverse drive. Unit is [mA]."
-        // uint16_t u16RevMaxTorque;    // SID = 20,"Maximum Torque of reverse drive. 
-        //                                 // Value is 0- 1862 (max TMD Raw Value)"
-        // uint16_t u16ErrorIdleTime;   // SID = 21,"Idle time of the motor controller after a Error condition.
-        //                                 // Unit is [ms]."
-        // uint16_t u16BackLash;        // SID = 22,"Backlash of the gearbox. The value depends if a Encoder or 
-        //                                 // Hallsensors are used for angle Positioning. Unit is [Increments]."
-        // uint16_t u16PGain;           // SID = 23,Proportional Gain for the RPM Regulator.
-        // uint16_t u16IGain;           // SID = 24,Integral Gain for the RPM Regulator.
-        // uint16_t u16Encoder;         // SID = 25,"0 = No Encoder (positioning with Hallsensors).               (INTEGER) 
-    
-        #pragma endregion
-        // step 2 : Update MCB basic paramater.    
-        
+        ConvertAmsBasicToMcbBulletin(bulletin->AmsBulletin.CMD340Struct);
+        // step 2 : Update MCB basic paramater.
+        mcb->WriteBasicParameter(&bulletin->McbBulletin.BasicPara);
         // step 3 : Read MCB basic parameeter. 
         
         // step 4 : Update ramdisk database.
@@ -307,12 +338,13 @@ int GtcsManager::CheckUiSettingFSM(int uicmd)
         // step 5 : Compare basic data btweem ramdisk database and emmc database.
 
         // step 6 : Update ans cmd.            
-        ams->GetAmsBulletin(AMSCMD::ANS340);        
+        // ams->GetAmsBulletin(AMSCMD::ANS340);     
+           
         #pragma endregion
-        result = SETTING_OK;
+        result = 0;
         break;
     default:
-        result = SETTING_OK;
+        result = 0;
         break;
     }
     return result;
@@ -321,7 +353,8 @@ int GtcsManager::CheckUiSettingFSM(int uicmd)
 std::string GtcsManager::GetUiCmdResponse(std::string uicmd_string)
 {
     int uiresponsecmd = 0;
-    if(uicmd_string == "REQ300")
+
+    if(uicmd_string == "REQ300") // Polling
     {
         if(bulletin->checksysok==true)
         {
@@ -331,120 +364,198 @@ std::string GtcsManager::GetUiCmdResponse(std::string uicmd_string)
         {
             uiresponsecmd = AMSCMD::REQ301;
         }
-    }
-    else{
+    } 
+    else                          // Setting
+    {
         uiresponsecmd = ams->GetAmsSymmetryCmdNumver(ams->GetAmsCmdNum(uicmd_string));
     }
     return ams->GetAmsBulletin(uiresponsecmd);
 }
 // Initial Gtcs System.
-int GtcsManager::InitialGtcsSystem()
+bool GtcsManager::InitialGtcsSystem()
 {
-    int result = 0;
     // Initial MCB Com.
-    mcb->InitialMcbComPort("/dev/ttymxc3");
+    // mcb->InitialMcbComPort("/dev/ttymxc3");
+    mcb->InitialMcbComPort(comport_name);
     for(int index=0;index<5;index++)
     {
         mcb->CheckMcbFSM((int)MCB_FSM::NORMAL_POLLING);
-        ConvertActuralData300();
+        ConvertReadlTimeActuralValue();
     }
     mcb->telegram.ctrl.IsEnable = false;
-
+    // Min fsm jump to Check system status.
     SetMainFSM(MAIN_FSM::CHECK_SYS);
-    return result;
+    return false;
 }
-int GtcsManager::CopyDatabase(std::string source ,std::string destination)
+bool GtcsManager::CopyDatabase(std::string destination ,std::string source)
 {
-    int result = -1;
     std::string systemcmd = "sudo cp " + source + " " + destination;
     system(systemcmd.c_str());
     systemcmd = "sudo chmod -R 777 " + destination;
     system(systemcmd.c_str());
-    result = 0;   
+    return true;
+}
+// 
+bool GtcsManager::UpdateMcbBasicParaToDB(GtcsDatabase &db,GtcsDatabaseBasicInfo &db_basic,McbID2Struct &mcb_basic)
+{   
+    // Update data. 
+    db_basic.data["mintemp"]          
+        = DataSorter::GetFloatScaleSortString((float)mcb_basic.s16MinTemp/10,1);// Min temperature       (REAL)
+    db_basic.data["maxtemp"]          
+        = DataSorter::GetFloatScaleSortString((float)mcb_basic.s16MaxTemp/10,1);// Max temperature       (REAL) 
+    db_basic.data["maxcurrent"]       = std::to_string(mcb_basic.u16MaxCurrent);      // Max current           (REAL) 
+    db_basic.data["maxpeakcurrent"]   = std::to_string(mcb_basic.u16MaxPeakCurrent);  // Max peak current      (INTEGER) 
+    db_basic.data["torquesensortype"] = std::to_string(mcb_basic.u16TorqueSensorType);// torque sensor type    (INTEGER) 
+    db_basic.data["maxdutycycle"]     
+        = DataSorter::GetFloatScaleSortString((float)mcb_basic.u16MaxDutyCycle/10,1);  // Max duty cycle        (REAL)
+    db_basic.data["maxtorque"]        = db_basic.data["maxtorque"];                                        // Max torque            (REAL) 
+    db_basic.data["pwmfreq"]          = std::to_string(mcb_basic.u16PWMFreq);         // PWM frequency         (INTEGER) 
+    db_basic.data["maxrpm"]           = std::to_string(mcb_basic.u16MaxRPM);          // Max rpm               (INTEGER) 
+    db_basic.data["maxslope"]         = std::to_string(mcb_basic.u16MaxSlope);        // Max slope             (INTEGER) 
+    db_basic.data["minbusvolt"]       
+        = DataSorter::GetFloatScaleSortString((float)mcb_basic.u16MinBusVolt/10,1);    // Min bus voltage       (REAL) 
+    db_basic.data["maxbusvolt"]       
+        = DataSorter::GetFloatScaleSortString((float)mcb_basic.u16MaxBusVolt/10,1);    // Max bus voltage       (REAL) 
+    db_basic.data["startdutycycle"]   = std::to_string(mcb_basic.u16StartDutyCycle);  // Start duty cycle      (REAL) 
+    db_basic.data["gearboxratio"]     
+        = DataSorter::GetFloatScaleSortString((float)mcb_basic.u16GearBoxRatio/100,2); // Gear box ratio        (REAL) 
+    db_basic.data["startinp"]         = std::to_string(mcb_basic.u32StartInp);        // Start input source    (INTEGER) 
+    db_basic.data["revinp"]           = std::to_string(mcb_basic.u32RevInp);          // Reverse ipnut source  (INTEGER) 
+    db_basic.data["revrpm"]           = std::to_string(mcb_basic.u16RevRpm);          // Reverse rpm           (INTEGER) 
+    db_basic.data["revslope"]         = std::to_string(mcb_basic.u16RevSlope);        // Reverse slope         (INTEGER) 
+    db_basic.data["revmaxcurrent"]    = std::to_string(mcb_basic.u16RevMaxCurrent);   // Reverse max current   (INTEGER) 
+    db_basic.data["revmaxtorque"]     = db_basic.data["revmaxtorque"];                                         // Reverse max torque    (REAL) 
+    db_basic.data["erroridletime"]    = std::to_string(mcb_basic.u16ErrorIdleTime);   // Error idle time       (INTEGER) 
+    db_basic.data["backlash"]         = std::to_string(mcb_basic.u16BackLash);        // Bachlash              (INTEGER) 
+    db_basic.data["pgain"]            = std::to_string(mcb_basic.u16PGain);           // Proportional gain     (INTEGER) 
+    db_basic.data["igain"]            = std::to_string(mcb_basic.u16IGain);           // Integral gain         (INTEGER) 
+    db_basic.data["encoder"]          = std::to_string(mcb_basic.u16Encoder);         // Encoder               (INTEGER) 
+    
+    // Update Sqlite 
+    db.UpdateDatabase(db.GetDatabasePath(),"basic",db_basic.GetUpdateSqlCommand());
+    return true;
+}
+
+bool GtcsManager::CompareBasicStruct(GtcsDatabaseBasicInfo &emmc,GtcsDatabaseBasicInfo &ramdisk)
+{
+    bool result = true;
+    
+    for (int i = 0; i < emmc.columnnames.size(); i++)
+    {
+        if (emmc.data[emmc.columnnames[i]] != ramdisk.data[ramdisk.columnnames[i]])
+        {
+            result = false;
+        }
+        std::cout << "check key = " << emmc.columnnames[i] ;
+        std::cout << " emmc_value = " << emmc.data[emmc.columnnames[i]];
+        std::cout << " ramdisk_value = " << ramdisk.data[ramdisk.columnnames[i]] << std::endl;
+    }    
     return result;
 }
+// 
+bool GtcsManager::SetAmsBulletinBasicPara(GtcsDatabaseBasicInfo &basic)
+{
+    GtcsBulletin *bulletin = GtcsBulletin::GetInstance();
+    // Setting REQ301 value.
+    bulletin->AmsBulletin.REQ301Struct.str5  = basic.data["mintemp"];          // Min temperature
+    bulletin->AmsBulletin.REQ301Struct.str6  = basic.data["maxtemp"];          // Max temperature
+    bulletin->AmsBulletin.REQ301Struct.str7  = basic.data["maxcurrent"];       // Max current
+    bulletin->AmsBulletin.REQ301Struct.str8  = basic.data["maxpeakcurrent"];   // Max peak current
+    bulletin->AmsBulletin.REQ301Struct.str9  = basic.data["torquesensortype"]; // torque sensor type
+    bulletin->AmsBulletin.REQ301Struct.str10 = basic.data["maxdutycycle"];     // Max duty cycle
+    bulletin->AmsBulletin.REQ301Struct.str11 = basic.data["maxtorque"];        // Max torque
+    bulletin->AmsBulletin.REQ301Struct.str12 = basic.data["pwmfreq"];          // PWM frequency 
+    bulletin->AmsBulletin.REQ301Struct.str13 = basic.data["maxrpm"];           // Max rpm
+    bulletin->AmsBulletin.REQ301Struct.str14 = basic.data["maxslope"];         // Max slope
+    bulletin->AmsBulletin.REQ301Struct.str15 = basic.data["minbusvolt"];       // Min bus voltage
+    bulletin->AmsBulletin.REQ301Struct.str16 = basic.data["maxbusvolt"];       // Max bus voltage
+    bulletin->AmsBulletin.REQ301Struct.str17 = basic.data["startdutycycle"];   // Start duty cycle
+    bulletin->AmsBulletin.REQ301Struct.str18 = basic.data["gearboxratio"];     // Gear box ratio
+    bulletin->AmsBulletin.REQ301Struct.str19 = basic.data["startinp"];         // Start input source
+    bulletin->AmsBulletin.REQ301Struct.str20 = basic.data["revinp"];           // Reverse ipnut source
+    bulletin->AmsBulletin.REQ301Struct.str21 = basic.data["revrpm"];           // Reverse rpm
+    bulletin->AmsBulletin.REQ301Struct.str22 = basic.data["revslope"];         // Reverse slope
+    bulletin->AmsBulletin.REQ301Struct.str23 = basic.data["revmaxcurrent"];    // Reverse max current
+    bulletin->AmsBulletin.REQ301Struct.str24 = basic.data["revmaxtorque"];     // Reverse max torque
+    bulletin->AmsBulletin.REQ301Struct.str25 = basic.data["erroridletime"];    // Error idle time
+    bulletin->AmsBulletin.REQ301Struct.str26 = basic.data["backlash"];         // Bachlash 
+    bulletin->AmsBulletin.REQ301Struct.str27 = basic.data["pgain"];            // Proportional gain
+    bulletin->AmsBulletin.REQ301Struct.str28 = basic.data["igain"];            // Integral gain
+    bulletin->AmsBulletin.REQ301Struct.str29 = basic.data["encoder"];          // Encoder
+    // 
+    bulletin->AmsBulletin.REQ301Struct.str30 = basic.data["mintorque"];        // Min Torque
+    bulletin->AmsBulletin.REQ301Struct.str31 = basic.data["minrpm"];           // Min RPM
+    bulletin->AmsBulletin.REQ301Struct.str32 = basic.data["revminrpm"];        // Reverse Min RPM
+    bulletin->AmsBulletin.REQ301Struct.str33 = basic.data["dmsswver"];         // DmsSWVer
+    bulletin->AmsBulletin.REQ301Struct.str34 = basic.data["dmscoreid"];        // DmsCoreID
+    bulletin->AmsBulletin.REQ301Struct.str35 = basic.data["dmssernr"];         // DmsSerNr
+    bulletin->AmsBulletin.REQ301Struct.str36 = basic.data["led"];              // Led
+    bulletin->AmsBulletin.REQ301Struct.str37 = basic.data["lever_sensitivity"];// Lever Sensitivity
+    bulletin->AmsBulletin.REQ301Struct.str38 = basic.data["push_sensitivity"]; // Push Sensitivity
+    bulletin->AmsBulletin.REQ301Struct.str39 = basic.data["motswver"];         // MotSWVer
+    return true;
+}
 // Initial Gtcs System.
-int GtcsManager::CheckGtcsSystem()
+bool GtcsManager::CheckGtcsSystem()
 {
     // Initial value.
     GtcsBulletin *bulletin = GtcsBulletin::GetInstance();
-    std::string db_emmc_Path = "/var/www/html/database/tcs.db";   // Initial database path.
-    std::string db_ramdisk_Path = "/mnt/ramdisk/tcs.db";          // Initial database path.
-    // char strbuff[20];
-    int result = -1;
+    // std::string db_emmc_Path = "/var/www/html/database/tcs.db";   // Initial database path.
+    // std::string db_ramdisk_Path = "/mnt/ramdisk/tcs.db";          // Initial database path.
+    GtcsDatabase db_emmc(db_emmc_Path);
+    GtcsDatabase db_ramdisk(db_ramdisk_Path);                     
+    GtcsDatabaseBasicInfo basic_emmc;     
+    GtcsDatabaseBasicInfo basic_ramdisk;
 
-    // Step 1 = Read data from mcb basice parameter.
+    // Step 1 : Read data from mcb basice parameter.
     mcb->ReadBasicParameter();    
 
-    // Step 2 = Copy tcs.db to ramdisk.
-    CopyDatabase(db_emmc_Path,db_ramdisk_Path);
+    // Step 2 : Copy tcs.db from emmc to ramdisk.
+    CopyDatabase(db_ramdisk_Path,db_emmc_Path);
     
-    #pragma region Step 3 = Write basic parameter to tcs.db which is in ramdisk.
-    GtcsDatabase database(db_ramdisk_Path,db_emmc_Path);
-    // database.CheckDatabaseFSM((int)DB_FSM::R_RAM_BAIIC_PARA);
-    database.ReadFromSqliteDatabase(database.db_ramdisk,"basic",(std::string *)(void* )&bulletin->DbBulletin.basic.mintemp);    
-    std::cout << database.db_ramdisk.GetDatabasePath() << std::endl;
-    std::cout << database.db_emmc.GetDatabasePath() << std::endl;
-
-    GtcsDatabaseBasicInfo ram_basic;
-    ram_basic.SetDataValue(&bulletin->DbBulletin.basic.mintemp);  // Convert data to basic parameter buffer.        
-    ram_basic.data["mintemp"]          
-        = DataSorter::GetFloatScaleSortString((float)bulletin->McbBulletin.BasicPara.s16MinTemp/10,1);// Min temperature       (REAL)
-    ram_basic.data["maxtemp"]          
-        = DataSorter::GetFloatScaleSortString((float)bulletin->McbBulletin.BasicPara.s16MaxTemp/10,1);// Max temperature       (REAL) 
-    ram_basic.data["maxcurrent"]       = std::to_string(bulletin->McbBulletin.BasicPara.u16MaxCurrent);      // Max current           (REAL) 
-    ram_basic.data["maxpeakcurrent"]   = std::to_string(bulletin->McbBulletin.BasicPara.u16MaxPeakCurrent);  // Max peak current      (INTEGER) 
-    ram_basic.data["torquesensortype"] = std::to_string(bulletin->McbBulletin.BasicPara.u16TorqueSensorType);// torque sensor type    (INTEGER) 
-    ram_basic.data["maxdutycycle"]     
-        = DataSorter::GetFloatScaleSortString((float)bulletin->McbBulletin.BasicPara.u16MaxDutyCycle/10,1);  // Max duty cycle        (REAL)
-    ram_basic.data["maxtorque"]        = ram_basic.data["maxtorque"];                                        // Max torque            (REAL) 
-    ram_basic.data["pwmfreq"]          = std::to_string(bulletin->McbBulletin.BasicPara.u16PWMFreq);         // PWM frequency         (INTEGER) 
-    ram_basic.data["maxrpm"]           = std::to_string(bulletin->McbBulletin.BasicPara.u16MaxRPM);          // Max rpm               (INTEGER) 
-    ram_basic.data["maxslope"]         = std::to_string(bulletin->McbBulletin.BasicPara.u16MaxSlope);        // Max slope             (INTEGER) 
-    ram_basic.data["minbusvolt"]       
-        = DataSorter::GetFloatScaleSortString((float)bulletin->McbBulletin.BasicPara.u16MinBusVolt/10,1);    // Min bus voltage       (REAL) 
-    ram_basic.data["maxbusvolt"]       
-        = DataSorter::GetFloatScaleSortString((float)bulletin->McbBulletin.BasicPara.u16MaxBusVolt/10,1);    // Max bus voltage       (REAL) 
-    ram_basic.data["startdutycycle"]   = std::to_string(bulletin->McbBulletin.BasicPara.u16StartDutyCycle);  // Start duty cycle      (REAL) 
-    ram_basic.data["gearboxratio"]     
-        = DataSorter::GetFloatScaleSortString((float)bulletin->McbBulletin.BasicPara.u16GearBoxRatio/100,2); // Gear box ratio        (REAL) 
-    ram_basic.data["startinp"]         = std::to_string(bulletin->McbBulletin.BasicPara.u32StartInp);        // Start input source    (INTEGER) 
-    ram_basic.data["revinp"]           = std::to_string(bulletin->McbBulletin.BasicPara.u32RevInp);          // Reverse ipnut source  (INTEGER) 
-    ram_basic.data["revrpm"]           = std::to_string(bulletin->McbBulletin.BasicPara.u16RevRpm);          // Reverse rpm           (INTEGER) 
-    ram_basic.data["revslope"]         = std::to_string(bulletin->McbBulletin.BasicPara.u16RevSlope);        // Reverse slope         (INTEGER) 
-    ram_basic.data["revmaxcurrent"]    = std::to_string(bulletin->McbBulletin.BasicPara.u16RevMaxCurrent);   // Reverse max current   (INTEGER) 
-    ram_basic.data["revmaxtorque"]     = ram_basic.data["revmaxtorque"];                                         // Reverse max torque    (REAL) 
-    ram_basic.data["erroridletime"]    = std::to_string(bulletin->McbBulletin.BasicPara.u16ErrorIdleTime);   // Error idle time       (INTEGER) 
-    ram_basic.data["backlash"]         = std::to_string(bulletin->McbBulletin.BasicPara.u16BackLash);        // Bachlash              (INTEGER) 
-    ram_basic.data["pgain"]            = std::to_string(bulletin->McbBulletin.BasicPara.u16PGain);           // Proportional gain     (INTEGER) 
-    ram_basic.data["igain"]            = std::to_string(bulletin->McbBulletin.BasicPara.u16IGain);           // Integral gain         (INTEGER) 
-    ram_basic.data["encoder"]          = std::to_string(bulletin->McbBulletin.BasicPara.u16Encoder);         // Encoder               (INTEGER) 
-    
-    // Update Sqlite 
-    database.UpdateSqliteDatabase(database.db_ramdisk,ram_basic.dbtablename,ram_basic.GetUpdateSqlCommand());
-    #pragma endregion
-
-    #pragma region Step 4 = Compare data bwtweem ramdisk and emmc database basic table.
-    GtcsDatabaseBasicInfo emmc_basic;
-    database.ReadFromSqliteDatabase(database.db_emmc,"basic",(std::string *)(void* )&bulletin->DbBulletin.basic.mintemp);    
-    emmc_basic.SetDataValue(&bulletin->DbBulletin.basic.mintemp);
-    database.ReadFromSqliteDatabase(database.db_ramdisk,"basic",(std::string *)(void* )&bulletin->DbBulletin.basic.mintemp);    
-    ram_basic.SetDataValue(&bulletin->DbBulletin.basic.mintemp);
-    #pragma endregion
-
-    #pragma region Step 5 = Jump to selected MAIN_FSM.    
-    bulletin->checksysok = true;
-    for (int i = 0; i < ram_basic.columnnames.size(); i++)
+    // Step 3 : Read basic data from emmc database to dbstruct.
+    if (db_emmc.ReadDatabase(db_emmc.GetDatabasePath(),"basic",(std::string *)(void* )&bulletin->DbBulletin.basic.mintemp)==false)
     {
-        if (ram_basic.data[ram_basic.columnnames[i]] != emmc_basic.data[emmc_basic.columnnames[i]])
-        {
-            bulletin->checksysok = false;
-        }
-        std::cout << "check key = " << ram_basic.columnnames[i] ;
-        std::cout << " ram_value = " << ram_basic.data[ram_basic.columnnames[i]];
-        std::cout << " basic_value = " << emmc_basic.data[emmc_basic.columnnames[i]] << std::endl;
-    }    
-    std::cout << " bulletin->checksysok = " << bulletin->checksysok << std::endl;     
+        std::cout << "Step 3 : Read basic data from emmc database to dbstruct." << std::endl;
+        return false;
+    }
+    else
+    {
+        basic_ramdisk.SetDataValue(&bulletin->DbBulletin.basic.mintemp);
+    }
+    
+    // Step 4 : Update MCB basic parameter to database.
+    if (UpdateMcbBasicParaToDB(db_ramdisk,basic_ramdisk,bulletin->McbBulletin.BasicPara)==false)
+    {
+        std::cout << "Step 4 : Update MCB basic parameter to database." << std::endl;
+        return false;
+    }
+    
+    // Step 5 = Read basic data from emmc database to dbstruct.
+    if (db_emmc.ReadDatabase(db_emmc.GetDatabasePath(),"basic",(std::string *)(void* )&bulletin->DbBulletin.basic.mintemp)==false)
+    {
+        std::cout << "Step 5 = Read basic data from emmc database to dbstruct." << std::endl;
+        return false;
+    }
+    else
+    {
+        basic_emmc.SetDataValue(&bulletin->DbBulletin.basic.mintemp);
+    }
+
+    // Step 6 : Read basic data from ramdisk database to dbstruct.
+    if (db_ramdisk.ReadDatabase(db_ramdisk.GetDatabasePath(),"basic",(std::string *)(void* )&bulletin->DbBulletin.basic.mintemp)==false)
+    {
+        std::cout << "Step 6 : Read basic data from ramdisk database to dbstruct." << std::endl;
+        return false;
+    }
+    else
+    {
+        basic_ramdisk.SetDataValue(&bulletin->DbBulletin.basic.mintemp);
+    }     
+
+    // Step 7 = Jump to selected MAIN_FSM.    
+    bulletin->checksysok = CompareBasicStruct(basic_emmc,basic_ramdisk);
+    std::cout << " bulletin->checksysok = " << bulletin->checksysok << std::endl;
     if (bulletin->checksysok == true)
     {
         // Display some informaiton.
@@ -453,80 +564,37 @@ int GtcsManager::CheckGtcsSystem()
     }
     else
     {
-        #pragma region
-        // Setting REQ301 value.
-        bulletin->AmsBulletin.REQ301Struct.str5  = ram_basic.data["mintemp"];          // Min temperature
-        bulletin->AmsBulletin.REQ301Struct.str6  = ram_basic.data["maxtemp"];          // Max temperature
-        bulletin->AmsBulletin.REQ301Struct.str7  = ram_basic.data["maxcurrent"];       // Max current
-        bulletin->AmsBulletin.REQ301Struct.str8  = ram_basic.data["maxpeakcurrent"];   // Max peak current
-        bulletin->AmsBulletin.REQ301Struct.str9  = ram_basic.data["torquesensortype"]; // torque sensor type
-        bulletin->AmsBulletin.REQ301Struct.str10 = ram_basic.data["maxdutycycle"];     // Max duty cycle
-        bulletin->AmsBulletin.REQ301Struct.str11 = ram_basic.data["maxtorque"];        // Max torque
-        bulletin->AmsBulletin.REQ301Struct.str12 = ram_basic.data["pwmfreq"];          // PWM frequency 
-        bulletin->AmsBulletin.REQ301Struct.str13 = ram_basic.data["maxrpm"];           // Max rpm
-        bulletin->AmsBulletin.REQ301Struct.str14 = ram_basic.data["maxslope"];         // Max slope
-        bulletin->AmsBulletin.REQ301Struct.str15 = ram_basic.data["minbusvolt"];       // Min bus voltage
-        bulletin->AmsBulletin.REQ301Struct.str16 = ram_basic.data["maxbusvolt"];       // Max bus voltage
-        bulletin->AmsBulletin.REQ301Struct.str17 = ram_basic.data["startdutycycle"];   // Start duty cycle
-        bulletin->AmsBulletin.REQ301Struct.str18 = ram_basic.data["gearboxratio"];     // Gear box ratio
-        bulletin->AmsBulletin.REQ301Struct.str19 = ram_basic.data["startinp"];         // Start input source
-        bulletin->AmsBulletin.REQ301Struct.str20 = ram_basic.data["revinp"];           // Reverse ipnut source
-        bulletin->AmsBulletin.REQ301Struct.str21 = ram_basic.data["revrpm"];           // Reverse rpm
-        bulletin->AmsBulletin.REQ301Struct.str22 = ram_basic.data["revslope"];         // Reverse slope
-        bulletin->AmsBulletin.REQ301Struct.str23 = ram_basic.data["revmaxcurrent"];    // Reverse max current
-        bulletin->AmsBulletin.REQ301Struct.str24 = ram_basic.data["revmaxtorque"];     // Reverse max torque
-        bulletin->AmsBulletin.REQ301Struct.str25 = ram_basic.data["erroridletime"];    // Error idle time
-        bulletin->AmsBulletin.REQ301Struct.str26 = ram_basic.data["backlash"];         // Bachlash 
-        bulletin->AmsBulletin.REQ301Struct.str27 = ram_basic.data["pgain"];            // Proportional gain
-        bulletin->AmsBulletin.REQ301Struct.str28 = ram_basic.data["igain"];            // Integral gain
-        bulletin->AmsBulletin.REQ301Struct.str29 = ram_basic.data["encoder"];          // Encoder
-        // 
-        bulletin->AmsBulletin.REQ301Struct.str30 = ram_basic.data["mintorque"];        // Min Torque
-        bulletin->AmsBulletin.REQ301Struct.str31 = ram_basic.data["minrpm"];           // Min RPM
-        bulletin->AmsBulletin.REQ301Struct.str32 = ram_basic.data["revminrpm"];        // Reverse Min RPM
-        bulletin->AmsBulletin.REQ301Struct.str33 = ram_basic.data["dmsswver"];         // DmsSWVer
-        bulletin->AmsBulletin.REQ301Struct.str34 = ram_basic.data["dmscoreid"];        // DmsCoreID
-        bulletin->AmsBulletin.REQ301Struct.str35 = ram_basic.data["dmssernr"];         // DmsSerNr
-        bulletin->AmsBulletin.REQ301Struct.str36 = ram_basic.data["led"];              // Led
-        bulletin->AmsBulletin.REQ301Struct.str37 = ram_basic.data["lever_sensitivity"];// Lever Sensitivity
-        bulletin->AmsBulletin.REQ301Struct.str38 = ram_basic.data["push_sensitivity"]; // Push Sensitivity
-        bulletin->AmsBulletin.REQ301Struct.str39 = ram_basic.data["motswver"];         // MotSWVer 
+        SetAmsBulletinBasicPara(basic_ramdisk);
         SetMainFSM(MAIN_FSM::SETTING);
-        #pragma endregion
     }
-    #pragma endregion
     
-    result = 0;
-    return result;
+    return true;
 }
 // Initial Gtcs System.
-int GtcsManager::RunGtcsSystem()
+bool GtcsManager::RunGtcsSystem()
 {
-    int result = 0;
     if (bulletin->uisetting==false)
     {
         mcb->CheckMcbFSM((int)MCB_FSM::NORMAL_POLLING);
-        ConvertActuralData300();
+        ConvertReadlTimeActuralValue();
     }
     else
     {
         SetMainFSM(MAIN_FSM::SETTING); // MAIN_FSM Jump to setting mode.
     }
-    return result;
+    return true;
 }
 // Clear Gtcs System Alarm.
-int GtcsManager::ClearGtcsSystemAlarm()
+bool GtcsManager::ClearGtcsSystemAlarm()
 {
-    int result = 0;
-    return result;
+    return true;
 }
 // Setting Gtcs System.
-int GtcsManager::SettingGtcsSystem()
+bool GtcsManager::SettingGtcsSystem()
 {
-    int result = 0;
     if (bulletin->uisetting==true)
     {
-        if (CheckUiSettingFSM(ams->GetAmsCmdNum(bulletin->uisockrevcmd))==SETTING_OK)
+        if (CheckUiSettingFSM(ams->GetAmsCmdNum(bulletin->uisockrevcmd))==true)
         {
             bulletin->uisetting = false;
             SetMainFSM(MAIN_FSM::READY);
@@ -537,7 +605,7 @@ int GtcsManager::SettingGtcsSystem()
         // CheckUiSettingFSM(ams->GetAmsCmdNum(bulletin->sockrevcmd));
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     }
-    return result;
+    return true;
 }
 #pragma region UI
 // Check Request Status from UI.
@@ -547,6 +615,19 @@ std::string GtcsManager::CheckUiCmdRequest(std::string reqest_string)
 }
 #pragma endregion
 
+//
+void GtcsManager::SetMcbPortName(std::string com_name)
+{
+    comport_name = com_name;
+}
+void GtcsManager::SetEmmcDatabasePath(std::string Path)
+{
+    db_emmc_Path = Path;
+}
+void GtcsManager::SetRamdiskDatabasePath(std::string Path)
+{
+    db_ramdisk_Path = Path;
+}
 // Check ui request status.
 int GtcsManager::CheckMainFSM(int main_fsm)
 {

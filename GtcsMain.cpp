@@ -116,48 +116,13 @@ int main()
     manager.SetMcbPortName("/dev/ttymxc3");
     manager.SetEmmcDatabasePath("/var/www/html/database/tcs.db");
     manager.SetRamdiskDatabasePath("/mnt/ramdisk/tcs.db");
-    manager.CheckMainFSM(MAIN_FSM::INITIAL);
+    manager.InitialGtcsSystem();
+    
     // Check GTCS System.
-    manager.CheckMainFSM(MAIN_FSM::CHECK_SYS);
+    manager.CheckGtcsSystem();
 
     // Ste 3 = Set tcpsocket thread and start.
     std::thread thread_tcpsocket = std::thread(tcpsocket);
-    #pragma endregion
-
-    // test.
-    #pragma region test code 
-    #ifdef _TEST_
-    GtcsBulletin *bulletin = GtcsBulletin::GetInstance();
-    GtcsDatabaseBasicInfo dbBasic;     
-    std::cout << dbBasic.columnnames[dbBasic.columnnames.size()-1]<<std::endl;
-    std::cout << "motswver = " <<dbBasic.data["motswver"]<<std::endl;
-    dbBasic.SetDataValue(&bulletin->DbBulletin.basic.mintemp);
-    std::cout << "motswver = " <<dbBasic.data["motswver"]<<std::endl;
-
-    std::cout << "=======================test=================="<<std::endl;
-    std::cout << "Map size: " << dbBasic.data.size() << std::endl;  
-    for(std::map<std::string, std::string>::iterator i=dbBasic.data.begin(); i!=dbBasic.data.end(); i++) 
-    {  
-        std::cout << (*i).first << ": " << (*i).second << std::endl;  
-        std::cout << i->first << ": " << i->second << std::endl;  
-    }
-    
-    for( auto & x : dbBasic.data)
-    {
-        std::cout << x.first << ": " << x.second << std::endl;
-    }  
-    
-    std::string table   = "basic";
-    std::string sqlcmd = "Updat " +table + " set ";
-    for (auto i = dbBasic.data.begin(); i != dbBasic.data.end(); i++)
-    {
-        sqlcmd += i->first+"="+i->second+",";
-    }    
-    // std::cout << "string lenght = " << std::to_string(sqlcmd.length()) << std::endl;
-    sqlcmd = sqlcmd.replace(sqlcmd.end()-1,sqlcmd.end()," ");
-    sqlcmd += "where rowid=1;" ;    
-    std::cout << sqlcmd << std::endl;
-    #endif
     #pragma endregion
 
     #pragma region step 2
@@ -167,13 +132,16 @@ int main()
         switch(manager.GetMainFSM())
         {
             case MAIN_FSM::READY:
-                manager.CheckMainFSM(MAIN_FSM::READY);
+                std::cout << "CheckMainFSM = READY" << std::endl;
+                manager.RunGtcsSystem();
                 break;
             case MAIN_FSM::ALARM:
-                manager.CheckMainFSM(MAIN_FSM::ALARM);
+                std::cout << "CheckMainFSM = ALARM" << std::endl;
+                manager.ClearGtcsSystemAlarm();
                 break;
             case MAIN_FSM::SETTING:
-                manager.CheckMainFSM(MAIN_FSM::SETTING);
+                std::cout << "CheckMainFSM = SETTING" << std::endl;
+                manager.SettingGtcsSystem();
                 break;
         }
     }

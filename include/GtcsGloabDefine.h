@@ -618,7 +618,19 @@ typedef struct
     std::string str27; // Proportional gain
     std::string str28; // Integral gain
     std::string str29; // Encoder
-    std::string str30;  // CL,RF
+
+    std::string str30;  // Min Torque
+    std::string str31;  // Min RPM
+    std::string str32;  // Reverse Min RPM
+    std::string str33;  // DmsSWVer
+    std::string str34;  // DmsCoreID
+    std::string str35;  // DmsSerNr
+    std::string str36;  // Led
+    std::string str37;  // Lever Sensitivity
+    std::string str38;  // Push Sensitivity
+    std::string str39;  // MotSWVer 
+    std::string str40;  // CL,RF
+
 }AmsCMD340Struct;
 #pragma endregion
 #pragma region ANS
@@ -832,7 +844,18 @@ typedef struct
     std::string str27; // Proportional gain
     std::string str28; // Integral gain
     std::string str29; // Encoder
-    std::string str30;  // CL,RF
+    // New
+    std::string str30;  // Min Torque
+    std::string str31;  // Min RPM
+    std::string str32;  // Reverse Min RPM
+    std::string str33;  // DmsSWVer
+    std::string str34;  // DmsCoreID
+    std::string str35;  // DmsSerNr
+    std::string str36;  // Led
+    std::string str37;  // Lever Sensitivity
+    std::string str38;  // Push Sensitivity
+    std::string str39;  // MotSWVer 
+    std::string str40;  // CL,RF
 }AmsANS340Struct;
 #pragma endregion
 #pragma region REQ
@@ -878,19 +901,18 @@ typedef struct
     std::string str27; // Proportional gain
     std::string str28; // Integral gain
     std::string str29; // Encoder
-    // 
-    std::string str30; //  
-    std::string str31; // 
-    std::string str32; // 
-    std::string str33; // 
-    std::string str34; // 
-    std::string str35; // 
-    std::string str36; // 
-    std::string str37; // 
-    std::string str38; // 
-    std::string str39; // 
-
-    std::string str40; // CL,RF
+    // New
+    std::string str30;  // Min Torque
+    std::string str31;  // Min RPM
+    std::string str32;  // Reverse Min RPM
+    std::string str33;  // DmsSWVer
+    std::string str34;  // DmsCoreID
+    std::string str35;  // DmsSerNr
+    std::string str36;  // Led
+    std::string str37;  // Lever Sensitivity
+    std::string str38;  // Push Sensitivity
+    std::string str39;  // MotSWVer 
+    std::string str40;  // CL,RF
 }AmsREQ301Struct;
 // REQ302
 typedef struct 

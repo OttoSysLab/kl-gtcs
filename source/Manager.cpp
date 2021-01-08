@@ -240,6 +240,7 @@ bool GtcsManager::ConvertAmsBasicToMcbStruct(AmsCMD340Struct &amscmd,McbID2Struc
 
     //mcb_basic.u16MaxTorque        
     //   = (uint16_t)std::stoi(amscmd.str11);   // SID = 7,"Maximum Torque Value is 0- 1862 (maxRaw TMD Value)"
+    mcb_basic.u16MaxTorque = 1862;   // SID = 7,"Maximum Torque Value is 0- 1862 (maxRaw TMD Value)"
     
     mcb_basic.u16PWMFreq
         = (uint16_t)std::stoi(amscmd.str12);   // SID = 8,0 = 16kHz,1 = 24kHz,2 = 32kHz,3 = 40kHz,4 = 48kHz"
@@ -259,7 +260,7 @@ bool GtcsManager::ConvertAmsBasicToMcbStruct(AmsCMD340Struct &amscmd,McbID2Struc
         = (uint16_t)(std::stof(amscmd.str16)*10);    // SID = 12,Maximal Bus Voltage of the Power Supply. 
                                                 // Above this Voltage the tool doesn’t work. Unit is [0,1V].
     mcb_basic.u16StartDutyCycle   
-        = (uint16_t)std::stoi(amscmd.str17);    // SID = 13,Start Duty Cycle for the RPM regulator Unit is [0,1%].(20 = 10%)
+        = (uint16_t)(std::stof(amscmd.str17)*10);    // SID = 13,Start Duty Cycle for the RPM regulator Unit is [0,1%].(20 = 10%)
 
     mcb_basic.u16GearBoxRatio     
         = (uint16_t)(std::stof(amscmd.str18)*100);    // SID = 14,Gear box ratio. Unit [0,01] (1600 = 16:1)
@@ -277,6 +278,8 @@ bool GtcsManager::ConvertAmsBasicToMcbStruct(AmsCMD340Struct &amscmd,McbID2Struc
     //mcb_basic.u16RevMaxTorque     
     // = (uint16_t)std::stoi(amscmd.str24);   // SID = 20,"Maximum Torque of reverse drive. 
     //                                         // Value is 0- 1862 (max TMD Raw Value)"
+    mcb_basic.u16RevMaxTorque = 1862;
+
     mcb_basic.u16ErrorIdleTime
         = (uint16_t)std::stoi(amscmd.str25);   // SID = 21,"Idle time of the motor controller after a Error condition.Unit is [ms]."
     mcb_basic.u16BackLash         
@@ -291,11 +294,45 @@ bool GtcsManager::ConvertAmsBasicToMcbStruct(AmsCMD340Struct &amscmd,McbID2Struc
     
     return true;
 }
-// bool GtcsManager::ConvertAmsBasicToDBStruct(AmsCMD340Struct &amscmd,GtcsDatabaseBasicStruct &db_basic)
-// {   
-//     return true;
-// }
-// 
+bool GtcsManager::SetAmsBaiscParaCmdsToAns()
+{
+    bulletin->AmsBulletin.ANS340Struct.str5 = bulletin->AmsBulletin.CMD340Struct.str5;
+    bulletin->AmsBulletin.ANS340Struct.str6 = bulletin->AmsBulletin.CMD340Struct.str6;
+    bulletin->AmsBulletin.ANS340Struct.str7 = bulletin->AmsBulletin.CMD340Struct.str7;
+    bulletin->AmsBulletin.ANS340Struct.str8 = bulletin->AmsBulletin.CMD340Struct.str8;
+    bulletin->AmsBulletin.ANS340Struct.str9 = bulletin->AmsBulletin.CMD340Struct.str9;
+    bulletin->AmsBulletin.ANS340Struct.str10 = bulletin->AmsBulletin.CMD340Struct.str10;
+    bulletin->AmsBulletin.ANS340Struct.str11 = bulletin->AmsBulletin.CMD340Struct.str11;
+    bulletin->AmsBulletin.ANS340Struct.str12 = bulletin->AmsBulletin.CMD340Struct.str12;
+    bulletin->AmsBulletin.ANS340Struct.str13 = bulletin->AmsBulletin.CMD340Struct.str13;
+    bulletin->AmsBulletin.ANS340Struct.str14 = bulletin->AmsBulletin.CMD340Struct.str14;
+    bulletin->AmsBulletin.ANS340Struct.str15 = bulletin->AmsBulletin.CMD340Struct.str15;
+    bulletin->AmsBulletin.ANS340Struct.str16 = bulletin->AmsBulletin.CMD340Struct.str16;
+    bulletin->AmsBulletin.ANS340Struct.str17 = bulletin->AmsBulletin.CMD340Struct.str17;
+    bulletin->AmsBulletin.ANS340Struct.str18 = bulletin->AmsBulletin.CMD340Struct.str18;
+    bulletin->AmsBulletin.ANS340Struct.str19 = bulletin->AmsBulletin.CMD340Struct.str19;
+    bulletin->AmsBulletin.ANS340Struct.str20 = bulletin->AmsBulletin.CMD340Struct.str20;
+    bulletin->AmsBulletin.ANS340Struct.str21 = bulletin->AmsBulletin.CMD340Struct.str21;
+    bulletin->AmsBulletin.ANS340Struct.str22 = bulletin->AmsBulletin.CMD340Struct.str22;
+    bulletin->AmsBulletin.ANS340Struct.str23 = bulletin->AmsBulletin.CMD340Struct.str23;
+    bulletin->AmsBulletin.ANS340Struct.str24 = bulletin->AmsBulletin.CMD340Struct.str24;
+    bulletin->AmsBulletin.ANS340Struct.str25 = bulletin->AmsBulletin.CMD340Struct.str25;
+    bulletin->AmsBulletin.ANS340Struct.str26 = bulletin->AmsBulletin.CMD340Struct.str26;
+    bulletin->AmsBulletin.ANS340Struct.str27 = bulletin->AmsBulletin.CMD340Struct.str27;
+    bulletin->AmsBulletin.ANS340Struct.str28 = bulletin->AmsBulletin.CMD340Struct.str28;
+    bulletin->AmsBulletin.ANS340Struct.str29 = bulletin->AmsBulletin.CMD340Struct.str29;
+    // New 
+    bulletin->AmsBulletin.ANS340Struct.str30 = bulletin->AmsBulletin.CMD340Struct.str30;
+    bulletin->AmsBulletin.ANS340Struct.str31 = bulletin->AmsBulletin.CMD340Struct.str31;
+    bulletin->AmsBulletin.ANS340Struct.str32 = bulletin->AmsBulletin.CMD340Struct.str32;
+    bulletin->AmsBulletin.ANS340Struct.str33 = bulletin->AmsBulletin.CMD340Struct.str33;
+    bulletin->AmsBulletin.ANS340Struct.str34 = bulletin->AmsBulletin.CMD340Struct.str34;
+    bulletin->AmsBulletin.ANS340Struct.str35 = bulletin->AmsBulletin.CMD340Struct.str35;
+    bulletin->AmsBulletin.ANS340Struct.str36 = bulletin->AmsBulletin.CMD340Struct.str36;
+    bulletin->AmsBulletin.ANS340Struct.str37 = bulletin->AmsBulletin.CMD340Struct.str37;
+    bulletin->AmsBulletin.ANS340Struct.str38 = bulletin->AmsBulletin.CMD340Struct.str38;
+    bulletin->AmsBulletin.ANS340Struct.str39 = bulletin->AmsBulletin.CMD340Struct.str39;
+}
 bool GtcsManager::SetSystemBasicParameter(AmsCMD340Struct &amscmd,GtcsDatabaseBasicStruct &db_basic,McbID2Struct &mcb_basic)
 {
     // Initial value.
@@ -329,34 +366,9 @@ bool GtcsManager::SetSystemBasicParameter(AmsCMD340Struct &amscmd,GtcsDatabaseBa
     }
     // step 4 : Cpoy emmc database to ramdisk.
     CopyDatabase(db_ramdisk_Path,db_emmc_Path);
-
     // step 5 : Set ANS340
-    bulletin->AmsBulletin.ANS340Struct.str5 = bulletin->AmsBulletin.CMD340Struct.str5;
-    bulletin->AmsBulletin.ANS340Struct.str6 = bulletin->AmsBulletin.CMD340Struct.str6;
-    bulletin->AmsBulletin.ANS340Struct.str7 = bulletin->AmsBulletin.CMD340Struct.str7;
-    bulletin->AmsBulletin.ANS340Struct.str8 = bulletin->AmsBulletin.CMD340Struct.str8;
-    bulletin->AmsBulletin.ANS340Struct.str9 = bulletin->AmsBulletin.CMD340Struct.str9;
-    bulletin->AmsBulletin.ANS340Struct.str10 = bulletin->AmsBulletin.CMD340Struct.str10;
-    bulletin->AmsBulletin.ANS340Struct.str11 = bulletin->AmsBulletin.CMD340Struct.str11;
-    bulletin->AmsBulletin.ANS340Struct.str12 = bulletin->AmsBulletin.CMD340Struct.str12;
-    bulletin->AmsBulletin.ANS340Struct.str13 = bulletin->AmsBulletin.CMD340Struct.str13;
-    bulletin->AmsBulletin.ANS340Struct.str14 = bulletin->AmsBulletin.CMD340Struct.str14;
-    bulletin->AmsBulletin.ANS340Struct.str15 = bulletin->AmsBulletin.CMD340Struct.str15;
-    bulletin->AmsBulletin.ANS340Struct.str16 = bulletin->AmsBulletin.CMD340Struct.str16;
-    bulletin->AmsBulletin.ANS340Struct.str17 = bulletin->AmsBulletin.CMD340Struct.str17;
-    bulletin->AmsBulletin.ANS340Struct.str18 = bulletin->AmsBulletin.CMD340Struct.str18;
-    bulletin->AmsBulletin.ANS340Struct.str19 = bulletin->AmsBulletin.CMD340Struct.str19;
-    bulletin->AmsBulletin.ANS340Struct.str20 = bulletin->AmsBulletin.CMD340Struct.str20;
-    bulletin->AmsBulletin.ANS340Struct.str21 = bulletin->AmsBulletin.CMD340Struct.str21;
-    bulletin->AmsBulletin.ANS340Struct.str22 = bulletin->AmsBulletin.CMD340Struct.str22;
-    bulletin->AmsBulletin.ANS340Struct.str23 = bulletin->AmsBulletin.CMD340Struct.str23;
-    bulletin->AmsBulletin.ANS340Struct.str24 = bulletin->AmsBulletin.CMD340Struct.str24;
-    bulletin->AmsBulletin.ANS340Struct.str25 = bulletin->AmsBulletin.CMD340Struct.str25;
-    bulletin->AmsBulletin.ANS340Struct.str26 = bulletin->AmsBulletin.CMD340Struct.str26;
-    bulletin->AmsBulletin.ANS340Struct.str27 = bulletin->AmsBulletin.CMD340Struct.str27;
-    bulletin->AmsBulletin.ANS340Struct.str28 = bulletin->AmsBulletin.CMD340Struct.str28;
-    bulletin->AmsBulletin.ANS340Struct.str29 = bulletin->AmsBulletin.CMD340Struct.str29;
-
+    SetAmsBaiscParaCmdsToAns();
+    
     return true;
 }
 // Check Ui Setting FSM.
@@ -418,27 +430,13 @@ std::string GtcsManager::GetUiCmdResponse(std::string uicmd_string)
     } 
     else                          // Setting
     {
+        std::cout << "ams->GetAmsCmdNum(uicmd_string) = "  << std::to_string(ams->GetAmsCmdNum(uicmd_string))<<std::endl;
         uiresponsecmd = ams->GetAmsSymmetryCmdNumver(ams->GetAmsCmdNum(uicmd_string));
+        std::cout << "std::to_string(uiresponsecmd) = " << std::to_string(uiresponsecmd) << std::endl;
     }
     return ams->GetAmsBulletin(uiresponsecmd);
 }
-// Initial Gtcs System.
-bool GtcsManager::InitialGtcsSystem()
-{
-    // Initial MCB Com.
-    // mcb->InitialMcbComPort("/dev/ttymxc3");
-    mcb->InitialMcbComPort(comport_name);
-    for(int index=0;index<5;index++)
-    {
-        mcb->NormalPollingToMcb();
-        // mcb->CheckMcbFSM((int)MCB_FSM::NORMAL_POLLING);
-        ConvertReadlTimeActuralValue();
-    }
-    mcb->telegram.ctrl.IsEnable = false;
-    // Min fsm jump to Check system status.
-    SetMainFSM(MAIN_FSM::CHECK_SYS);
-    return false;
-}
+// Copy database.
 bool GtcsManager::CopyDatabase(std::string destination ,std::string source)
 {
     std::string systemcmd = "sudo cp " + source + " " + destination;
@@ -452,9 +450,9 @@ bool GtcsManager::UpdateMcbBasicParaToDB(GtcsDatabase &db,GtcsDatabaseBasicInfo 
 {   
     // Update data. 
     db_basic.data["mintemp"]          
-        = DataSorter::GetFloatScaleSortString((float)mcb_basic.s16MinTemp/10,1);// Min temperature       (REAL)
+        = DataSorter::GetFloatScaleSortString((float)mcb_basic.s16MinTemp/10,1);      // Min temperature       (REAL)
     db_basic.data["maxtemp"]          
-        = DataSorter::GetFloatScaleSortString((float)mcb_basic.s16MaxTemp/10,1);// Max temperature       (REAL) 
+        = DataSorter::GetFloatScaleSortString((float)mcb_basic.s16MaxTemp/10,1);      // Max temperature       (REAL) 
     db_basic.data["maxcurrent"]       = std::to_string(mcb_basic.u16MaxCurrent);      // Max current           (REAL) 
     db_basic.data["maxpeakcurrent"]   = std::to_string(mcb_basic.u16MaxPeakCurrent);  // Max peak current      (INTEGER) 
     db_basic.data["torquesensortype"] = std::to_string(mcb_basic.u16TorqueSensorType);// torque sensor type    (INTEGER) 
@@ -468,7 +466,8 @@ bool GtcsManager::UpdateMcbBasicParaToDB(GtcsDatabase &db,GtcsDatabaseBasicInfo 
         = DataSorter::GetFloatScaleSortString((float)mcb_basic.u16MinBusVolt/10,1);    // Min bus voltage       (REAL) 
     db_basic.data["maxbusvolt"]       
         = DataSorter::GetFloatScaleSortString((float)mcb_basic.u16MaxBusVolt/10,1);    // Max bus voltage       (REAL) 
-    db_basic.data["startdutycycle"]   = std::to_string(mcb_basic.u16StartDutyCycle);  // Start duty cycle      (REAL) 
+    db_basic.data["startdutycycle"]   
+        = DataSorter::GetFloatScaleSortString((float)mcb_basic.u16StartDutyCycle/10,1);  // Start duty cycle      (REAL) 
     db_basic.data["gearboxratio"]     
         = DataSorter::GetFloatScaleSortString((float)mcb_basic.u16GearBoxRatio/100,2); // Gear box ratio        (REAL) 
     db_basic.data["startinp"]         = std::to_string(mcb_basic.u32StartInp);        // Start input source    (INTEGER) 
@@ -547,7 +546,42 @@ bool GtcsManager::SetAmsBulletinBasicPara(GtcsDatabaseBasicInfo &basic)
     bulletin->AmsBulletin.REQ301Struct.str39 = basic.data["motswver"];         // MotSWVer
     return true;
 }
+
+// Check Request Status from UI.
+std::string GtcsManager::CheckUiCmdRequest(std::string reqest_string)
+{
+    return ams->SetAmsBulletin(reqest_string);
+}
+// Set Initial value.
+void GtcsManager::SetMcbPortName(std::string com_name)
+{
+    comport_name = com_name;
+}
+void GtcsManager::SetEmmcDatabasePath(std::string Path)
+{
+    db_emmc_Path = Path;
+}
+void GtcsManager::SetRamdiskDatabasePath(std::string Path)
+{
+    db_ramdisk_Path = Path;
+}
 // Initial Gtcs System.
+bool GtcsManager::InitialGtcsSystem()
+{
+    // Initial MCB Com.
+    // mcb->InitialMcbComPort("/dev/ttymxc3");
+    mcb->InitialMcbComPort(comport_name);
+    for(int index=0;index<5;index++)
+    {
+        mcb->NormalPollingToMcb();
+        ConvertReadlTimeActuralValue();
+    }
+    mcb->telegram.ctrl.IsEnable = false;
+    // Min fsm jump to Check system status.
+    SetMainFSM(MAIN_FSM::CHECK_SYS);
+    return false;
+}
+// Check Gtcs System.
 bool GtcsManager::CheckGtcsSystem()
 {
     // Initial value.
@@ -614,6 +648,7 @@ bool GtcsManager::CheckGtcsSystem()
     {
         // Display some informaiton.
         std::cout <<"Gear Ratio = " << std::to_string(bulletin->McbBulletin.BasicPara.u16GearBoxRatio)<<std::endl;
+        mcb->telegram.ctrl.IsEnable = true;
         SetMainFSM(MAIN_FSM::READY);
     }
     else
@@ -630,7 +665,6 @@ bool GtcsManager::RunGtcsSystem()
     if (bulletin->uisetting==false)
     {
         mcb->NormalPollingToMcb();
-        // mcb->CheckMcbFSM((int)MCB_FSM::NORMAL_POLLING);
         ConvertReadlTimeActuralValue();
     }
     else
@@ -661,55 +695,4 @@ bool GtcsManager::SettingGtcsSystem()
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     }
     return true;
-}
-#pragma region UI
-// Check Request Status from UI.
-std::string GtcsManager::CheckUiCmdRequest(std::string reqest_string)
-{
-    return ams->SetAmsBulletin(reqest_string);
-}
-#pragma endregion
-
-// Set Initial value.
-void GtcsManager::SetMcbPortName(std::string com_name)
-{
-    comport_name = com_name;
-}
-void GtcsManager::SetEmmcDatabasePath(std::string Path)
-{
-    db_emmc_Path = Path;
-}
-void GtcsManager::SetRamdiskDatabasePath(std::string Path)
-{
-    db_ramdisk_Path = Path;
-}
-// Check ui request status.
-int GtcsManager::CheckMainFSM(int main_fsm)
-{
-    int result = 0;
-    // Check gtcs Ams Protocol.
-    switch (main_fsm)
-    {
-    case MAIN_FSM::READY:
-        std::cout << "CheckMainFSM = READY" << std::endl;
-        result = RunGtcsSystem();
-        break;
-    case MAIN_FSM::SETTING:
-        std::cout << "CheckMainFSM = SETTING" << std::endl;
-        result = SettingGtcsSystem();
-        break;
-    case MAIN_FSM::ALARM:
-        std::cout << "CheckMainFSM = ALARM" << std::endl;
-        result = ClearGtcsSystemAlarm();
-        break;
-    case MAIN_FSM::CHECK_SYS:
-        std::cout << "CheckMainFSM = CHECK_SYS" << std::endl;
-        result = CheckGtcsSystem();
-        break;
-    case MAIN_FSM::INITIAL:
-        std::cout << "CheckMainFSM = INITIAL" << std::endl;
-        result = InitialGtcsSystem();
-        break;
-    }
-    return result;
 }

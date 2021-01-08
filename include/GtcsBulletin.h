@@ -214,7 +214,18 @@ public:
         .str27 = "0",                                        // Proportional gain
         .str28 = "0",                                        // Integral gain
         .str29 = "0",                                        // Encoder
-        .str30 = "\n\r",                                     // CR,LF
+        // New
+        .str30 = "0",     // Min Torque
+        .str31 = "0",     // Min RPM
+        .str32 = "0",     // Reverse Min RPM
+        .str33 = "0",     // DmsSWVer
+        .str34 = "0",     // DmsCoreID
+        .str35 = "0",     // DmsSerNr
+        .str36 = "0",     // Led
+        .str37 = "0",     // Lever Sensitivity
+        .str38 = "0",     // Push Sensitivity
+        .str39 = "0",     // MotSWVer 
+        .str40 = "\n\r",  // CL,RF        
     };// CMD340, 設定Initial.
     #pragma endregion
     #pragma region ANS
@@ -347,7 +358,7 @@ public:
         .str11 = "\n\r",                                     // CR,LF
     };// ANS323, 回復Advanced Time.
     AmsANS330Struct ANS330Struct = {
-        .str1  = "CMD330",                                   // Header+DATA
+        .str1  = "ANS330",                                   // Header+DATA
         .str2  = "yyyyMMdd HH:mm:ss",                        // yyyyMMdd HH:mm:ss
         .str3  = "0",                                        // check sum ,4 chars
         .str4  = "0",                                        // Command_sn
@@ -366,7 +377,7 @@ public:
         .str17 = "\n\r",                                     // CR,LF
     };// ANS330, 回復Program.
     AmsANS340Struct ANS340Struct = {
-        .str1 = "CMD340",                                   // Header+DATA
+        .str1 = "ANS340",                                   // Header+DATA
         .str2 = "yyyyMMdd HH:mm:ss",                        // yyyyMMdd HH:mm:ss
         .str3 = "0",                                        // check sum ,4 chars        
         .str4 = "0",                                        // Command_sn
@@ -395,7 +406,18 @@ public:
         .str27 = "0",                                        // Proportional gain
         .str28 = "0",                                        // Integral gain
         .str29 = "0",                                        // Encoder
-        .str30 = "\n\r",                                     // CR,LF
+        // New
+        .str30 = "0",     // Min Torque
+        .str31 = "0",     // Min RPM
+        .str32 = "0",     // Reverse Min RPM
+        .str33 = "0",     // DmsSWVer
+        .str34 = "0",     // DmsCoreID
+        .str35 = "0",     // DmsSerNr
+        .str36 = "0",     // Led
+        .str37 = "0",     // Lever Sensitivity
+        .str38 = "0",     // Push Sensitivity
+        .str39 = "0",     // MotSWVer 
+        .str40 = "\n\r",  // CL,RF  
     };// ANS340, 回復Initial.
 	#pragma endregion
     #pragma region REQ

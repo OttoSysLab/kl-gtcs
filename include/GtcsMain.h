@@ -17,22 +17,22 @@
  Date	       	: 2019/08/06
 =======================================================================================*/
 #include "../include/Manager.h"
+#include "../include/GtcsTcpSocket.h"
 
 #include <iostream>
-#include <thread>
+// #include <thread>
 #include <pthread.h>
 #include <cstring>
-#include <array>
-#include <ctime>
+// #include <ctime>
 
-// socket
-#include <cerrno>         // 
-#include <unistd.h>       //  
-#include <arpa/inet.h>    // 
-#include <termios.h>      // 
-#include <netinet/in.h>   //
-#include <sys/types.h>    // 
-#include <sys/socket.h>   // 
-#include <sys/stat.h>     //
+// // socket
+// #include <cerrno>         // 
+// #include <unistd.h>       //  
+// #include <arpa/inet.h>    // 
+// #include <termios.h>      // 
+// #include <netinet/in.h>   //
+// #include <sys/types.h>    // 
+// #include <sys/socket.h>   // 
+// #include <sys/stat.h>     //
 
 #endif

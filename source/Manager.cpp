@@ -563,9 +563,22 @@ void GtcsManager::SetRamdiskDatabasePath(std::string Path)
 {
     db_ramdisk_Path = Path;
 }
-void GtcsManager::SetGtcsTcpSocketServer(std::string ipaddr,int port)
+// Tcp socket.
+std::string GtcsManager::GetGtcsTcpSocketServerIP()
 {
-    
+    return bulletin->TcpServer.GetIpAddress();
+}  
+void GtcsManager::SetGtcsTcpSocketServerIP(std::string ipaddr)
+{
+    bulletin->TcpServer.SetIpAddress(ipaddr);
+}
+int GtcsManager::GetGtcsTcpSocketServerPort()
+{
+    return bulletin->TcpServer.GetPort();
+}
+void GtcsManager::SetGtcsTcpSocketServerPort(int port)
+{
+    bulletin->TcpServer.SetPortNum(port);
 }
 // Initial Gtcs System.
 bool GtcsManager::InitialGtcsSystem()

@@ -1,7 +1,7 @@
 CC = g++
 INCLUDE = -I"./include" -I"../include"
 OBJS = ./object/GtcsMain.o ./object/ComPort.o ./object/CrcChecker.o ./object/GtcsDatabase.o \
-		./object/TcpSocket.o ./object/GtcsGloabDefine.o ./object/GtcsBulletin.o ./object/Common.o \
+		./object/GtcsTcpSocket.o ./object/GtcsGloabDefine.o ./object/GtcsBulletin.o ./object/Common.o \
 		./object/GtcsAmsProtocol.o ./object/GtcsMcbComm.o \
 		./object/Manager.o 
 
@@ -10,14 +10,14 @@ LIBS = -lpthread -lsqlite3
 gtcs: GtcsMain.o \
       CrcChecker.o \
 	  GtcsDatabase.o \
-	  TcpSocket.o \
+	  GtcsTcpSocket.o \
 	  ComPort.o \
 	  GtcsGloabDefine.o \
 	  GtcsBulletin.o \
 	  Common.o \
-	  Manager.o \
 	  GtcsAmsProtocol.o  \
 	  GtcsMcbComm.o \
+	  Manager.o \
 	# ${CC} -pthread -o $@ ${INCLUDE} ${OBJS} 
 	${CC} -o $@ ${INCLUDE} ${OBJS} ${LIBS}
 
@@ -27,8 +27,8 @@ GtcsMain.o : ./GtcsMain.cpp
 CrcChecker.o : ./source/CrcChecker.cpp 
 	${CC} ${INCLUDE} -c $< -o ./object/CrcChecker.o
 
-TcpSocket.o : ./source/TcpSocket.cpp 
-	${CC} ${INCLUDE} -c $< -o ./object/TcpSocket.o
+GtcsTcpSocket.o : ./source/GtcsTcpSocket.cpp 
+	${CC} ${INCLUDE} -c $< -o ./object/GtcsTcpSocket.o
 
 GtcsDatabase.o : ./source/GtcsDatabase.cpp 
 	${CC} ${INCLUDE} -c $< -o ./object/GtcsDatabase.o 
@@ -45,14 +45,14 @@ GtcsGloabDefine.o : ./source/GtcsGloabDefine.cpp
 GtcsBulletin.o : ./source/GtcsBulletin.cpp
 	${CC} ${INCLUDE} -c $< -o ./object/GtcsBulletin.o
 
-Manager.o : ./source/Manager.cpp
-	${CC} ${INCLUDE} -c $< -o ./object/Manager.o
-
 GtcsAmsProtocol.o : ./source/GtcsAmsProtocol.cpp 
 	${CC} ${INCLUDE} -c $< -o ./object/GtcsAmsProtocol.o
 
 GtcsMcbComm.o : ./source/GtcsMcbComm.cpp 
 	${CC} ${INCLUDE} -c $< -o ./object/GtcsMcbComm.o
+
+Manager.o : ./source/Manager.cpp
+	${CC} ${INCLUDE} -c $< -o ./object/Manager.o
 
 clear:
 	rm -f ./object/*.o

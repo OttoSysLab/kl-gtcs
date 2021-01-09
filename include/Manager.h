@@ -96,8 +96,13 @@ public:
     void SetMcbPortName(std::string comname);
     void SetEmmcDatabasePath(std::string Path);
     void SetRamdiskDatabasePath(std::string Path);
-    void SetGtcsTcpSocketServer(std::string ipaddr,int port);
-    
+    // Tcp Socke server.
+    std::string GetGtcsTcpSocketServerIP();
+    void SetGtcsTcpSocketServerIP(std::string ipaddr);
+    int GetGtcsTcpSocketServerPort();
+    void SetGtcsTcpSocketServerPort(int port);
+    // 
+
     std::string CheckRequestStatus(std::string reqest_string);
     std::string CheckUiCmdRequest(std::string reqest_string);
     std::string GetUiCmdResponse(std::string uicmd_string);

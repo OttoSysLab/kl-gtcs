@@ -13,6 +13,10 @@
  Programmer    	: Otto Chang                                                                   
  Date	       	: 2019/08/06                                                         
 =======================================================================================*/
+#include "GtcsGloabDefine.h"
+#include "GtcsBulletin.h"
+#include "Manager.h"
+
 #include <iostream>       // 
 #include <cstring>        // 
 #include <cerrno>         // 
@@ -44,10 +48,10 @@ public:
 class GtcsTcpSocket : public TcpSocket
 {
 private:
-    
 public:
     GtcsTcpSocket(/* args */);
     ~GtcsTcpSocket();
+    static void GtcsTcpSocketServerHandler();
 };
 
 #endif

@@ -776,6 +776,31 @@ public:
     // DatabasteBulletin(){};
     // ~DatabasteBulletin(){};
 };
+class TcpSocketInfo
+{
+private:
+    /* data */
+    std::string IP="";
+    int Port = 0;
+public:
+    TcpSocketInfo(/* args */){};
+    ~TcpSocketInfo(){};
+    // IP information.
+    std::string GetIpAddress(){
+        return IP;
+    };
+    void SetIpAddress(std::string ipaddr){
+        IP = ipaddr;
+    };
+    // Port information.
+    int GetPort(){
+        return Port;
+    };
+    void SetPortNum(int port_num){
+        Port = port_num;
+    };
+};
+
 #pragma endregion
 #pragma region bulletin
 //GTCS Bulletin.
@@ -795,7 +820,9 @@ public:
     DatabasteBulletin  DbBulletin;
     bool checksysok = true;  
     bool uisetting = false;  
-    std::string uisockrevcmd = ""; 
+    std::string uisockrevcmd = "";
+    TcpSocketInfo TcpServer;
+    TcpSocketInfo TcpClient;
 };
 #pragma endregion
 #pragma endregion

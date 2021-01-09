@@ -369,11 +369,11 @@ public:
     // Write to mcb flash.
     int WriteToMcbFlash(int mainid,int subid ,int add_num); // mainid = 7 , subid = 11(step) ,subid = 12 (Process)
     // Step Parameter. (Main ID = 3)
-    int ReadStepParametrer(int mainid);
-    int WriteStepParameter(McbID3Struct *step_para,int mainid);
+    int ReadStepParametrer(McbID3Struct &step_para,int mainid);
+    int WriteStepParameter(McbID3Struct &step_para,int mainid);
     // Prcoess Parameter.(Main ID = 4)
-    int ReadProcessParameter(int processnum);
-    int WriteProcessParameter(McbID4Struct *process,int processid);
+    int ReadProcessParameter(McbID4Struct &process,int processnum);
+    int WriteProcessParameter(McbID4Struct &process,int processid);
     #pragma endregion
 
     // Polling to MCB.

@@ -238,23 +238,6 @@ bool GtcsDatabase::ReadDatabaseBasicTable(GtcsDatabaseBasicInfo &db_basic)
         return false;
     }
 
-    // Get data from sqlite_clomn_text pointer. 
-    int columnnames_size  = db_basic.columnnames.size();
-    for (int i = 0; i < columnnames_size; i++)
-    {
-        if (db_basic.type[db_basic.columnnames[i]]!="TEXT")
-        {
-            sqlcmd += db_basic.columnnames[i] + " = " + db_basic.data[db_basic.columnnames[i]] + ",";   
-        }   
-        else
-        {
-            sqlcmd += db_basic.columnnames[i] + " = " + "'" + db_basic.data[db_basic.columnnames[i]] + "'" +",";   
-        }
-    }
-    sqlcmd = sqlcmd.replace(sqlcmd.end()-1,sqlcmd.end()," ");
-    sqlcmd += "where rowid = 1;";
-
-
     // Assign dat to bsic struct.
     int columnname_size  = db_basic.columnnames.size();    
     for (int i = 0; i < columnname_size; i++)

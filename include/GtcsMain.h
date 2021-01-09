@@ -16,19 +16,23 @@
  Programmer    	: Otto Chang
  Date	       	: 2019/08/06
 =======================================================================================*/
+#include "../include/Manager.h"
+
 #include <iostream>
 #include <thread>
 #include <pthread.h>
-#include <string>
+#include <cstring>
 #include <array>
 #include <ctime>
 
-#include "../include/Manager.h"
-#include "../include/TcpSocket.h"
+// socket
+#include <cerrno>         // 
+#include <unistd.h>       //  
+#include <arpa/inet.h>    // 
+#include <termios.h>      // 
+#include <netinet/in.h>   //
+#include <sys/types.h>    // 
+#include <sys/socket.h>   // 
+#include <sys/stat.h>     //
 
-// #if defined(OS_WINDOWS)
-//     #include <windows.h>
-// #endif
-// #if defined(OS_LINUX)
-// #endif
 #endif

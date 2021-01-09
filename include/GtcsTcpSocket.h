@@ -1,3 +1,6 @@
+#ifndef _TCP_SOCKET_
+#define _TCP_SOCKET_
+#pragma once
 /*=======================================================================================
  Program Nane  	: gtcs_tlg_decoder.c     
  Subject 		: SARM Serial Port Communication Driver Process                                  
@@ -10,11 +13,41 @@
  Programmer    	: Otto Chang                                                                   
  Date	       	: 2019/08/06                                                         
 =======================================================================================*/
-#include "TcpSocket.h"
+#include <iostream>       // 
+#include <cstring>        // 
+#include <cerrno>         // 
+#include <unistd.h>       //  
+// #if defined(OS_LINUX)
+#include <arpa/inet.h>    // 
+#include <termios.h>      // 
+#include <netinet/in.h>   //
+#include <sys/types.h>    // 
+#include <sys/socket.h>   // 
+#include <sys/stat.h>     // 
+// #endif
 
-// Constructor.
-TcpSocket::TcpSocket()
-{}
-// Distruct.
-TcpSocket::~TcpSocket()
-{}
+// Class strcut.
+class TcpSocket
+{
+private:
+    /* data */
+    int MAXLINE = 4096;                   // Buffer size.
+    // char tcpserverIP[] = "127.0.0.1";  // Socket IP & Port.  
+    
+public:
+    TcpSocket(/* args */);
+    ~TcpSocket();
+    //void Initial();
+    //int TcpSocketServer(char *IP,int Port);
+};
+
+class GtcsTcpSocket : public TcpSocket
+{
+private:
+    
+public:
+    GtcsTcpSocket(/* args */);
+    ~GtcsTcpSocket();
+};
+
+#endif

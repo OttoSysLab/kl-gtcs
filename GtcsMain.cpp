@@ -13,10 +13,8 @@
 #include "../include/GtcsMain.h"
 
 // TCP socket.
-void tcpsocket()
-{
-    // Socket.
-    TcpSocket mytcpserver;
+void TcpSocketServerhandler()
+{    
     GtcsBulletin *bulletin = GtcsBulletin::GetInstance();
     GtcsManager manager;
     #ifdef _DEBUG_MODE_
@@ -122,7 +120,7 @@ int main()
     manager.CheckGtcsSystem();
 
     // Ste 3 = Set tcpsocket thread and start.
-    std::thread thread_tcpsocket = std::thread(tcpsocket);
+    std::thread thread_tcpsocket_server = std::thread(TcpSocketServerhandler);
     #pragma endregion
 
     #pragma region step 2
@@ -148,6 +146,6 @@ int main()
     #pragma endregion
 
     // Join thread.
-    thread_tcpsocket.join();
+    thread_tcpsocket_server.join();
     return 0;
 }

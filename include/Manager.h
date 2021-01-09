@@ -18,6 +18,8 @@
 #include "GtcsAmsProtocol.h"
 #include "GtcsMcbComm.h"
 #include "GtcsDatabase.h"
+#include "GtcsTcpSocket.h"
+
 // #include "Common.h"
 // #include <iostream>
 // #include <string.h>
@@ -94,6 +96,7 @@ public:
     void SetMcbPortName(std::string comname);
     void SetEmmcDatabasePath(std::string Path);
     void SetRamdiskDatabasePath(std::string Path);
+    void SetGtcsTcpSocketServer(std::string ipaddr,int port);
     
     std::string CheckRequestStatus(std::string reqest_string);
     std::string CheckUiCmdRequest(std::string reqest_string);
@@ -106,6 +109,7 @@ public:
     bool RunGtcsSystem();
     bool ClearGtcsSystemAlarm();
     bool SettingGtcsSystem();
+
 };
 #pragma endregion
 #endif

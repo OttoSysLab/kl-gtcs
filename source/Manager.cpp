@@ -349,23 +349,22 @@ bool GtcsManager::SetSystemBasicParameter(AmsCMD340Struct &amscmd,GtcsDatabaseBa
     }
 
     // Step 2 : Read basic data from emmc database to dbstruct.
-    if (db_emmc.ReadDatabase(db_emmc.GetDatabasePath(),"basic",(std::string *)(void* )&bulletin->DbBulletin.basic.mintemp)==false)
+    if (db_emmc.ReadDatabaseBasicTable(basic_emmc)==false)
     {
         std::cout << "Step 2 : Read basic data from emmc database to dbstruct." << std::endl;
         return false;
     }
-    else
-    {
-        basic_emmc.SetDataValue(&bulletin->DbBulletin.basic.mintemp);
-    }
+
     // step 3 : Update Mcb struct to emmc basic datatbase.
     if (UpdateMcbBasicParaToDB(db_emmc,basic_emmc,bulletin->McbBulletin.BasicPara)==false)
     {
         std::cout << "Step 3 : Update MCB basic parameter to database." << std::endl;
         return false;
     }
+
     // step 4 : Cpoy emmc database to ramdisk.
     CopyDatabase(db_ramdisk_Path,db_emmc_Path);
+
     // step 5 : Set ANS340
     SetAmsCmdBaiscParaToAns(bulletin->AmsBulletin.ANS340Struct,bulletin->AmsBulletin.CMD340Struct);
 
@@ -568,7 +567,6 @@ void GtcsManager::SetRamdiskDatabasePath(std::string Path)
 bool GtcsManager::InitialGtcsSystem()
 {
     // Initial MCB Com.
-    // mcb->InitialMcbComPort("/dev/ttymxc3");
     mcb->InitialMcbComPort(comport_name);
     for(int index=0;index<5;index++)
     {
@@ -601,14 +599,14 @@ bool GtcsManager::CheckGtcsSystem()
     CopyDatabase(db_ramdisk_Path,db_emmc_Path);
 
     // Step 3 : Read basic data from emmc database to dbstruct.
-    if (db_emmc.ReadDatabase(db_emmc.GetDatabasePath(),"basic",(std::string *)(void* )&bulletin->DbBulletin.basic.mintemp)==false)
+    if (db_emmc.ReadDatabaseBasicTable(basic_emmc)==false)
     {
         std::cout << "Step 3 : Read basic data from emmc database to dbstruct." << std::endl;
         return false;
     }
     else
     {
-        basic_ramdisk.SetDataValue(&bulletin->DbBulletin.basic.mintemp);
+        basic_ramdisk.SetDataValue(basic_emmc.data);
     }
 
     // Step 4 : Update MCB basic parameter to database.
@@ -619,25 +617,17 @@ bool GtcsManager::CheckGtcsSystem()
     }
 
     // Step 5 = Read basic data from emmc database to dbstruct.
-    if (db_emmc.ReadDatabase(db_emmc.GetDatabasePath(),"basic",(std::string *)(void* )&bulletin->DbBulletin.basic.mintemp)==false)
+    if (db_emmc.ReadDatabaseBasicTable(basic_emmc)==false)
     {
         std::cout << "Step 5 = Read basic data from emmc database to dbstruct." << std::endl;
         return false;
     }
-    else
-    {
-        basic_emmc.SetDataValue(&bulletin->DbBulletin.basic.mintemp);
-    }
 
     // Step 6 : Read basic data from ramdisk database to dbstruct.
-    if (db_ramdisk.ReadDatabase(db_ramdisk.GetDatabasePath(),"basic",(std::string *)(void* )&bulletin->DbBulletin.basic.mintemp)==false)
+    if (db_ramdisk.ReadDatabaseBasicTable(basic_ramdisk)==false)
     {
         std::cout << "Step 6 : Read basic data from ramdisk database to dbstruct." << std::endl;
         return false;
-    }
-    else
-    {
-        basic_ramdisk.SetDataValue(&bulletin->DbBulletin.basic.mintemp);
     }
 
     // Step 7 = Jump to selected MAIN_FSM.
@@ -690,8 +680,7 @@ bool GtcsManager::SettingGtcsSystem()
     }
     else
     {
-        // CheckUiSettingFSM(ams->GetAmsCmdNum(bulletin->sockrevcmd));
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));  // Thread sleep 1s.
     }
     return true;
 }

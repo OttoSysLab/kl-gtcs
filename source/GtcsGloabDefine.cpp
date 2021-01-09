@@ -25,20 +25,30 @@ void GtcsDatabaseBaseInfo::InitialDataStruct()
         data.insert(std::pair<std::string,std::string>(columnnames[i],"-"));
     }        
 }
-void GtcsDatabaseBaseInfo::SetDataValue(std::string *ptr)
+// void GtcsDatabaseBaseInfo::SetDataValue(std::string *ptr)
+// {
+//     // std::cout << "======================SetDataValue====================" << std::endl;
+//     data[columnnames[0]] = *ptr;
+//     // std::cout<<"Index = "<< "0 " << columnnames[0] << " = " <<*ptr<< std::endl;
+//     int columnnames_size = columnnames.size();
+
+//     ptr = (std::string *)(void *)(ptr+1);
+//     for (int i = 1; i < columnnames_size; i++)
+//     {
+//         data[columnnames[i]] = *ptr;
+//         // std::cout <<"Index = "<<i<<" "<< columnnames[i] << " = " <<*ptr<< std::endl;
+//         ptr = (std::string *)(void *)(ptr+1);
+//     }       
+// }
+void GtcsDatabaseBaseInfo::SetDataValue(std::map<std::string,std::string> &pDataValue)
 {
     // std::cout << "======================SetDataValue====================" << std::endl;
-    data[columnnames[0]] = *ptr;
-    // std::cout<<"Index = "<< "0 " << columnnames[0] << " = " <<*ptr<< std::endl;
     int columnnames_size = columnnames.size();
-
-    ptr = (std::string *)(void *)(ptr+1);
-    for (int i = 1; i < columnnames_size; i++)
+    for (int i = 0; i < columnnames_size; i++)
     {
-        data[columnnames[i]] = *ptr;
+        data[columnnames[i]] = pDataValue[columnnames[i]];
         // std::cout <<"Index = "<<i<<" "<< columnnames[i] << " = " <<*ptr<< std::endl;
-        ptr = (std::string *)(void *)(ptr+1);
-    }       
+    }
 }
 #pragma endregion
 

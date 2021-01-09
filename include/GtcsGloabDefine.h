@@ -1039,7 +1039,8 @@ public:
     virtual void InitialColumnName(){};
     virtual void InitilaTypeList(){}; 
     void InitialDataStruct();
-    void SetDataValue(std::string *ptr);
+    // void SetDataValue(std::string *ptr);
+    void SetDataValue(std::map<std::string,std::string> &pDatavalue);
 };
 // Gtcs database basic information.
 class GtcsDatabaseBasicInfo : public GtcsDatabaseBaseInfo

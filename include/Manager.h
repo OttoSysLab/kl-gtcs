@@ -80,10 +80,10 @@ private:
     bool SetSystemBasicParameter(AmsCMD340Struct &amscmd,GtcsDatabaseBasicStruct &db_basic,McbID2Struct &mcb_basic);
     
     // AMS Protocol.
-    bool SetAmsBulletinBasicPara(GtcsDatabaseBasicInfo &basic);   // GTCS AMS REQ301 
+    bool SetDatabaseBasicParaToAns(AmsANS340Struct &amsans,GtcsDatabaseBasicInfo &db_basic);   // DB_BASIC  ->AMS_ANS340 
+    bool SetAmsCmdBaiscParaToAns(AmsANS340Struct &amsans,AmsCMD340Struct &amscmd);            // AMS_CMD340->AMS_ANS340
     bool ConvertReadlTimeActuralValue();                          // GTCS AMS DATA300  
-    bool ConvertAmsBasicToMcbStruct(AmsCMD340Struct &amscmd,McbID2Struct &basic_para);//
-    bool SetAmsBaiscParaCmdsToAns();
+    bool ConvertAmsBasicToMcbStruct(AmsCMD340Struct &amscmd,McbID2Struct &basic_para);    // 
     // bool ConvertAmsBasicToDBStruct(AmsCMD340Struct &amscmd,GtcsDatabaseBasicStruct &db_basic); 
 public:
     // Constructor.

@@ -46,7 +46,7 @@ void GtcsDatabaseBaseInfo::SetDataValue(std::string *ptr)
 // Constructor.
 GtcsDatabaseBasicInfo::GtcsDatabaseBasicInfo()
 {
-    InitialTypeList();
+    InitialColumnType();
     InitialColumnName();
     InitialDataStruct();
 }
@@ -94,7 +94,7 @@ void GtcsDatabaseBasicInfo::InitialColumnName()
     columnnames.push_back("motswver");         // (TEXT)
     // columnnames.push_back("end");           // CL,RF  
 }
-void GtcsDatabaseBasicInfo::InitialTypeList()
+void GtcsDatabaseBasicInfo::InitialColumnType()
 {    
     type.insert(std::pair<std::string,std::string>("mintemp","REAL"));            // Min temperature       (REAL)
     type.insert(std::pair<std::string,std::string>("maxtemp","REAL"));            // Max temperature       (REAL)
@@ -132,25 +132,5 @@ void GtcsDatabaseBasicInfo::InitialTypeList()
     type.insert(std::pair<std::string,std::string>("lever_sensitivity","INTEGER"));// (INTEGER)
     type.insert(std::pair<std::string,std::string>("push_sensitivity","INTEGER")); // (INTEGER) 
     type.insert(std::pair<std::string,std::string>("motswver","TEXT"));         // (TEXT)
-}
-std::string GtcsDatabaseBasicInfo::GetUpdateSqlCommand()
-{
-    std::string sqlcmd = "";
-    sqlcmd = "update " + dbtablename + " set ";
-    int columnnames_size  = columnnames.size();
-    for (int i = 0; i < columnnames_size; i++)
-    {
-        if (type[columnnames[i]]!="TEXT")
-        {
-            sqlcmd += columnnames[i] + " = " + data[columnnames[i]] + ",";   
-        }   
-        else
-        {
-            sqlcmd += columnnames[i] + " = " + "'" + data[columnnames[i]] + "'" +",";   
-        }
-    }
-    sqlcmd = sqlcmd.replace(sqlcmd.end()-1,sqlcmd.end()," ");
-    sqlcmd += "where rowid = 1;";
-    return sqlcmd;
 }
 #pragma endregion

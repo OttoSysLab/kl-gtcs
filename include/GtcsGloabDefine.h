@@ -1050,9 +1050,8 @@ public:
     GtcsDatabaseBasicInfo(/* args */);
     ~GtcsDatabaseBasicInfo();
     std::string dbtablename = "basic";    
+    void InitialColumnType();
     void InitialColumnName();
-    void InitialTypeList();
-    std::string GetUpdateSqlCommand();
 };
 
 #pragma endregion

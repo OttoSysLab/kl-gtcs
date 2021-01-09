@@ -29,6 +29,11 @@ private:
 public:
     Sqlite3Manager();
     ~Sqlite3Manager();
+    // 
+    virtual std::string GetDatabasePath(){};
+    virtual void SetDatabasePath(std::string Path){};
+    
+    // Basic function.
     bool UpdateDatabase(std::string db_path,std::string table,std::string sqlcmd);
     bool ReadDatabase(std::string db_path,std::string table,std::string *ptr);       // int SetDatabaseFilePath(std::string path);
 };
@@ -43,9 +48,13 @@ public:
     // Constructor.
     GtcsDatabase(std::string Path);
     ~GtcsDatabase();
-    // Get database path.
-    // int SetDatabasePath(std::string dbPath);
-    std::string GetDatabasePath();
     
+    // Get database path.
+    std::string GetDatabasePath();
+    void SetDatabasePath(std::string Path);
+
+    // Set .  
+    bool UpdateDatabaseBasicTable(GtcsDatabaseBasicInfo &db_basic); // 
+    bool ReadDatabaseBasicTable(GtcsDatabaseBasicInfo &db_basic);   // 
 };
 #endif

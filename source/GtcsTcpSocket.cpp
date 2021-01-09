@@ -24,15 +24,14 @@ GtcsTcpSocket::~GtcsTcpSocket()
 {}
 void GtcsTcpSocket::GtcsTcpSocketServerHandler()
 {
-	GtcsBulletin *bulletin = GtcsBulletin::GetInstance();
+	// GtcsBulletin *bulletin = GtcsBulletin::GetInstance();
+    // Initials vlaue & object.
     GtcsManager manager;
-    
-    // char sockip[] = "192.168.0.207";
-    // char sockip[] = "127.0.0.1";
-
-    std::string sockip = manager.GetGtcsTcpSocketServerIP(); 
-    int sockport = manager.GetGtcsTcpSocketServerPort();
+    std::string socketrevcmd = "";
+    std::string sockip = manager.GetGtcsTcpSocketServerIP();   // Get tcp server ip from bulletin by manager.
+    int sockport = manager.GetGtcsTcpSocketServerPort();       // Get tcp port number from bulletin by manager.
     int MAXLINE = 512;                                         // Buffer size.
+    
     // Initial parameter.
     int  listenfd, connfd;
     struct sockaddr_in  servaddr;
@@ -82,17 +81,22 @@ void GtcsTcpSocket::GtcsTcpSocketServerHandler()
         #endif
 
         // Decoder CMD dn check request.
-        bulletin->uisockrevcmd = manager.CheckUiCmdRequest(revbuff);
-        if (bulletin->uisockrevcmd=="REQ300")
+        manager.CheckUiRequestCmd(revbuff);
+        socketrevcmd = manager.GetUiRequestCmd();
+        if (socketrevcmd=="REQ300")
         {
-            bulletin->uisetting = false;
+            // bulletin->uisetting = false;GtcsManager::
+            manager.SetUiSettingStatus(false);
         }
         else
         {
-            bulletin->uisetting = true;
+            // bulletin->uisetting = true;
+            manager.SetUiSettingStatus(true);
+
         }
         // Waiting for app to process CMD.
-        while(bulletin->uisetting)
+        // while(bulletin->uisetting)
+        while (manager.GetUiSettingStatus()==true)        
         {
             // std::cout << bulletin->uisockrevcmd << std::endl;
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
@@ -100,8 +104,9 @@ void GtcsTcpSocket::GtcsTcpSocketServerHandler()
 
         // Send data to tcpclient.
         std::fill_n(sendbuff,sizeof(sendbuff),0);   
-        strcpy(sendbuff,manager.GetUiCmdResponse(bulletin->uisockrevcmd).c_str());
-        // strcpy(sendbuff,bulletin->uisockrevcmd.c_str());
+        // strcpy(sendbuff,manager.GetUiCmdResponse(bulletin->uisockrevcmd).c_str());
+        strcpy(sendbuff,manager.GetUiResponseCmd(socketrevcmd).c_str());
+        // socketrevcmd = manager.GetUiResponseCmd(socketrevcmd);
         if (send(connfd,sendbuff,sizeof(sendbuff),0)<0)
         {
             printf("send msg error: %s(errno: %d)\n", strerror(errno), errno);

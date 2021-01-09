@@ -83,38 +83,37 @@ private:
     
     // AMS Protocol.
     bool SetDatabaseBasicParaToAns(AmsANS340Struct &amsans,GtcsDatabaseBasicInfo &db_basic);   // DB_BASIC  ->AMS_ANS340 
-    bool SetAmsCmdBaiscParaToAns(AmsANS340Struct &amsans,AmsCMD340Struct &amscmd);            // AMS_CMD340->AMS_ANS340
-    bool ConvertReadlTimeActuralValue();                          // GTCS AMS DATA300  
-    bool ConvertAmsBasicToMcbStruct(AmsCMD340Struct &amscmd,McbID2Struct &basic_para);    // 
-    // bool ConvertAmsBasicToDBStruct(AmsCMD340Struct &amscmd,GtcsDatabaseBasicStruct &db_basic); 
+    bool SetAmsCmdBaiscParaToAns(AmsANS340Struct &amsans,AmsCMD340Struct &amscmd);             // AMS_CMD340->AMS_ANS340
+    bool ConvertReadlTimeActuralValue();                                                       // GTCS AMS DATA300  
+    bool ConvertAmsBasicToMcbStruct(AmsCMD340Struct &amscmd,McbID2Struct &basic_para);         // AMC_CMD340->DB_Struct
 public:
     // Constructor.
     GtcsManager(/* args */);
     // Distructor.
     ~GtcsManager();
-    // 
+
+    // Intial set parameter.
     void SetMcbPortName(std::string comname);
     void SetEmmcDatabasePath(std::string Path);
     void SetRamdiskDatabasePath(std::string Path);
+    
     // Tcp Socke server.
     std::string GetGtcsTcpSocketServerIP();
     void SetGtcsTcpSocketServerIP(std::string ipaddr);
     int GetGtcsTcpSocketServerPort();
     void SetGtcsTcpSocketServerPort(int port);
-    // 
-
-    std::string CheckRequestStatus(std::string reqest_string);
-    std::string CheckUiCmdRequest(std::string reqest_string);
-    std::string GetUiCmdResponse(std::string uicmd_string);
-
-    // FSM
-    // Gtcs System Main state.
+    bool CheckUiRequestCmd(std::string reqest_string);
+    std::string GetUiRequestCmd();
+    std::string GetUiResponseCmd(std::string uicmd_string);
+    bool GetUiSettingStatus();
+    void SetUiSettingStatus(bool status);
+    
+    // Gtcs System Main state.(MAIN)FSM)
     bool InitialGtcsSystem();
     bool CheckGtcsSystem();
     bool RunGtcsSystem();
     bool ClearGtcsSystemAlarm();
     bool SettingGtcsSystem();
-
 };
 #pragma endregion
 #endif

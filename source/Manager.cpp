@@ -412,7 +412,7 @@ bool GtcsManager::CheckUiSettingFSM(int uicmd)
     return true;
 }
 // Get Ui Cmd Response.
-std::string GtcsManager::GetUiCmdResponse(std::string uicmd_string)
+std::string GtcsManager::GetUiResponseCmd(std::string uicmd_string)
 {
     int uiresponsecmd = 0;
 
@@ -435,6 +435,15 @@ std::string GtcsManager::GetUiCmdResponse(std::string uicmd_string)
     }
     return ams->GetAmsBulletin(uiresponsecmd);
 }
+bool GtcsManager::GetUiSettingStatus()
+{
+    return bulletin->uisetting;
+}
+void GtcsManager::SetUiSettingStatus(bool status)
+{
+    bulletin->uisetting = status;
+}
+
 // Copy database.
 bool GtcsManager::CopyDatabase(std::string destination ,std::string source)
 {
@@ -546,9 +555,14 @@ bool GtcsManager::SetDatabaseBasicParaToAns(AmsANS340Struct &amsans,GtcsDatabase
     return true;
 }
 // Check Request Status from UI.
-std::string GtcsManager::CheckUiCmdRequest(std::string reqest_string)
+bool GtcsManager::CheckUiRequestCmd(std::string reqest_string)
 {
-    return ams->SetAmsBulletin(reqest_string);
+    bulletin->uisockrevcmd = ams->SetAmsBulletin(reqest_string);
+    return true;
+}
+std::string GtcsManager::GetUiRequestCmd()
+{
+    return bulletin->uisockrevcmd;
 }
 // Set Initial value.
 void GtcsManager::SetMcbPortName(std::string com_name)

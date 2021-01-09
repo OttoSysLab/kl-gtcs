@@ -20,19 +20,7 @@
 #include "../include/GtcsTcpSocket.h"
 
 #include <iostream>
-// #include <thread>
 #include <pthread.h>
 #include <cstring>
-// #include <ctime>
-
-// // socket
-// #include <cerrno>         // 
-// #include <unistd.h>       //  
-// #include <arpa/inet.h>    // 
-// #include <termios.h>      // 
-// #include <netinet/in.h>   //
-// #include <sys/types.h>    // 
-// #include <sys/socket.h>   // 
-// #include <sys/stat.h>     //
 
 #endif

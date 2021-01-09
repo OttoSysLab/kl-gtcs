@@ -17,18 +17,16 @@
 #include "GtcsBulletin.h"
 #include "Manager.h"
 
-#include <iostream>       // 
-#include <cstring>        // 
+// #include <iostream>       // 
+// #include <cstring>        // 
 #include <cerrno>         // 
 #include <unistd.h>       //  
-// #if defined(OS_LINUX)
 #include <arpa/inet.h>    // 
 #include <termios.h>      // 
 #include <netinet/in.h>   //
 #include <sys/types.h>    // 
 #include <sys/socket.h>   // 
 #include <sys/stat.h>     // 
-// #endif
 
 // Class strcut.
 class TcpSocket
@@ -41,10 +39,8 @@ private:
 public:
     TcpSocket(/* args */);
     ~TcpSocket();
-    //void Initial();
-    //int TcpSocketServer(char *IP,int Port);
 };
-
+// Gtcs Tcp socket handler class.
 class GtcsTcpSocket : public TcpSocket
 {
 private:

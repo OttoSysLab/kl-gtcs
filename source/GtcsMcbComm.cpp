@@ -2120,14 +2120,21 @@ int GtcsMcbComm::NormalPollingToMcb()
 
     // Configur ctrl telegram data.
     GtcsCtrlTelegramStrcut *ctrltelegram;
-    // telegram.ctrl.InitialCtrlFlags(ctrltelegram);
     if (telegram.status.loosen_status == false)
     {
         ctrltelegram = &telegram.ctrl.fasten;   // Configure fasten ctrl telegram.
+        ctrltelegram->u16ControlMode = 1;
+        ctrltelegram->u8TMDControl   = 8;
+        telegram.ctrl.InitialCtrlFlags(ctrltelegram);
+        telegram.ctrl.SetCtrlFlags(ctrltelegram,CTRL_FLAGS_IDX::SC_REVERSE);
     }
     else
     {
-        ctrltelegram = &telegram.ctrl.loosen;   // Config loosen ctrl telegram.
+        // ctrltelegram = &telegram.ctrl.loosen;   // Config loosen ctrl telegram.
+        ctrltelegram = &telegram.ctrl.fasten;
+        ctrltelegram->u16ControlMode = 0;
+        ctrltelegram->u8TMDControl   = 4;
+        telegram.ctrl.InitialCtrlFlags(ctrltelegram);
         telegram.ctrl.SetCtrlFlags(ctrltelegram,CTRL_FLAGS_IDX::SC_REVERSE);
     }
 

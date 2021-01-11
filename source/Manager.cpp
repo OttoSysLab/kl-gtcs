@@ -369,7 +369,7 @@ bool GtcsManager::SetSystemBasicParameter(AmsCMD340Struct &amscmd,GtcsDatabaseBa
     SetAmsCmdBaiscParaToAns(bulletin->AmsBulletin.ANS340Struct,bulletin->AmsBulletin.CMD340Struct);
     
     // Check OK!!
-    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    // std::this_thread::sleep_for(std::chrono::milliseconds(200));
     bulletin->checksysok = true;
     return true;
 }
@@ -433,9 +433,10 @@ std::string GtcsManager::GetUiResponseCmd(std::string uicmd_string)
     }
     else                          // Setting
     {
-        std::cout << "ams->GetAmsCmdNum(uicmd_string) = "  << std::to_string(ams->GetAmsCmdNum(uicmd_string))<<std::endl;
+        // std::cout << "ams->GetAmsCmdNum(uicmd_string) = "  << std::to_string(ams->GetAmsCmdNum(uicmd_string))<<std::endl;
+        std::cout << "Ui setting cmd = " <<uicmd_string << std::endl;
         uiresponsecmd = ams->GetAmsSymmetryCmdNumver(ams->GetAmsCmdNum(uicmd_string));
-        std::cout << "std::to_string(uiresponsecmd) = " << std::to_string(uiresponsecmd) << std::endl;
+        // std::cout << "std::to_string(uiresponsecmd) = " << std::to_string(uiresponsecmd) << std::endl;
     }
     return ams->GetAmsBulletin(uiresponsecmd);
 }
@@ -645,6 +646,7 @@ void GtcsManager::SetGtcsTcpSocketServerPort(int port)
 // Initial Gtcs System.
 bool GtcsManager::InitialGtcsSystem()
 {
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));  // Thread sleep 1s.
     // Initial MCB Com.
     mcb->InitialMcbComPort(comport_name);
     for(int index=0;index<5;index++)
@@ -754,7 +756,16 @@ bool GtcsManager::SettingGtcsSystem()
         if (CheckUiSettingFSM(ams->GetAmsCmdNum(bulletin->uisockrevcmd))==true)
         {
             bulletin->uisetting = false;
-            SetMainFSM(MAIN_FSM::READY);
+            // SetMainFSM(MAIN_FSM::READY);
+    
+            if (bulletin->checksysok==true)
+            {
+                SetMainFSM(MAIN_FSM::READY);
+            }   
+        //     else
+        //     {
+        //         SetMainFSM(MAIN_FSM::SETTING);
+        //     }
         }
     }
     else

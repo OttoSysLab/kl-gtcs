@@ -2117,8 +2117,10 @@ int GtcsMcbComm::NormalPollingToMcb()
     int result = 0;
     int delay_time = 50;
     int MAX_READ = 1024;
-    
+
+    // Configur ctrl telegram data.
     GtcsCtrlTelegramStrcut *ctrltelegram;
+    // telegram.ctrl.InitialCtrlFlags(ctrltelegram);
     if (telegram.status.loosen_status == false)
     {
         ctrltelegram = &telegram.ctrl.fasten;   // Configure fasten ctrl telegram.
@@ -2126,10 +2128,10 @@ int GtcsMcbComm::NormalPollingToMcb()
     else
     {
         ctrltelegram = &telegram.ctrl.loosen;   // Config loosen ctrl telegram.
+        telegram.ctrl.SetCtrlFlags(ctrltelegram,CTRL_FLAGS_IDX::SC_REVERSE);
     }
 
-    // Configur.
-    telegram.ctrl.InitialCtrlFlags(ctrltelegram);
+    // 
     telegram.ctrl.SetCtrlFlags(ctrltelegram,CTRL_FLAGS_IDX::SHORT_UVW);
     telegram.ctrl.SetCtrlFlags(ctrltelegram,CTRL_FLAGS_IDX::EN_TIMEOUT_200MS);
     // telegram.ctrl.SetCtrlFlags(ctrltelegram,CTRL_FLAGS_IDX::SC_ENABLE);

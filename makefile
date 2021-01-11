@@ -7,7 +7,7 @@ OBJS = ./object/GtcsMain.o ./object/ComPort.o ./object/CrcChecker.o ./object/Gtc
 
 LIBS = -lpthread -lsqlite3
 
-gtcs: GtcsMain.o \
+gtcsdriver: GtcsMain.o \
       CrcChecker.o \
 	  GtcsDatabase.o \
 	  GtcsTcpSocket.o \

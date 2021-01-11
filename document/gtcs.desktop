@@ -1,0 +1,8 @@
+[Desktop Entry] 
+
+Type=Application
+
+//Exec=python3.7 /home/kls/project/gtcs/gtcsdriver.py
+//Exec=python3.7 /home/kls/project/gtcs/gtcsmain23.py
+Exec=./project/gtcsdriver
+Exec=./project/main23

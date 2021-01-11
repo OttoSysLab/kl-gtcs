@@ -82,7 +82,7 @@ public:
     }; 
     GtcsCtrlTelegramStrcut loosen = {
         .u16Ctrlflags     = 0,          // 
-        .u16ControlMode   = 1,          // Manuala mode = 0,Process mode = 1,
+        .u16ControlMode   = 0,          // Manuala mode = 0,Process mode = 1,
         .u16WorkProc      = 4249,       
         .u16CtrlProgram   = 1,
         .u16ManRpm        = 1000,
@@ -331,23 +331,6 @@ private:
     ComPort comm;
     char com_name[128];
     int com_num = 0; 
-
-    #pragma region RW MCB Parameter. 
-    // // Identification Parameter.(MainID = 1)
-    // int ReadIdentificationParameter();
-    // int WriteIdentificationParameter();
-    // // Basic Parameter.(MainID = 2)
-    // int ReadBasicParameter();    
-    // int WriteBasicParameter(McbID2Struct *basic);
-    // // Write to mcb flash.
-    // int WriteToMcbFlash(int mainid,int subid ,int add_num); // mainid = 7 , subid = 11(step) ,subid = 12 (Process)
-    // // Step Parameter. (Main ID = 3)
-    // int ReadStepParametrer(int mainid);
-    // int WriteStepParameter(McbID3Struct *step_para,int mainid);
-    // // Prcoess Parameter.(Main ID = 4)
-    // int ReadProcessParameter(int processnum);
-    // int WriteProcessParameter(McbID4Struct *process,int processid); 
-    #pragma endregion
 
 public:
     ~GtcsMcbComm();    

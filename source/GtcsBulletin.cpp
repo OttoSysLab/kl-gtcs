@@ -15,7 +15,9 @@
 #pragma region Signalton.
 // Constructor.
 GtcsBulletin::GtcsBulletin(/* args */)
-{}
+{
+    InitialGtcsBulletin();
+}
 // Distructor.
 GtcsBulletin::~GtcsBulletin()
 {}
@@ -29,5 +31,21 @@ GtcsBulletin* GtcsBulletin::GetInstance()
     }
     return instance;
 }
+
+bool GtcsBulletin::InitialGtcsBulletin()
+{
+    #pragma region 
+    // CMD300Struct->CMD300Struct = {
+    //     .str1 = "CMD300",                                   
+    //     .str2 = "yyyyMMdd HH:mm:ss",                                         
+    //     .str3 = "0",                                        
+    //     .str4 = "0",
+    //     .str5 = "\n\r",
+    // };// CMD300, 回復確認.
+    #pragma endregion
+
+    return true;
+}
+
 #pragma endregion
 

@@ -367,7 +367,10 @@ bool GtcsManager::SetSystemBasicParameter(AmsCMD340Struct &amscmd,GtcsDatabaseBa
 
     // step 5 : Set ANS340
     SetAmsCmdBaiscParaToAns(bulletin->AmsBulletin.ANS340Struct,bulletin->AmsBulletin.CMD340Struct);
-
+    
+    // Check OK!!
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    bulletin->checksysok = true;
     return true;
 }
 // Check Ui Setting FSM.
@@ -404,6 +407,7 @@ bool GtcsManager::CheckUiSettingFSM(int uicmd)
         {
             return false;
         }
+        
         break;
     default:
         return false;
@@ -554,6 +558,50 @@ bool GtcsManager::SetDatabaseBasicParaToAns(AmsANS340Struct &amsans,GtcsDatabase
     amsans.str39 = db_basic.data["motswver"];         // MotSWVer
     return true;
 }
+
+// Set AMS Bulletin Basic Parameter.
+bool GtcsManager::SetDatabaseBasicParaToReq(AmsREQ301Struct &amsreq,GtcsDatabaseBasicInfo &db_basic)
+{
+    // GtcsBulletin *bulletin = GtcsBulletin::GetInstance();
+    // Setting REQ301 value.
+    amsreq.str5  = db_basic.data["mintemp"];          // Min temperature
+    amsreq.str6  = db_basic.data["maxtemp"];          // Max temperature
+    amsreq.str7  = db_basic.data["maxcurrent"];       // Max current
+    amsreq.str8  = db_basic.data["maxpeakcurrent"];   // Max peak current
+    amsreq.str9  = db_basic.data["torquesensortype"]; // torque sensor type
+    amsreq.str10 = db_basic.data["maxdutycycle"];     // Max duty cycle
+    amsreq.str11 = db_basic.data["maxtorque"];        // Max torque
+    amsreq.str12 = db_basic.data["pwmfreq"];          // PWM frequency
+    amsreq.str13 = db_basic.data["maxrpm"];           // Max rpm
+    amsreq.str14 = db_basic.data["maxslope"];         // Max slope
+    amsreq.str15 = db_basic.data["minbusvolt"];       // Min bus voltage
+    amsreq.str16 = db_basic.data["maxbusvolt"];       // Max bus voltage
+    amsreq.str17 = db_basic.data["startdutycycle"];   // Start duty cycle
+    amsreq.str18 = db_basic.data["gearboxratio"];     // Gear box ratio
+    amsreq.str19 = db_basic.data["startinp"];         // Start input source
+    amsreq.str20 = db_basic.data["revinp"];           // Reverse ipnut source
+    amsreq.str21 = db_basic.data["revrpm"];           // Reverse rpm
+    amsreq.str22 = db_basic.data["revslope"];         // Reverse slope
+    amsreq.str23 = db_basic.data["revmaxcurrent"];    // Reverse max current
+    amsreq.str24 = db_basic.data["revmaxtorque"];     // Reverse max torque
+    amsreq.str25 = db_basic.data["erroridletime"];    // Error idle time
+    amsreq.str26 = db_basic.data["backlash"];         // Bachlash
+    amsreq.str27 = db_basic.data["pgain"];            // Proportional gain
+    amsreq.str28 = db_basic.data["igain"];            // Integral gain
+    amsreq.str29 = db_basic.data["encoder"];          // Encoder
+    // New
+    amsreq.str30 = db_basic.data["mintorque"];        // Min Torque
+    amsreq.str31 = db_basic.data["minrpm"];           // Min RPM
+    amsreq.str32 = db_basic.data["revminrpm"];        // Reverse Min RPM
+    amsreq.str33 = db_basic.data["dmsswver"];         // DmsSWVer
+    amsreq.str34 = db_basic.data["dmscoreid"];        // DmsCoreID
+    amsreq.str35 = db_basic.data["dmssernr"];         // DmsSerNr
+    amsreq.str36 = db_basic.data["led"];              // Led
+    amsreq.str37 = db_basic.data["lever_sensitivity"];// Lever Sensitivity
+    amsreq.str38 = db_basic.data["push_sensitivity"]; // Push Sensitivity
+    amsreq.str39 = db_basic.data["motswver"];         // MotSWVer
+    return true;
+}
 // Check Request Status from UI.
 bool GtcsManager::CheckUiRequestCmd(std::string reqest_string)
 {
@@ -673,7 +721,7 @@ bool GtcsManager::CheckGtcsSystem()
     }
     else
     {
-        SetDatabaseBasicParaToAns(bulletin->AmsBulletin.ANS340Struct,basic_ramdisk); // DB_basic -> ams_ans340.
+        SetDatabaseBasicParaToReq(bulletin->AmsBulletin.REQ301Struct,basic_ramdisk); // DB_basic -> ams_ans340.
         SetMainFSM(MAIN_FSM::SETTING);
     }
 

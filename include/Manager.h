@@ -2,16 +2,16 @@
 #define _GTCS_MANAGER_
 #pragma once
 /*=======================================================================================
- Program Nane  	: gtcs_tlg_decoder.c     
- Subject 		: SARM Serial Port Communication Driver Process                                  
+ Program Nane  	: gtcs_tlg_decoder.c
+ Subject 		: SARM Serial Port Communication Driver Process
 ---------------------------------------------------------------------------------------
- Compiler/IDE  	: gcc 4.6.3                                                             
- Library       	:                                                                       
- Commands      	: Geany Build Command 
-  				: Compile : gcc -Wall -I"../inc" -c "%f" 
-  				: Buid 	  : gcc -Wall -o "%e" "%f" "sarm2pcb.c" "pcb2sarm.c" "../lib/sarmdb.c" "../lib/sarmcomm.c" "../lib/sarmutility.c" -I"../inc" -l"sqlite3" -l"X11" `pkg-config --cflags --libs gtk+-3.0` -export-dynamic                                   
- Programmer    	: Otto Chang                                                                   
- Date	       	: 2019/08/06                                                         
+ Compiler/IDE  	: gcc 4.6.3
+ Library       	:
+ Commands      	: Geany Build Command
+  				: Compile : gcc -Wall -I"../inc" -c "%f"
+  				: Buid 	  : gcc -Wall -o "%e" "%f" "sarm2pcb.c" "pcb2sarm.c" "../lib/sarmdb.c" "../lib/sarmcomm.c" "../lib/sarmutility.c" -I"../inc" -l"sqlite3" -l"X11" `pkg-config --cflags --libs gtk+-3.0` -export-dynamic
+ Programmer    	: Otto Chang
+ Date	       	: 2019/08/06
 =======================================================================================*/
 #include "GtcsBulletin.h"
 #include "GtcsGloabDefine.h"
@@ -20,16 +20,7 @@
 #include "GtcsDatabase.h"
 #include "GtcsTcpSocket.h"
 
-// #include "Common.h"
-// #include <iostream>
-// #include <string.h>
-// #include <ctime>
-
-// #define SETTING_READY -1
-// #define SETTING_OK 0
-// #define SETTING_NG 1
-
-#pragma region 
+#pragma region
 class Manager
 {
 private:
@@ -37,14 +28,11 @@ private:
 public:
     Manager(/* args */);
     ~Manager();
-    // 
-    int MainFSM = MAIN_FSM::INITIAL;                         // READY    
+    //
+    int MainFSM = MAIN_FSM::INITIAL;                         // READY
     // Get & Set MAIN FSM.
     int GetMainFSM();
     void SetMainFSM(int main_fsm);
-    // virtual int CheckMainFSM(int main_fsm){}=0;
-    // virtual int CheckMainFSM(int main_fsm){};
-    int CheckMainFSM(int main_fsm);
 };
 
 // NTCS manager.
@@ -55,7 +43,6 @@ private:
 public:
     NtcsManager(/* args */);
     ~NtcsManager();
-    // int CheckMainFSM(int main_fsm);
 };
 
 // GTCS manager.
@@ -63,28 +50,29 @@ class GtcsManager : public Manager
 {
 private:
     // Attribute.
-    GtcsBulletin *bulletin = GtcsBulletin::GetInstance(); 
-    GtcsMcbComm *mcb       = GtcsMcbComm::GetInstance(); 
+    GtcsBulletin *bulletin = GtcsBulletin::GetInstance();
+    GtcsMcbComm *mcb       = GtcsMcbComm::GetInstance();
     GtcsAmsProtocol *ams = GtcsAmsProtocol::GetInstance();
     // method.
     std::string GetMcbRtStatusString(MCB_RT_STATUS status);
     std::string GetToolRunTimeStatus();
-    bool CheckUiSettingFSM(int uicmd);    
+    bool CheckUiSettingFSM(int uicmd);
 
     std::string comport_name = "";
     std::string db_emmc_Path = "";     // Initial database path.
     std::string db_ramdisk_Path = "";  // Initial database path.
 
-    // 
+    //
     bool CopyDatabase(std::string destination ,std::string source);
-    bool UpdateMcbBasicParaToDB(GtcsDatabase &db,GtcsDatabaseBasicInfo &db_basic,McbID2Struct &mcb_basic); 
+    bool UpdateMcbBasicParaToDB(GtcsDatabase &db,GtcsDatabaseBasicInfo &db_basic,McbID2Struct &mcb_basic);
     bool CompareBasicStruct(GtcsDatabaseBasicInfo &emmc,GtcsDatabaseBasicInfo &ramdisk);
     bool SetSystemBasicParameter(AmsCMD340Struct &amscmd,GtcsDatabaseBasicStruct &db_basic,McbID2Struct &mcb_basic);
-    
+
     // AMS Protocol.
-    bool SetDatabaseBasicParaToAns(AmsANS340Struct &amsans,GtcsDatabaseBasicInfo &db_basic);   // DB_BASIC  ->AMS_ANS340 
+    bool SetDatabaseBasicParaToAns(AmsANS340Struct &amsans,GtcsDatabaseBasicInfo &db_basic);   // DB_BASIC  ->AMS_ANS340
+    bool SetDatabaseBasicParaToReq(AmsREQ301Struct &amsreq,GtcsDatabaseBasicInfo &db_basic);   // DB_BASIC  ->AMS_REQ301
     bool SetAmsCmdBaiscParaToAns(AmsANS340Struct &amsans,AmsCMD340Struct &amscmd);             // AMS_CMD340->AMS_ANS340
-    bool ConvertReadlTimeActuralValue();                                                       // GTCS AMS DATA300  
+    bool ConvertReadlTimeActuralValue();                                                       // GTCS AMS DATA300
     bool ConvertAmsBasicToMcbStruct(AmsCMD340Struct &amscmd,McbID2Struct &basic_para);         // AMC_CMD340->DB_Struct
 public:
     // Constructor.
@@ -96,7 +84,7 @@ public:
     void SetMcbPortName(std::string comname);
     void SetEmmcDatabasePath(std::string Path);
     void SetRamdiskDatabasePath(std::string Path);
-    
+
     // Tcp Socke server.
     std::string GetGtcsTcpSocketServerIP();
     void SetGtcsTcpSocketServerIP(std::string ipaddr);
@@ -107,7 +95,7 @@ public:
     std::string GetUiResponseCmd(std::string uicmd_string);
     bool GetUiSettingStatus();
     void SetUiSettingStatus(bool status);
-    
+
     // Gtcs System Main state.(MAIN)FSM)
     bool InitialGtcsSystem();
     bool CheckGtcsSystem();

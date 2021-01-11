@@ -25,7 +25,7 @@ int main()
     manager.SetEmmcDatabasePath("/var/www/html/database/tcs.db");
     manager.SetRamdiskDatabasePath("/mnt/ramdisk/tcs.db");
     #ifdef _DEBUG_MODE_
-    manager.SetGtcsTcpSocketServerIP("192.168.0.207");
+    manager.SetGtcsTcpSocketServerIP("192.168.0.207"); // OTTO : 207,ERIC : 202
     #else
     manager.SetGtcsTcpSocketServerIP("127.0.0.1");
     #endif    

@@ -631,24 +631,23 @@ std::string GtcsManager::GetGtcsTcpSocketServerIP()
 {
     return bulletin->TcpServer.GetIpAddress();
 }  
-void GtcsManager::SetGtcsTcpSocketServerIP(std::string ipaddr)
-{
-    bulletin->TcpServer.SetIpAddress(ipaddr);
-}
 int GtcsManager::GetGtcsTcpSocketServerPort()
 {
     return bulletin->TcpServer.GetPort();
 }
-void GtcsManager::SetGtcsTcpSocketServerPort(int port)
+bool GtcsManager::SetGtcsTcpSocketServerInfo(std::string ip ,int port)
 {
+    bulletin->TcpServer.SetIpAddress(ip);
     bulletin->TcpServer.SetPortNum(port);
+    return true;
 }
 // Initial Gtcs System.
 bool GtcsManager::InitialGtcsSystem()
 {
-    std::this_thread::sleep_for(std::chrono::milliseconds(200));  // Thread sleep 1s.
     // Initial MCB Com.
     mcb->InitialMcbComPort(comport_name);
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));  // Thread sleep 1s.
+    // std::this_thread::sleep_for(std::chrono::milliseconds(200));  // Thread sleep 1s.
     for(int index=0;index<5;index++)
     {
         mcb->NormalPollingToMcb();
@@ -762,10 +761,6 @@ bool GtcsManager::SettingGtcsSystem()
             {
                 SetMainFSM(MAIN_FSM::READY);
             }   
-        //     else
-        //     {
-        //         SetMainFSM(MAIN_FSM::SETTING);
-        //     }
         }
     }
     else

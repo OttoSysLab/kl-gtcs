@@ -16,7 +16,7 @@
 // Constructor.
 GtcsBulletin::GtcsBulletin(/* args */)
 {
-    InitialGtcsBulletin();
+    // InitialGtcsBulletin();
 }
 // Distructor.
 GtcsBulletin::~GtcsBulletin()
@@ -42,6 +42,7 @@ bool GtcsBulletin::InitialGtcsBulletin()
     //     .str4 = "0",
     //     .str5 = "\n\r",
     // };// CMD300, 回復確認.
+    
     #pragma endregion
 
     return true;

@@ -26,13 +26,11 @@ int main()
     manager.SetRamdiskDatabasePath("/mnt/ramdisk/tcs.db");
     
     #ifdef _DEBUG_MODE_
-    manager.SetGtcsTcpSocketServerIP("192.168.0.207"); // OTTO : 207,ERIC : 202
+    manager.SetGtcsTcpSocketServerInfo("192.168.0.207",9000); // OTTO : 207,ERIC : 202
     #else
-    manager.SetGtcsTcpSocketServerIP("127.0.0.1");
+    manager.SetGtcsTcpSocketServerInfo("127.0.0.1",9000); 
     #endif    
-    manager.SetGtcsTcpSocketServerPort(9000);
-    std::this_thread::sleep_for(std::chrono::milliseconds(200));  // Thread sleep 1s.
-    
+    // manager.SetGtcsTcpSocketServerPort(9000);    
     manager.InitialGtcsSystem();
     
     // Check GTCS System.

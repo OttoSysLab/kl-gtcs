@@ -22,17 +22,15 @@ class AMSBulletin
 private:
     /* data */
 public:
-    #pragma region CMD
+    
+    #pragma region CMD    
     AmsCMD300Struct CMD300Struct = {
         .str1 = "CMD300",                                   
         .str2 = "yyyyMMdd HH:mm:ss",                                         
         .str3 = "0",                                        
         .str4 = "0",
         .str5 = "\n\r",
-    };// CMD300, 回復確認.
-
-    // AmsCMD300Struct *CMD300Struct;
-    
+    };// CMD300, 回復確認.   
     AmsCMD301Struct CMD301Struct = {
         .str1 = "CMD301",                                   // Header+DATA
         .str2 = "yyyyMMdd HH:mm:ss",                        // yyyyMMdd HH:mm:ss

@@ -87,9 +87,8 @@ public:
 
     // Tcp Socke server.
     std::string GetGtcsTcpSocketServerIP();
-    void SetGtcsTcpSocketServerIP(std::string ipaddr);
+    bool SetGtcsTcpSocketServerInfo(std::string ip,int port);
     int GetGtcsTcpSocketServerPort();
-    void SetGtcsTcpSocketServerPort(int port);
     bool CheckUiRequestCmd(std::string reqest_string);
     std::string GetUiRequestCmd();
     std::string GetUiResponseCmd(std::string uicmd_string);

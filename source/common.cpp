@@ -12,7 +12,23 @@
 =======================================================================================*/
 #include "common.h"
 
-// Convert int to 8 bites array.
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2021/01/12
+ *
+ *  @fn      BitArray::To8BiteArray(int num)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   int num
+ *
+ *  @return  std::array<bool,8>
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 std::array<bool,8> BitArray::To8BiteArray(int num)
 {
     std::array<bool,8> result;
@@ -30,6 +46,23 @@ std::array<bool,8> BitArray::To8BiteArray(int num)
     }
     return result;
 }
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 // Convert int to 16 bites array.
 std::array<bool,16> BitArray::To16BiteArray(int num)
 {
@@ -48,6 +81,23 @@ std::array<bool,16> BitArray::To16BiteArray(int num)
     }
     return result;
 }
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 // Convert int to 32 bites array.
 std::array<bool,32> BitArray::To32BiteArray(int num)
 {
@@ -66,6 +116,23 @@ std::array<bool,32> BitArray::To32BiteArray(int num)
     }
     return result;
 }
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 // Convert 8 bites array to uint8_t.
 uint8_t BitConverter::ToUInt8(std::array<bool,8> array)
 {
@@ -85,6 +152,23 @@ uint8_t BitConverter::ToUInt8(std::array<bool,8> array)
     }
     return result;
 }
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 // Convert 16 bites array to uint16_t.
 uint16_t BitConverter::ToUInt16(std::array<bool,16> array)
 {
@@ -104,6 +188,23 @@ uint16_t BitConverter::ToUInt16(std::array<bool,16> array)
     }
     return result;
 }
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 // Convert 32 bites array to uint32_t.
 uint32_t BitConverter::ToUInt32(std::array<bool,32> array)
 {
@@ -123,7 +224,23 @@ uint32_t BitConverter::ToUInt32(std::array<bool,32> array)
     }
     return result;
 }
-
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 // Get scale sort string.
 std::string DataSorter::GetFloatScaleSortString(float src,int scalenum)
 {

@@ -12,6 +12,23 @@
 =======================================================================================*/
 #include "comport.h"
 
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 // Initial.
 int ComPort::InitialComm(char *P_port_name){
     int 			L_fd;
@@ -70,7 +87,23 @@ int ComPort::InitialComm(char *P_port_name){
         return 0;
     }
 };
-// 
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 int ComPort::SendChar(int P_CommPort, unsigned char P_Value){
     char L_WriteBuffer[1];
     int  L_BytesWritten = 0;
@@ -84,6 +117,23 @@ int ComPort::SendChar(int P_CommPort, unsigned char P_Value){
     }
     return L_BytesWritten;
 };
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 // Read cpomport data.
 int ComPort::ReadData(int openCommPort,std::array<uint8_t,1024> &read_array)
 {

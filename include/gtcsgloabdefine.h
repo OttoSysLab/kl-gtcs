@@ -1,7 +1,5 @@
-#ifndef _GTCS_TYPE_DEFINE_
-#define _GTCS_TYPE_DEFINE_
-#define _GTCS_TEST_
 #pragma once
+#define _DEBUG_MODE_
 /*=======================================================================================
  Program Nane  	: gtcs_tlg_decoder.c     
  Subject 		: SARM Serial Port Communication Driver Process                                  
@@ -21,7 +19,6 @@
 #include <iostream>
 #include <cmath>
 #include <ctime>
-#include <array>
 
 #pragma region GTCS MCB Protcol
 #pragma region Parameter
@@ -41,21 +38,7 @@ enum MCB_TELEGRAM_TYPE : uint8_t{
     STEP_REQUEST     = 14,
     STEP_RESPONSE    = 15,
 };
-
-enum MCB_RT_STATUS : int{
-    OK          = 1,
-    OK_SEQUENCE,
-    OK_JOB     ,
-    NG_F       , 
-    NS_F       ,
-    NGQ        ,
-    NGA        ,
-    NG_MCB     ,
-    RUNNING    ,
-    REVERSE    ,
-    IDLE       ,
-};
-
+// MAIN_FSM
 enum MAIN_FSM : int{
     READY = 0,
     SETTING,
@@ -63,19 +46,6 @@ enum MAIN_FSM : int{
     CHECK_SYS,
     INITIAL,
 };
-
-// enum DB_FSM :int {
-//     R_RAM_BAIIC_PARA = 0,
-//     W_RAM_BAIIC_PARA ,
-// };
-// Enum MCB finite-state-machine status.
-// enum MCB_FSM:int {
-//     NORMAL_POLLING = 0,
-//     ADVANCE_POLLING,
-//     SETTING_CTRL_TELEGRAM,
-//     WRITE_MCB_BASIC,
-//     READ_MCB_BASIC,
-// };
 // TMD OUTPUT
 enum TMD_OUTPUT:int {
     LED_1 = 0,
@@ -107,7 +77,22 @@ enum CTRL_FLAGS_IDX:int{
     SC_REVERSE        = 14,
     SC_START          = 15,      
 };
-
+// 
+enum LOCKED_STATUS : int {
+    RUNNING = 0,
+    REVERSE,
+    IDLE,
+    OK,
+    OK_SEQUENCE,
+    OK_JOB,
+    NG_F,
+    NS_F,
+    NGQ,
+    NGA,
+    NG_MCB,
+    NGR,
+    NGT,
+};
 // MCB status flags.
 enum STATUS_FlAGS_IDX:int{
     TORQUE_MCU_PRSESENT     = 7,         // Flag 7
@@ -1020,6 +1005,29 @@ typedef struct
     std::string end;               // CL,RF
 }GtcsDatabaseBasicStruct;
 
+#pragma region  Screw sequence monitor
+class ScrewSequenceHanlder
+{
+public:
+    ScrewSequenceHanlder(){};
+    ~ScrewSequenceHanlder(){};
+    int statusnum = (int)LOCKED_STATUS::IDLE;
+};
+// Gtcs
+class GtcsScrewSequenceHandler : public ScrewSequenceHanlder
+{
+private:
+    /* data */
+public:
+    GtcsScrewSequenceHandler(/* args */);
+    ~GtcsScrewSequenceHandler();
+    std::string lockedmessage = "___________";
+    bool screwok = false;    
+};
+
+#pragma endregion
+
+#pragma region database
 // Database.
 class GtcsDatabaseBaseInfo
 {
@@ -1051,6 +1059,5 @@ public:
     void InitialColumnType();
     void InitialColumnName();
 };
-
 #pragma endregion
-#endif
+#pragma endregion

@@ -15,7 +15,6 @@
 =======================================================================================*/
 #include "gtcsgloabdefine.h"
 #include <array>
-// #include <iostream>
 
 // #endif
 class Common

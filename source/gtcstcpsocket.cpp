@@ -12,6 +12,23 @@
 =======================================================================================*/
 #include "gtcstcpsocket.h"
 
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 // Constructor.
 TcpSocket::TcpSocket()
 {}
@@ -22,6 +39,23 @@ GtcsTcpSocket::GtcsTcpSocket(/* args */)
 {}
 GtcsTcpSocket::~GtcsTcpSocket()
 {}
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 void GtcsTcpSocket::GtcsTcpSocketServerHandler()
 {
 	// GtcsBulletin *bulletin = GtcsBulletin::GetInstance();
@@ -90,21 +124,15 @@ void GtcsTcpSocket::GtcsTcpSocketServerHandler()
         }
         else
         {
-            // bulletin->uisetting = true;
             manager.SetUiSettingStatus(true);
-
         }
         // Waiting for app to process CMD.
-        // while(bulletin->uisetting)
         while (manager.GetUiSettingStatus()==true)        
         {
-            // std::cout << bulletin->uisockrevcmd << std::endl;
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
-
         // Send data to tcpclient.
         std::fill_n(sendbuff,sizeof(sendbuff),0);   
-        // strcpy(sendbuff,manager.GetUiCmdResponse(bulletin->uisockrevcmd).c_str());
         strcpy(sendbuff,manager.GetUiResponseCmd(socketrevcmd).c_str());
         // socketrevcmd = manager.GetUiResponseCmd(socketrevcmd);
         if (send(connfd,sendbuff,sizeof(sendbuff),0)<0)

@@ -13,6 +13,23 @@
 #include "../include/gtcsbulletin.h"
 
 #pragma region Signalton.
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 // Constructor.
 GtcsBulletin::GtcsBulletin(/* args */)
 {
@@ -31,7 +48,23 @@ GtcsBulletin* GtcsBulletin::GetInstance()
     }
     return instance;
 }
-
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 bool GtcsBulletin::InitialGtcsBulletin()
 {
     #pragma region 

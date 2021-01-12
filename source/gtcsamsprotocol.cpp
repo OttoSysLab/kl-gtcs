@@ -13,6 +13,23 @@
 #include "../include/gtcsamsprotocol.h"
 
 #pragma region Signalton.
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 // Constructor.
 GtcsAmsProtocol::GtcsAmsProtocol(/* args */)
 {}
@@ -30,7 +47,23 @@ GtcsAmsProtocol* GtcsAmsProtocol::GetInstance()
     return instance;
 }
 #pragma endregion
-
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 // Get AMS string 
 int GtcsAmsProtocol::ConvertToProtocolString(std::string *ptr,std::string & result)
 {
@@ -50,6 +83,23 @@ int GtcsAmsProtocol::ConvertToProtocolString(std::string *ptr,std::string & resu
     result += "}";
     return 0;
 }
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 int GtcsAmsProtocol::GetAmsSymmetryCmdNumver(int amscmd)
 {
     int result = 0;
@@ -98,6 +148,23 @@ int GtcsAmsProtocol::GetAmsSymmetryCmdNumver(int amscmd)
     }
     return result;
 }
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 // Get AMS Protocol string from bulletin.
 std::string GtcsAmsProtocol::GetAmsBulletin(int amscmd)
 {
@@ -206,6 +273,23 @@ std::string GtcsAmsProtocol::GetAmsBulletin(int amscmd)
     //  std::cout<<result<<std::endl;
     return result;
 }
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 // Split String.
 std::vector<std::string> GtcsAmsProtocol::SplitString(const std::string & str,const std::string& pattern)
 {
@@ -234,6 +318,23 @@ std::vector<std::string> GtcsAmsProtocol::SplitString(const std::string & str,co
   	}
   	return result; 
 }
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 // Get Ams SpliteArray.
 std::vector<std::string> GtcsAmsProtocol::GetAmsSpliteArray(const std::string & str)
 {
@@ -243,6 +344,23 @@ std::vector<std::string> GtcsAmsProtocol::GetAmsSpliteArray(const std::string & 
     result = SplitString(splite_2[0],",");  // 分結果
     return result;
 }
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 // Get CMD enum number. 
 int GtcsAmsProtocol::GetAmsCmdNum(std::string amscmd)
 {
@@ -273,6 +391,23 @@ int GtcsAmsProtocol::GetAmsCmdNum(std::string amscmd)
     
     return result;    
 }
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 // Update Protocol Struct.
 int GtcsAmsProtocol::UpdateProtocolStruct(std::string* ptr,std::vector<std::string>& ams_array)
 {
@@ -295,6 +430,23 @@ int GtcsAmsProtocol::UpdateProtocolStruct(std::string* ptr,std::vector<std::stri
     }
     return 0;
 }
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 // Set AMS Protocol struct to bulletin.
 std::string GtcsAmsProtocol::SetAmsBulletin(std::string ams_string)
 {

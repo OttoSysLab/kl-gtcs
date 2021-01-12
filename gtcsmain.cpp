@@ -30,7 +30,6 @@ int main()
     #else
     manager.SetGtcsTcpSocketServerInfo("127.0.0.1",9000); 
     #endif    
-    // manager.SetGtcsTcpSocketServerPort(9000);    
     manager.InitialGtcsSystem();
     
     // Check GTCS System.
@@ -47,15 +46,21 @@ int main()
         switch(manager.GetMainFSM())
         {
             case MAIN_FSM::READY:
+                #ifdef _DEBUG_MODE_
                 std::cout << "CheckMainFSM = READY" << std::endl;
+                #endif
                 manager.RunGtcsSystem();
                 break;
             case MAIN_FSM::ALARM:
+                #ifdef _DEBUG_MODE_
                 std::cout << "CheckMainFSM = ALARM" << std::endl;
+                #endif
                 manager.ClearGtcsSystemAlarm();
                 break;
             case MAIN_FSM::SETTING:
+                #ifdef _DEBUG_MODE_
                 std::cout << "CheckMainFSM = SETTING" << std::endl;
+                #endif
                 manager.SettingGtcsSystem();
                 break;
         }

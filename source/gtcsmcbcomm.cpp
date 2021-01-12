@@ -13,6 +13,23 @@
 #include "../include/gtcsmcbcomm.h"
 
 #pragma region Status
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 // Check TMS status.
 int StatusTelegram::CheckLoosenStatus(uint16_t last_status_flags,uint16_t current_status_flags)
 {
@@ -38,6 +55,23 @@ int StatusTelegram::CheckLoosenStatus(uint16_t last_status_flags,uint16_t curren
 #pragma endregion
 
 #pragma region telegram strcut define.
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 // Telegram Construct.
 TelegramStruct::TelegramStruct()
 {}
@@ -55,6 +89,23 @@ int TelegramStruct::InitialTelegramArray()
     }
     return result;
 }
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 // Encode Ctrl telegram payload array.
 int TelegramStruct::EncodeTelegramArray()
 {
@@ -68,6 +119,23 @@ int TelegramStruct::EncodeTelegramArray()
     telegram_array[47] = crccheck.crc32_value[3];
     return result;
 }
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 // Encode Header array.
 int TelegramStruct::EncodeHeaderArray()
 {
@@ -85,6 +153,23 @@ int TelegramStruct::EncodeHeaderArray()
     }
     return result;
 }
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 // Ctrl telegram flags configuration.
 int CtrlTelegram::InitialCtrlFlags(GtcsCtrlTelegramStrcut *telegram)
 {
@@ -98,6 +183,23 @@ int CtrlTelegram::SetCtrlFlags(GtcsCtrlTelegramStrcut *telegram,int flagIdx)
     telegram->u16Ctrlflags |= 1<<flagIdx;
     return result;
 }
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 // Encode Ctrl telegram payload array.
 int CtrlTelegram::EncodeTelegramArray(GtcsCtrlTelegramStrcut *ptr_ctrl_telegram,int length)
 {
@@ -125,7 +227,23 @@ int CtrlTelegram::EncodeTelegramArray(GtcsCtrlTelegramStrcut *ptr_ctrl_telegram,
     telegram_array[47] = crccheck.crc32_value[3];
     return result;
 }
-// GTCS
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 int StatusTelegram::DecodeTelegramArray()
 {
     int result = -1;
@@ -168,6 +286,23 @@ int StatusTelegram::DecodeTelegramArray()
     return result;
 }
 #pragma endregion
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 // Constructor.
 GtcsMcbComm::GtcsMcbComm(/* args */)
 {}
@@ -186,6 +321,23 @@ GtcsMcbComm* GtcsMcbComm::GetInstance()
     return instance;
 }
 #pragma region RW MCB Paramter.
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 // Identification Parameter.(MainID = 1)
 int GtcsMcbComm::ReadIdentificationParameter()
 {
@@ -197,13 +349,28 @@ int GtcsMcbComm::WriteIdentificationParameter()
     int result = -1;
     return result;
 }
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 // Basic Parameter.(MainID = 2)
 int GtcsMcbComm::ReadBasicParameter(McbID2Struct &basic_para)
 {
     int result = -1;
-    // Get
-    // GtcsBulletin *bulltein = GtcsBulletin::GetInstance();
-    // McbID2Struct *basic_para = &bulltein->McbBulletin.BasicPara;
+    // Initial value.
     uint8_t main_id = 2;
     uint8_t sub_id[6];
     uint16_t payload_start_index = 8;
@@ -615,40 +782,58 @@ int GtcsMcbComm::ReadBasicParameter(McbID2Struct &basic_para)
                              ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+5]<<8);  // SID = 25
     // telegram.rw_response.InitialTelegramArray();
     #pragma endregion
-    #pragma region diaplay.
-    // // Display package 1.
-    // std::cout << "basic_para.s16MinTemp = " << std::to_string(basic_para.s16MinTemp) << std::endl;
-    // std::cout << "basic_para.s16MaxTemp = " << std::to_string(basic_para.s16MaxTemp) << std::endl;
-    // std::cout << "basic_para.u16MaxCurrent = " << std::to_string(basic_para.u16MaxCurrent) << std::endl;
-    // std::cout << "basic_para.u16MaxPeakCurrent = " << std::to_string(basic_para.u16MaxPeakCurrent) << std::endl;
-    // std::cout << "basic_para.u16TorqueSensorType = " << std::to_string(basic_para.u16TorqueSensorType) << std::endl;
-    // std::cout << "basic_para.u16MaxDutyCycle = " << std::to_string(basic_para.u16MaxDutyCycle) << std::endl;
-    // // Display package 2.
-    // std::cout << "basic_para.u16MaxTorque = " << std::to_string(basic_para.u16MaxTorque) << std::endl;
-    // std::cout << "basic_para.u16PWMFreq = " << std::to_string(basic_para.u16PWMFreq) << std::endl;
-    // std::cout << "basic_para.u16MaxRPM = " << std::to_string(basic_para.u16MaxRPM) << std::endl;
-    // std::cout << "basic_para.u16MaxSlope = " << std::to_string(basic_para.u16MaxSlope) << std::endl;
-    // std::cout << "basic_para.u16MinBusVolt = " << std::to_string(basic_para.u16MinBusVolt) << std::endl;
-    // std::cout << "basic_para.u16MaxBusVolt = " << std::to_string(basic_para.u16MaxBusVolt) << std::endl;
-    // // Display package 3.
-    // std::cout << "basic_para.u16StartDutyCycle = " << std::to_string(basic_para.u16StartDutyCycle) << std::endl;
-    // std::cout << "basic_para.u16GearBoxRatio = " << std::to_string(basic_para.u16GearBoxRatio) << std::endl;
-    // std::cout << "basic_para.u32StartInp = " << std::to_string(basic_para.u32StartInp) << std::endl;
-    // std::cout << "basic_para.u32RevInp = " << std::to_string(basic_para.u32RevInp) << std::endl;
-    // std::cout << "basic_para.u16RevRpm = " << std::to_string(basic_para.u16RevRpm) << std::endl;
-    // std::cout << "basic_para.u16RevSlope = " << std::to_string(basic_para.u16RevSlope) << std::endl;
-    // // Display package 4.
-    // std::cout << "basic_para.u16RevMaxCurrent = " << std::to_string(basic_para.u16RevMaxCurrent) << std::endl;
-    // std::cout << "basic_para.u16RevMaxTorque = " << std::to_string(basic_para.u16RevMaxTorque) << std::endl;
-    // std::cout << "basic_para.u16ErrorIdleTime = " << std::to_string(basic_para.u16ErrorIdleTime) << std::endl;
-    // std::cout << "basic_para.u16BackLash = " << std::to_string(basic_para.u16BackLash) << std::endl;
-    // std::cout << "basic_para.u16PGain = " << std::to_string(basic_para.u16PGain) << std::endl;
-    // std::cout << "basic_para.u16IGain = " << std::to_string(basic_para.u16IGain) << std::endl;
+
+    #ifdef _DEBUG_MODE_
+    // Display package 1.
+    std::cout << "basic_para.s16MinTemp = " << std::to_string(basic_para.s16MinTemp) << std::endl;
+    std::cout << "basic_para.s16MaxTemp = " << std::to_string(basic_para.s16MaxTemp) << std::endl;
+    std::cout << "basic_para.u16MaxCurrent = " << std::to_string(basic_para.u16MaxCurrent) << std::endl;
+    std::cout << "basic_para.u16MaxPeakCurrent = " << std::to_string(basic_para.u16MaxPeakCurrent) << std::endl;
+    std::cout << "basic_para.u16TorqueSensorType = " << std::to_string(basic_para.u16TorqueSensorType) << std::endl;
+    std::cout << "basic_para.u16MaxDutyCycle = " << std::to_string(basic_para.u16MaxDutyCycle) << std::endl;
+    // Display package 2.
+    std::cout << "basic_para.u16MaxTorque = " << std::to_string(basic_para.u16MaxTorque) << std::endl;
+    std::cout << "basic_para.u16PWMFreq = " << std::to_string(basic_para.u16PWMFreq) << std::endl;
+    std::cout << "basic_para.u16MaxRPM = " << std::to_string(basic_para.u16MaxRPM) << std::endl;
+    std::cout << "basic_para.u16MaxSlope = " << std::to_string(basic_para.u16MaxSlope) << std::endl;
+    std::cout << "basic_para.u16MinBusVolt = " << std::to_string(basic_para.u16MinBusVolt) << std::endl;
+    std::cout << "basic_para.u16MaxBusVolt = " << std::to_string(basic_para.u16MaxBusVolt) << std::endl;
+    // Display package 3.
+    std::cout << "basic_para.u16StartDutyCycle = " << std::to_string(basic_para.u16StartDutyCycle) << std::endl;
+    std::cout << "basic_para.u16GearBoxRatio = " << std::to_string(basic_para.u16GearBoxRatio) << std::endl;
+    std::cout << "basic_para.u32StartInp = " << std::to_string(basic_para.u32StartInp) << std::endl;
+    std::cout << "basic_para.u32RevInp = " << std::to_string(basic_para.u32RevInp) << std::endl;
+    std::cout << "basic_para.u16RevRpm = " << std::to_string(basic_para.u16RevRpm) << std::endl;
+    std::cout << "basic_para.u16RevSlope = " << std::to_string(basic_para.u16RevSlope) << std::endl;
+    // Display package 4.
+    std::cout << "basic_para.u16RevMaxCurrent = " << std::to_string(basic_para.u16RevMaxCurrent) << std::endl;
+    std::cout << "basic_para.u16RevMaxTorque = " << std::to_string(basic_para.u16RevMaxTorque) << std::endl;
+    std::cout << "basic_para.u16ErrorIdleTime = " << std::to_string(basic_para.u16ErrorIdleTime) << std::endl;
+    std::cout << "basic_para.u16BackLash = " << std::to_string(basic_para.u16BackLash) << std::endl;
+    std::cout << "basic_para.u16PGain = " << std::to_string(basic_para.u16PGain) << std::endl;
+    std::cout << "basic_para.u16IGain = " << std::to_string(basic_para.u16IGain) << std::endl;
     // Display package 5.
-    // std::cout << "basic_para.u16Encoder = " << std::to_string(basic_para.u16Encoder) << std::endl;
-    #pragma endregion
+    std::cout << "basic_para.u16Encoder = " << std::to_string(basic_para.u16Encoder) << std::endl;
+    #endif
     return result;
 }
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 int GtcsMcbComm::WriteBasicParameter(McbID2Struct &basic)
 {
     // Initial local paramter.
@@ -1011,6 +1196,23 @@ int GtcsMcbComm::WriteBasicParameter(McbID2Struct &basic)
     #pragma endregion
     return result;
 }
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 // Write to mcb flash.
 int GtcsMcbComm::WriteToMcbFlash(int mainid,int subid,int addr_num)
 {
@@ -1091,6 +1293,23 @@ int GtcsMcbComm::WriteToMcbFlash(int mainid,int subid,int addr_num)
     #pragma endregion
     return result;
 }
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 // Step Parameter. (Main ID = 3XXX)
 int GtcsMcbComm::ReadStepParametrer(McbID3Struct &step_para,int mainid)
 {
@@ -1343,6 +1562,9 @@ int GtcsMcbComm::ReadStepParametrer(McbID3Struct &step_para,int mainid)
                                   ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+11]<<8); // SID = 14
     step_para.u16TorqueWindow2 = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+16]+
                                   ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+17]<<8); // SID = 15
+    #pragma endregion
+    
+    #ifdef _DEBUG_MODE_
     // Display step parameter SID2-7.
     std::cout << "step_para.u16StepRpm = " << std::to_string(step_para.u16StepRpm) << std::endl;
     std::cout << "step_para.u16StepSlope = " << std::to_string(step_para.u16StepSlope) << std::endl;
@@ -1360,9 +1582,27 @@ int GtcsMcbComm::ReadStepParametrer(McbID3Struct &step_para,int mainid)
     std::cout << "step_para.u16WindowMode = " << std::to_string(step_para.u16WindowMode) << std::endl;
     std::cout << "step_para.u16AngleWindow2 = " << std::to_string(step_para.u16AngleWindow2) << std::endl;
     std::cout << "step_para.u16TorqueWindow2 = " << std::to_string(step_para.u16TorqueWindow2) << std::endl;
-    #pragma endregion
+    #endif
+    
     return result;
 }
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 // Write Step Parameter. (Main ID = 3XXX)
 int GtcsMcbComm::WriteStepParameter(McbID3Struct &step, int mainid)
 {
@@ -1587,6 +1827,23 @@ int GtcsMcbComm::WriteStepParameter(McbID3Struct &step, int mainid)
     #pragma endregion
     return result;
 }
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 // Prcoess Parameter.(Main ID = 4XXX)
 int GtcsMcbComm::ReadProcessParameter(McbID4Struct &process,int processnum)
 { 
@@ -1848,7 +2105,8 @@ int GtcsMcbComm::ReadProcessParameter(McbID4Struct &process,int processnum)
     process.step_id_12 = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+34]+
                          ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+35]<<8); // SID = 4
     #pragma endregion
-    #pragma region display.
+    
+    #ifdef _DEBUG_MODE_
     // Display package 1.
     std::cout << "process.u16ProcPGain = " << std::to_string(process.u16ProcPGain) << std::endl;
     std::cout << "process.u16ProcIGain = " << std::to_string(process.u16ProcIGain) << std::endl;
@@ -1870,9 +2128,26 @@ int GtcsMcbComm::ReadProcessParameter(McbID4Struct &process,int processnum)
     std::cout << "process.step_id_10 = " << std::to_string(process.step_id_10) << std::endl;
     std::cout << "process.step_id_11 = " << std::to_string(process.step_id_11) << std::endl;
     std::cout << "process.step_id_12 = " << std::to_string(process.step_id_12) << std::endl;
-    #pragma endregion
+    #endif
     return result;
 }
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 int GtcsMcbComm::WriteProcessParameter(McbID4Struct &process, int processid)
 {
     // Initial local parameter.
@@ -2101,6 +2376,23 @@ int GtcsMcbComm::WriteProcessParameter(McbID4Struct &process, int processid)
 #pragma endregion
 
 #pragma region FSM method.
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 // Initial MCB comport.
 int GtcsMcbComm::InitialMcbComPort(std::string com_name_string)
 {
@@ -2108,9 +2400,30 @@ int GtcsMcbComm::InitialMcbComPort(std::string com_name_string)
     // Initial ComPort.
     strcpy(com_name,com_name_string.c_str());
     com_num = comm.InitialComm(com_name);
+    
+    #ifdef _DEBUG_MODE_
     std::cout << "open com_num= " <<std::to_string(com_num) <<std::endl;
+    #endif
+
     return result;
 }
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 // Normal polling to MCB.
 int GtcsMcbComm::NormalPollingToMcb()
 {
@@ -2131,22 +2444,24 @@ int GtcsMcbComm::NormalPollingToMcb()
         telegram.ctrl.InitialCtrlFlags(ctrltelegram);
         telegram.ctrl.SetCtrlFlags(ctrltelegram,CTRL_FLAGS_IDX::SC_REVERSE);
     }
-
-    // 
+ 
     telegram.ctrl.SetCtrlFlags(ctrltelegram,CTRL_FLAGS_IDX::SHORT_UVW);
     telegram.ctrl.SetCtrlFlags(ctrltelegram,CTRL_FLAGS_IDX::EN_TIMEOUT_200MS);
-    // telegram.ctrl.SetCtrlFlags(ctrltelegram,CTRL_FLAGS_IDX::SC_ENABLE);
 
     if(telegram.ctrl.IsEnable == true)
     {
         telegram.ctrl.SetCtrlFlags(ctrltelegram,CTRL_FLAGS_IDX::SC_ENABLE);
+        #ifdef _DEBUG_MODE_
         std::cout << "telegram.ctrl.IsEnable status = "<<std::to_string(telegram.ctrl.IsEnable) << std::endl;   
         std::cout << "ctrltelegram->u16Ctrlflags = "<<std::to_string(ctrltelegram->u16Ctrlflags) << std::endl;  
+        #endif
     }    
     else
     {
+        #ifdef _DEBUG_MODE_
         std::cout << "telegram.ctrl.IsEnable status = "<<std::to_string(telegram.ctrl.IsEnable) << std::endl;   
         std::cout << "ctrltelegram->u16Ctrlflags = "<<std::to_string(ctrltelegram->u16Ctrlflags) << std::endl;   
+        #endif
     }    
 
     // Encode ctrl telegram array.
@@ -2164,7 +2479,7 @@ int GtcsMcbComm::NormalPollingToMcb()
     telegram.status.DecodeTelegramArray();
     telegram.status.CheckLoosenStatus(telegram.status.last_status.u16TMDFlags,telegram.status.current_status.u16TMDFlags);
     
-    #pragma region not used
+    #ifdef _DEBUG_MODE_
     std::cout <<"u16Statusflags = "<<std::to_string(telegram.status.current_status.u16Statusflags)<< std::endl;
     std::cout <<"u32ActError    = "<<std::to_string(telegram.status.current_status.u32ActError)<< std::endl;
     std::cout <<"u16ActProcNr   = "<<std::to_string(telegram.status.current_status.u16ActProcNr)<< std::endl;
@@ -2178,11 +2493,27 @@ int GtcsMcbComm::NormalPollingToMcb()
     std::cout <<"u16TMDFlags    = "<<std::to_string(telegram.status.current_status.u16TMDFlags)<< std::endl;
     std::cout <<"s16Debug       = "<<std::to_string(telegram.status.current_status.s16Debug)<< std::endl;
     std::cout <<"s32Debug       = "<<std::to_string(telegram.status.current_status.s32Debug)<< std::endl;
-    #pragma endregion
-
-    telegram.status.last_status = telegram.status.current_status;
+    #endif
+        
     return result;
 }
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 // Advance polling to MCB.
 int GtcsMcbComm::AdvancePollingToMcb()
 {

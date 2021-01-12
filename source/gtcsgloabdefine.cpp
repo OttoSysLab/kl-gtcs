@@ -13,6 +13,23 @@
 #include "gtcsgloabdefine.h"
 
 #pragma region database base.
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 GtcsDatabaseBaseInfo::GtcsDatabaseBaseInfo()
 {}
 GtcsDatabaseBaseInfo::~GtcsDatabaseBaseInfo()
@@ -25,6 +42,23 @@ void GtcsDatabaseBaseInfo::InitialDataStruct()
         data.insert(std::pair<std::string,std::string>(columnnames[i],"-"));
     }        
 }
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 void GtcsDatabaseBaseInfo::SetDataValue(std::map<std::string,std::string> &pDataValue)
 {
     // std::cout << "======================SetDataValue====================" << std::endl;
@@ -37,7 +71,48 @@ void GtcsDatabaseBaseInfo::SetDataValue(std::map<std::string,std::string> &pData
 }
 #pragma endregion
 
+#pragma region 
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+GtcsScrewSequenceHandler::GtcsScrewSequenceHandler()
+{}
+GtcsScrewSequenceHandler::~GtcsScrewSequenceHandler()
+{}
+#pragma endregion
+
 #pragma region basic database object 
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 // Constructor.
 GtcsDatabaseBasicInfo::GtcsDatabaseBasicInfo()
 {
@@ -48,6 +123,23 @@ GtcsDatabaseBasicInfo::GtcsDatabaseBasicInfo()
 // Distructor.
 GtcsDatabaseBasicInfo::~GtcsDatabaseBasicInfo()
 {}
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 // Initial basic columnName
 void GtcsDatabaseBasicInfo::InitialColumnName()
 {
@@ -89,6 +181,23 @@ void GtcsDatabaseBasicInfo::InitialColumnName()
     columnnames.push_back("motswver");         // (TEXT)
     // columnnames.push_back("end");           // CL,RF  
 }
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 void GtcsDatabaseBasicInfo::InitialColumnType()
 {    
     type.insert(std::pair<std::string,std::string>("mintemp","REAL"));            // Min temperature       (REAL)

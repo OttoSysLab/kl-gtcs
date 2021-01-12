@@ -1,5 +1,3 @@
-#ifndef _GTCS_CRC_DECODER_
-#define _GTCS_CRC_DECODER_
 #pragma once
 /*=======================================================================================
  Program Nane  	: gtcs_tlg_decoder.c     
@@ -97,4 +95,3 @@ public:
     // Calculate CRC32 checksum.
     void calculateCrc32(uint8_t* pData);
 };
-#endif

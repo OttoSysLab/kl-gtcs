@@ -1,5 +1,3 @@
-#ifndef _TCP_SOCKET_
-#define _TCP_SOCKET_
 #pragma once
 /*=======================================================================================
  Program Nane  	: gtcs_tlg_decoder.c     
@@ -17,8 +15,7 @@
 #include "gtcsbulletin.h"
 #include "manager.h"
 
-// #include <iostream>       // 
-// #include <cstring>        // 
+// about tcpsocket
 #include <cerrno>         // 
 #include <unistd.h>       //  
 #include <arpa/inet.h>    // 
@@ -49,5 +46,3 @@ public:
     ~GtcsTcpSocket();
     static void GtcsTcpSocketServerHandler();
 };
-
-#endif

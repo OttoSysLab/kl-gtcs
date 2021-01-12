@@ -1,5 +1,3 @@
-#ifndef _GTCS_DATABASE_
-#define _GTCS_DATABASE_
 #pragma once
 /*=======================================================================================
  Program Nane  	: gtcs_tlg_decoder.c     
@@ -17,7 +15,7 @@
 #include <sqlite3.h>
 #include <iostream>
 #include "gtcsgloabdefine.h"
-#include "gtcsbulletin.h"
+// #include "gtcsbulletin.h"
 
 #pragma region Sqlite3Manager 
 // Gtcs database struct.
@@ -55,4 +53,3 @@ public:
     bool UpdateDatabaseBasicTable(GtcsDatabaseBasicInfo &db_basic); // 
     bool ReadDatabaseBasicTable(GtcsDatabaseBasicInfo &db_basic);   // 
 };
-#endif

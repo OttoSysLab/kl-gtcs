@@ -1,8 +1,4 @@
-#ifndef _GTCS_AMS_PROTOCOL_
-#define _GTCS_AMS_PROTOCOL_
-
 #pragma once
-
 /*=======================================================================================
  Program Nane  	: gtcs_tlg_decoder.c     
  Subject 		: SARM Serial Port Communication Driver Process                                  
@@ -22,7 +18,6 @@
 #include "gtcsgloabdefine.h"
 #include "gtcsbulletin.h"
 
-#pragma region AMS Protocol object
 // Gtcs AMS Protocol
 class GtcsAmsProtocol
 {
@@ -33,8 +28,6 @@ private:
     GtcsAmsProtocol(/* args */);
     int ConvertToProtocolString(std::string* ptr,std::string& result);
     int UpdateProtocolStruct(std::string* ptr,std::vector<std::string>& ams_array);
-    
-    // int CopyAmsStructData(std::string  );
 
     std::vector<std::string> SplitString(const std::string & str,const std::string& pattern);
     std::vector<std::string> GetAmsSpliteArray(const std::string & str);
@@ -48,5 +41,3 @@ public:
     std::string GetAmsBulletin(int amscmd);
     std::string SetAmsBulletin(std::string ams_string);
 };
-#pragma endregion
-#endif

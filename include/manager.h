@@ -1,5 +1,3 @@
-#ifndef _GTCS_MANAGER_
-#define _GTCS_MANAGER_
 #pragma once
 /*=======================================================================================
  Program Nane  	: gtcs_tlg_decoder.c
@@ -53,9 +51,12 @@ private:
     GtcsBulletin *bulletin = GtcsBulletin::GetInstance();
     GtcsMcbComm *mcb       = GtcsMcbComm::GetInstance();
     GtcsAmsProtocol *ams = GtcsAmsProtocol::GetInstance();
+    
     // method.
-    std::string GetMcbRtStatusString(MCB_RT_STATUS status);
-    std::string GetToolRunTimeStatus();
+    // std::string GetMcbRtStatusString(MCB_RT_STATUS status);
+    std::string GetRtLockedStatusMessage(int lcstatusnum);                                        // Define Locksed status string. 
+
+    std::string GetToolRunTimeStatus(GtcsScrewSequenceHandler &screwstatus);
     bool CheckUiSettingFSM(int uicmd);
 
     std::string comport_name = "";
@@ -103,4 +104,3 @@ public:
     bool SettingGtcsSystem();
 };
 #pragma endregion
-#endif

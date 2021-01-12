@@ -1,5 +1,3 @@
-#ifndef _GTCS_MCB_TELEGRAM_
-#define _GTCS_MCB_TELEGRAM_
 #pragma once
 /*=======================================================================================
  Program Nane  	: gtcs_tlg_decoder.c     
@@ -162,7 +160,7 @@ public:
     int CheckLoosenStatus(uint16_t last_status_flags,uint16_t current_status_flags);
     bool loosen_status = false;
     int check_loosen_cnt = 0;
-    std::string last_rt_status = "-";
+    // int lc_status = 0;
 };
 // Wrie Request Telegram
 class WriteRequestTelegram : public TelegramStruct
@@ -364,4 +362,3 @@ public:
     int AdvancePollingToMcb();
 };
 #pragma endregion
-#endif

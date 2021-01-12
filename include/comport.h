@@ -1,5 +1,3 @@
-#ifndef _GTCS_COMPORT_
-#define _GTCS_COMPORT_
 #pragma once
 /*=======================================================================================
  Program Nane  	: gtcs_tlg_decoder.c     
@@ -16,7 +14,7 @@
 #include <iostream>    // 
 #include <array>
 
-// #if defined(OS_LINUX)
+// About linux comport.
 #include <termios.h>   // Contains POSIX terminal control definitions.
 #include <unistd.h>    // write(), read(), close(), Unix Port System Call
 #include <fcntl.h>     // 
@@ -24,16 +22,13 @@
 class ComPort
 {
 private:
-    /* data */
-    // char comport[] = "/dev/ttymxc3";
 public:
     ComPort(/* args */){};             // 
     ~ComPort(){};                      // 
-    // Initial Comm port.              //
-    int InitialComm(char *P_port_name);//
+    // Initial Comm port.              
+    int InitialComm(char *P_port_name);
     // Send Char.
     int SendChar(int P_CommPort, unsigned char P_Value);
     // Read Data.
     int ReadData(int openCommPort,std::array<uint8_t,1024> &read_array);
 };
-#endif

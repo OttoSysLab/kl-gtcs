@@ -820,6 +820,7 @@ public:
     AMSBulletin AmsBulletin;
     MCBBulletin McbBulletin;
     DatabasteBulletin  DbBulletin;
+    GtcsScrewSequenceHandler ScrewStatus;
     bool checksysok = true;  
     bool uisetting = false;  
     std::string uisockrevcmd = "";

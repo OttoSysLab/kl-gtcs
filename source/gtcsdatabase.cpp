@@ -1,4 +1,3 @@
-#define _BDEBUG_DB_
 /*=======================================================================================
  Program Nane  	: gtcs_tlg_decoder.c
  Subject 		: SARM Serial Port Communication Driver Process
@@ -15,12 +14,46 @@
 #include <sqlite3.h>
 
 #pragma region Sqlite3Manager
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 // Constructor.
 Sqlite3Manager::Sqlite3Manager()
 {}
 // Disturctor.
 Sqlite3Manager::~Sqlite3Manager()
 {}
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 // Write data to sqlite.
 bool Sqlite3Manager::UpdateDatabase(std::string db_Path,std::string table,std::string sqlcmd)
 {
@@ -58,6 +91,23 @@ bool Sqlite3Manager::UpdateDatabase(std::string db_Path,std::string table,std::s
     sqlite3_close(db);
     return true;
 }
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 // Write data to sqlite.
 bool Sqlite3Manager::ReadDatabase(std::string db_Path, std::string table,std::string *ptr)
 {
@@ -200,6 +250,23 @@ bool GtcsDatabase::UpdateDatabaseBasicTable(GtcsDatabaseBasicInfo &db_basic)
     sqlite3_close(db);
     return true;
 }
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 bool GtcsDatabase::ReadDatabaseBasicTable(GtcsDatabaseBasicInfo &db_basic)
 {
     // Initial sqlcmd.

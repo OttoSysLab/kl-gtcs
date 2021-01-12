@@ -13,6 +13,23 @@
 #include "../include/manager.h"
 
 #pragma region manager
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 // Constructor.
 Manager::Manager(/* args */)
 {}
@@ -32,6 +49,23 @@ void Manager::SetMainFSM(int main_fsm)
 #pragma endregion
 
 #pragma region NTCS manager
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 NtcsManager::NtcsManager()
 {}
 NtcsManager::~NtcsManager()
@@ -39,140 +73,216 @@ NtcsManager::~NtcsManager()
 #pragma endregion
 
 #pragma region GTCS manager
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 // Constructor
 GtcsManager::GtcsManager()
 {}
 // Distructor
 GtcsManager::~GtcsManager()
 {}
-// Get MCB realy time status string.
-std::string GtcsManager::GetMcbRtStatusString(MCB_RT_STATUS status)
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+std::string GtcsManager::GetRtLockedStatusMessage(int lcstatusnum)
 {
     std::string result = "";
-    switch(status)
+    switch (lcstatusnum)
     {
-    case MCB_RT_STATUS::RUNNING:
-        result = "Running";
+    case LOCKED_STATUS::RUNNING:
+        result = "RUNNING____";
         break;
-    case MCB_RT_STATUS::REVERSE:
-        result = "Reverse";
+    case LOCKED_STATUS::REVERSE:
+        result = "REVERSE____";
         break;
-    case MCB_RT_STATUS::OK:
-        result = "OK";
+    case LOCKED_STATUS::IDLE:
+        result = "IDLE_______";
         break;
-    case MCB_RT_STATUS::OK_SEQUENCE:
-        result = "OK-Sequence";
+    case LOCKED_STATUS::OK:
+        result = "OK_________";
         break;
-    case MCB_RT_STATUS::OK_JOB:
-        result = "OK-JOB";
+    case LOCKED_STATUS::OK_SEQUENCE:
+        result = "OK_SEQUENCE";
         break;
-    case MCB_RT_STATUS::NG_F:
-        result = "NG-F";
+    case LOCKED_STATUS::OK_JOB:
+        result = "OK_JOB_____";
         break;
-    case MCB_RT_STATUS::NS_F:
-        result = "NS-F";
+    case LOCKED_STATUS::NG_F:
+        result = "NG_F_______";
         break;
-    case MCB_RT_STATUS::NGQ:
-        result = "NGQ";
+    case LOCKED_STATUS::NS_F:
+        result = "NS_F_______";
         break;
-    case MCB_RT_STATUS::NGA:
-        result = "NGA";
+    case LOCKED_STATUS::NGQ:
+        result = "NGQ________";
         break;
-    case MCB_RT_STATUS::NG_MCB:
-        result = "NG-MCB";
+    case LOCKED_STATUS::NGA:
+        result = "NGA________";
         break;
-    case MCB_RT_STATUS::IDLE:
-        result = "Idel";
+    case LOCKED_STATUS::NG_MCB:
+        // result = "NG_MCB_____";
+        result = "NG_________";
+        break;
+    case LOCKED_STATUS::NGR:
+        result = "NGR________";
+        break;
+    case LOCKED_STATUS::NGT:
+        result = "NGT________";
+        break;
+    default:
         break;
     }
     return result;
 }
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 // Get real time tool status
-std::string GtcsManager::GetToolRunTimeStatus()
+std::string GtcsManager::GetToolRunTimeStatus(GtcsScrewSequenceHandler &screwstatus)
 {
     // Checl flags
-    std::array<bool,16> current_status_flags
-        = BitArray::To16BiteArray(mcb->telegram.status.current_status.u16Statusflags);
-    std::array<bool,16> last_status_lags
-        = BitArray::To16BiteArray(mcb->telegram.status.last_status.u16Statusflags);
-    std::array<bool,16> tmd_flags
-        = BitArray::To16BiteArray(mcb->telegram.status.current_status.u16TMDFlags);
+    std::array<bool,16> current_status_flags = BitArray::To16BiteArray(mcb->telegram.status.current_status.u16Statusflags);
+    std::array<bool,16> last_status_lags     = BitArray::To16BiteArray(mcb->telegram.status.last_status.u16Statusflags);
+    std::array<bool,16> tmd_flags            = BitArray::To16BiteArray(mcb->telegram.status.current_status.u16TMDFlags);
+
     // Check sensor.
-    bool tmd_start    = tmd_flags[TMD_INPUT::LEVER_SW];
+    bool start_signal    = tmd_flags[TMD_INPUT::LEVER_SW];
+
     // Check flag status.
-    bool tool_start   = current_status_flags[STATUS_FlAGS_IDX::TOOL_START];
-    bool tool_reverse = current_status_flags[STATUS_FlAGS_IDX::TOOL_REVERSE];
-    bool tool_NG      = current_status_flags[STATUS_FlAGS_IDX::ERROR_OCCURED];
-    bool proc_status  = current_status_flags[STATUS_FlAGS_IDX::PROC_STATUS];
     bool last_proc_status = last_status_lags[STATUS_FlAGS_IDX::PROC_STATUS];
+    bool tool_run         = current_status_flags[STATUS_FlAGS_IDX::TOOL_START];
+    bool tool_reverse     = current_status_flags[STATUS_FlAGS_IDX::TOOL_REVERSE];
+    bool tool_NG          = current_status_flags[STATUS_FlAGS_IDX::ERROR_OCCURED];
+    bool proc_status      = current_status_flags[STATUS_FlAGS_IDX::PROC_STATUS];
 
-    // Get last RT status.
-    std::string result = mcb->telegram.status.last_rt_status;
-
-    // Check current RT Status.
-    if (tool_start)
+    int lc_statusnum = screwstatus.statusnum;
+    #pragma region Check current RT Status.
+    if (tool_NG==true)
     {
-        if(tool_reverse == false)
+        lc_statusnum = (int)LOCKED_STATUS::NG_MCB;
+    }
+    else
+    {
+        if (tool_run== true)
         {
-            // result = "Running    "; //
-            result = "Running____"; //
-            // result = "Running"; //
-
+            screwstatus.screwok =false;
+            if (tool_reverse == false)
+            {
+                lc_statusnum = (int)LOCKED_STATUS::RUNNING;
+            }
+            else
+            {
+                lc_statusnum = (int)LOCKED_STATUS::REVERSE;
+            }
         }
-        else{
-            // result = "Reverse    ";
-            result = "Reverse____";
-            // result = "Reverse";
-        }
-    }
-    else if(tool_NG)
-    {
-        // result = "NG         ";
-        result = "NG_________";
-        // result = "NG";
-    }
-    else if(last_proc_status!=proc_status)
-    {
-        // result = "OK         ";
-        result = "OK_________";
-        // result = "OK";
-    }
-    else if(last_proc_status==proc_status)
-    {
-        if (tmd_start==false)
+        else
         {
-            // result = "NG         ";
-            result = "NG_________";
-            // result = "NG";
+            if (last_proc_status!=proc_status)
+            {
+                screwstatus.screwok = true;
+                lc_statusnum = (int)LOCKED_STATUS::OK;
+            }
+            else if (start_signal == false)
+            {
+                if (screwstatus.screwok == false)
+                {
+                    lc_statusnum = (int)LOCKED_STATUS::NG_MCB;
+                }
+            }
         }
     }
-    mcb->telegram.status.last_rt_status = result;
-    return result;
+    #pragma endregion
+
+    // Assign data to last locked status num.
+    screwstatus.statusnum = lc_statusnum;
+    screwstatus.lockedmessage = GetRtLockedStatusMessage(lc_statusnum);
+    return screwstatus.lockedmessage;
 }
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 // Get MCB realy time status string.
 bool GtcsManager::ConvertReadlTimeActuralValue()
 {
-    // GtcsBulletin *bulletin = GtcsBulletin::GetInstance();
-    // GtcsMcbComm *mcb = GtcsMcbComm::GetInstance();
     AmsDATA300Struct *data300 = &bulletin->AmsBulletin.DATA300Struct;
-    GtcsStatusTelegramStrcut *mcb_status = &mcb->telegram.status.current_status;
+    GtcsStatusTelegramStrcut *mcbstatus = &mcb->telegram.status.current_status;
+
+    // DataSorter::GetFloatScaleSortString((float)mcb_basic.u16MaxDutyCycle/10,1);
 
     // Get status.
-    double toolmaxtorque = 7;
-    std::array<bool,16> current_status_flags
-        = BitArray::To16BiteArray(mcb->telegram.status.current_status.u16Statusflags);
-    std::array<bool,16> last_status_lags
-        = BitArray::To16BiteArray(mcb->telegram.status.last_status.u16Statusflags);
-    std::array<bool,32> error_flags
-        = BitArray::To32BiteArray(mcb->telegram.status.current_status.u32ActError);
+    float toolmaxtorque = 7;
+    std::array<bool,16> current_status_flags = BitArray::To16BiteArray(mcb->telegram.status.current_status.u16Statusflags);
+    std::array<bool,16> last_status_lags     = BitArray::To16BiteArray(mcb->telegram.status.last_status.u16Statusflags);
+    std::array<bool,32> error_flags          = BitArray::To32BiteArray(mcb->telegram.status.current_status.u32ActError);
 
     // Calcuate angle & revalution.
-    double gear     = (double)bulletin->McbBulletin.BasicPara.u16GearBoxRatio/100; // Get gear box.
-    double acttorque  = ((double)mcb_status->u16ActTorque/1862) * toolmaxtorque;   // Calculate Act torque.
-    double angle      = (double)mcb_status->u32Angle/(gear*200) * 360;             // Calculate revalution.
-    double maxtorque  = ((double)mcb_status->u16MaxTorque/1862) * toolmaxtorque;   // Calculate Act torque.
-    double revolution = (double)mcb_status->u32Revolutions/(gear * 200) * 360;     // Calculate revalution.
-    std::string current_rt_status = GetToolRunTimeStatus();
+    float gear       = (float)bulletin->McbBulletin.BasicPara.u16GearBoxRatio/100; // Get gear box.
+    std::string acttorque  
+        = DataSorter::GetFloatScaleSortString(((float)mcbstatus->u16ActTorque/1862) * toolmaxtorque,4);     // Calculate Act torque.
+    std::string angle      
+        = DataSorter::GetFloatScaleSortString((float)mcbstatus->u32Angle/(gear*200) * 360,1);               // Calculate angle.
+    std::string maxtorque  
+        = DataSorter::GetFloatScaleSortString(((float)mcbstatus->u16MaxTorque/1862) * toolmaxtorque,4);     // Calculate max torque.
+    std::string revolution 
+        = DataSorter::GetFloatScaleSortString((float)mcbstatus->u32Revolutions/(gear * 200) * 360,4);       // Calculate revalution.
+    std::string current_rt_status = GetToolRunTimeStatus(bulletin->ScrewStatus);
     std::string current_mcb_err = "NO-ERR______________";
     // data300->header = std::to_string(0);      // str1:Header+DATA
     // time.
@@ -186,36 +296,52 @@ bool GtcsManager::ConvertReadlTimeActuralValue()
                         ':'+
                         std::to_string(ltm->tm_min)+
                         ':'+
-                        std::to_string(ltm->tm_sec); // str2:yyyyMMdd HH:mm:ss
-    data300->checksum    = std::to_string(angle);   // str3:check sum ,4 chars
+                        std::to_string(ltm->tm_sec);                   // str2:yyyyMMdd HH:mm:ss
+    data300->checksum    = std::to_string(0);                      // str3:check sum ,4 chars
     data300->cmdsn       = std::to_string(0);   // str4:Command_sn
     data300->dervicetype = std::to_string(0);   // str5:Device type
     data300->toolsn      = std::to_string(0);   // str6:Tool SN
     data300->dervicesn   = std::to_string(0);   // str7:Device SN
     data300->jobid         = std::to_string(0); // str8:Job ID
     data300->seqid         = std::to_string(0); // str9:Sequence ID
-    data300->progid        = std::to_string(mcb_status->u16ActProcNr); // str10:Program ID
-    data300->stepid        = std::to_string(mcb_status->u16ActStepNr); // str11:Step ID
+    data300->progid        = std::to_string(mcbstatus->u16ActProcNr); // str10:Program ID
+    data300->stepid        = std::to_string(mcbstatus->u16ActStepNr); // str11:Step ID
     data300->dircetion     = std::to_string(0); // str12:Direction
     data300->torqueuint    = std::to_string(0); // str13:Torque unit
     data300->inc_dec       = std::to_string(0); // str14:INC/DEC
     data300->last_screwcnt = std::to_string(0); // str15:Last_screw_count
     data300->max_screwcnd  = std::to_string(0); // str16:Max_screw_count
     data300->fasteningtime = std::to_string(0); // str17:Fastening time
-    data300->acttorque     = std::to_string(acttorque); // str18:Torque
-    data300->actangle      = std::to_string(angle); // str19:Angle
-    data300->maxtorque     = std::to_string(maxtorque); // str20:Max Torque
-    data300->revolutions   = std::to_string(revolution); // str21:Revolutions
+    data300->acttorque     = acttorque;         // str18:Torque
+    data300->actangle      = angle;             // str19:Angle
+    data300->maxtorque     = maxtorque;         // str20:Max Torque
+    data300->revolutions   = revolution;        // str21:Revolutions
     data300->status        = current_rt_status; // str22:Status // data300->status        = std::to_string(0); // str22:Status
     data300->inputio       = std::to_string(0); // str23:Inputio
     data300->outputio      = std::to_string(0); // str24:Outputio
-    data300->errmsg        = current_mcb_err; // str25:Error Masseage
+    data300->errmsg        = current_mcb_err;   // str25:Error Masseage
     data300->toolcnt       = std::to_string(0); // str26:Tool Count
-    data300->actrpm        = std::to_string(mcb_status->u16ActRPM); // str27:RPM
-    // data300->toolstatus    = std::to_string(0); // str28:Tool status
+    data300->actrpm        = std::to_string(mcbstatus->u16ActRPM); // str27:RPM
 
     return true;
 }
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 bool GtcsManager::ConvertAmsBasicToMcbStruct(AmsCMD340Struct &amscmd,McbID2Struct &mcb_basic)
 {
     //
@@ -294,6 +420,23 @@ bool GtcsManager::ConvertAmsBasicToMcbStruct(AmsCMD340Struct &amscmd,McbID2Struc
 
     return true;
 }
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 bool GtcsManager::SetAmsCmdBaiscParaToAns(AmsANS340Struct &amsans,AmsCMD340Struct &amscmd)   // CMD340->ANS340
 {
     amsans.str5 = amscmd.str5;
@@ -333,6 +476,23 @@ bool GtcsManager::SetAmsCmdBaiscParaToAns(AmsANS340Struct &amsans,AmsCMD340Struc
     amsans.str38 = amscmd.str38;
     amsans.str39 = amscmd.str39;
 }
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 bool GtcsManager::SetSystemBasicParameter(AmsCMD340Struct &amscmd,GtcsDatabaseBasicStruct &db_basic,McbID2Struct &mcb_basic)
 {
     // Initial value.
@@ -367,12 +527,29 @@ bool GtcsManager::SetSystemBasicParameter(AmsCMD340Struct &amscmd,GtcsDatabaseBa
 
     // step 5 : Set ANS340
     SetAmsCmdBaiscParaToAns(bulletin->AmsBulletin.ANS340Struct,bulletin->AmsBulletin.CMD340Struct);
-    
+
     // Check OK!!
     // std::this_thread::sleep_for(std::chrono::milliseconds(200));
     bulletin->checksysok = true;
     return true;
 }
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 // Check Ui Setting FSM.
 bool GtcsManager::CheckUiSettingFSM(int uicmd)
 {
@@ -407,7 +584,7 @@ bool GtcsManager::CheckUiSettingFSM(int uicmd)
         {
             return false;
         }
-        
+
         break;
     default:
         return false;
@@ -415,6 +592,23 @@ bool GtcsManager::CheckUiSettingFSM(int uicmd)
     }
     return true;
 }
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 // Get Ui Cmd Response.
 std::string GtcsManager::GetUiResponseCmd(std::string uicmd_string)
 {
@@ -458,7 +652,23 @@ bool GtcsManager::CopyDatabase(std::string destination ,std::string source)
     system(systemcmd.c_str());
     return true;
 }
-//
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 bool GtcsManager::UpdateMcbBasicParaToDB(GtcsDatabase &db,GtcsDatabaseBasicInfo &db_basic,McbID2Struct &mcb_basic)
 {
     // Update data.
@@ -499,6 +709,23 @@ bool GtcsManager::UpdateMcbBasicParaToDB(GtcsDatabase &db,GtcsDatabaseBasicInfo 
     db.UpdateDatabaseBasicTable(db_basic);
     return true;
 }
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 // Compare Basic Struct.
 bool GtcsManager::CompareBasicStruct(GtcsDatabaseBasicInfo &emmc,GtcsDatabaseBasicInfo &ramdisk)
 {
@@ -516,6 +743,23 @@ bool GtcsManager::CompareBasicStruct(GtcsDatabaseBasicInfo &emmc,GtcsDatabaseBas
     }
     return result;
 }
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 // Set AMS Bulletin Basic Parameter.
 bool GtcsManager::SetDatabaseBasicParaToAns(AmsANS340Struct &amsans,GtcsDatabaseBasicInfo &db_basic)
 {
@@ -559,8 +803,23 @@ bool GtcsManager::SetDatabaseBasicParaToAns(AmsANS340Struct &amsans,GtcsDatabase
     amsans.str39 = db_basic.data["motswver"];         // MotSWVer
     return true;
 }
-
-// Set AMS Bulletin Basic Parameter.
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 bool GtcsManager::SetDatabaseBasicParaToReq(AmsREQ301Struct &amsreq,GtcsDatabaseBasicInfo &db_basic)
 {
     // GtcsBulletin *bulletin = GtcsBulletin::GetInstance();
@@ -603,7 +862,23 @@ bool GtcsManager::SetDatabaseBasicParaToReq(AmsREQ301Struct &amsreq,GtcsDatabase
     amsreq.str39 = db_basic.data["motswver"];         // MotSWVer
     return true;
 }
-// Check Request Status from UI.
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 bool GtcsManager::CheckUiRequestCmd(std::string reqest_string)
 {
     bulletin->uisockrevcmd = ams->SetAmsBulletin(reqest_string);
@@ -613,7 +888,23 @@ std::string GtcsManager::GetUiRequestCmd()
 {
     return bulletin->uisockrevcmd;
 }
-// Set Initial value.
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 void GtcsManager::SetMcbPortName(std::string com_name)
 {
     comport_name = com_name;
@@ -626,11 +917,27 @@ void GtcsManager::SetRamdiskDatabasePath(std::string Path)
 {
     db_ramdisk_Path = Path;
 }
-// Tcp socket.
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2021/01/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 std::string GtcsManager::GetGtcsTcpSocketServerIP()
 {
     return bulletin->TcpServer.GetIpAddress();
-}  
+}
 int GtcsManager::GetGtcsTcpSocketServerPort()
 {
     return bulletin->TcpServer.GetPort();
@@ -641,7 +948,23 @@ bool GtcsManager::SetGtcsTcpSocketServerInfo(std::string ip ,int port)
     bulletin->TcpServer.SetPortNum(port);
     return true;
 }
-// Initial Gtcs System.
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 bool GtcsManager::InitialGtcsSystem()
 {
     // Initial MCB Com.
@@ -651,14 +974,31 @@ bool GtcsManager::InitialGtcsSystem()
     for(int index=0;index<5;index++)
     {
         mcb->NormalPollingToMcb();
-        ConvertReadlTimeActuralValue();
+        ConvertReadlTimeActuralValue();                                        // Calaulate RT actural value.
+        mcb->telegram.status.last_status = mcb->telegram.status.current_status;// Storage last telegram status.
     }
     mcb->telegram.ctrl.IsEnable = false;
     // Min fsm jump to Check system status.
     SetMainFSM(MAIN_FSM::CHECK_SYS);
     return false;
 }
-// Check Gtcs System.
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 bool GtcsManager::CheckGtcsSystem()
 {
     // Initial value.
@@ -728,13 +1068,30 @@ bool GtcsManager::CheckGtcsSystem()
 
     return true;
 }
-// Initial Gtcs System.
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 bool GtcsManager::RunGtcsSystem()
 {
     if (bulletin->uisetting==false)
     {
         mcb->NormalPollingToMcb();
-        ConvertReadlTimeActuralValue();
+        ConvertReadlTimeActuralValue();                                         // Calaulate RT actural value.
+        mcb->telegram.status.last_status = mcb->telegram.status.current_status; //
     }
     else
     {
@@ -742,12 +1099,44 @@ bool GtcsManager::RunGtcsSystem()
     }
     return true;
 }
-// Clear Gtcs System Alarm.
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 bool GtcsManager::ClearGtcsSystemAlarm()
 {
     return true;
 }
-// Setting Gtcs System.
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 bool GtcsManager::SettingGtcsSystem()
 {
     if (bulletin->uisetting==true)
@@ -756,11 +1145,11 @@ bool GtcsManager::SettingGtcsSystem()
         {
             bulletin->uisetting = false;
             // SetMainFSM(MAIN_FSM::READY);
-    
+
             if (bulletin->checksysok==true)
             {
                 SetMainFSM(MAIN_FSM::READY);
-            }   
+            }
         }
     }
     else

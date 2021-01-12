@@ -1024,7 +1024,6 @@ public:
     std::string lockedmessage = "___________";
     bool screwok = false;    
 };
-
 #pragma endregion
 
 #pragma region database

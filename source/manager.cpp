@@ -181,7 +181,7 @@ std::string GtcsManager::GetRtLockedStatusMessage(int lcstatusnum)
  *
  *******************************************************************************************/
 // Get real time tool status
-std::string GtcsManager::GetToolRunTimeStatus(GtcsScrewSequenceHandler &screwstatus)
+std::string GtcsManager::GetToolRunTimeStatus(GtcsScrewSequenceHandler &ScrewHandler)
 {
     // Checl flags
     std::array<bool,16> current_status_flags = BitArray::To16BiteArray(mcb->telegram.status.current_status.u16Statusflags);
@@ -198,7 +198,7 @@ std::string GtcsManager::GetToolRunTimeStatus(GtcsScrewSequenceHandler &screwsta
     bool tool_NG          = current_status_flags[STATUS_FlAGS_IDX::ERROR_OCCURED];
     bool proc_status      = current_status_flags[STATUS_FlAGS_IDX::PROC_STATUS];
 
-    int lc_statusnum = screwstatus.statusnum;
+    int lc_statusnum = ScrewHandler.statusnum;
     #pragma region Check current RT Status.
     if (tool_NG==true)
     {
@@ -208,7 +208,7 @@ std::string GtcsManager::GetToolRunTimeStatus(GtcsScrewSequenceHandler &screwsta
     {
         if (tool_run== true)
         {
-            screwstatus.screwok =false;
+            ScrewHandler.screwok =false;
             if (tool_reverse == false)
             {
                 lc_statusnum = (int)LOCKED_STATUS::RUNNING;
@@ -222,12 +222,12 @@ std::string GtcsManager::GetToolRunTimeStatus(GtcsScrewSequenceHandler &screwsta
         {
             if (last_proc_status!=proc_status)
             {
-                screwstatus.screwok = true;
+                ScrewHandler.screwok = true;
                 lc_statusnum = (int)LOCKED_STATUS::OK;
             }
             else if (start_signal == false)
             {
-                if (screwstatus.screwok == false)
+                if (ScrewHandler.screwok == false)
                 {
                     lc_statusnum = (int)LOCKED_STATUS::NG_MCB;
                 }
@@ -237,9 +237,9 @@ std::string GtcsManager::GetToolRunTimeStatus(GtcsScrewSequenceHandler &screwsta
     #pragma endregion
 
     // Assign data to last locked status num.
-    screwstatus.statusnum = lc_statusnum;
-    screwstatus.lockedmessage = GetRtLockedStatusMessage(lc_statusnum);
-    return screwstatus.lockedmessage;
+    ScrewHandler.statusnum = lc_statusnum;
+    ScrewHandler.lockedmessage = GetRtLockedStatusMessage(lc_statusnum);
+    return ScrewHandler.lockedmessage;
 }
 /******************************************************************************************
  *
@@ -264,8 +264,6 @@ bool GtcsManager::ConvertReadlTimeActuralValue()
     AmsDATA300Struct *data300 = &bulletin->AmsBulletin.DATA300Struct;
     GtcsStatusTelegramStrcut *mcbstatus = &mcb->telegram.status.current_status;
 
-    // DataSorter::GetFloatScaleSortString((float)mcb_basic.u16MaxDutyCycle/10,1);
-
     // Get status.
     float toolmaxtorque = 7;
     std::array<bool,16> current_status_flags = BitArray::To16BiteArray(mcb->telegram.status.current_status.u16Statusflags);
@@ -282,7 +280,7 @@ bool GtcsManager::ConvertReadlTimeActuralValue()
         = DataSorter::GetFloatScaleSortString(((float)mcbstatus->u16MaxTorque/1862) * toolmaxtorque,4);     // Calculate max torque.
     std::string revolution 
         = DataSorter::GetFloatScaleSortString((float)mcbstatus->u32Revolutions/(gear * 200) * 360,4);       // Calculate revalution.
-    std::string current_rt_status = GetToolRunTimeStatus(bulletin->ScrewStatus);
+    std::string current_rt_status = GetToolRunTimeStatus(bulletin->ScrewHandler);
     std::string current_mcb_err = "NO-ERR______________";
     // data300->header = std::to_string(0);      // str1:Header+DATA
     // time.

@@ -74,8 +74,7 @@ bool GtcsBulletin::InitialGtcsBulletin()
     //     .str3 = "0",                                        
     //     .str4 = "0",
     //     .str5 = "\n\r",
-    // };// CMD300, 回復確認.
-    
+    // };// CMD300, 回復確認.   
     #pragma endregion
 
     return true;

@@ -22,7 +22,6 @@ class AMSBulletin
 private:
     /* data */
 public:
-    
     #pragma region CMD    
     AmsCMD300Struct CMD300Struct = {
         .str1 = "CMD300",                                   
@@ -30,7 +29,9 @@ public:
         .str3 = "0",                                        
         .str4 = "0",
         .str5 = "\n\r",
-    };// CMD300, 回復確認.   
+    };// CMD300, 回復確認.
+    // AmsCMD300Struct CMD300Struct;
+
     AmsCMD301Struct CMD301Struct = {
         .str1 = "CMD301",                                   // Header+DATA
         .str2 = "yyyyMMdd HH:mm:ss",                        // yyyyMMdd HH:mm:ss
@@ -820,7 +821,7 @@ public:
     AMSBulletin AmsBulletin;
     MCBBulletin McbBulletin;
     DatabasteBulletin  DbBulletin;
-    GtcsScrewSequenceHandler ScrewStatus;
+    GtcsScrewSequenceHandler ScrewHandler;
     bool checksysok = true;  
     bool uisetting = false;  
     std::string uisockrevcmd = "";

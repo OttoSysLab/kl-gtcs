@@ -24,19 +24,20 @@ int main()
     manager.SetMcbPortName("/dev/ttymxc3");
     manager.SetEmmcDatabasePath("/var/www/html/database/tcs.db");
     manager.SetRamdiskDatabasePath("/mnt/ramdisk/tcs.db");
-    
-    #ifdef _DEBUG_MODE_
-    manager.SetGtcsTcpSocketServerInfo("192.168.0.207",9000); // OTTO : 207,ERIC : 202
-    #else
-    manager.SetGtcsTcpSocketServerInfo("127.0.0.1",9000);
-    #endif    
+       
     manager.InitialGtcsSystem();
     
     // Check GTCS System.
     manager.CheckGtcsSystem();
 
     // Ste 3 = Set tcpsocket thread and start.
-    std::thread thread_tcpserver = std::thread(GtcsTcpSocket::GtcsTcpSocketServerHandler);
+    // std::thread thread_tcpserver = std::thread(GtcsTcpSocket::GtcsTcpSocketServerHandler);
+    #ifdef _DEBUG_MODE_
+    manager.SetGtcsTcpSocketServerInfo("192.168.0.207",9000); // OTTO : 207,ERIC : 202
+    #else
+    manager.SetGtcsTcpSocketServerInfo("127.0.0.1",9000);
+    #endif 
+
     #pragma endregion
 
     #pragma region step 2
@@ -50,6 +51,7 @@ int main()
                 std::cout << "CheckMainFSM = READY" << std::endl;
                 #endif
                 manager.RunGtcsSystem();
+                // manager.StopAllThread();
                 break;
             case MAIN_FSM::ALARM:
                 #ifdef _DEBUG_MODE_
@@ -68,6 +70,7 @@ int main()
     #pragma endregion
 
     // Join thread.
-    thread_tcpserver.join();
+    // thread_tcpserver.join();
+    // manager.StopAllThread();
     return 0;
 }

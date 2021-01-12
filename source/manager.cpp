@@ -946,8 +946,31 @@ bool GtcsManager::SetGtcsTcpSocketServerInfo(std::string ip ,int port)
 {
     bulletin->TcpServer.SetIpAddress(ip);
     bulletin->TcpServer.SetPortNum(port);
+    thread_tcpserver = std::thread(GtcsTcpSocket::GtcsTcpSocketServerHandler);
     return true;
 }
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+// bool GtcsManager::StopAllThread()
+// {
+//     thread_tcpserver.join();
+//     return true;
+// }
 /******************************************************************************************
  *
  *  @author  Otto
@@ -970,7 +993,6 @@ bool GtcsManager::InitialGtcsSystem()
     // Initial MCB Com.
     mcb->InitialMcbComPort(comport_name);
     std::this_thread::sleep_for(std::chrono::milliseconds(200));  // Thread sleep 1s.
-    // std::this_thread::sleep_for(std::chrono::milliseconds(200));  // Thread sleep 1s.
     for(int index=0;index<5;index++)
     {
         mcb->NormalPollingToMcb();

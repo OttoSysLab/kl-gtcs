@@ -62,6 +62,9 @@ private:
     std::string comport_name = "";
     std::string db_emmc_Path = "";     // Initial database path.
     std::string db_ramdisk_Path = "";  // Initial database path.
+    
+    // Thread
+    std::thread thread_tcpserver;
 
     bool CopyDatabase(std::string destination ,std::string source);
     bool UpdateMcbBasicParaToDB(GtcsDatabase &db,GtcsDatabaseBasicInfo &db_basic,McbID2Struct &mcb_basic);
@@ -94,6 +97,9 @@ public:
     std::string GetUiResponseCmd(std::string uicmd_string);
     bool GetUiSettingStatus();
     void SetUiSettingStatus(bool status);
+
+    // Jion thread.
+    // bool StopAllThread();
 
     // Gtcs System Main state.(MAIN)FSM)
     bool InitialGtcsSystem();

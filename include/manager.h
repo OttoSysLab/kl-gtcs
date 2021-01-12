@@ -63,7 +63,6 @@ private:
     std::string db_emmc_Path = "";     // Initial database path.
     std::string db_ramdisk_Path = "";  // Initial database path.
 
-    //
     bool CopyDatabase(std::string destination ,std::string source);
     bool UpdateMcbBasicParaToDB(GtcsDatabase &db,GtcsDatabaseBasicInfo &db_basic,McbID2Struct &mcb_basic);
     bool CompareBasicStruct(GtcsDatabaseBasicInfo &emmc,GtcsDatabaseBasicInfo &ramdisk);

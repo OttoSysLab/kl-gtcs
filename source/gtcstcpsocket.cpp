@@ -35,6 +35,23 @@ TcpSocket::TcpSocket()
 // Distruct.
 TcpSocket::~TcpSocket()
 {}
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 GtcsTcpSocket::GtcsTcpSocket(/* args */)
 {}
 GtcsTcpSocket::~GtcsTcpSocket()

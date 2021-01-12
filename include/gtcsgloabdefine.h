@@ -1047,6 +1047,33 @@ public:
     // void SetDataValue(std::string *ptr);
     void SetDataValue(std::map<std::string,std::string> &pDatavalue);
 };
+
+// Gtcs database program information.
+class GtcsDatabaseProgramInfo : public GtcsDatabaseBaseInfo
+{
+private:
+    /* data */
+public:
+    GtcsDatabaseProgramInfo (/* args */);
+    ~GtcsDatabaseProgramInfo ();
+    std::string dbtablename = "program";    
+    void InitialColumnType();
+    void InitialColumnName();
+};
+
+// Gtcs database step information.
+class GtcsDatabaseStepInfo : public GtcsDatabaseBaseInfo
+{
+private:
+    /* data */
+public:
+    GtcsDatabaseStepInfo (/* args */);
+    ~GtcsDatabaseStepInfo ();
+    std::string dbtablename = "step";    
+    void InitialColumnType();
+    void InitialColumnName();
+};
+
 // Gtcs database basic information.
 class GtcsDatabaseBasicInfo : public GtcsDatabaseBaseInfo
 {

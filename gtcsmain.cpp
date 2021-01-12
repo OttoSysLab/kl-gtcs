@@ -28,7 +28,7 @@ int main()
     #ifdef _DEBUG_MODE_
     manager.SetGtcsTcpSocketServerInfo("192.168.0.207",9000); // OTTO : 207,ERIC : 202
     #else
-    manager.SetGtcsTcpSocketServerInfo("127.0.0.1",9000); 
+    manager.SetGtcsTcpSocketServerInfo("127.0.0.1",9000);
     #endif    
     manager.InitialGtcsSystem();
     

@@ -13,7 +13,7 @@
  Programmer    	: Otto Chang                                                                   
  Date	       	: 2019/08/06                                                         
 =======================================================================================*/
-#include "GtcsGloabDefine.h"
+#include "gtcsgloabdefine.h"
 
 #pragma region bulletin
 #pragma region Gtcs AMS bulletin

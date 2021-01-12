@@ -10,7 +10,7 @@
  Programmer    	: Otto Chang
  Date	       	: 2019/08/06
 =======================================================================================*/
-#include "../include/GtcsMcbComm.h"
+#include "../include/gtcsmcbcomm.h"
 
 #pragma region Status
 // Check TMS status.

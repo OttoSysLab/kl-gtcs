@@ -13,9 +13,9 @@
  Programmer    	: Otto Chang                                                                   
  Date	       	: 2019/08/06                                                         
 =======================================================================================*/
-#include "GtcsGloabDefine.h"
-#include "GtcsBulletin.h"
-#include "Manager.h"
+#include "gtcsgloabdefine.h"
+#include "gtcsbulletin.h"
+#include "manager.h"
 
 // #include <iostream>       // 
 // #include <cstring>        // 

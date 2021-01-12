@@ -10,7 +10,8 @@
  Programmer    	: Otto Chang                                                                   
  Date	       	: 2019/08/06                                                         
 =======================================================================================*/
-#include "../include/GtcsAmsProtocol.h"
+#include "../include/gtcsamsprotocol.h"
+
 #pragma region Signalton.
 // Constructor.
 GtcsAmsProtocol::GtcsAmsProtocol(/* args */)

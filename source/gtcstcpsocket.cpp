@@ -10,7 +10,7 @@
  Programmer    	: Otto Chang                                                                   
  Date	       	: 2019/08/06                                                         
 =======================================================================================*/
-#include "GtcsTcpSocket.h"
+#include "gtcstcpsocket.h"
 
 // Constructor.
 TcpSocket::TcpSocket()

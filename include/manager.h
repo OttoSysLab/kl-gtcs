@@ -13,12 +13,12 @@
  Programmer    	: Otto Chang
  Date	       	: 2019/08/06
 =======================================================================================*/
-#include "GtcsBulletin.h"
-#include "GtcsGloabDefine.h"
-#include "GtcsAmsProtocol.h"
-#include "GtcsMcbComm.h"
-#include "GtcsDatabase.h"
-#include "GtcsTcpSocket.h"
+#include "gtcsbulletin.h"
+#include "gtcsgloabdefine.h"
+#include "gtcsamsprotocol.h"
+#include "gtcsmcbcomm.h"
+#include "gtcsdatabase.h"
+#include "gtcstcpsocket.h"
 
 #pragma region
 class Manager

@@ -16,8 +16,8 @@
  Programmer    	: Otto Chang
  Date	       	: 2019/08/06
 =======================================================================================*/
-#include "../include/Manager.h"
-#include "../include/GtcsTcpSocket.h"
+#include "../include/manager.h"
+#include "../include/gtcstcpsocket.h"
 
 #include <iostream>
 #include <pthread.h>

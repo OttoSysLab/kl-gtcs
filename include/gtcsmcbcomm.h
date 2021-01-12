@@ -20,11 +20,10 @@
 #include <ctime>
 #include <chrono>
 
-#include "ComPort.h"
-#include "GtcsGloabDefine.h"
-#include "GtcsBulletin.h"
-#include "CrcChecker.h"
-// #include <typeinfo>
+#include "comport.h"
+#include "gtcsgloabdefine.h"
+#include "gtcsbulletin.h"
+#include "crcchecker.h"
 
 #pragma region telegram strcut define.
 class TelegramStruct

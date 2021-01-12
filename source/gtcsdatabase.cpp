@@ -11,7 +11,7 @@
  Programmer    	: Otto Chang
  Date	       	: 2019/08/06
 =======================================================================================*/
-#include "GtcsDatabase.h"
+#include "gtcsdatabase.h"
 #include <sqlite3.h>
 
 #pragma region Sqlite3Manager

@@ -10,7 +10,7 @@
  Programmer    	: Otto Chang
  Date	       	: 2019/08/06
 =======================================================================================*/
-#include "../include/Manager.h"
+#include "../include/manager.h"
 
 #pragma region manager
 // Constructor.

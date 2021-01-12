@@ -1,58 +1,58 @@
 CC = g++
 INCLUDE = -I"./include" -I"../include"
-OBJS = ./object/GtcsMain.o ./object/ComPort.o ./object/CrcChecker.o ./object/GtcsDatabase.o \
-		./object/GtcsTcpSocket.o ./object/GtcsGloabDefine.o ./object/GtcsBulletin.o ./object/Common.o \
-		./object/GtcsAmsProtocol.o ./object/GtcsMcbComm.o \
-		./object/Manager.o 
+OBJS = ./object/gtcsmain.o ./object/comport.o ./object/crcchecker.o ./object/gtcsdatabase.o \
+		./object/gtcstcpsocket.o ./object/gtcsgloabdefine.o ./object/gtcsbulletin.o ./object/common.o \
+		./object/gtcsamsprotocol.o ./object/gtcsmcbcomm.o \
+		./object/manager.o 
 
 LIBS = -lpthread -lsqlite3
 
-gtcsdriver: GtcsMain.o \
-      CrcChecker.o \
-	  GtcsDatabase.o \
-	  GtcsTcpSocket.o \
-	  ComPort.o \
-	  GtcsGloabDefine.o \
-	  GtcsBulletin.o \
-	  Common.o \
-	  GtcsAmsProtocol.o  \
-	  GtcsMcbComm.o \
-	  Manager.o \
+gtcsdriver: gtcsmain.o \
+      crcchecker.o \
+	  gtcstcpsocket.o \
+	  gtcsdatabase.o \
+	  comport.o \
+	  gtcsgloabdefine.o \
+	  gtcsbulletin.o \
+	  common.o \
+	  gtcsamsprotocol.o  \
+	  gtcsmcbcomm.o \
+	  manager.o \
 	# ${CC} -pthread -o $@ ${INCLUDE} ${OBJS} 
 	${CC} -o $@ ${INCLUDE} ${OBJS} ${LIBS}
 
-GtcsMain.o : ./GtcsMain.cpp
-	${CC} ${INCLUDE} -c $< -o ./object/GtcsMain.o
+gtcsmain.o : ./gtcsmain.cpp
+	${CC} ${INCLUDE} -c $< -o ./object/gtcsmain.o
 
-CrcChecker.o : ./source/CrcChecker.cpp 
-	${CC} ${INCLUDE} -c $< -o ./object/CrcChecker.o
+crcchecker.o : ./source/crcchecker.cpp 
+	${CC} ${INCLUDE} -c $< -o ./object/crcchecker.o
 
-GtcsTcpSocket.o : ./source/GtcsTcpSocket.cpp 
-	${CC} ${INCLUDE} -c $< -o ./object/GtcsTcpSocket.o
+gtcstcpsocket.o : ./source/gtcstcpsocket.cpp 
+	${CC} ${INCLUDE} -c $< -o ./object/gtcstcpsocket.o
 
-GtcsDatabase.o : ./source/GtcsDatabase.cpp 
-	${CC} ${INCLUDE} -c $< -o ./object/GtcsDatabase.o 
+gtcsdatabase.o : ./source/gtcsdatabase.cpp 
+	${CC} ${INCLUDE} -c $< -o ./object/gtcsdatabase.o 
 
-Common.o : ./source/Common.cpp 
-	${CC} ${INCLUDE} -c $< -o ./object/Common.o
+common.o : ./source/common.cpp
+	${CC} ${INCLUDE} -c $< -o ./object/common.o
 
-ComPort.o : ./source/ComPort.cpp 
-	${CC} ${INCLUDE} -c $< -o ./object/ComPort.o
+comport.o : ./source/comport.cpp 
+	${CC} ${INCLUDE} -c $< -o ./object/comport.o
 
-GtcsGloabDefine.o : ./source/GtcsGloabDefine.cpp
-	${CC} ${INCLUDE} -c $< -o ./object/GtcsGloabDefine.o
+gtcsgloabdefine.o : ./source/gtcsgloabdefine.cpp
+	${CC} ${INCLUDE} -c $< -o ./object/gtcsgloabdefine.o
 
-GtcsBulletin.o : ./source/GtcsBulletin.cpp
-	${CC} ${INCLUDE} -c $< -o ./object/GtcsBulletin.o
+gtcsbulletin.o : ./source/gtcsbulletin.cpp
+	${CC} ${INCLUDE} -c $< -o ./object/gtcsbulletin.o
 
-GtcsAmsProtocol.o : ./source/GtcsAmsProtocol.cpp 
-	${CC} ${INCLUDE} -c $< -o ./object/GtcsAmsProtocol.o
+gtcsamsprotocol.o : ./source/gtcsamsprotocol.cpp 
+	${CC} ${INCLUDE} -c $< -o ./object/gtcsamsprotocol.o
 
-GtcsMcbComm.o : ./source/GtcsMcbComm.cpp 
-	${CC} ${INCLUDE} -c $< -o ./object/GtcsMcbComm.o
+gtcsmcbcomm.o : ./source/gtcsmcbcomm.cpp 
+	${CC} ${INCLUDE} -c $< -o ./object/gtcsmcbcomm.o
 
-Manager.o : ./source/Manager.cpp
-	${CC} ${INCLUDE} -c $< -o ./object/Manager.o
+manager.o : ./source/manager.cpp
+	${CC} ${INCLUDE} -c $< -o ./object/manager.o
 
 clear:
 	rm -f ./object/*.o

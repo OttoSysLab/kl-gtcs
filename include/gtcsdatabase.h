@@ -1,8 +1,6 @@
-#ifndef _GTCS_AMS_PROTOCOL_
-#define _GTCS_AMS_PROTOCOL_
-
+#ifndef _GTCS_DATABASE_
+#define _GTCS_DATABASE_
 #pragma once
-
 /*=======================================================================================
  Program Nane  	: gtcs_tlg_decoder.c     
  Subject 		: SARM Serial Port Communication Driver Process                                  
@@ -15,38 +13,46 @@
  Programmer    	: Otto Chang                                                                   
  Date	       	: 2019/08/06                                                         
 =======================================================================================*/
-#include <map>
-#include <iostream>
 #include <cstring>
-#include <vector>
-#include "GtcsGloabDefine.h"
-#include "GtcsBulletin.h"
+#include <sqlite3.h>
+#include <iostream>
+#include "gtcsgloabdefine.h"
+#include "gtcsbulletin.h"
 
-#pragma region AMS Protocol object
-// Gtcs AMS Protocol
-class GtcsAmsProtocol
+#pragma region Sqlite3Manager 
+// Gtcs database struct.
+class Sqlite3Manager
 {
-private: 
-    // SignleTon instance object.
-    static GtcsAmsProtocol* instance;
-    // Constructor.
-    GtcsAmsProtocol(/* args */);
-    int ConvertToProtocolString(std::string* ptr,std::string& result);
-    int UpdateProtocolStruct(std::string* ptr,std::vector<std::string>& ams_array);
+private:
+public:
+    Sqlite3Manager();
+    ~Sqlite3Manager();
+    // 
+    virtual std::string GetDatabasePath(){};
+    virtual void SetDatabasePath(std::string Path){};
     
-    // int CopyAmsStructData(std::string  );
-
-    std::vector<std::string> SplitString(const std::string & str,const std::string& pattern);
-    std::vector<std::string> GetAmsSpliteArray(const std::string & str);
-public:    
-    int cmdsn = 0; 
-    ~GtcsAmsProtocol();
-    static GtcsAmsProtocol* GetInstance();
-    // AMSBulletin amsprotocol;
-    int GetAmsCmdNum(std::string amscmd);
-    int GetAmsSymmetryCmdNumver(int amscmd);
-    std::string GetAmsBulletin(int amscmd);
-    std::string SetAmsBulletin(std::string ams_string);
+    // Basic function.
+    bool UpdateDatabase(std::string db_path,std::string table,std::string sqlcmd);
+    bool ReadDatabase(std::string db_path,std::string table,std::string *ptr);       // int SetDatabaseFilePath(std::string path);
 };
 #pragma endregion
+
+#pragma region GtcsDatabase
+class GtcsDatabase : public Sqlite3Manager
+{
+private:
+    std::string dbPath = "";
+public:
+    // Constructor.
+    GtcsDatabase(std::string Path);
+    ~GtcsDatabase();
+    
+    // Get database path.
+    std::string GetDatabasePath();
+    void SetDatabasePath(std::string Path);
+
+    // Set .  
+    bool UpdateDatabaseBasicTable(GtcsDatabaseBasicInfo &db_basic); // 
+    bool ReadDatabaseBasicTable(GtcsDatabaseBasicInfo &db_basic);   // 
+};
 #endif

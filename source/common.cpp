@@ -10,7 +10,7 @@
  Programmer    	: Otto Chang                                                                   
  Date	       	: 2019/08/06                                                         
 =======================================================================================*/
-#include "Common.h"
+#include "common.h"
 
 // Convert int to 8 bites array.
 std::array<bool,8> BitArray::To8BiteArray(int num)

@@ -1,6 +1,3 @@
-#ifndef _GTCS_COMMON_
-#define _GTCS_COMMON_
-#pragma once
 /*=======================================================================================
  Program Nane  	: gtcs_tlg_decoder.c     
  Subject 		: SARM Serial Port Communication Driver Process                                  
@@ -13,49 +10,43 @@
  Programmer    	: Otto Chang                                                                   
  Date	       	: 2019/08/06                                                         
 =======================================================================================*/
-#include "GtcsGloabDefine.h"
-#include <array>
-// #include <iostream>
+#include "../include/gtcsbulletin.h"
 
-// #endif
-class Common
+#pragma region Signalton.
+// Constructor.
+GtcsBulletin::GtcsBulletin(/* args */)
 {
-private:
-    /* data */
-public:
-    Common(/* args */);             // 
-    ~Common();                      // 
-    // Send Char.
-};
+    // InitialGtcsBulletin();
+}
+// Distructor.
+GtcsBulletin::~GtcsBulletin()
+{}
+// SignleTon instance object.
+GtcsBulletin* GtcsBulletin::instance = 0;
+// Get Instance.
+GtcsBulletin* GtcsBulletin::GetInstance()
+{
+    if(instance == 0){
+        instance = new GtcsBulletin();
+    }
+    return instance;
+}
 
-class BitArray
+bool GtcsBulletin::InitialGtcsBulletin()
 {
-private:
-    /* data */
-public:
-    BitArray(/* args */){};
-    ~BitArray(){};
-    static std::array<bool,8> To8BiteArray(int num);
-    static std::array<bool,16> To16BiteArray(int num);
-    static std::array<bool,32> To32BiteArray(int num);
-};
-class BitConverter
-{
-private:
-    /* data */
-public:
-    BitConverter(/* args */){};
-    ~BitConverter(){};
-    static uint8_t ToUInt8(std::array<bool,8> array);
-    static uint16_t ToUInt16(std::array<bool,16> array);
-    static uint32_t ToUInt32(std::array<bool,32> array);
-};
+    #pragma region 
+    // CMD300Struct->CMD300Struct = {
+    //     .str1 = "CMD300",                                   
+    //     .str2 = "yyyyMMdd HH:mm:ss",                                         
+    //     .str3 = "0",                                        
+    //     .str4 = "0",
+    //     .str5 = "\n\r",
+    // };// CMD300, 回復確認.
+    
+    #pragma endregion
 
-class DataSorter
-{
-public:
-    DataSorter(){};
-    ~DataSorter(){};
-    static std::string GetFloatScaleSortString(float src,int scalenum);
-};
-#endif
+    return true;
+}
+
+#pragma endregion
+

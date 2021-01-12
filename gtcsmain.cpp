@@ -10,7 +10,7 @@
  Programmer    	: Otto Chang
  Date	       	: 2019/08/06
 =======================================================================================*/
-#include "../include/GtcsMain.h"
+#include "../include/gtcsmain.h"
 
 // main.
 int main()

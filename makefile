@@ -1,11 +1,29 @@
 CC = g++
-INCLUDE = -I"./include" -I"../include"
-OBJS = ./object/gtcsmain.o ./object/comport.o ./object/crcchecker.o ./object/gtcsdatabase.o \
-		./object/gtcstcpsocket.o ./object/gtcsgloabdefine.o ./object/gtcsbulletin.o ./object/common.o \
-		./object/gtcsamsprotocol.o ./object/gtcsmcbcomm.o \
-		./object/manager.o 
 
-LIBS = -lpthread -lsqlite3
+SRCS :=
+INCLUDES :=
+LIBS :=
+OBJS :=
+DEPS := 
+CFLAGS := 
+
+INCLUDE += -I"./include" 
+INCLUDE += -I"../include"
+
+OBJS += ./object/gtcsmain.o 
+OBJS += ./object/comport.o 
+OBJS += ./object/crcchecker.o 
+OBJS += ./object/gtcsdatabase.o 
+OBJS += ./object/gtcstcpsocket.o 
+OBJS += ./object/gtcsgloabdefine.o 
+OBJS += ./object/gtcsbulletin.o 
+OBJS += ./object/common.o 
+OBJS += ./object/gtcsamsprotocol.o 
+OBJS += ./object/gtcsmcbcomm.o
+OBJS += ./object/manager.o 
+
+LIBS += -lpthread 
+LIBS += -lsqlite3
 
 gtcsdriver: gtcsmain.o \
       crcchecker.o \

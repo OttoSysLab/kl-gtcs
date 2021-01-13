@@ -1059,7 +1059,7 @@ bool GtcsManager::CheckGtcsSystem()
         basic_ramdisk.SetDataValue(basic_emmc.data);
     }
 
-    // Step 4 : Update MCB basic parameter to database.
+    // Step 4 : Update MCB basic parameter to ramdisk DB.
     if (UpdateMcbBasicParaToDB(db_ramdisk,basic_ramdisk,bulletin->McbBulletin.BasicPara)==false)
     {
         std::cout << "Step 4 : Update MCB basic parameter to database." << std::endl;
@@ -1083,6 +1083,7 @@ bool GtcsManager::CheckGtcsSystem()
     // Step 7 = Jump to selected MAIN_FSM.
     bulletin->checksysok = CompareBasicStruct(basic_emmc,basic_ramdisk);
     std::cout << " bulletin->checksysok = " << bulletin->checksysok << std::endl;
+    // 
     if (bulletin->checksysok == true)
     {
         // Display some informaiton.
@@ -1117,8 +1118,13 @@ bool GtcsManager::CheckGtcsSystem()
  *******************************************************************************************/
 bool GtcsManager::RunGtcsSystem()
 {
+
+    // Check uisetting status.
     if (bulletin->uisetting==false)
     {
+        // step 1
+
+        //  
         mcb->NormalPollingToMcb();                                              // 
         ConvertReadlTimeActuralValue();                                         // Calaulate RT actural value.
         mcb->telegram.status.last_status = mcb->telegram.status.current_status; //

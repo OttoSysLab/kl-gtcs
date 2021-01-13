@@ -75,7 +75,6 @@ GtcsTcpSocket::~GtcsTcpSocket()
  *******************************************************************************************/
 void GtcsTcpSocket::GtcsTcpSocketServerHandler()
 {
-	// GtcsBulletin *bulletin = GtcsBulletin::GetInstance();
     // Initials vlaue & object.
     GtcsManager manager;
     std::string socketrevcmd = "";
@@ -136,7 +135,6 @@ void GtcsTcpSocket::GtcsTcpSocketServerHandler()
         socketrevcmd = manager.GetUiRequestCmd();
         if (socketrevcmd=="REQ300")
         {
-            // bulletin->uisetting = false;GtcsManager::
             manager.SetUiSettingStatus(false);
         }
         else
@@ -151,7 +149,6 @@ void GtcsTcpSocket::GtcsTcpSocketServerHandler()
         // Send data to tcpclient.
         std::fill_n(sendbuff,sizeof(sendbuff),0);   
         strcpy(sendbuff,manager.GetUiResponseCmd(socketrevcmd).c_str());
-        // socketrevcmd = manager.GetUiResponseCmd(socketrevcmd);
         if (send(connfd,sendbuff,sizeof(sendbuff),0)<0)
         {
             printf("send msg error: %s(errno: %d)\n", strerror(errno), errno);

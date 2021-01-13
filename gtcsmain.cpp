@@ -50,7 +50,6 @@ int main()
                 std::cout << "CheckMainFSM = READY" << std::endl;
                 #endif
                 manager.RunGtcsSystem();
-                // manager.StopAllThread();
                 break;
             case MAIN_FSM::ALARM:
                 #ifdef _DEBUG_MODE_

@@ -460,7 +460,7 @@ void AMSBulletin::InitialStructValue()
         .str2 = "yyyyMMdd HH:mm:ss",                         // yyyyMMdd HH:mm:ss
         .str3 = "0",                                         // check sum ,4 chars
         .str4 = "0",                                         // Command_sn
-        .str5 = "\n\r",                                     // CR,LF
+        .str5 = "\n\r",                                      // CR,LF
     };// REQ300, 保持連線.
     REQ301Struct = {
         .str1  = "REQ301",                                   // Header+DATA

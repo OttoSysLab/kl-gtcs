@@ -491,7 +491,8 @@ bool GtcsManager::SetAmsCmdBaiscParaToAns(AmsANS340Struct &amsans,AmsCMD340Struc
  *  @note    none
  *
  *******************************************************************************************/
-bool GtcsManager::SetSystemBasicParameter(AmsCMD340Struct &amscmd,GtcsDatabaseBasicStruct &db_basic,McbID2Struct &mcb_basic)
+// bool GtcsManager::SetSystemBasicParameter(AmsCMD340Struct &amscmd,GtcsDatabaseBasicStruct &db_basic,McbID2Struct &mcb_basic)
+bool GtcsManager::SetSystemBasicParameter(AmsCMD340Struct &amscmd,McbID2Struct &mcb_basic)
 {
     // Initial value.
     GtcsDatabase db_emmc(db_emmc_Path);
@@ -529,7 +530,7 @@ bool GtcsManager::SetSystemBasicParameter(AmsCMD340Struct &amscmd,GtcsDatabaseBa
     // Check OK!!
     // std::this_thread::sleep_for(std::chrono::milliseconds(200));
     bulletin->checksysok = true;
-    return true;
+    return bulletin->checksysok;
 }
 /******************************************************************************************
  *
@@ -578,7 +579,7 @@ bool GtcsManager::CheckUiSettingFSM(int uicmd)
         #pragma endregion
         break;
     case AMSCMD::CMD340:
-        if(SetSystemBasicParameter(bulletin->AmsBulletin.CMD340Struct,bulletin->DbBulletin.basic,bulletin->McbBulletin.BasicPara)==false)
+        if(SetSystemBasicParameter(bulletin->AmsBulletin.CMD340Struct,bulletin->McbBulletin.BasicPara)==false)
         {
             return false;
         }
@@ -879,7 +880,16 @@ bool GtcsManager::SetDatabaseBasicParaToReq(AmsREQ301Struct &amsreq,GtcsDatabase
  *******************************************************************************************/
 bool GtcsManager::CheckUiRequestCmd(std::string reqest_string)
 {
+    #ifdef _DEBUG_MODE_
+    std::cout << "CheckUiRequestCmd = Initial!! " << std::endl;
+    #endif
+
     bulletin->uisockrevcmd = ams->SetAmsBulletin(reqest_string);
+    
+    #ifdef _DEBUG_MODE_
+    std::cout << "CheckUiRequestCmd = OK!! " << std::endl;
+    #endif
+
     return true;
 }
 std::string GtcsManager::GetUiRequestCmd()
@@ -1109,7 +1119,7 @@ bool GtcsManager::RunGtcsSystem()
 {
     if (bulletin->uisetting==false)
     {
-        mcb->NormalPollingToMcb();
+        mcb->NormalPollingToMcb();                                              // 
         ConvertReadlTimeActuralValue();                                         // Calaulate RT actural value.
         mcb->telegram.status.last_status = mcb->telegram.status.current_status; //
     }

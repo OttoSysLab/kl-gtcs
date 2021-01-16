@@ -735,10 +735,13 @@ bool GtcsManager::CompareBasicStruct(GtcsDatabaseBasicInfo &emmc,GtcsDatabaseBas
         if (emmc.data[emmc.columnnames[i]] != ramdisk.data[ramdisk.columnnames[i]])
         {
             result = false;
+            std::cout << " key = " << emmc.columnnames[i] << "is not the same.";
+            std::cout << " emmc_value = " << emmc.data[emmc.columnnames[i]];
+            std::cout << " ramdisk_value = " << ramdisk.data[ramdisk.columnnames[i]] << std::endl;  
         }
-        std::cout << "check key = " << emmc.columnnames[i] ;
-        std::cout << " emmc_value = " << emmc.data[emmc.columnnames[i]];
-        std::cout << " ramdisk_value = " << ramdisk.data[ramdisk.columnnames[i]] << std::endl;
+        // std::cout << "check key = " << emmc.columnnames[i] ;
+        // std::cout << " emmc_value = " << emmc.data[emmc.columnnames[i]];
+        // std::cout << " ramdisk_value = " << ramdisk.data[ramdisk.columnnames[i]] << std::endl;
     }
     return result;
 }
@@ -1087,7 +1090,7 @@ bool GtcsManager::CheckGtcsSystem()
     if (bulletin->checksysok == true)
     {
         // Display some informaiton.
-        std::cout <<"Gear Ratio = " << std::to_string(bulletin->McbBulletin.BasicPara.u16GearBoxRatio)<<std::endl;
+        std::cout << "Gear Ratio = " << std::to_string(bulletin->McbBulletin.BasicPara.u16GearBoxRatio)<<std::endl;
         mcb->telegram.ctrl.IsEnable = true;
         SetMainFSM(MAIN_FSM::READY);
     }

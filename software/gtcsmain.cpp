@@ -10,7 +10,12 @@
  Programmer    	: Otto Chang
  Date	       	: 2019/08/06
 =======================================================================================*/
-#include "../include/gtcsmain.h"
+#include "../include/manager.h"
+#include "../include/gtcstcpsocket.h"
+
+#include <iostream>
+#include <pthread.h>
+#include <cstring>
 
 // main.
 int main()

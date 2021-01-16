@@ -1,5 +1,3 @@
-#ifndef _GTCS_BULLETIN_
-#define _GTCS_BULLETIN_
 #pragma once
 /*=======================================================================================
  Program Nane  	: gtcs_tlg_decoder.c
@@ -14,7 +12,7 @@
  Date	       	: 2019/08/06
 =======================================================================================*/
 #include "gtcsgloabdefine.h"
-#include <list>
+// #include <list>
 
 #pragma region bulletin
 #pragma region Gtcs AMS bulletin
@@ -145,4 +143,3 @@ public:
 };
 #pragma endregion
 #pragma endregion
-#endif

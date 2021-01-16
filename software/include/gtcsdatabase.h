@@ -15,7 +15,6 @@
 #include <sqlite3.h>
 #include <iostream>
 #include "gtcsgloabdefine.h"
-// #include "gtcsbulletin.h"
 
 #pragma region Sqlite3Manager 
 // Gtcs database struct.

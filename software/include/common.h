@@ -1,5 +1,3 @@
-#ifndef _GTCS_COMMON_
-#define _GTCS_COMMON_
 #pragma once
 /*=======================================================================================
  Program Nane  	: gtcs_tlg_decoder.c     
@@ -57,4 +55,3 @@ public:
     ~DataSorter(){};
     static std::string GetFloatScaleSortString(float src,int scalenum);
 };
-#endif

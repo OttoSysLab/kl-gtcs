@@ -42,20 +42,6 @@ LIBS += -lsqlite3
 all:$(OBJS)
 	@${CC} ${INCLUDE} ${OBJS} ${LIBS} -o ${TARGET}
 
-# build: gtcsmain.o \
-#       crcchecker.o \
-# 	  gtcstcpsocket.o \
-# 	  gtcsdatabase.o \
-# 	  comport.o \
-# 	  gtcsgloabdefine.o \
-# 	  gtcsbulletin.o \
-# 	  common.o \
-# 	  gtcsamsprotocol.o  \
-# 	  gtcsmcbcomm.o \
-# 	  manager.o \
-	# ${CC} -pthread -o $@ ${INCLUDE} ${OBJS} 
-	# ${CC} -o $@ ${INCLUDE} ${OBJS} ${LIBS}
-
 build: $(CMD)
 
 gtcsmain.o : ./gtcsmain.cpp

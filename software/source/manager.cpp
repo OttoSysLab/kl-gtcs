@@ -258,6 +258,145 @@ std::string GtcsManager::GetToolRunTimeStatus(GtcsScrewSequenceHandler &ScrewHan
  *  @note    none
  *
  *******************************************************************************************/
+std::string GtcsManager::GetMCBErrMessageString(uint32_t errorflagindex)
+{
+    std::string result = "NO-ERR______________";
+    switch (errorflagindex)
+    {
+    case MCB_ERR_FLAG::ERR_CONT_TEMP:       // 0
+        result = "ERR-CONT-TEMP_______";
+        break;
+    case MCB_ERR_FLAG::ERR_MOT_TEMP:        // 1
+        result = "ERR-MOT-TEMP________";
+        break;
+    case MCB_ERR_FLAG::ERR_MOT_CURR:        // 2
+        result = "ERR-MOT-CURR________";
+        break;
+    case MCB_ERR_FLAG::ERR_MOT_PEAK_CURR:   // 3
+        result = "ERR-MOT-PEAK-CURR___";
+        break;
+    case MCB_ERR_FLAG::ERR_MOT_TORQUE:      // 4 
+        result = "ERR-MOT-TORQUE______";    
+        break;
+    case MCB_ERR_FLAG::ERR_DEADLOCK:        // 5
+        result = "ERR-DEADLOCK________";    
+        break;
+    case MCB_ERR_FLAG::ERR_PROC_MINTIME:    // 6 
+        result = "ERR-PROC_MINTIME____";    
+        break;
+    case MCB_ERR_FLAG::ERR_PROC_MAXTIME:    // 7 
+        result = "ERR-PROC-MAXTIME____";    
+        break;
+    case MCB_ERR_FLAG::ERR_ENCODER:         // 8 
+        result = "ERR-ENCODER_________";    
+        break;
+    case MCB_ERR_FLAG::ERR_HALL:            // 9 
+        result = "ERR-HALL____________";    
+        break;
+    case MCB_ERR_FLAG::ERR_BUSVOLT_HIGH:    // 10 
+        result = "ERR-BUSVOLT-HIGH____";    
+        break;
+    case MCB_ERR_FLAG::ERR_BUSVOLT_LOW:     // 11 
+        result = "ERR-BUSVOLT-LOW_____";    
+        break;
+    case MCB_ERR_FLAG::ERR_PROG_NA:         // 12 
+        result = "ERR-PROG-NA_________";    
+        break;
+    case MCB_ERR_FLAG::ERR_PROC_NA:         // 13 
+        result = "ERR-PROC-NA_________";    
+        break;
+    case MCB_ERR_FLAG::ERR_STEP_NA:         // 14 
+        result = "ERR-STEP-NA_________";    
+        break;
+    case MCB_ERR_FLAG::ERR_DMS_COMM:        // 15 
+        result = "ERR-DMS-COMM________";    
+        break;
+    case MCB_ERR_FLAG::ERR_FLASH:           // 16 
+        result = "ERR-FLASH___________";    
+        break;
+    case MCB_ERR_FLAG::ERR_FRAM:            // 17 
+        result = "ERR-FRAM____________";    
+        break;
+    case MCB_ERR_FLAG::ERR_ANGLE:           // 18 
+        result = "ERR-ANGLE___________";    
+        break;
+    case MCB_ERR_FLAG::ERR_REVOLUTIONS:     // 19 
+        result = "ERR-REVOLUTIONS_____";    
+        break;
+    case MCB_ERR_FLAG::ERR_PROTECT_CIRCUIT: // 20 
+        result = "ERR-PROTECT-CIRCUIT_";    
+        break;
+    case MCB_ERR_FLAG::ERR_SWITCH_CONFIG:   // 21 
+        result = "ERR-SWITCH-CONFIG___";    
+        break;
+    case MCB_ERR_FLAG::ERR_DISPLAY_COMM_TO: // 22 
+        // result = "ERR-DISPLAY-COMM-TO_";    
+        break;
+    case MCB_ERR_FLAG::ERR_STEP_NOT_REC:    // 23 
+        result = "ERR-STEP-NOT-REC____";    
+        break;
+    case MCB_ERR_FLAG::ERR_TMD_FRAM:        // 24 
+        result = "ERR-TMD-FRAM________";    
+        break;
+    default:
+        result = "NO-ERR______________";
+        break;
+    }
+    return result;
+}
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+std::string GtcsManager::GetCurrentMCBErrorMessage(uint32_t errorflags) 
+{
+    std::string result = "NO-ERR______________";
+    std::array<bool,32> errorflagarray = BitArray::To32BiteArray(errorflags);
+    // int count  = sizeof(errorflagarray);
+    int count = 24;
+
+    for (uint32_t i = 0; i < count; i++)
+    {
+        if (errorflagarray[i]==1)
+        {
+            if(i!=22)
+            {
+                result = GetMCBErrMessageString(i);
+            }
+        }        
+    }        
+    return result;
+}
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 // Get MCB realy time status string.
 bool GtcsManager::ConvertReadlTimeActuralValue()
 {
@@ -281,7 +420,8 @@ bool GtcsManager::ConvertReadlTimeActuralValue()
     std::string revolution 
         = DataSorter::GetFloatScaleSortString((float)mcbstatus->u32Revolutions/(gear * 200) * 360,4);       // Calculate revalution.
     std::string current_rt_status = GetToolRunTimeStatus(bulletin->ScrewHandler);
-    std::string current_mcb_err = "NO-ERR______________";
+    // std::string current_mcb_err = "NO-ERR______________";
+    std::string current_mcb_err = GetCurrentMCBErrorMessage(mcbstatus->u32ActError);
     // data300->header = std::to_string(0);      // str1:Header+DATA
     // time.
     time_t now = time(0);
@@ -342,7 +482,7 @@ bool GtcsManager::ConvertReadlTimeActuralValue()
  *******************************************************************************************/
 bool GtcsManager::ConvertAmsBasicToMcbStruct(AmsCMD340Struct &amscmd,McbID2Struct &mcb_basic)
 {
-    //
+    // 
     mcb_basic.s16MinTemp
         = (uint16_t)(std::stof(amscmd.str5)*10);// SID = 1,Minimal Temperature of the motor and the motorcontroller.
                                                 // Underneath this temperature the tool doesn’t work. Unit is [0,1 °C]."

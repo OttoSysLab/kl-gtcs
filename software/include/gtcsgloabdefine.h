@@ -60,7 +60,6 @@ enum TMD_INPUT:int{
     REV_SW,
     TEMP_ALM,
 };
-
 // MCB ctrl flags.
 enum CTRL_FLAGS_IDX:int{
     SL_AUTO_TURNBLOCK = 0,
@@ -93,6 +92,35 @@ enum LOCKED_STATUS : int {
     NGR,
     NGT,
 };
+// MCB error flag index
+enum MCB_ERR_FLAG:int{
+    ERR_CONT_TEMP = 0,
+    ERR_MOT_TEMP,
+    ERR_MOT_CURR,
+    ERR_MOT_PEAK_CURR,
+    ERR_MOT_TORQUE, 
+    ERR_DEADLOCK, 
+    ERR_PROC_MINTIME,
+    ERR_PROC_MAXTIME,
+    ERR_ENCODER,
+    ERR_HALL,
+    ERR_BUSVOLT_HIGH,
+    ERR_BUSVOLT_LOW, 
+    ERR_PROG_NA,
+    ERR_PROC_NA,
+    ERR_STEP_NA,
+    ERR_DMS_COMM, 
+    ERR_FLASH,
+    ERR_FRAM, 
+    ERR_ANGLE,
+    ERR_REVOLUTIONS,
+    ERR_PROTECT_CIRCUIT,
+    ERR_SWITCH_CONFIG, 
+    ERR_DISPLAY_COMM_TO,
+    ERR_STEP_NOT_REC,
+    ERR_TMD_FRAM,
+};
+
 // MCB status flags.
 enum STATUS_FlAGS_IDX:int{
     TORQUE_MCU_PRSESENT     = 7,         // Flag 7

@@ -6,9 +6,7 @@
                 "${workspaceFolder}\\**",
                 "${workspaceFolder}\\include\\**",
                 "${workspaceFolder}\\object\\**",
-                "${workspaceFolder}\\resource\\**",
-                "${workspaceFolder}\\source\\**",
-                "${workspaceFolder}\\testdriven\\**"
+                "${workspaceFolder}\\source\\**"
             ],
             "defines": [
                 "_DEBUG",

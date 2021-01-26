@@ -100,6 +100,8 @@ public:
 
     // Jion thread.
     // bool StopAllThread();
+    std::string GetMCBErrMessageString(uint32_t errorflagindex);
+    std::string GetCurrentMCBErrorMessage(uint32_t errorflags);
 
     // Gtcs System Main state.(MAIN)FSM)
     bool InitialGtcsSystem();

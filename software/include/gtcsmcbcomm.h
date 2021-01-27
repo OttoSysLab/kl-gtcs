@@ -68,7 +68,7 @@ public:
     GtcsCtrlTelegramStrcut fasten = {
         .u16Ctrlflags     = 0, 
         .u16ControlMode   = 1,
-        .u16WorkProc      = 4248,   // 4248
+        .u16WorkProc      = 4000,   // 4248
         .u16CtrlProgram   = 1,
         .u16ManRpm        = 1000,
         .u16ManSlope      = 1000,

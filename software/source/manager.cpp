@@ -404,7 +404,7 @@ bool GtcsManager::ConvertReadlTimeActuralValue()
     GtcsStatusTelegramStrcut *mcbstatus = &mcb->telegram.status.current_status;
 
     // Get status.
-    float toolmaxtorque = 7;
+    float toolmaxtorque = 5;
     std::array<bool,16> current_status_flags = BitArray::To16BiteArray(mcb->telegram.status.current_status.u16Statusflags);
     std::array<bool,16> last_status_lags     = BitArray::To16BiteArray(mcb->telegram.status.last_status.u16Statusflags);
     std::array<bool,32> error_flags          = BitArray::To32BiteArray(mcb->telegram.status.current_status.u32ActError);
@@ -1266,8 +1266,8 @@ bool GtcsManager::RunGtcsSystem()
     if (bulletin->uisetting==false)
     {
         // step 1
-
-        //  
+        
+        // step 2 = 
         mcb->NormalPollingToMcb();                                              // 
         ConvertReadlTimeActuralValue();                                         // Calaulate RT actural value.
         mcb->telegram.status.last_status = mcb->telegram.status.current_status; //
@@ -1297,6 +1297,7 @@ bool GtcsManager::RunGtcsSystem()
  *******************************************************************************************/
 bool GtcsManager::ClearGtcsSystemAlarm()
 {
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));  // Thread sleep 1s.
     return true;
 }
 /******************************************************************************************

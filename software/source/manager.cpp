@@ -1143,14 +1143,15 @@ bool GtcsManager::InitialGtcsSystem()
 {
     // Initial MCB Com.
     mcb->InitialMcbComPort(comport_name);
-    std::this_thread::sleep_for(std::chrono::milliseconds(200));  // Thread sleep 1s.
+    std::this_thread::sleep_for(std::chrono::milliseconds(1));  // Thread sleep 1s.
     for(int index=0;index<5;index++)
     {
-        mcb->NormalPollingToMcb();
+        mcb->PollingToMcb();
         ConvertReadlTimeActuralValue();                                        // Calaulate RT actural value.
         mcb->telegram.status.last_status = mcb->telegram.status.current_status;// Storage last telegram status.
     }
     mcb->telegram.ctrl.IsEnable = false;
+    // std::this_thread::sleep_for(std::chrono::milliseconds(100));  // Thread sleep 1s.
     // Min fsm jump to Check system status.
     SetMainFSM(MAIN_FSM::CHECK_SYS);
     return false;
@@ -1261,14 +1262,13 @@ bool GtcsManager::CheckGtcsSystem()
  *******************************************************************************************/
 bool GtcsManager::RunGtcsSystem()
 {
-
     // Check uisetting status.
     if (bulletin->uisetting==false)
     {
-        // step 1
+        // step 1 = 
         
         // step 2 = 
-        mcb->NormalPollingToMcb();                                              // 
+        mcb->PollingToMcb();                                              // 
         ConvertReadlTimeActuralValue();                                         // Calaulate RT actural value.
         mcb->telegram.status.last_status = mcb->telegram.status.current_status; //
     }

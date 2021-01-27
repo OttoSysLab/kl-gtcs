@@ -374,7 +374,10 @@ int GtcsMcbComm::ReadBasicParameter(McbID2Struct &basic_para)
     uint8_t main_id = 2;
     uint8_t sub_id[6];
     uint16_t payload_start_index = 8;
-    int delay_time = 50;
+    int delaytime = 50;
+
+    // std::this_thread::sleep_for(std::chrono::milliseconds(20));
+
     #pragma region First package. (SID1-6)
     telegram.r_request.InitialTelegramArray();
     // Initial sub id array.
@@ -441,7 +444,7 @@ int GtcsMcbComm::ReadBasicParameter(McbID2Struct &basic_para)
         comm.SendChar(com_num,telegram.r_request.telegram_array[index]);
     }
     // Get Data for telegram rw request.
-    std::this_thread::sleep_for(std::chrono::milliseconds(delay_time));
+    std::this_thread::sleep_for(std::chrono::milliseconds(delaytime));
     telegram.rw_response.InitialTelegramArray();
     result = read(com_num, &telegram.rw_response.telegram_array, 1024);
     // Get basic parameter from telegram.
@@ -457,6 +460,10 @@ int GtcsMcbComm::ReadBasicParameter(McbID2Struct &basic_para)
                                       ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+29]<<8); // SID = 5
     basic_para.u16MaxDutyCycle     = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+34]+
                                       ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+35]<<8); // SID = 4
+    // flush buffer.
+    tcflush(com_num, TCIFLUSH);   	/* Discards old data in the rx buffer            */
+	tcflush(com_num, TCOFLUSH);
+    std::this_thread::sleep_for(std::chrono::milliseconds(delaytime));
     #pragma endregion
     #pragma region second package. (SID7-12)
     telegram.r_request.InitialTelegramArray();
@@ -524,7 +531,7 @@ int GtcsMcbComm::ReadBasicParameter(McbID2Struct &basic_para)
         comm.SendChar(com_num,telegram.r_request.telegram_array[index]);
     }
     // Get Data for telegram rw request.
-    std::this_thread::sleep_for(std::chrono::milliseconds(delay_time));
+    std::this_thread::sleep_for(std::chrono::milliseconds(delaytime));
     telegram.rw_response.InitialTelegramArray();
     result = read(com_num, &telegram.rw_response.telegram_array, 1024);
     // Get basic parameter from telegram.
@@ -540,6 +547,10 @@ int GtcsMcbComm::ReadBasicParameter(McbID2Struct &basic_para)
                                   ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+29]<<8); // SID = 11
     basic_para.u16MaxBusVolt   = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+34]+
                                   ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+35]<<8); // SID = 12
+    // flush buffer.
+    tcflush(com_num, TCIFLUSH);   	/* Discards old data in the rx buffer            */
+	tcflush(com_num, TCOFLUSH);
+    std::this_thread::sleep_for(std::chrono::milliseconds(delaytime));
     #pragma endregion
     #pragma region third send. (SID13-18)
      telegram.r_request.InitialTelegramArray();
@@ -607,7 +618,7 @@ int GtcsMcbComm::ReadBasicParameter(McbID2Struct &basic_para)
         comm.SendChar(com_num,telegram.r_request.telegram_array[index]);
     }
     // Get Data for telegram rw request.
-    std::this_thread::sleep_for(std::chrono::milliseconds(delay_time));
+    std::this_thread::sleep_for(std::chrono::milliseconds(delaytime));
     telegram.rw_response.InitialTelegramArray();
     result = read(com_num, &telegram.rw_response.telegram_array, 1024);
     // Get basic parameter from telegram.
@@ -623,6 +634,11 @@ int GtcsMcbComm::ReadBasicParameter(McbID2Struct &basic_para)
                                     ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+29]<<8); // SID = 17
     basic_para.u16RevSlope       = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+34]+
                                     ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+35]<<8); // SID = 18
+    // flush buffer.
+    tcflush(com_num, TCIFLUSH);   	/* Discards old data in the rx buffer            */
+	tcflush(com_num, TCOFLUSH);
+    std::this_thread::sleep_for(std::chrono::milliseconds(delaytime));
+
     #pragma endregion
     #pragma region fourth package. (SID19-24)
     telegram.r_request.InitialTelegramArray();
@@ -690,7 +706,7 @@ int GtcsMcbComm::ReadBasicParameter(McbID2Struct &basic_para)
         comm.SendChar(com_num,telegram.r_request.telegram_array[index]);
     }
     // Get Data for telegram rw request.
-    std::this_thread::sleep_for(std::chrono::milliseconds(delay_time));
+    std::this_thread::sleep_for(std::chrono::milliseconds(delaytime));
     telegram.rw_response.InitialTelegramArray();
     result = read(com_num, &telegram.rw_response.telegram_array, 1024);
     // Get basic parameter from telegram.
@@ -706,6 +722,11 @@ int GtcsMcbComm::ReadBasicParameter(McbID2Struct &basic_para)
                                    ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+29]<<8); // SID = 17
     basic_para.u16IGain         = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+34]+
                                    ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+35]<<8); // SID = 18
+    // flush buffer.
+    tcflush(com_num, TCIFLUSH);   	/* Discards old data in the rx buffer            */
+	tcflush(com_num, TCOFLUSH);
+    std::this_thread::sleep_for(std::chrono::milliseconds(delaytime));
+
     // telegram.rw_response.InitialTelegramArray();
     #pragma endregion
     #pragma region fifth (SID25)
@@ -774,13 +795,18 @@ int GtcsMcbComm::ReadBasicParameter(McbID2Struct &basic_para)
         comm.SendChar(com_num,telegram.r_request.telegram_array[index]);
     }
     // Get Data for telegram rw request.
-    std::this_thread::sleep_for(std::chrono::milliseconds(delay_time));
+    std::this_thread::sleep_for(std::chrono::milliseconds(delaytime));
     telegram.rw_response.InitialTelegramArray();
     result = read(com_num, &telegram.rw_response.telegram_array, 1024);
     // Get basic parameter from telegram.
     basic_para.u16Encoder = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+4]+
                              ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+5]<<8);  // SID = 25
     // telegram.rw_response.InitialTelegramArray();
+    // flush buffer.
+    tcflush(com_num, TCIFLUSH);   	/* Discards old data in the rx buffer            */
+	tcflush(com_num, TCOFLUSH);
+    std::this_thread::sleep_for(std::chrono::milliseconds(delaytime));
+
     #pragma endregion
 
     #ifdef _DEBUG_MODE_
@@ -841,7 +867,7 @@ int GtcsMcbComm::WriteBasicParameter(McbID2Struct &basic)
     uint8_t main_id = 2;
     uint8_t sub_id[6];
     uint16_t payload_start_index = 8;
-    int delay_time = 50;
+    int delaytime = 20;
     #pragma region First package. (SID1-6)
     telegram.w_request.InitialTelegramArray();
     // Initial sub id array.
@@ -908,7 +934,7 @@ int GtcsMcbComm::WriteBasicParameter(McbID2Struct &basic)
         comm.SendChar(com_num,telegram.w_request.telegram_array[index]);
     }
     // Get Data for telegram rw request.
-    std::this_thread::sleep_for(std::chrono::milliseconds(delay_time));
+    std::this_thread::sleep_for(std::chrono::milliseconds(delaytime));
     telegram.rw_response.InitialTelegramArray();
     // comm.ReadData(com_num,telegram.rw_response.telegram_array);
     result = read(com_num, &telegram.rw_response.telegram_array, 1024);
@@ -979,7 +1005,7 @@ int GtcsMcbComm::WriteBasicParameter(McbID2Struct &basic)
         comm.SendChar(com_num,telegram.w_request.telegram_array[index]);
     }
     // Get Data for telegram rw request.
-    std::this_thread::sleep_for(std::chrono::milliseconds(delay_time));
+    std::this_thread::sleep_for(std::chrono::milliseconds(delaytime));
     telegram.rw_response.InitialTelegramArray();
     // comm.ReadData(com_num,telegram.rw_response.telegram_array);
     result = read(com_num, &telegram.rw_response.telegram_array, 1024);
@@ -1050,7 +1076,7 @@ int GtcsMcbComm::WriteBasicParameter(McbID2Struct &basic)
         comm.SendChar(com_num,telegram.w_request.telegram_array[index]);
     }
     // Get Data for telegram rw request.
-    std::this_thread::sleep_for(std::chrono::milliseconds(delay_time));
+    std::this_thread::sleep_for(std::chrono::milliseconds(delaytime));
     telegram.rw_response.InitialTelegramArray();
     result = read(com_num, &telegram.rw_response.telegram_array, 1024);
     #pragma endregion
@@ -1120,7 +1146,7 @@ int GtcsMcbComm::WriteBasicParameter(McbID2Struct &basic)
         comm.SendChar(com_num,telegram.w_request.telegram_array[index]);
     }
     // Get Data for telegram rw request.
-    std::this_thread::sleep_for(std::chrono::milliseconds(delay_time));
+    std::this_thread::sleep_for(std::chrono::milliseconds(delaytime));
     telegram.rw_response.InitialTelegramArray();
     result = read(com_num, &telegram.rw_response.telegram_array, 1024);
     #pragma endregion
@@ -1190,7 +1216,7 @@ int GtcsMcbComm::WriteBasicParameter(McbID2Struct &basic)
         comm.SendChar(com_num,telegram.w_request.telegram_array[index]);
     }
     // Get Data for telegram rw request.
-    std::this_thread::sleep_for(std::chrono::milliseconds(delay_time));
+    std::this_thread::sleep_for(std::chrono::milliseconds(delaytime));
     telegram.rw_response.InitialTelegramArray();
     result = read(com_num, &telegram.rw_response.telegram_array, 1024);
     #pragma endregion
@@ -1220,7 +1246,7 @@ int GtcsMcbComm::WriteToMcbFlash(int mainid,int subid,int addr_num)
     int main_id = mainid;
     uint8_t sub_id[6];
     uint16_t payload_start_index = 8;
-    int delay_time = 100;
+    int delaytime = 100;
     #pragma region final package. Wriete to flash.
     telegram.w_request.InitialTelegramArray();
     // Initial sub id array.
@@ -1287,7 +1313,7 @@ int GtcsMcbComm::WriteToMcbFlash(int mainid,int subid,int addr_num)
         comm.SendChar(com_num,telegram.w_request.telegram_array[index]);
     }
     // Get Data for telegram rw request.
-    std::this_thread::sleep_for(std::chrono::milliseconds(delay_time));
+    std::this_thread::sleep_for(std::chrono::milliseconds(delaytime));
     telegram.rw_response.InitialTelegramArray();
     result = read(com_num, &telegram.rw_response.telegram_array, 1024);
     #pragma endregion
@@ -1319,7 +1345,7 @@ int GtcsMcbComm::ReadStepParametrer(McbID3Struct &step_para,int mainid)
     int main_id = mainid;
     uint8_t sub_id[6];
     uint16_t payload_start_index = 8;
-    int delay_time = 20;
+    int delaytime = 20;
     #pragma region First package. (SID2-7)
     telegram.r_request.InitialTelegramArray();
     // Initial sub id array.
@@ -1386,7 +1412,7 @@ int GtcsMcbComm::ReadStepParametrer(McbID3Struct &step_para,int mainid)
         comm.SendChar(com_num,telegram.r_request.telegram_array[index]);
     }
     // Get Data for telegram rw request.
-    std::this_thread::sleep_for(std::chrono::milliseconds(delay_time));
+    std::this_thread::sleep_for(std::chrono::milliseconds(delaytime));
     telegram.rw_response.InitialTelegramArray();
     result = read(com_num, &telegram.rw_response.telegram_array, 1024);
     // Get basic parameter from telegram.
@@ -1469,7 +1495,7 @@ int GtcsMcbComm::ReadStepParametrer(McbID3Struct &step_para,int mainid)
         comm.SendChar(com_num,telegram.r_request.telegram_array[index]);
     }
     // Get Data for telegram rw request.
-    std::this_thread::sleep_for(std::chrono::milliseconds(delay_time));
+    std::this_thread::sleep_for(std::chrono::milliseconds(delaytime));
     telegram.rw_response.InitialTelegramArray();
     result = read(com_num, &telegram.rw_response.telegram_array, 1024);
     // Get basic parameter from telegram.
@@ -1552,7 +1578,7 @@ int GtcsMcbComm::ReadStepParametrer(McbID3Struct &step_para,int mainid)
         comm.SendChar(com_num,telegram.r_request.telegram_array[index]);
     }
     // Get Data for telegram rw request.
-    std::this_thread::sleep_for(std::chrono::milliseconds(delay_time));
+    std::this_thread::sleep_for(std::chrono::milliseconds(delaytime));
     telegram.rw_response.InitialTelegramArray();
     result = read(com_num, &telegram.rw_response.telegram_array, 1024);
     // Get basic parameter from telegram.
@@ -1611,7 +1637,7 @@ int GtcsMcbComm::WriteStepParameter(McbID3Struct &step, int mainid)
     int main_id = mainid;
     uint8_t sub_id[6];
     uint16_t payload_start_index = 8;
-    int delay_time = 20;
+    int delaytime = 20;
     #pragma region First package. (SID2-7)
     telegram.w_request.InitialTelegramArray();
     // Initial sub id array.
@@ -1678,7 +1704,7 @@ int GtcsMcbComm::WriteStepParameter(McbID3Struct &step, int mainid)
         comm.SendChar(com_num,telegram.w_request.telegram_array[index]);
     }
     // Get Data for telegram rw request.
-    std::this_thread::sleep_for(std::chrono::milliseconds(delay_time));
+    std::this_thread::sleep_for(std::chrono::milliseconds(delaytime));
     telegram.rw_response.InitialTelegramArray();
     result = read(com_num, &telegram.rw_response.telegram_array, 1024);
     #pragma endregion
@@ -1748,7 +1774,7 @@ int GtcsMcbComm::WriteStepParameter(McbID3Struct &step, int mainid)
         comm.SendChar(com_num,telegram.w_request.telegram_array[index]);
     }
     // Get Data for telegram rw request.
-    std::this_thread::sleep_for(std::chrono::milliseconds(delay_time));
+    std::this_thread::sleep_for(std::chrono::milliseconds(delaytime));
     telegram.rw_response.InitialTelegramArray();
     result = read(com_num, &telegram.rw_response.telegram_array, 1024);
     #pragma endregion.
@@ -1818,7 +1844,7 @@ int GtcsMcbComm::WriteStepParameter(McbID3Struct &step, int mainid)
         comm.SendChar(com_num,telegram.w_request.telegram_array[index]);
     }
     // Get Data for telegram rw request.
-    std::this_thread::sleep_for(std::chrono::milliseconds(delay_time));
+    std::this_thread::sleep_for(std::chrono::milliseconds(delaytime));
     telegram.rw_response.InitialTelegramArray();
     result = read(com_num, &telegram.rw_response.telegram_array, 1024);
     #pragma endregion
@@ -1854,7 +1880,7 @@ int GtcsMcbComm::ReadProcessParameter(McbID4Struct &process,int processnum)
     int main_id = processnum;
     uint16_t sub_id[6];
     uint16_t payload_start_index = 8;
-    int delay_time = 20;
+    int delaytime = 20;
 
     #pragma region First package. (SID1-6)
     telegram.r_request.InitialTelegramArray();
@@ -1922,7 +1948,7 @@ int GtcsMcbComm::ReadProcessParameter(McbID4Struct &process,int processnum)
         comm.SendChar(com_num,telegram.r_request.telegram_array[index]);
     }
     // Get Data for telegram rw request.
-    std::this_thread::sleep_for(std::chrono::milliseconds(delay_time));
+    std::this_thread::sleep_for(std::chrono::milliseconds(delaytime));
     telegram.rw_response.InitialTelegramArray();
     result = read(com_num, &telegram.rw_response.telegram_array, 1024);
     // Get basic parameter from telegram.
@@ -2005,7 +2031,7 @@ int GtcsMcbComm::ReadProcessParameter(McbID4Struct &process,int processnum)
         comm.SendChar(com_num,telegram.r_request.telegram_array[index]);
     }
     // Get Data for telegram rw request.
-    std::this_thread::sleep_for(std::chrono::milliseconds(delay_time));
+    std::this_thread::sleep_for(std::chrono::milliseconds(delaytime));
     telegram.rw_response.InitialTelegramArray();
     result = read(com_num, &telegram.rw_response.telegram_array, 1024);
     // Get basic parameter from telegram.
@@ -2088,7 +2114,7 @@ int GtcsMcbComm::ReadProcessParameter(McbID4Struct &process,int processnum)
         comm.SendChar(com_num,telegram.r_request.telegram_array[index]);
     }
     // Get Data for telegram rw request.
-    std::this_thread::sleep_for(std::chrono::milliseconds(delay_time));
+    std::this_thread::sleep_for(std::chrono::milliseconds(delaytime));
     telegram.rw_response.InitialTelegramArray();
     result = read(com_num, &telegram.rw_response.telegram_array, 1024);
     // Get basic parameter from telegram.
@@ -2155,7 +2181,7 @@ int GtcsMcbComm::WriteProcessParameter(McbID4Struct &process, int processid)
     int main_id = processid;
     uint16_t sub_id[6];
     uint16_t payload_start_index = 8;
-    int delay_time = 20;
+    int delaytime = 20;
 
     #pragma region First package. (SID1-6)
     telegram.w_request.InitialTelegramArray();
@@ -2223,7 +2249,7 @@ int GtcsMcbComm::WriteProcessParameter(McbID4Struct &process, int processid)
         comm.SendChar(com_num,telegram.w_request.telegram_array[index]);
     }
     // Get Data for telegram rw request.
-    std::this_thread::sleep_for(std::chrono::milliseconds(delay_time));
+    std::this_thread::sleep_for(std::chrono::milliseconds(delaytime));
     telegram.rw_response.InitialTelegramArray();
     result = read(com_num, &telegram.rw_response.telegram_array, 1024);
     #pragma endregion
@@ -2293,7 +2319,7 @@ int GtcsMcbComm::WriteProcessParameter(McbID4Struct &process, int processid)
         comm.SendChar(com_num,telegram.w_request.telegram_array[index]);
     }
     // Get Data for telegram rw request.
-    std::this_thread::sleep_for(std::chrono::milliseconds(delay_time));
+    std::this_thread::sleep_for(std::chrono::milliseconds(delaytime));
     telegram.rw_response.InitialTelegramArray();
     result = read(com_num, &telegram.rw_response.telegram_array, 1024);
     // Get basic parameter from telegram.
@@ -2364,7 +2390,7 @@ int GtcsMcbComm::WriteProcessParameter(McbID4Struct &process, int processid)
         comm.SendChar(com_num,telegram.w_request.telegram_array[index]);
     }
     // Get Data for telegram rw request.
-    std::this_thread::sleep_for(std::chrono::milliseconds(delay_time));
+    std::this_thread::sleep_for(std::chrono::milliseconds(delaytime));
     telegram.rw_response.InitialTelegramArray();
     result = read(com_num, &telegram.rw_response.telegram_array, 1024);
     #pragma endregion
@@ -2425,10 +2451,10 @@ int GtcsMcbComm::InitialMcbComPort(std::string com_name_string)
  *
  *******************************************************************************************/
 // Normal polling to MCB.
-int GtcsMcbComm::NormalPollingToMcb()
+int GtcsMcbComm::PollingToMcb()
 {
     int result = 0;
-    int delay_time = 50;
+    int delaytime = 20;
     int MAX_READ = 1024;
 
     // Configur ctrl telegram data.
@@ -2463,17 +2489,16 @@ int GtcsMcbComm::NormalPollingToMcb()
         std::cout << "ctrltelegram->u16Ctrlflags = "<<std::to_string(ctrltelegram->u16Ctrlflags) << std::endl;   
         #endif
     }    
-
     // Encode ctrl telegram array.
     telegram.ctrl.EncodeTelegramArray(ctrltelegram,telegram.ctrl.struct_length);
-    
     // Send to MCB.
     for(int index=0;index<48;index++)
     {
         comm.SendChar(com_num,telegram.ctrl.telegram_array[index]);
     }
     // Read data form mcb.
-    std::this_thread::sleep_for(std::chrono::milliseconds(delay_time));
+    std::this_thread::sleep_for(std::chrono::milliseconds(delaytime));
+    // 
     telegram.status.InitialTelegramArray();
     result = read(com_num, &telegram.status.telegram_array, MAX_READ);
     telegram.status.DecodeTelegramArray();
@@ -2494,42 +2519,11 @@ int GtcsMcbComm::NormalPollingToMcb()
     std::cout <<"s16Debug       = "<<std::to_string(telegram.status.current_status.s16Debug)<< std::endl;
     std::cout <<"s32Debug       = "<<std::to_string(telegram.status.current_status.s32Debug)<< std::endl;
     #endif
-        
-    return result;
-}
-/******************************************************************************************
- *
- *  @author  Otto
- *
- *  @date    2016/06/21
- *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
- *
- *  @brief   ( Constructivist )
- *
- *  @param   QObject *parent
- *
- *  @return  none
- *
- *  @note    none
- *
- *******************************************************************************************/
-// Advance polling to MCB.
-int GtcsMcbComm::AdvancePollingToMcb()
-{
-    int result = 0;
-    int delay_time = 20;
-    telegram.ctrl.EncodeTelegramArray(&telegram.ctrl.fasten,telegram.ctrl.struct_length);
-    // Send to MCB.
-    for(int index=0;index<48;index++)
-    {
-        comm.SendChar(com_num,telegram.ctrl.telegram_array[index]);
-    }
-    // Read data form mcb.
-    std::this_thread::sleep_for(std::chrono::milliseconds(delay_time));
-    telegram.status.InitialTelegramArray();
-    result = read(com_num, &telegram.status.telegram_array, 1024);
-    telegram.status.DecodeTelegramArray();
+
+    // flush buffer.
+    tcflush(com_num, TCIFLUSH);   	/* Discards old data in the rx buffer            */
+	tcflush(com_num, TCOFLUSH);
+    // std::this_thread::sleep_for(std::chrono::milliseconds(1));
     return result;
 }
 #pragma endregion

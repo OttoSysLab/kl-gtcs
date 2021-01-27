@@ -211,6 +211,8 @@ bool GtcsDatabase::UpdateDatabaseBasicTable(GtcsDatabaseBasicInfo &db_basic)
         {
             sqlcmd += db_basic.columnnames[i] + " = " + "'" + db_basic.data[db_basic.columnnames[i]] + "'" +",";   
         }
+        // Test 
+        // std::cout << "sqlcmd " << db_basic.columnnames[i] << " = " << db_basic.data[db_basic.columnnames[i]] <<std::endl;
     }
     sqlcmd = sqlcmd.replace(sqlcmd.end()-1,sqlcmd.end()," ");
     sqlcmd += "where rowid = 1;";
@@ -226,7 +228,8 @@ bool GtcsDatabase::UpdateDatabaseBasicTable(GtcsDatabaseBasicInfo &db_basic)
         std::cout<<"Can't open database : "<< sqlite3_errmsg(db) <<std::endl;
         return false;
     }
-    std::cout << "sqlcmd = " << sqlcmd <<std::endl;
+    
+    // std::cout << "sqlcmd = " << sqlcmd <<std::endl;
 
     // updata database.
     rc = sqlite3_prepare_v2(db,sqlcmd.c_str(),-1,&stmt,NULL);

@@ -20,7 +20,7 @@
 // main.
 int main()
 {
-    // Initial GtcsManager object.s;
+    // Initial GtcsManager object.
     GtcsManager manager;
     // GtcsTcpSocket tcpserver;
 
@@ -35,13 +35,11 @@ int main()
     manager.CheckGtcsSystem();
 
     // Ste 3 = Set tcpsocket thread and start.
-    // std::thread thread_tcpserver = std::thread(GtcsTcpSocket::GtcsTcpSocketServerHandler);
     #ifdef _DEBUG_MODE_
     manager.SetGtcsTcpSocketServerInfo("192.168.0.207",9000); // OTTO : 207,ERIC : 202
     #else
     manager.SetGtcsTcpSocketServerInfo("127.0.0.1",9000);
     #endif 
-
     #pragma endregion
 
     #pragma region step 2

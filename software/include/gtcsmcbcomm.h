@@ -336,9 +336,7 @@ public:
     GtcsMcbTelegram telegram;
     // Initial MCB com.
     int InitialMcbComPort(std::string com_bname);
-    // Check MCB FSM.
-    // int CheckMcbFSM(int mac_fsm);
-
+    
     #pragma region RW MCB Parameter. 
     // Identification Parameter.(MainID = 1)
     int ReadIdentificationParameter();
@@ -358,7 +356,6 @@ public:
 
     // Polling to MCB.
     int CheckLoosenStatus();
-    int NormalPollingToMcb();
-    int AdvancePollingToMcb();
+    int PollingToMcb();
 };
 #pragma endregion

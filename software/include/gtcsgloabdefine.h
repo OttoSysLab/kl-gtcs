@@ -120,7 +120,6 @@ enum MCB_ERR_FLAG:int{
     ERR_STEP_NOT_REC,
     ERR_TMD_FRAM,
 };
-
 // MCB status flags.
 enum STATUS_FlAGS_IDX:int{
     TORQUE_MCU_PRSESENT     = 7,         // Flag 7

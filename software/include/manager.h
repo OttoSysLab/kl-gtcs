@@ -66,6 +66,11 @@ private:
     // Thread
     std::thread thread_tcpserver;
 
+    // Sequence list.
+    uint32_t jobnumber  = 0;
+    std::vector<std::string> sequencelist;
+    std::vector<std::string> steplist;
+
     bool CopyDatabase(std::string destination ,std::string source);
     bool UpdateMcbBasicParaToDB(GtcsDatabase &db,GtcsDatabaseBasicInfo &db_basic,McbID2Struct &mcb_basic);
     bool CompareBasicStruct(GtcsDatabaseBasicInfo &emmc,GtcsDatabaseBasicInfo &ramdisk);

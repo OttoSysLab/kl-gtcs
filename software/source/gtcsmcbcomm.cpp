@@ -2451,22 +2451,22 @@ int GtcsMcbComm::InitialMcbComPort(std::string com_name_string)
  *
  *******************************************************************************************/
 // Normal polling to MCB.
-int GtcsMcbComm::PollingToMcb()
+int GtcsMcbComm::PollingToMcb(GtcsCtrlTelegramStrcut &ctrlTelegram, GtcsStatusTelegramStrcut &statusTelegram)
 {
     int result = 0;
-    int delaytime = 20;
-    int MAX_READ = 1024;
+    int delaytime = 50;  // 30
+    int MAX_READ = 1024; 
 
     // Configur ctrl telegram data.
     GtcsCtrlTelegramStrcut *ctrltelegram;
     if (telegram.status.loosen_status == false)
     {
-        ctrltelegram = &telegram.ctrl.fasten;   // Configure fasten ctrl telegram.
+        ctrltelegram = &telegram.ctrl.fasten;                               // Configure fasten ctrl telegram.
         telegram.ctrl.InitialCtrlFlags(ctrltelegram);
     }
     else
     {
-        ctrltelegram = &telegram.ctrl.loosen;   // Config loosen ctrl telegram.
+        ctrltelegram = &telegram.ctrl.loosen;                               // Config loosen ctrl telegram.
         telegram.ctrl.InitialCtrlFlags(ctrltelegram);
         telegram.ctrl.SetCtrlFlags(ctrltelegram,CTRL_FLAGS_IDX::SC_REVERSE);
     }
@@ -2479,14 +2479,12 @@ int GtcsMcbComm::PollingToMcb()
         telegram.ctrl.SetCtrlFlags(ctrltelegram,CTRL_FLAGS_IDX::SC_ENABLE);
         #ifdef _DEBUG_MODE_
         std::cout << "telegram.ctrl.IsEnable status = "<<std::to_string(telegram.ctrl.IsEnable) << std::endl;   
-        std::cout << "ctrltelegram->u16Ctrlflags = "<<std::to_string(ctrltelegram->u16Ctrlflags) << std::endl;  
         #endif
     }    
     else
     {
         #ifdef _DEBUG_MODE_
         std::cout << "telegram.ctrl.IsEnable status = "<<std::to_string(telegram.ctrl.IsEnable) << std::endl;   
-        std::cout << "ctrltelegram->u16Ctrlflags = "<<std::to_string(ctrltelegram->u16Ctrlflags) << std::endl;   
         #endif
     }    
     // Encode ctrl telegram array.

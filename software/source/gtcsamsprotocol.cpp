@@ -364,7 +364,7 @@ std::vector<std::string> GtcsAmsProtocol::GetAmsSpliteArray(const std::string & 
 // Get CMD enum number. 
 int GtcsAmsProtocol::GetAmsCmdNum(std::string amscmd)
 {
-    int result = -1;
+    int result = 0;
     if (amscmd == "REQ300"){
         result = AMSCMD::REQ300;
     }
@@ -387,6 +387,10 @@ int GtcsAmsProtocol::GetAmsCmdNum(std::string amscmd)
     else if(amscmd == "CMD340")
     {
         result = AMSCMD::CMD340;
+    }
+    else 
+    {
+        result = AMSCMD::REQ300;    //  
     }
     
     return result;    

@@ -716,6 +716,9 @@ bool GtcsManager::CheckUiSettingFSM(int uicmd)
         {
             bulletin->AmsBulletin.ANS302Struct.str5 = "3";
         }
+        else{
+            return false;
+        }
         #pragma endregion
         break;
     case AMSCMD::CMD340:
@@ -1144,14 +1147,13 @@ bool GtcsManager::InitialGtcsSystem()
     // Initial MCB Com.
     mcb->InitialMcbComPort(comport_name);
     std::this_thread::sleep_for(std::chrono::milliseconds(1));  // Thread sleep 1s.
-    for(int index=0;index<5;index++)
+    for(int index=0;index<10;index++)
     {
         mcb->PollingToMcb();
         ConvertReadlTimeActuralValue();                                        // Calaulate RT actural value.
         mcb->telegram.status.last_status = mcb->telegram.status.current_status;// Storage last telegram status.
     }
     mcb->telegram.ctrl.IsEnable = false;
-    // std::this_thread::sleep_for(std::chrono::milliseconds(100));  // Thread sleep 1s.
     // Min fsm jump to Check system status.
     SetMainFSM(MAIN_FSM::CHECK_SYS);
     return false;
@@ -1266,8 +1268,9 @@ bool GtcsManager::RunGtcsSystem()
     if (bulletin->uisetting==false)
     {
         // step 1 = 
-        
+
         // step 2 = 
+        
         mcb->PollingToMcb();                                              // 
         ConvertReadlTimeActuralValue();                                         // Calaulate RT actural value.
         mcb->telegram.status.last_status = mcb->telegram.status.current_status; //

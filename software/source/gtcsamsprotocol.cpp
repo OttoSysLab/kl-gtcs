@@ -449,9 +449,9 @@ int GtcsAmsProtocol::UpdateProtocolStruct(std::string* ptr,std::vector<std::stri
  *
  *******************************************************************************************/
 // Set AMS Protocol struct to bulletin.
-std::string GtcsAmsProtocol::SetAmsBulletin(std::string ams_string)
+bool GtcsAmsProtocol::SetAmsBulletin(std::string ams_string)
 {
-    std::string result = "-";
+    // bool result = "-";
     GtcsBulletin* gtcsbulletin = GtcsBulletin::GetInstance();
     AMSBulletin* amsbulletin =& gtcsbulletin->AmsBulletin;
 
@@ -551,10 +551,34 @@ std::string GtcsAmsProtocol::SetAmsBulletin(std::string ams_string)
         UpdateProtocolStruct((std::string *)(void *)&amsbulletin->ANS340Struct,ams_arry);
         break;
     default:
+        return false;
         break;
     #pragma endregion
     }        
-    result = ams_arry[0];
-    return result;
+    // result = ams_arry[0];
+    // return result;
+    return true;
 } 
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+std::string GtcsAmsProtocol::GetAmsCmd(std::string ams_string)
+{
+    std::vector<std::string> ams_arry = GetAmsSpliteArray(ams_string);
+    return ams_arry[0];
+}
 

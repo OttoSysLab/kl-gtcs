@@ -131,29 +131,30 @@ void GtcsTcpSocket::GtcsTcpSocketServerHandler()
         #endif
 
         // Decoder CMD dn check request.
-        manager.CheckUiRequestCmd(revbuff);
-        
-        socketrevcmd = manager.GetUiRequestCmd();
-        if (socketrevcmd=="REQ300")
+        if (manager.CheckUiRequestCmd(revbuff)==true)
         {
-            manager.SetUiSettingStatus(false);
-        }
-        else
-        {
-            manager.SetUiSettingStatus(true);
-        }
-        // Waiting for app to process CMD.
-        while (manager.GetUiSettingStatus()==true)        
-        {
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        }
-        // Send data to tcpclient.
-        std::fill_n(sendbuff,sizeof(sendbuff),0);   
-        strcpy(sendbuff,manager.GetUiResponseCmd(socketrevcmd).c_str());
-        if (send(connfd,sendbuff,sizeof(sendbuff),0)<0)
-        {
-            printf("send msg error: %s(errno: %d)\n", strerror(errno), errno);
-        }
+            socketrevcmd = manager.GetUiRequestCmd();
+            if (socketrevcmd=="REQ300")
+            {
+                manager.SetUiSettingStatus(false);
+            }
+            else
+            {
+                manager.SetUiSettingStatus(true);
+            }
+            // Waiting for app to process CMD.
+            while (manager.GetUiSettingStatus()==true)        
+            {
+                std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            }
+            // Send data to tcpclient.
+            std::fill_n(sendbuff,sizeof(sendbuff),0);   
+            strcpy(sendbuff,manager.GetUiResponseCmd(socketrevcmd).c_str());
+            if (send(connfd,sendbuff,sizeof(sendbuff),0)<0)
+            {
+                printf("send msg error: %s(errno: %d)\n", strerror(errno), errno);
+            }    
+        }       
         close(connfd);
     }
     close(listenfd);

@@ -39,5 +39,6 @@ public:
     int GetAmsCmdNum(std::string amscmd);
     int GetAmsSymmetryCmdNumver(int amscmd);
     std::string GetAmsBulletin(int amscmd);
-    std::string SetAmsBulletin(std::string ams_string);
+    bool SetAmsBulletin(std::string ams_string);
+    std::string GetAmsCmd(std::string ams_string); 
 };

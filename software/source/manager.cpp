@@ -1026,16 +1026,18 @@ bool GtcsManager::SetDatabaseBasicParaToReq(AmsREQ301Struct &amsreq,GtcsDatabase
  *******************************************************************************************/
 bool GtcsManager::CheckUiRequestCmd(std::string reqest_string)
 {
-    #ifdef _DEBUG_MODE_
-    std::cout << "CheckUiRequestCmd = Initial!! " << std::endl;
-    #endif
-    
-    bulletin->uisockrevcmd = ams->SetAmsBulletin(reqest_string);
-    
-    #ifdef _DEBUG_MODE_
-    std::cout << "CheckUiRequestCmd = OK!! " << std::endl;
-    #endif
-
+    //  
+    if (ams->SetAmsBulletin(reqest_string)==false)
+    {
+        #ifdef _DEBUG_MODE_
+        std::cout << "CheckUiRequestCmd = error!! " << std::endl;
+        #endif
+        return false;
+    }
+    else
+    {
+        bulletin->uisockrevcmd = ams->GetAmsCmd(reqest_string);
+    }        
     return true;
 }
 std::string GtcsManager::GetUiRequestCmd()
@@ -1147,7 +1149,7 @@ bool GtcsManager::InitialGtcsSystem()
     // Initial MCB Com.
     mcb->InitialMcbComPort(comport_name);
     std::this_thread::sleep_for(std::chrono::milliseconds(1));  // Thread sleep 1s.
-    for(int index=0;index<10;index++)
+    for(int index=0;index<5;index++)
     {
         mcb->GetMcbPollingStatus(mcb->telegram.ctrl.fasten);
         ConvertReadlTimeActuralValue();                                        // Calaulate RT actural value.
@@ -1383,10 +1385,11 @@ bool GtcsManager::SettingGtcsSystem()
                 SetMainFSM(MAIN_FSM::READY);
             }
         }
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));  // Thread sleep 1s.
     }
     else
     {
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));  // Thread sleep 1s.
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));  // Thread sleep 1s.
     }
     return true;
 }

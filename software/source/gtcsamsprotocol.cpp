@@ -267,6 +267,7 @@ std::string GtcsAmsProtocol::GetAmsBulletin(int amscmd)
         ConvertToProtocolString((std::string *)(void *)&amsbulletin->ANS340Struct,result);
         break;
     default:
+        result = "-";
         break;
     #pragma endregion
     }
@@ -364,7 +365,7 @@ std::vector<std::string> GtcsAmsProtocol::GetAmsSpliteArray(const std::string & 
 // Get CMD enum number. 
 int GtcsAmsProtocol::GetAmsCmdNum(std::string amscmd)
 {
-    int result = 0;
+    int result = -1;
     if (amscmd == "REQ300"){
         result = AMSCMD::REQ300;
     }
@@ -387,10 +388,6 @@ int GtcsAmsProtocol::GetAmsCmdNum(std::string amscmd)
     else if(amscmd == "CMD340")
     {
         result = AMSCMD::CMD340;
-    }
-    else 
-    {
-        result = AMSCMD::REQ300;    //  
     }
     
     return result;    

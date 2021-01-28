@@ -80,7 +80,7 @@ public:
     GtcsCtrlTelegramStrcut loosen = {
         .u16Ctrlflags     = 0,          // 
         .u16ControlMode   = 0,          // Manuala mode = 0,Process mode = 1,
-        .u16WorkProc      = 4248,       
+        .u16WorkProc      = 4000,       
         .u16CtrlProgram   = 1,
         .u16ManRpm        = 1000,
         .u16ManSlope      = 1000,
@@ -104,8 +104,8 @@ public:
     bool IsEnable = false;
     int struct_length = 10;
     // Ctrl telegram flags configuration.
-    int InitialCtrlFlags(GtcsCtrlTelegramStrcut *telegram);
-    int SetCtrlFlags(GtcsCtrlTelegramStrcut *telegram,int flagIdx);
+    void InitialCtrlFlags(GtcsCtrlTelegramStrcut &telegram);
+    void SetCtrlFlags(GtcsCtrlTelegramStrcut &telegram,int flagIdx);
 
     // Encode Telegram array.
     int EncodeTelegramArray(GtcsCtrlTelegramStrcut *ptr_ctrl_telegram,int length);
@@ -356,6 +356,6 @@ public:
 
     // Polling to MCB.
     int CheckLoosenStatus();
-    int PollingToMcb();
+    int GetMcbPollingStatus(GtcsCtrlTelegramStrcut &ctrltelegram);
 };
 #pragma endregion

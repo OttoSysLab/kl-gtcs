@@ -1029,7 +1029,7 @@ bool GtcsManager::CheckUiRequestCmd(std::string reqest_string)
     #ifdef _DEBUG_MODE_
     std::cout << "CheckUiRequestCmd = Initial!! " << std::endl;
     #endif
-
+    
     bulletin->uisockrevcmd = ams->SetAmsBulletin(reqest_string);
     
     #ifdef _DEBUG_MODE_
@@ -1149,7 +1149,7 @@ bool GtcsManager::InitialGtcsSystem()
     std::this_thread::sleep_for(std::chrono::milliseconds(1));  // Thread sleep 1s.
     for(int index=0;index<10;index++)
     {
-        mcb->PollingToMcb();
+        mcb->GetMcbPollingStatus(mcb->telegram.ctrl.fasten);
         ConvertReadlTimeActuralValue();                                        // Calaulate RT actural value.
         mcb->telegram.status.last_status = mcb->telegram.status.current_status;// Storage last telegram status.
     }
@@ -1264,15 +1264,64 @@ bool GtcsManager::CheckGtcsSystem()
  *******************************************************************************************/
 bool GtcsManager::RunGtcsSystem()
 {
+    // Initial object.
+    GtcsCtrlTelegramStrcut ctrltelegram;
+
     // Check uisetting status.
     if (bulletin->uisetting==false)
     {
-        // step 1 = 
+        // step 1 = Check Job ID.
+        if (JobID)
+        {
+            /* 毒DB拿program data */
+            /* 毒DB拿program data */
+            /* 設定list index */
+        }   
 
-        // step 2 = 
+        // step 2 = Check sequence list counter.
+        if (sequencelist.empty()==true)
+        {
+            /* 毒DB拿program data */
+            /* 毒DB拿sequence list data */
+            /* 跳到設定流程 */
+            // SetMainFSM(MAIN_FSM::SETTING); // MAIN_FSM Jump to setting mode.
+            // return false;
+        }        
         
-        mcb->PollingToMcb();                                              // 
-        ConvertReadlTimeActuralValue();                                         // Calaulate RT actural value.
+        // step 3 = Config ctrl telegram.
+        if (mcb->telegram.status.loosen_status == false)
+        {
+            ctrltelegram = mcb->telegram.ctrl.fasten;                                      // Configure fasten ctrl telegram.
+            mcb->telegram.ctrl.InitialCtrlFlags(ctrltelegram);
+        }
+        else
+        {
+            ctrltelegram = mcb->telegram.ctrl.loosen;                                      // Config loosen ctrl telegram.
+            mcb->telegram.ctrl.InitialCtrlFlags(ctrltelegram);
+            mcb->telegram.ctrl.SetCtrlFlags(ctrltelegram,CTRL_FLAGS_IDX::SC_REVERSE); // Reverse 
+        
+        }        
+        mcb->telegram.ctrl.SetCtrlFlags(ctrltelegram,CTRL_FLAGS_IDX::SHORT_UVW);
+        mcb->telegram.ctrl.SetCtrlFlags(ctrltelegram,CTRL_FLAGS_IDX::EN_TIMEOUT_200MS);
+        // Enabale | Disable ?
+        if(mcb->telegram.ctrl.IsEnable == true)
+        {
+            mcb->telegram.ctrl.SetCtrlFlags(ctrltelegram,CTRL_FLAGS_IDX::SC_ENABLE);
+        }    
+
+        #ifdef _DEBUG_MODE_
+        std::cout << "telegram.ctrl.IsEnable status = "<<std::to_string(mcb->telegram.ctrl.IsEnable) << std::endl;   
+        #endif           
+
+        // Step 4 = Polling to MCB & get MCB status.
+        if (mcb->GetMcbPollingStatus(ctrltelegram))
+        {
+            ConvertReadlTimeActuralValue();                                         // Calaulate RT actural value.
+            
+            // ...
+            
+        }
+        // Step ? = Package system status to bulletin.
         mcb->telegram.status.last_status = mcb->telegram.status.current_status; //
     }
     else

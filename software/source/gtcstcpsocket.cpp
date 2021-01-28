@@ -132,6 +132,7 @@ void GtcsTcpSocket::GtcsTcpSocketServerHandler()
 
         // Decoder CMD dn check request.
         manager.CheckUiRequestCmd(revbuff);
+        
         socketrevcmd = manager.GetUiRequestCmd();
         if (socketrevcmd=="REQ300")
         {

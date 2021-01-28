@@ -67,7 +67,7 @@ private:
     std::thread thread_tcpserver;
 
     // Sequence list.
-    uint32_t jobnumber  = 0;
+    uint32_t JobID  = 0;
     std::vector<std::string> sequencelist;
     std::vector<std::string> steplist;
 

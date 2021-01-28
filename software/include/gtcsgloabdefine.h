@@ -80,17 +80,25 @@ enum CTRL_FLAGS_IDX:int{
 };
 // 
 enum LOCKED_STATUS : int {
-    RUNNING = 0,
-    REVERSE,
-    IDLE,
+    // IDLE
+    IDLE = 0,
+    
+    // Running
+    RUNNING,     // Fasten running
+    REVERSE,     // loosen running.
+
+    // STOP
     OK,
     OK_SEQUENCE,
     OK_JOB,
-    NG_F,
+
+    // Confirm 不能解決 
+    NG_MCB,    
+    // Confirm 能解決
+    NG_F,     
     NS_F,
     NGQ,
     NGA,
-    NG_MCB,
     NGR,
     NGT,
 };

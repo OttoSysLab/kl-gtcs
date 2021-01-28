@@ -35,10 +35,10 @@ int main()
     manager.CheckGtcsSystem();
 
     // Ste 3 = Set tcpsocket thread and start.
-    #pragma region 
+    #pragma region step 2
     #ifdef _DEBUG_MODE_    
     #if defined(_DEBUG_MODE_202_)
-    manager.SetGtcsTcpSocketServerInfo("192.168.0.202",9000); // OTTO : 207,ERIC : 202
+    manager.SetGtcsTcpSocketServerInfo("127.0.0.1",9000); // OTTO : 207,ERIC : 202
     #endif
     #if defined(_DEBUG_MODE_207_)
     manager.SetGtcsTcpSocketServerInfo("192.168.0.207",9000); // OTTO : 207,ERIC : 202
@@ -49,7 +49,7 @@ int main()
     #pragma endregion
     #pragma endregion
 
-    #pragma region step 2
+    #pragma region step 3
     // loop.
     while (true)
     {

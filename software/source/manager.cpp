@@ -1185,6 +1185,8 @@ bool GtcsManager::CheckGtcsSystem()
     GtcsDatabase db_ramdisk(db_ramdisk_Path);
     GtcsDatabaseBasicInfo basic_emmc;
     GtcsDatabaseBasicInfo basic_ramdisk;
+    
+    SetMainFSM(MAIN_FSM::SETTING);       // Default MAIN_FSM = SETTING. 
 
     // Step 1 : Read data from mcb basice parameter.
     if (mcb->ReadBasicParameter(bulletin->McbBulletin.BasicPara) == false)

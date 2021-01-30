@@ -1273,12 +1273,12 @@ bool GtcsManager::RunGtcsSystem()
 
     // Check uisetting status.
     if (bulletin->uisetting==false)
-    {
+    {     
         // step 1 = Check Job ID.
-        if (JobID)
+        if (currentseqindex!=lastseqindex)
         {
-            /* 毒DB拿program data */
-            /* 毒DB拿program data */
+            /* 讀DB拿program data */
+            /* 讀DB拿program data */
             /* 設定list index */
         }   
 
@@ -1387,11 +1387,11 @@ bool GtcsManager::SettingGtcsSystem()
                 SetMainFSM(MAIN_FSM::READY);
             }
         }
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));  // Thread sleep 1s.
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));  // Thread sleep 1s.
     }
     else
     {
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));  // Thread sleep 1s.
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));  // Thread sleep 1s.
     }
     return true;
 }

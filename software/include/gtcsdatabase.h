@@ -45,10 +45,18 @@ public:
     ~GtcsDatabase();
     
     // Get database path.
-    std::string GetDatabasePath();
-    void SetDatabasePath(std::string Path);
+    std::string GetDatabasePath();                                   //
+    void SetDatabasePath(std::string Path);                          // 
+       
+    // Table = Basic parameter.  
+    bool ReadDatabaseBasicTable(GtcsDatabaseBasicInfo &db_basic);    // .
+    bool UpdateDatabaseBasicTable(GtcsDatabaseBasicInfo &db_basic);  // . 
+    
+    // Table = jobsequence.
+    bool ReadDatabaseJobSequenceTable();
+    bool UpdateDatabaseJobSequenceTable();
 
-    // Set .  
-    bool UpdateDatabaseBasicTable(GtcsDatabaseBasicInfo &db_basic); // 
-    bool ReadDatabaseBasicTable(GtcsDatabaseBasicInfo &db_basic);   // 
+    // Table = program.
+
+    // Table = step.
 };

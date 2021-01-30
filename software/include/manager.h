@@ -67,9 +67,15 @@ private:
     std::thread thread_tcpserver;
 
     // Sequence list.
-    uint32_t JobID  = 0;
+    uint32_t jobid  = 0;
+    uint32_t currentseqindex = 0;
+    uint32_t lastseqindex = 0;
     std::vector<std::string> sequencelist;
     std::vector<std::string> steplist;
+
+    // Switch Job sequence.
+    bool SetJobID(int jobid);
+    bool SetSequenceListIndex(int sequenceid);
 
     bool CopyDatabase(std::string destination ,std::string source);
     bool UpdateMcbBasicParaToDB(GtcsDatabase &db,GtcsDatabaseBasicInfo &db_basic,McbID2Struct &mcb_basic);

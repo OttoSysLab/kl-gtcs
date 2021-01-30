@@ -1084,6 +1084,32 @@ public:
     void SetDataValue(std::map<std::string,std::string> &pDatavalue);
 };
 
+// Gtcs database basic information.
+class GtcsDatabaseBasicInfo : public GtcsDatabaseBaseInfo
+{
+private:
+    /* data */
+public:
+    GtcsDatabaseBasicInfo(/* args */);
+    ~GtcsDatabaseBasicInfo();
+    std::string dbtablename = "basic";    
+    void InitialColumnType();
+    void InitialColumnName();
+};
+
+// Gtcs database program information.
+class GtcsDatabaseJobSequecne : public GtcsDatabaseBaseInfo
+{
+private:
+    /* data */
+public:
+    GtcsDatabaseJobSequecne(/* args */);
+    ~GtcsDatabaseJobSequecne();
+    std::string dbtablename = "JobSequecne";
+    void InitialColumnType();
+    void InitialColumnName();
+};
+
 // Gtcs database program information.
 class GtcsDatabaseProgramInfo : public GtcsDatabaseBaseInfo
 {
@@ -1106,19 +1132,6 @@ public:
     GtcsDatabaseStepInfo (/* args */);
     ~GtcsDatabaseStepInfo ();
     std::string dbtablename = "step";    
-    void InitialColumnType();
-    void InitialColumnName();
-};
-
-// Gtcs database basic information.
-class GtcsDatabaseBasicInfo : public GtcsDatabaseBaseInfo
-{
-private:
-    /* data */
-public:
-    GtcsDatabaseBasicInfo(/* args */);
-    ~GtcsDatabaseBasicInfo();
-    std::string dbtablename = "basic";    
     void InitialColumnType();
     void InitialColumnName();
 };

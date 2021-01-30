@@ -2450,7 +2450,7 @@ int GtcsMcbComm::InitialMcbComPort(std::string com_name_string)
 int GtcsMcbComm::GetMcbPollingStatus(GtcsCtrlTelegramStrcut &ctrltelegram)
 {
     int result = 0;
-    int delaytime = 20;  // 30
+    int delaytime = 40;  // 20,30
     int MAX_READ = 1024; 
 
     // Encode ctrl telegram array.

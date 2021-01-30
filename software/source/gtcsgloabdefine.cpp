@@ -127,226 +127,6 @@ void GtcsDatabaseBaseInfo::SetDataValue(std::map<std::string,std::string> &pData
  *  @note    none
  *
  *******************************************************************************************/
-GtcsDatabaseProgramInfo ::GtcsDatabaseProgramInfo (/* args */)
-{
-    InitialColumnType();
-    InitialColumnName();
-    InitialDataStruct();
-}
-GtcsDatabaseProgramInfo ::~GtcsDatabaseProgramInfo ()
-{}
-/******************************************************************************************
- *
- *  @author  Otto
- *
- *  @date    2016/06/21
- *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
- *
- *  @brief   ( Constructivist )
- *
- *  @param   QObject *parent
- *
- *  @return  none
- *
- *  @note    none
- *
- *******************************************************************************************/
-void GtcsDatabaseProgramInfo ::InitialColumnType()
-{
-    type.insert(std::pair<std::string,std::string>("program_id","INTEGER"));      
-    type.insert(std::pair<std::string,std::string>("program_name","TEXT"));       
-    type.insert(std::pair<std::string,std::string>("first_step","INTEGER"));      
-    type.insert(std::pair<std::string,std::string>("second_step","INTEGER"));    
-    type.insert(std::pair<std::string,std::string>("third_step","INTEGER"));     
-    type.insert(std::pair<std::string,std::string>("fourth_step","INTEGER"));       
-    type.insert(std::pair<std::string,std::string>("fifth_step","INTEGER"));         
-    type.insert(std::pair<std::string,std::string>("sixth_step","INTEGER"));         
-    type.insert(std::pair<std::string,std::string>("seventh_step","INTEGER"));         
-    type.insert(std::pair<std::string,std::string>("eighth_step","INTEGER"));        
-    type.insert(std::pair<std::string,std::string>("ok_time","INTEGER"));         
-    type.insert(std::pair<std::string,std::string>("ng_stop","INTEGER"));         
-    type.insert(std::pair<std::string,std::string>("pgain","INTEGER"));     
-    type.insert(std::pair<std::string,std::string>("igain","INTEGER"));       
-    type.insert(std::pair<std::string,std::string>("maxtime","INTEGER"));        
-    type.insert(std::pair<std::string,std::string>("mintime","INTEGER"));          
-    type.insert(std::pair<std::string,std::string>("reversefunction","INTEGER"));          
-    type.insert(std::pair<std::string,std::string>("numbersteps","INTEGER"));        
-    type.insert(std::pair<std::string,std::string>("joint_offset","REAL"));       
-}
-/******************************************************************************************
- *
- *  @author  Otto
- *
- *  @date    2016/06/21
- *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
- *
- *  @brief   ( Constructivist )
- *
- *  @param   QObject *parent
- *
- *  @return  none
- *
- *  @note    none
- *
- *******************************************************************************************/
-void GtcsDatabaseProgramInfo ::InitialColumnName()
-{
-    columnnames.push_back("program_id");   
-    columnnames.push_back("program_name"); 
-    columnnames.push_back("first_step");   
-    columnnames.push_back("second_step");  
-    columnnames.push_back("third_step");   
-    columnnames.push_back("fourth_step");   
-    columnnames.push_back("fifth_step");    
-    columnnames.push_back("sixth_step");    
-    columnnames.push_back("seventh_step");  
-    columnnames.push_back("eighth_step");   
-    columnnames.push_back("ok_time");      
-    columnnames.push_back("ng_stop");      
-    columnnames.push_back("pgain");           
-    columnnames.push_back("igain");    
-    columnnames.push_back("maxtime");        
-    columnnames.push_back("mintime");          
-    columnnames.push_back("reversefunction");
-    columnnames.push_back("numbersteps");    
-    columnnames.push_back("joint_offset");   
-}
-/******************************************************************************************
- *
- *  @author  Otto
- *
- *  @date    2016/06/21
- *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
- *
- *  @brief   ( Constructivist )
- *
- *  @param   QObject *parent
- *
- *  @return  none
- *
- *  @note    none
- *
- *******************************************************************************************/
-GtcsDatabaseStepInfo ::GtcsDatabaseStepInfo (/* args */)
-{
-    InitialColumnType();
-    InitialColumnName();
-    InitialDataStruct();
-}
-GtcsDatabaseStepInfo ::~GtcsDatabaseStepInfo ()
-{}
-/******************************************************************************************
- *
- *  @author  Otto
- *
- *  @date    2016/06/21
- *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
- *
- *  @brief   ( Constructivist )
- *
- *  @param   QObject *parent
- *
- *  @return  none
- *
- *  @note    none
- *
- *******************************************************************************************/
-void GtcsDatabaseStepInfo ::InitialColumnType()
-{
-    type.insert(std::pair<std::string,std::string>("ScrewStepID","INTEGER"));            
-    type.insert(std::pair<std::string,std::string>("u8StepName","TEXT"));            
-    type.insert(std::pair<std::string,std::string>("u16StepRpm","INTEGER"));        
-    type.insert(std::pair<std::string,std::string>("u16StepSlope","REAL"));         
-    type.insert(std::pair<std::string,std::string>("u16StepMaxCurrent","INTEGER"));
-    type.insert(std::pair<std::string,std::string>("u16StepMaxTorque","REAL"));    
-    type.insert(std::pair<std::string,std::string>("u16StepMaxRevol","REAL"));     
-    type.insert(std::pair<std::string,std::string>("u16StepTime","REAL"));         
-    type.insert(std::pair<std::string,std::string>("u16StepAngle","REAL"));        
-    type.insert(std::pair<std::string,std::string>("u16StepAngleWindow","INTEGER"));  
-    type.insert(std::pair<std::string,std::string>("u16StepTorqueWindow","INTEGER")); 
-    type.insert(std::pair<std::string,std::string>("u16MinDutyCycle","REAL"));        
-    type.insert(std::pair<std::string,std::string>("u16StepFlags","INTEGER"));        
-    type.insert(std::pair<std::string,std::string>("ScrewHiTorque","REAL"));        
-    type.insert(std::pair<std::string,std::string>("ScrewLoTorque","REAL"));        
-    type.insert(std::pair<std::string,std::string>("ScrewHiAngle","REAL"));         
-    type.insert(std::pair<std::string,std::string>("ScrewLoAngle","REAL"));         
-    type.insert(std::pair<std::string,std::string>("TorqueThreshold","REAL"));      
-    type.insert(std::pair<std::string,std::string>("AngleThreshold","REAL"));       
-    type.insert(std::pair<std::string,std::string>("TorqueJointOffset","REAL"));    
-    type.insert(std::pair<std::string,std::string>("StepDelaytime","REAL"));         
-    type.insert(std::pair<std::string,std::string>("ScrewStepDirection","INTEGER")); 
-    type.insert(std::pair<std::string,std::string>("StepMonitoringMode","INTEGER")); 
-    type.insert(std::pair<std::string,std::string>("off_set","INTEGER"));           
-    type.insert(std::pair<std::string,std::string>("ScrewReverseForce","INTEGER"));  
-    type.insert(std::pair<std::string,std::string>("u16WindowModeFlags","INTEGER")); 
-}
-/******************************************************************************************
- *
- *  @author  Otto
- *
- *  @date    2016/06/21
- *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
- *
- *  @brief   ( Constructivist )
- *
- *  @param   QObject *parent
- *
- *  @return  none
- *
- *  @note    none
- *
- *******************************************************************************************/
-void GtcsDatabaseStepInfo ::InitialColumnName()
-{
-    columnnames.push_back("ScrewStepID");   
-    columnnames.push_back("u8StepName"); 
-    columnnames.push_back("u16StepRpm");   
-    columnnames.push_back("u16StepSlope");  
-    columnnames.push_back("u16StepMaxCurrent");   
-    columnnames.push_back("u16StepMaxTorque");   
-    columnnames.push_back("u16StepMaxRevol");    
-    columnnames.push_back("u16StepTime");    
-    columnnames.push_back("u16StepAngle");  
-    columnnames.push_back("u16StepAngleWindow");   
-    columnnames.push_back("u16StepTorqueWindow");      
-    columnnames.push_back("u16MinDutyCycle");      
-    columnnames.push_back("u16StepFlags");           
-    columnnames.push_back("ScrewHiTorque");    
-    columnnames.push_back("ScrewLoTorque");        
-    columnnames.push_back("ScrewHiAngle");          
-    columnnames.push_back("ScrewLoAngle");
-    columnnames.push_back("TorqueThreshold");    
-    columnnames.push_back("AngleThreshold");   
-    columnnames.push_back("TorqueJointOffset");   
-    columnnames.push_back("StepDelaytime");   
-    columnnames.push_back("ScrewStepDirection");   
-    columnnames.push_back("StepMonitoringMode");   
-    columnnames.push_back("off_set");   
-    columnnames.push_back("ScrewReverseForce");   
-    columnnames.push_back("u16WindowModeFlags");   
-}
-/******************************************************************************************
- *
- *  @author  Otto
- *
- *  @date    2016/06/21
- *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
- *
- *  @brief   ( Constructivist )
- *
- *  @param   QObject *parent
- *
- *  @return  none
- *
- *  @note    none
- *
- *******************************************************************************************/
 // Constructor.
 GtcsDatabaseBasicInfo::GtcsDatabaseBasicInfo()
 {
@@ -427,10 +207,9 @@ void GtcsDatabaseBasicInfo::InitialColumnType()
  *
  *  @return  none
  *
- *  @note    none
+ *  @note    Initial basic columnName
  *
  *******************************************************************************************/
-// Initial basic columnName
 void GtcsDatabaseBasicInfo::InitialColumnName()
 {
     columnnames.push_back("mintemp");         // Min temperature       (REAL)
@@ -470,5 +249,303 @@ void GtcsDatabaseBasicInfo::InitialColumnName()
     columnnames.push_back("push_sensitivity"); // (INTEGER) 
     columnnames.push_back("motswver");         // (TEXT)
     // columnnames.push_back("end");           // CL,RF  
+}
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
+ *  @date    2021/01/30
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    Initial Job sequence columnName
+ *
+ *******************************************************************************************/
+GtcsDatabaseJobSequecne::GtcsDatabaseJobSequecne()
+{
+    InitialColumnType();
+    InitialColumnName();
+    InitialDataStruct();
+}
+GtcsDatabaseJobSequecne::~GtcsDatabaseJobSequecne()
+{
+}
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2021/01/30
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    Initial Job sequence columnName
+ *
+ *******************************************************************************************/
+void GtcsDatabaseJobSequecne::InitialColumnType()
+{
+    type.insert(std::pair<std::string,std::string>("id","INTEGER"));                  // column_index  = 0
+    type.insert(std::pair<std::string,std::string>("job_id","INTEGER"));              // column_index  = 1
+    type.insert(std::pair<std::string,std::string>("job_name","TEXT"));               // column_index  = 2
+    type.insert(std::pair<std::string,std::string>("unscrew","INTEGER"));             // column_index  = 3
+    type.insert(std::pair<std::string,std::string>("force","INTEGER"));               // column_index  = 4
+    type.insert(std::pair<std::string,std::string>("rpm","INTEGER"));                 // column_index  = 5
+    type.insert(std::pair<std::string,std::string>("enable_unscrew_force","INTEGER"));// column_index  = 6            
+}
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2021/01/30
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    Initial Job sequence columnName
+ *
+ *******************************************************************************************/
+void GtcsDatabaseJobSequecne::InitialColumnName()
+{
+    columnnames.push_back("id");                   // column_index  = 0
+    columnnames.push_back("job_id");               // column_index  = 1
+    columnnames.push_back("job_name");             // column_index  = 2
+    columnnames.push_back("unscrew");              // column_index  = 3
+    columnnames.push_back("force");                // column_index  = 4
+    columnnames.push_back("rpm");                  // column_index  = 5
+    columnnames.push_back("enable_unscrew_force"); // column_index  = 6        
+}
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+GtcsDatabaseProgramInfo ::GtcsDatabaseProgramInfo (/* args */)
+{
+    InitialColumnType();
+    InitialColumnName();
+    InitialDataStruct();
+}
+GtcsDatabaseProgramInfo ::~GtcsDatabaseProgramInfo ()
+{}
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+void GtcsDatabaseProgramInfo ::InitialColumnType()
+{
+    type.insert(std::pair<std::string,std::string>("job_id","INTEGER"));          // column_index  = 0
+    type.insert(std::pair<std::string,std::string>("seq_id","INTEGER"));          // column_index  = 1
+    type.insert(std::pair<std::string,std::string>("program_name","TEXT"));       // column_index  = 2
+    type.insert(std::pair<std::string,std::string>("ok_time","INTEGER"));         // column_index  = 3
+    type.insert(std::pair<std::string,std::string>("ng_stop","INTEGER"));         // column_index  = 4
+    type.insert(std::pair<std::string,std::string>("joint_offset","REAL"));       // column_index  = 5
+    type.insert(std::pair<std::string,std::string>("offset","INTEGER"));          // column_index  = 6
+    type.insert(std::pair<std::string,std::string>("tr","INTEGER"));              // column_index  = 7
+    type.insert(std::pair<std::string,std::string>("ok_seq","INTEGER"));          // column_index  = 8
+    type.insert(std::pair<std::string,std::string>("ok_seq_time","INTEGER"));     // column_index  = 9
+    type.insert(std::pair<std::string,std::string>("seq_stop","INTEGER"));        // column_index  = 10
+}
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+void GtcsDatabaseProgramInfo ::InitialColumnName()
+{ 
+    columnnames.push_back("job_id");          // column_index  = 0
+    columnnames.push_back("seq_id");          // column_index  = 1
+    columnnames.push_back("program_name");    // column_index  = 2
+    columnnames.push_back("ok_time");         // column_index  = 3
+    columnnames.push_back("ng_stop");         // column_index  = 4
+    columnnames.push_back("joint_offset");    // column_index  = 5
+    columnnames.push_back("offset");          // column_index  = 6
+    columnnames.push_back("tr");              // column_index  = 7
+    columnnames.push_back("ok_seq");          // column_index  = 8
+    columnnames.push_back("ok_seq_time");     // column_index  = 9
+    columnnames.push_back("seq_stop");        // column_index  = 10
+}
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+GtcsDatabaseStepInfo::GtcsDatabaseStepInfo (/* args */)
+{
+    InitialColumnType();
+    InitialColumnName();
+    InitialDataStruct();
+}
+GtcsDatabaseStepInfo::~GtcsDatabaseStepInfo ()
+{}
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+void GtcsDatabaseStepInfo ::InitialColumnType()
+{
+    type.insert(std::pair<std::string,std::string>("job_id","INTEGER"));                // colunm_index = 0
+    type.insert(std::pair<std::string,std::string>("seq_id","INTEGER"));                // colunm_index = 1
+    type.insert(std::pair<std::string,std::string>("target_type","INTEGER"));           // colunm_index = 2
+    type.insert(std::pair<std::string,std::string>("program_name","TEXT"));             // colunm_index = 3
+    type.insert(std::pair<std::string,std::string>("ScrewStepID","INTEGER"));           // colunm_index = 4
+    type.insert(std::pair<std::string,std::string>("u8StepName","TEXT"));               // colunm_index = 5
+    type.insert(std::pair<std::string,std::string>("u16StepRpm","INTEGER"));            // colunm_index = 6
+    type.insert(std::pair<std::string,std::string>("u16StepSlope","REAL"));             // colunm_index = 7
+    type.insert(std::pair<std::string,std::string>("u16StepMaxCurrent","INTEGER"));     // colunm_index = 8
+    type.insert(std::pair<std::string,std::string>("u16StepMaxTorque","REAL"));         // colunm_index = 9 
+    type.insert(std::pair<std::string,std::string>("u16StepMaxRevol","REAL"));          // colunm_index = 10 
+    type.insert(std::pair<std::string,std::string>("u16StepTime","REAL"));              // colunm_index = 11
+    type.insert(std::pair<std::string,std::string>("u16StepAngle","REAL"));             // colunm_index = 12
+    type.insert(std::pair<std::string,std::string>("u16StepAngleWindow","INTEGER"));    // colunm_index = 13
+    type.insert(std::pair<std::string,std::string>("u16StepTorqueWindow","INTEGER"));   // colunm_index = 14
+    type.insert(std::pair<std::string,std::string>("u16MinDutyCycle","REAL"));          // colunm_index = 15
+    type.insert(std::pair<std::string,std::string>("u16StepFlags","INTEGER"));          // colunm_index = 16
+    type.insert(std::pair<std::string,std::string>("ScrewHiTorque","REAL"));            // colunm_index = 17
+    type.insert(std::pair<std::string,std::string>("ScrewLoTorque","REAL"));            // colunm_index = 18
+    type.insert(std::pair<std::string,std::string>("ScrewHiAngle","REAL"));             // colunm_index = 19
+    type.insert(std::pair<std::string,std::string>("ScrewLoAngle","REAL"));             // colunm_index = 20
+    type.insert(std::pair<std::string,std::string>("TorqueThreshold","REAL"));          // colunm_index = 21
+    type.insert(std::pair<std::string,std::string>("AngleThreshold","REAL"));           // colunm_index = 22
+    type.insert(std::pair<std::string,std::string>("TorqueJointOffset","REAL"));        // colunm_index = 23
+    type.insert(std::pair<std::string,std::string>("StepDelaytime","REAL"));            // colunm_index = 24
+    type.insert(std::pair<std::string,std::string>("ScrewStepDirection","INTEGER"));    // colunm_index = 25
+    type.insert(std::pair<std::string,std::string>("StepMonitoringMode","INTEGER"));    // colunm_index = 26
+    type.insert(std::pair<std::string,std::string>("off_set","INTEGER"));               // colunm_index = 27
+    type.insert(std::pair<std::string,std::string>("ScrewReverseForce","INTEGER"));     // colunm_index = 28
+    type.insert(std::pair<std::string,std::string>("u16WindowModeFlags","INTEGER"));    // colunm_index = 29
+    type.insert(std::pair<std::string,std::string>("enable_downshift","INTEGER"));      // colunm_index = 30
+    type.insert(std::pair<std::string,std::string>("downshift_torque","INTEGER"));      // colunm_index = 31
+    type.insert(std::pair<std::string,std::string>("downshift_speed","INTEGER"));       // colunm_index = 32
+}
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+void GtcsDatabaseStepInfo ::InitialColumnName()
+{
+    columnnames.push_back("job_id");                // colunm_index = 0
+    columnnames.push_back("seq_id");                // colunm_index = 1
+    columnnames.push_back("target_type");           // colunm_index = 2
+    columnnames.push_back("program_name");          // colunm_index = 3
+    columnnames.push_back("ScrewStepID");           // colunm_index = 4
+    columnnames.push_back("u8StepName");            // colunm_index = 5
+    columnnames.push_back("u16StepRpm");            // colunm_index = 6
+    columnnames.push_back("u16StepSlope");          // colunm_index = 7
+    columnnames.push_back("u16StepMaxCurrent");     // colunm_index = 8
+    columnnames.push_back("u16StepMaxTorque");      // colunm_index = 9 
+    columnnames.push_back("u16StepMaxRevol");       // colunm_index = 10 
+    columnnames.push_back("u16StepTime");           // colunm_index = 11
+    columnnames.push_back("u16StepAngle");          // colunm_index = 12
+    columnnames.push_back("u16StepAngleWindow");    // colunm_index = 13
+    columnnames.push_back("u16StepTorqueWindow");   // colunm_index = 14
+    columnnames.push_back("u16MinDutyCycle");       // colunm_index = 15
+    columnnames.push_back("u16StepFlags");          // colunm_index = 16
+    columnnames.push_back("ScrewHiTorque");         // colunm_index = 17
+    columnnames.push_back("ScrewLoTorque");         // colunm_index = 18
+    columnnames.push_back("ScrewHiAngle");          // colunm_index = 19
+    columnnames.push_back("ScrewLoAngle");          // colunm_index = 20
+    columnnames.push_back("TorqueThreshold");       // colunm_index = 21
+    columnnames.push_back("AngleThreshold");        // colunm_index = 22
+    columnnames.push_back("TorqueJointOffset");     // colunm_index = 23
+    columnnames.push_back("StepDelaytime");         // colunm_index = 24
+    columnnames.push_back("ScrewStepDirection");    // colunm_index = 25
+    columnnames.push_back("StepMonitoringMode");    // colunm_index = 26
+    columnnames.push_back("off_set");               // colunm_index = 27
+    columnnames.push_back("ScrewReverseForce");     // colunm_index = 28
+    columnnames.push_back("u16WindowModeFlags");    // colunm_index = 29
+    columnnames.push_back("enable_downshift");      // colunm_index = 30
+    columnnames.push_back("downshift_torque");      // colunm_index = 31
+    columnnames.push_back("downshift_speed");       // colunm_index = 32
 }
 #pragma endregion

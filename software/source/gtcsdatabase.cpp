@@ -179,6 +179,23 @@ bool Sqlite3Manager::ReadDatabase(std::string db_Path, std::string table,std::st
 #pragma endregion
 
 #pragma region GtcsDatabase
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 // Constructor
 GtcsDatabase::GtcsDatabase(std::string Path)
 {
@@ -186,72 +203,49 @@ GtcsDatabase::GtcsDatabase(std::string Path)
 }
 // Distructor.
 GtcsDatabase::~GtcsDatabase()
-{}
+{
+}
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 std::string GtcsDatabase::GetDatabasePath()
 {
     return dbPath;
 }
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 void GtcsDatabase::SetDatabasePath(std::string Path)
 {
     dbPath = Path;
-}
-// Basic table.
-bool GtcsDatabase::UpdateDatabaseBasicTable(GtcsDatabaseBasicInfo &db_basic)
-{
-    // Initial sql command.
-    std::string sqlcmd = "update " + db_basic.dbtablename + " set ";
-    int columnnames_size  = db_basic.columnnames.size();
-    for (int i = 0; i < columnnames_size; i++)
-    {
-        if (db_basic.type[db_basic.columnnames[i]]!="TEXT")
-        {
-            sqlcmd += db_basic.columnnames[i] + " = " + db_basic.data[db_basic.columnnames[i]] + ",";   
-        }   
-        else
-        {
-            sqlcmd += db_basic.columnnames[i] + " = " + "'" + db_basic.data[db_basic.columnnames[i]] + "'" +",";   
-        }
-        // Test 
-        // std::cout << "sqlcmd " << db_basic.columnnames[i] << " = " << db_basic.data[db_basic.columnnames[i]] <<std::endl;
-    }
-    sqlcmd = sqlcmd.replace(sqlcmd.end()-1,sqlcmd.end()," ");
-    sqlcmd += "where rowid = 1;";
-    
-    // Initial value.
-    sqlite3 *db;
-    sqlite3_stmt *stmt;
-    int rc;
-    // Open database.
-    rc = sqlite3_open(dbPath.c_str(),&db);
-    if (rc)
-    {
-        std::cout<<"Can't open database : "<< sqlite3_errmsg(db) <<std::endl;
-        return false;
-    }
-    
-    // std::cout << "sqlcmd = " << sqlcmd <<std::endl;
-
-    // updata database.
-    rc = sqlite3_prepare_v2(db,sqlcmd.c_str(),-1,&stmt,NULL);
-    if (rc != SQLITE_OK)
-    {
-        std::cout<<"Write SQL error:"<<sqlite3_errmsg(db)<<std::endl;
-        sqlite3_finalize(stmt);
-        return false;
-    }
-
-    rc = sqlite3_step(stmt);
-    if (rc != SQLITE_ROW && rc != SQLITE_DONE)
-    {
-        std::cout<<"Write SQL error:"<<sqlite3_errmsg(db)<<std::endl;
-        sqlite3_finalize(stmt);
-        return false;
-    }
-
-    // Finialize process.
-    sqlite3_finalize(stmt);
-    sqlite3_close(db);
-    return true;
 }
 /******************************************************************************************
  *
@@ -326,4 +320,95 @@ bool GtcsDatabase::ReadDatabaseBasicTable(GtcsDatabaseBasicInfo &db_basic)
     sqlite3_close(db);
     return true;
 }
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+bool GtcsDatabase::UpdateDatabaseBasicTable(GtcsDatabaseBasicInfo &db_basic)
+{
+    // Initial sql command.
+    std::string sqlcmd = "update " + db_basic.dbtablename + " set ";
+    int columnnames_size  = db_basic.columnnames.size();
+    for (int i = 0; i < columnnames_size; i++)
+    {
+        if (db_basic.type[db_basic.columnnames[i]]!="TEXT")
+        {
+            sqlcmd += db_basic.columnnames[i] + " = " + db_basic.data[db_basic.columnnames[i]] + ",";   
+        }   
+        else
+        {
+            sqlcmd += db_basic.columnnames[i] + " = " + "'" + db_basic.data[db_basic.columnnames[i]] + "'" +",";   
+        }
+        // Test 
+        // std::cout << "sqlcmd " << db_basic.columnnames[i] << " = " << db_basic.data[db_basic.columnnames[i]] <<std::endl;
+    }
+    sqlcmd = sqlcmd.replace(sqlcmd.end()-1,sqlcmd.end()," ");
+    sqlcmd += "where rowid = 1;";
+    
+    // Initial value.
+    sqlite3 *db;
+    sqlite3_stmt *stmt;
+    int rc;
+    // Open database.
+    rc = sqlite3_open(dbPath.c_str(),&db);
+    if (rc)
+    {
+        std::cout<<"Can't open database : "<< sqlite3_errmsg(db) <<std::endl;
+        return false;
+    }
+    
+    // std::cout << "sqlcmd = " << sqlcmd <<std::endl;
+
+    // updata database.
+    rc = sqlite3_prepare_v2(db,sqlcmd.c_str(),-1,&stmt,NULL);
+    if (rc != SQLITE_OK)
+    {
+        std::cout<<"Write SQL error:"<<sqlite3_errmsg(db)<<std::endl;
+        sqlite3_finalize(stmt);
+        return false;
+    }
+
+    rc = sqlite3_step(stmt);
+    if (rc != SQLITE_ROW && rc != SQLITE_DONE)
+    {
+        std::cout<<"Write SQL error:"<<sqlite3_errmsg(db)<<std::endl;
+        sqlite3_finalize(stmt);
+        return false;
+    }
+
+    // Finialize process.
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+    return true;
+}
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 #pragma endregion

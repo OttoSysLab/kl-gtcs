@@ -267,13 +267,13 @@ void GtcsDatabaseBasicInfo::InitialColumnName()
  *  @note    Initial Job sequence columnName
  *
  *******************************************************************************************/
-GtcsDatabaseJobSequecne::GtcsDatabaseJobSequecne()
+GtcsDatabaseJobSequenceInfo::GtcsDatabaseJobSequenceInfo()
 {
     InitialColumnType();
     InitialColumnName();
     InitialDataStruct();
 }
-GtcsDatabaseJobSequecne::~GtcsDatabaseJobSequecne()
+GtcsDatabaseJobSequenceInfo::~GtcsDatabaseJobSequenceInfo()
 {
 }
 /******************************************************************************************
@@ -293,7 +293,7 @@ GtcsDatabaseJobSequecne::~GtcsDatabaseJobSequecne()
  *  @note    Initial Job sequence columnName
  *
  *******************************************************************************************/
-void GtcsDatabaseJobSequecne::InitialColumnType()
+void GtcsDatabaseJobSequenceInfo::InitialColumnType()
 {
     type.insert(std::pair<std::string,std::string>("id","INTEGER"));                  // column_index  = 0
     type.insert(std::pair<std::string,std::string>("job_id","INTEGER"));              // column_index  = 1
@@ -320,7 +320,7 @@ void GtcsDatabaseJobSequecne::InitialColumnType()
  *  @note    Initial Job sequence columnName
  *
  *******************************************************************************************/
-void GtcsDatabaseJobSequecne::InitialColumnName()
+void GtcsDatabaseJobSequenceInfo::InitialColumnName()
 {
     columnnames.push_back("id");                   // column_index  = 0
     columnnames.push_back("job_id");               // column_index  = 1
@@ -354,7 +354,8 @@ GtcsDatabaseProgramInfo ::GtcsDatabaseProgramInfo (/* args */)
     InitialDataStruct();
 }
 GtcsDatabaseProgramInfo ::~GtcsDatabaseProgramInfo ()
-{}
+{
+}
 /******************************************************************************************
  *
  *  @author  Otto
@@ -441,7 +442,8 @@ GtcsDatabaseStepInfo::GtcsDatabaseStepInfo (/* args */)
     InitialDataStruct();
 }
 GtcsDatabaseStepInfo::~GtcsDatabaseStepInfo ()
-{}
+{
+}
 /******************************************************************************************
  *
  *  @author  Otto
@@ -548,4 +550,88 @@ void GtcsDatabaseStepInfo ::InitialColumnName()
     columnnames.push_back("downshift_torque");      // colunm_index = 31
     columnnames.push_back("downshift_speed");       // colunm_index = 32
 }
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+StepInfo::StepInfo()
+{}
+StepInfo::~StepInfo()
+{}
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+GtcsStepInfo::GtcsStepInfo()
+{}
+GtcsStepInfo::~GtcsStepInfo()
+{}
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+SequenceInfo::SequenceInfo()
+{}
+SequenceInfo::~SequenceInfo()
+{}
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+GtcsSequenceInfo::GtcsSequenceInfo()
+{}
+GtcsSequenceInfo::~GtcsSequenceInfo()
+{}
 #pragma endregion

@@ -53,10 +53,11 @@ public:
     bool UpdateDatabaseBasicTable(GtcsDatabaseBasicInfo &db_basic);  // . 
     
     // Table = jobsequence.
-    bool ReadDatabaseJobSequenceTable();
-    bool UpdateDatabaseJobSequenceTable();
+    bool ReadDatabaseJobSequenceTable(GtcsDatabaseJobSequenceInfo &db_jbseq,int jobid);
+    bool UpdateDatabaseJobSequenceTable(GtcsDatabaseJobSequenceInfo &db_jbseq,int jobid);
 
     // Table = program.
-
+    int GetDatabaseSequenceList();
+    
     // Table = step.
 };

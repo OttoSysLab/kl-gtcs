@@ -972,41 +972,85 @@ bool GtcsManager::GetDatabaseUnscrewData(GtcsCtrlTelegramStrcut &telegram,int jo
     float unscrew_forcerate = 0;
 
     // Get data from database
-    db_ramdisk.ReadDatabaseJobData(jobinfo,jobid);
-
-    #ifdef _DEBUG_MODE_
-    std::cout << "--------------------------------- " << std::endl; 
-    std::cout << "id                   = " << jobinfo.data["id"]       << std::endl;
-    std::cout << "job_id               = " << jobinfo.data["job_id"]   << std::endl;
-    std::cout << "job_name             = " << jobinfo.data["job_name"] << std::endl;
-    std::cout << "unscrew_direction    = " << jobinfo.data["unscrew_direction"]  << std::endl;
-    std::cout << "force                = " << jobinfo.data["force"]    << std::endl;
-    std::cout << "rpm                  = " << jobinfo.data["rpm"]      << std::endl;
-    std::cout << "enable_unscrew_force = " << jobinfo.data["enable_unscrew_force"] << std::endl;
-    std::cout << "--------------------------------- " << std::endl; 
-    #endif
-    // Configure data to telegram. 
-    // telegram.u16Ctrlflags     = 0; 
-    // telegram.u16ControlMode   = 0;
-    // telegram.u16WorkProc      = 4000;   // 4248
-    // telegram.u16CtrlProgram   = 1;
-    // telegram.u16ManRpm        = 1000;
-    // telegram.u16ManSlope      = 1000;
-    // telegram.u16ManMaxTorque  = 1862;
-    // telegram.u16ManMaxCurrent = 30000;
-    // telegram.u16ManRpmMode    = 0;
-    // telegram.u8TMDControl     = 8;
-
-    telegram.u16ManRpm = (uint16_t)(std::stoi(jobinfo.data["rpm"]));
-    if (std::stoi(jobinfo.data["enable_unscrew_force"])==1)
+    if(db_ramdisk.ReadDatabaseJobData(jobinfo,jobid)==true)
     {
-        unscrew_forcerate = std::stof(jobinfo.data["force"])/100;
-        telegram.u16ManMaxTorque = (uint16_t)(1862 *unscrew_forcerate); 
+        #ifdef _DEBUG_MODE_
+        std::cout << "--------------------------------- " << std::endl; 
+        std::cout << "id                   = " << jobinfo.data["id"]       << std::endl;
+        std::cout << "job_id               = " << jobinfo.data["job_id"]   << std::endl;
+        std::cout << "job_name             = " << jobinfo.data["job_name"] << std::endl;
+        std::cout << "unscrew_direction    = " << jobinfo.data["unscrew_direction"]  << std::endl;
+        std::cout << "force                = " << jobinfo.data["force"]    << std::endl;
+        std::cout << "rpm                  = " << jobinfo.data["rpm"]      << std::endl;
+        std::cout << "enable_unscrew_force = " << jobinfo.data["enable_unscrew_force"] << std::endl;
+        std::cout << "--------------------------------- " << std::endl; 
+        #endif
+
+        telegram.u16ManRpm = (uint16_t)(std::stoi(jobinfo.data["rpm"]));
+        if (std::stoi(jobinfo.data["enable_unscrew_force"])==1)
+        {
+            unscrew_forcerate = std::stof(jobinfo.data["force"])/100;
+            telegram.u16ManMaxTorque = (uint16_t)(1862 *unscrew_forcerate); 
+        }
+        else
+        {
+            #ifdef _DEBUG_MODE_
+            std::cout << "Fuck unscrew_forcerate!!!" <<std::endl;
+            #endif
+        }
     }
     else
     {
-        std::cout << "Fuck unscrew_forcerate!!!" <<std::endl;
+        return false;
     }    
+    return true;
+}
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    Set AMS Bulletin Basic Parameter.
+ *
+ *******************************************************************************************/
+bool GtcsManager::GetDatabaseScrewSequenceListData(int jobid)
+{
+    // Initial object.
+    GtcsDatabase db_ramdisk(db_ramdisk_Path);
+    std::vector<GtcsDatabaseSequenceInfo> db_seqlist;
+    
+    // 
+    db_ramdisk.ReadDataBaseSequenceList(db_seqlist,jobid);
+
+    #ifdef _DEBUG_MODE_
+    int row_size = db_seqlist.size();
+    for (int i = 0;i<row_size;i++)
+    {
+        std::cout << "--------------------------------- " << std::endl; 
+        std::cout << "db_seqlist["<<std::to_string(i)<<"] = " << db_seqlist[i].data["job_id"]       << std::endl;
+        std::cout << "db_seqlist["<<std::to_string(i)<<"] = " << db_seqlist[i].data["seq_id"]       << std::endl;
+        std::cout << "db_seqlist["<<std::to_string(i)<<"] = " << db_seqlist[i].data["program_name"] << std::endl;
+        std::cout << "db_seqlist["<<std::to_string(i)<<"] = " << db_seqlist[i].data["ok_time"]      << std::endl;
+        std::cout << "db_seqlist["<<std::to_string(i)<<"] = " << db_seqlist[i].data["ng_stop"]      << std::endl;
+        std::cout << "db_seqlist["<<std::to_string(i)<<"] = " << db_seqlist[i].data["joint_offset"] << std::endl;
+        std::cout << "db_seqlist["<<std::to_string(i)<<"] = " << db_seqlist[i].data["offset"]       << std::endl;
+        std::cout << "db_seqlist["<<std::to_string(i)<<"] = " << db_seqlist[i].data["tr"]           << std::endl;
+        std::cout << "db_seqlist["<<std::to_string(i)<<"] = " << db_seqlist[i].data["ok_seq"]       << std::endl;
+        std::cout << "db_seqlist["<<std::to_string(i)<<"] = " << db_seqlist[i].data["ok_seq_time"]  << std::endl;
+        std::cout << "db_seqlist["<<std::to_string(i)<<"] = " << db_seqlist[i].data["seq_stop"]     << std::endl;
+        std::cout << "--------------------------------- " << std::endl; 
+    }
+    #endif
+
     return true;
 }
 /******************************************************************************************
@@ -1247,9 +1291,9 @@ bool GtcsManager::CheckGtcsSystem()
     GtcsDatabase db_emmc(db_emmc_Path);
     GtcsDatabase db_ramdisk(db_ramdisk_Path);
     GtcsDatabaseBasicInfo basic_emmc;
-    GtcsDatabaseBasicInfo basic_ramdisk;
-    
+    GtcsDatabaseBasicInfo basic_ramdisk;    
     SetMainFSM(MAIN_FSM::SETTING);       // Default MAIN_FSM = SETTING. 
+
 
     // Step 1 : Read data from mcb basice parameter.
     if (mcb->ReadBasicParameter(bulletin->McbBulletin.BasicPara) == false)
@@ -1296,16 +1340,9 @@ bool GtcsManager::CheckGtcsSystem()
     // Step 7 = Jump to selected MAIN_FSM.
     bulletin->checksysok = CompareBasicStruct(basic_emmc,basic_ramdisk);
     std::cout << " bulletin->checksysok = " << bulletin->checksysok << std::endl;
-    // 
     if (bulletin->checksysok == true)
     {
-        // Display some informaiton.
-        std::cout << "Gear Ratio = " << std::to_string(bulletin->McbBulletin.BasicPara.u16GearBoxRatio)<<std::endl;
-        bulletin->ScrewHandler.IsEnable = true;
-        SetMainFSM(MAIN_FSM::READY);
-        
-        //
-        // Get Initial MCB ctrl telegram.
+        // Get Initial MCB ctrl telegram form database.
         GetDatabaseUnscrewData(mcb->telegram.ctrl.loosen,0);        // Get normal unscrew data. 
         #ifdef _DEBUG_MODE_
         std::cout << "--------------------------------- " << std::endl; 
@@ -1320,7 +1357,13 @@ bool GtcsManager::CheckGtcsSystem()
         std::cout << "normal.unscrew.u16ManRpmMode    = " << mcb->telegram.ctrl.loosen.u16ManRpmMode<< std::endl;
         std::cout << "normal.unscrew.u8TMDControl     = " << mcb->telegram.ctrl.loosen.u8TMDControl<< std::endl;
         std::cout << "--------------------------------- " << std::endl; 
-        #endif
+        #endif        
+        GetDatabaseScrewSequenceListData(1);
+
+        // Display some informaiton.
+        std::cout << "Gear Ratio = " << std::to_string(bulletin->McbBulletin.BasicPara.u16GearBoxRatio)<<std::endl;
+        bulletin->ScrewHandler.IsEnable = true;
+        SetMainFSM(MAIN_FSM::READY);
     }
     else
     {

@@ -47,7 +47,7 @@ int main()
     manager.SetGtcsTcpSocketServerInfo("127.0.0.1",9000);
     #endif 
     #pragma endregion
-    #pragma endregion
+    #pragma endregion 
 
     #pragma region step 3
     // loop.
@@ -57,7 +57,7 @@ int main()
         manager.StopAllThread();
         break;
         #endif
-        
+
         switch(manager.GetMainFSM())
         {
             case MAIN_FSM::READY:

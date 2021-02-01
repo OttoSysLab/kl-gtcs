@@ -57,7 +57,7 @@ public:
     bool UpdateDatabaseJobData(GtcsDatabaseJobInfo &dbstruct,int jobid);
 
     // Table = program.     
-    
+    bool ReadDataBaseSequenceList(std::vector<GtcsDatabaseSequenceInfo> &dblist,int jobid);
     // Table = step.
     // bool GetDatabaseStepList(Gtcs);
 };

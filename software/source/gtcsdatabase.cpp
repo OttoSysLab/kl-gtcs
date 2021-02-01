@@ -492,7 +492,6 @@ bool GtcsDatabase::ReadDatabaseJobData(GtcsDatabaseJobInfo &dbstruct,int jobid)
  *******************************************************************************************/
 bool GtcsDatabase::UpdateDatabaseJobData(GtcsDatabaseJobInfo &dbstruct,int jobid)
 {
-
     // Initial sql command.
     std::string sqlcmd = "";
     
@@ -546,6 +545,109 @@ bool GtcsDatabase::UpdateDatabaseJobData(GtcsDatabaseJobInfo &dbstruct,int jobid
     }
 
     // Finialize process.
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+    return true;
+}
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+bool GtcsDatabase::ReadDataBaseSequenceList(std::vector<GtcsDatabaseSequenceInfo> &dblist,int jobid)
+{
+    // Initial object 
+    GtcsDatabaseSequenceInfo sequencedata;
+    dblist.clear();
+
+    // Initial sqlcmd.
+    std::string sqlcmd = "SELECT * from program ";
+    sqlcmd += " where job_id=";
+    sqlcmd += std::to_string(jobid);
+    sqlcmd += ";";
+    
+    // Initial value.
+    sqlite3 *db;
+    sqlite3_stmt *stmt;
+    int rc;
+    // Open database.
+    rc = sqlite3_open(dbPath.c_str(),&db);
+    if (rc)
+    {
+        std::cout<<"Can't open database : "<< sqlite3_errmsg(db) <<std::endl;
+        return false;
+    }
+    // Send SQL statement to db.
+    rc = sqlite3_prepare_v2(db,sqlcmd.c_str(),-1,&stmt,NULL);
+    if (rc != SQLITE_OK)
+    {
+        std::cout<<"Read SQL error:"<<sqlite3_errmsg(db)<<std::endl;
+        sqlite3_finalize(stmt);
+        return false;
+    }
+
+    // Loop  
+    for(;;)
+    {
+        // Excute step.
+        rc = sqlite3_step(stmt);    
+        if (rc != SQLITE_ROW)
+        {
+            break;
+        }
+        else
+        {
+            // Assign dat to bsic struct.    
+            int columnname_size  = sequencedata.columnnames.size();    
+            for (int i = 0; i < columnname_size; i++)
+            {
+                if (sqlite3_column_text(stmt, i)==NULL) // If get data == null,break the while loop.
+                {
+                    return false;
+                } 
+                else
+                {
+                    sequencedata.data[sequencedata.columnnames[i]] = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, i)));
+                }
+            }
+            dblist.push_back(sequencedata);
+        }        
+    }
+
+    if (rc != SQLITE_DONE) 
+    {
+        sqlite3_finalize(stmt);
+        std::cout<<"customer not found"<<std::endl;
+        return false;
+    }
+
+    // Assign dat to bsic struct.    
+    // int columnname_size  = dbstruct.columnnames.size();    
+    // for (int i = 0; i < columnname_size; i++)
+    // {
+    //     if (sqlite3_column_text(stmt, i)==NULL) // If get data == null,break the while loop.
+    //     {
+    //         return false;
+    //     } 
+    //     else
+    //     {
+    //         dbstruct.data[dbstruct.columnnames[i]] = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, i)));
+    //     }
+    // }
+
+    // Close sqlite3.
     sqlite3_finalize(stmt);
     sqlite3_close(db);
     return true;

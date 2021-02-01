@@ -558,11 +558,11 @@ int GtcsMcbComm::ReadBasicParameter(McbID2Struct &basic_para)
     sub_id[4]  = 17;
     sub_id[5]  = 18;
     // Initial header address.
-    telegram.r_request.header.address_2 = payload_start_index+6;         //
-    telegram.r_request.header.address_3 = payload_start_index+12;        //
-    telegram.r_request.header.address_4 = payload_start_index+18;        //
-    telegram.r_request.header.address_5 = payload_start_index+24;        //
-    telegram.r_request.header.address_6 = payload_start_index+30;        //
+    telegram.r_request.header.address_2 = payload_start_index+6;         // 
+    telegram.r_request.header.address_3 = payload_start_index+12;        // 
+    telegram.r_request.header.address_4 = payload_start_index+18;        // 
+    telegram.r_request.header.address_5 = payload_start_index+24;        // 
+    telegram.r_request.header.address_6 = payload_start_index+30;        // 
     telegram.r_request.EncodeHeaderArray();
     // Package SID = 1
     telegram.r_request.telegram_array[payload_start_index]    = main_id;

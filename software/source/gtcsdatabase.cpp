@@ -264,7 +264,7 @@ void GtcsDatabase::SetDatabasePath(std::string Path)
  *  @note    none
  *
  *******************************************************************************************/
-bool GtcsDatabase::ReadDatabaseBasicData(GtcsDatabaseBasicInfo &db_basic)
+bool GtcsDatabase::ReadDatabaseBasicData(GtcsDatabaseBasicInfo &dbstruct)
 {
     // Initial sqlcmd.
     std::string sqlcmd = "SELECT * from basic where rowid = 1;";
@@ -303,7 +303,7 @@ bool GtcsDatabase::ReadDatabaseBasicData(GtcsDatabaseBasicInfo &db_basic)
     }
 
     // Assign dat to bsic struct.
-    int columnname_size  = db_basic.columnnames.size();    
+    int columnname_size  = dbstruct.columnnames.size();    
     for (int i = 0; i < columnname_size; i++)
     {
         if (sqlite3_column_text(stmt, i)==NULL) // If get data == null,break the while loop.
@@ -312,7 +312,7 @@ bool GtcsDatabase::ReadDatabaseBasicData(GtcsDatabaseBasicInfo &db_basic)
         } 
         else
         {
-            db_basic.data[db_basic.columnnames[i]] = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, i)));
+            dbstruct.data[dbstruct.columnnames[i]] = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, i)));
         }
     }
     // Close sqlite3.
@@ -337,23 +337,23 @@ bool GtcsDatabase::ReadDatabaseBasicData(GtcsDatabaseBasicInfo &db_basic)
  *  @note    none
  *
  *******************************************************************************************/
-bool GtcsDatabase::UpdateDatabaseBasicData(GtcsDatabaseBasicInfo &db_basic)
+bool GtcsDatabase::UpdateDatabaseBasicData(GtcsDatabaseBasicInfo &dbstruct)
 {
     // Initial sql command.
-    std::string sqlcmd = "update " + db_basic.dbtablename + " set ";
-    int columnnames_size  = db_basic.columnnames.size();
+    std::string sqlcmd = "update " + dbstruct.dbtablename + " set ";
+    int columnnames_size  = dbstruct.columnnames.size();
     for (int i = 0; i < columnnames_size; i++)
     {
-        if (db_basic.type[db_basic.columnnames[i]]!="TEXT")
+        if (dbstruct.type[dbstruct.columnnames[i]]!="TEXT")
         {
-            sqlcmd += db_basic.columnnames[i] + " = " + db_basic.data[db_basic.columnnames[i]] + ",";   
+            sqlcmd += dbstruct.columnnames[i] + " = " + dbstruct.data[dbstruct.columnnames[i]] + ",";   
         }   
         else
         {
-            sqlcmd += db_basic.columnnames[i] + " = " + "'" + db_basic.data[db_basic.columnnames[i]] + "'" +",";   
+            sqlcmd += dbstruct.columnnames[i] + " = " + "'" + dbstruct.data[dbstruct.columnnames[i]] + "'" +",";   
         }
         // Test 
-        // std::cout << "sqlcmd " << db_basic.columnnames[i] << " = " << db_basic.data[db_basic.columnnames[i]] <<std::endl;
+        // std::cout << "sqlcmd " << dbstruct.columnnames[i] << " = " << dbstruct.data[dbstruct.columnnames[i]] <<std::endl;
     }
     sqlcmd = sqlcmd.replace(sqlcmd.end()-1,sqlcmd.end()," ");
     sqlcmd += "where rowid = 1;";
@@ -411,10 +411,16 @@ bool GtcsDatabase::UpdateDatabaseBasicData(GtcsDatabaseBasicInfo &db_basic)
  *  @note    none
  *
  *******************************************************************************************/
-bool GtcsDatabase::ReadDatabaseJobData(GtcsDatabaseJobInfo &db_jobseq,int jobid)
+bool GtcsDatabase::ReadDatabaseJobData(GtcsDatabaseJobInfo &dbstruct,int jobid)
 {
     // Initial sqlcmd.
-    std::string sqlcmd = "SELECT * from basic where rowid = 1;";
+    std::string sqlcmd = "SELECT * from ";
+    sqlcmd += dbstruct.dbtablename;
+    sqlcmd += " ";
+    sqlcmd += " where job_id=";
+    sqlcmd += std::to_string(jobid);
+    sqlcmd += ";";
+    
     // Initial value.
     sqlite3 *db;
     sqlite3_stmt *stmt;
@@ -450,18 +456,18 @@ bool GtcsDatabase::ReadDatabaseJobData(GtcsDatabaseJobInfo &db_jobseq,int jobid)
     }
 
     // Assign dat to bsic struct.
-    // int columnname_size  = db_basic.columnnames.size();    
-    // for (int i = 0; i < columnname_size; i++)
-    // {
-    //     if (sqlite3_column_text(stmt, i)==NULL) // If get data == null,break the while loop.
-    //     {
-    //         return false;
-    //     } 
-    //     else
-    //     {
-    //         db_basic.data[db_basic.columnnames[i]] = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, i)));
-    //     }
-    // }
+    int columnname_size  = dbstruct.columnnames.size();    
+    for (int i = 0; i < columnname_size; i++)
+    {
+        if (sqlite3_column_text(stmt, i)==NULL) // If get data == null,break the while loop.
+        {
+            return false;
+        } 
+        else
+        {
+            dbstruct.data[dbstruct.columnnames[i]] = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, i)));
+        }
+    }
     // Close sqlite3.
     sqlite3_finalize(stmt);
     sqlite3_close(db);
@@ -484,26 +490,26 @@ bool GtcsDatabase::ReadDatabaseJobData(GtcsDatabaseJobInfo &db_jobseq,int jobid)
  *  @note    none
  *
  *******************************************************************************************/
-bool GtcsDatabase::UpdateDatabaseJobData(GtcsDatabaseJobInfo &db_Jobseq,int jobid)
+bool GtcsDatabase::UpdateDatabaseJobData(GtcsDatabaseJobInfo &dbstruct,int jobid)
 {
 
     // Initial sql command.
     std::string sqlcmd = "";
     
-    // std::string sqlcmd = "update " + db_basic.dbtablename + " set ";
-    // int columnnames_size  = db_basic.columnnames.size();
+    // std::string sqlcmd = "update " + dbstruct.dbtablename + " set ";
+    // int columnnames_size  = dbstruct.columnnames.size();
     // for (int i = 0; i < columnnames_size; i++)
     // {
-    //     if (db_basic.type[db_basic.columnnames[i]]!="TEXT")
+    //     if (dbstruct.type[dbstruct.columnnames[i]]!="TEXT")
     //     {
-    //         sqlcmd += db_basic.columnnames[i] + " = " + db_basic.data[db_basic.columnnames[i]] + ",";   
+    //         sqlcmd += dbstruct.columnnames[i] + " = " + dbstruct.data[dbstruct.columnnames[i]] + ",";   
     //     }   
     //     else
     //     {
-    //         sqlcmd += db_basic.columnnames[i] + " = " + "'" + db_basic.data[db_basic.columnnames[i]] + "'" +",";   
+    //         sqlcmd += dbstruct.columnnames[i] + " = " + "'" + dbstruct.data[dbstruct.columnnames[i]] + "'" +",";   
     //     }
     //     // Test 
-    //     // std::cout << "sqlcmd " << db_basic.columnnames[i] << " = " << db_basic.data[db_basic.columnnames[i]] <<std::endl;
+    //     // std::cout << "sqlcmd " << dbstruct.columnnames[i] << " = " << dbstruct.data[dbstruct.columnnames[i]] <<std::endl;
     // }
     // sqlcmd = sqlcmd.replace(sqlcmd.end()-1,sqlcmd.end()," ");
     // sqlcmd += "where rowid = 1;";

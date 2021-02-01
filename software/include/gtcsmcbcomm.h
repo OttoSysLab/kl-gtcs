@@ -101,7 +101,6 @@ public:
         .u16ManRpmMode    = 0,
         .u8TMDControl     = 15,
     };
-    bool IsEnable = false;
     int struct_length = 10;
     // Ctrl telegram flags configuration.
     void InitialCtrlFlags(GtcsCtrlTelegramStrcut &telegram);

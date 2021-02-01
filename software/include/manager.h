@@ -66,21 +66,13 @@ private:
     // Thread
     std::thread thread_tcpserver;
 
-    // Sequence list.
-    uint32_t jobid  = 0;
-    uint32_t currentseqindex = 0;
-    uint32_t lastseqindex = 0;
-    std::vector<std::string> sequencelist;
-    std::vector<std::string> steplist;
-
-    // Switch Job sequence.
-    bool SetJobID(int jobid);
-    bool SetSequenceListIndex(int sequenceid);
-
     bool CopyDatabase(std::string destination ,std::string source);
     bool UpdateMcbBasicParaToDB(GtcsDatabase &db,GtcsDatabaseBasicInfo &db_basic,McbID2Struct &mcb_basic);
     bool CompareBasicStruct(GtcsDatabaseBasicInfo &emmc,GtcsDatabaseBasicInfo &ramdisk);
     bool SetSystemBasicParameter(AmsCMD340Struct &amscmd,McbID2Struct &mcb_basic);
+
+    // Switch Job sequence.
+    bool GetDatabaseUnscrewData(GtcsCtrlTelegramStrcut &telegram,int jobid);
 
     // AMS Protocol.
     bool SetDatabaseBasicParaToAns(AmsANS340Struct &amsans,GtcsDatabaseBasicInfo &db_basic);   // DB_BASIC  ->AMS_ANS340
@@ -110,7 +102,7 @@ public:
     void SetUiSettingStatus(bool status);
 
     // Jion thread.
-    // bool StopAllThread();
+    bool StopAllThread();
     std::string GetMCBErrMessageString(uint32_t errorflagindex);
     std::string GetCurrentMCBErrorMessage(uint32_t errorflags);
 
@@ -120,5 +112,6 @@ public:
     bool RunGtcsSystem();
     bool ClearGtcsSystemAlarm();
     bool SettingGtcsSystem();
+    
 };
 #pragma endregion

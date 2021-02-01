@@ -698,13 +698,13 @@ bool GtcsManager::CheckUiSettingFSM(int uicmd)
         #pragma region cmd302 sequence
         if(bulletin->AmsBulletin.CMD302Struct.str5 == "0")
         {
-            mcb->telegram.ctrl.IsEnable = true;
+            bulletin->ScrewHandler.IsEnable = true;
             bulletin->AmsBulletin.ANS302Struct.str5 = "0";
             bulletin->AmsBulletin.DATA300Struct.toolstatus = "0";
         }
         else if (bulletin->AmsBulletin.CMD302Struct.str5 == "1")
         {
-            mcb->telegram.ctrl.IsEnable = false;
+            bulletin->ScrewHandler.IsEnable  = false;
             bulletin->AmsBulletin.ANS302Struct.str5 = "1";
             bulletin->AmsBulletin.DATA300Struct.toolstatus = "1";
         }
@@ -902,10 +902,9 @@ bool GtcsManager::CompareBasicStruct(GtcsDatabaseBasicInfo &emmc,GtcsDatabaseBas
  *
  *  @return  none
  *
- *  @note    none
+ *  @note    Set AMS Bulletin Basic Parameter.
  *
  *******************************************************************************************/
-// Set AMS Bulletin Basic Parameter.
 bool GtcsManager::SetDatabaseBasicParaToAns(AmsANS340Struct &amsans,GtcsDatabaseBasicInfo &db_basic)
 {
     // GtcsBulletin *bulletin = GtcsBulletin::GetInstance();
@@ -946,6 +945,68 @@ bool GtcsManager::SetDatabaseBasicParaToAns(AmsANS340Struct &amsans,GtcsDatabase
     amsans.str37 = db_basic.data["lever_sensitivity"];// Lever Sensitivity
     amsans.str38 = db_basic.data["push_sensitivity"]; // Push Sensitivity
     amsans.str39 = db_basic.data["motswver"];         // MotSWVer
+    return true;
+}
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    Set AMS Bulletin Basic Parameter.
+ *
+ *******************************************************************************************/
+bool GtcsManager::GetDatabaseUnscrewData(GtcsCtrlTelegramStrcut &telegram,int jobid)
+{
+    // Initial object.
+    GtcsDatabase db_ramdisk(db_ramdisk_Path);
+    GtcsDatabaseJobInfo jobinfo;
+    float unscrew_forcerate = 0;
+
+    // Get data from database
+    db_ramdisk.ReadDatabaseJobData(jobinfo,jobid);
+
+    #ifdef _DEBUG_MODE_
+    std::cout << "--------------------------------- " << std::endl; 
+    std::cout << "id                   = " << jobinfo.data["id"]       << std::endl;
+    std::cout << "job_id               = " << jobinfo.data["job_id"]   << std::endl;
+    std::cout << "job_name             = " << jobinfo.data["job_name"] << std::endl;
+    std::cout << "unscrew_direction    = " << jobinfo.data["unscrew_direction"]  << std::endl;
+    std::cout << "force                = " << jobinfo.data["force"]    << std::endl;
+    std::cout << "rpm                  = " << jobinfo.data["rpm"]      << std::endl;
+    std::cout << "enable_unscrew_force = " << jobinfo.data["enable_unscrew_force"] << std::endl;
+    std::cout << "--------------------------------- " << std::endl; 
+    #endif
+    // Configure data to telegram. 
+    // telegram.u16Ctrlflags     = 0; 
+    // telegram.u16ControlMode   = 0;
+    // telegram.u16WorkProc      = 4000;   // 4248
+    // telegram.u16CtrlProgram   = 1;
+    // telegram.u16ManRpm        = 1000;
+    // telegram.u16ManSlope      = 1000;
+    // telegram.u16ManMaxTorque  = 1862;
+    // telegram.u16ManMaxCurrent = 30000;
+    // telegram.u16ManRpmMode    = 0;
+    // telegram.u8TMDControl     = 8;
+
+    telegram.u16ManRpm = (uint16_t)(std::stoi(jobinfo.data["rpm"]));
+    if (std::stoi(jobinfo.data["enable_unscrew_force"])==1)
+    {
+        unscrew_forcerate = std::stof(jobinfo.data["force"])/100;
+        telegram.u16ManMaxTorque = (uint16_t)(1862 *unscrew_forcerate); 
+    }
+    else
+    {
+        std::cout << "Fuck unscrew_forcerate!!!" <<std::endl;
+    }    
     return true;
 }
 /******************************************************************************************
@@ -1122,11 +1183,11 @@ bool GtcsManager::SetGtcsTcpSocketServerInfo(std::string ip ,int port)
  *  @note    none
  *
  *******************************************************************************************/
-// bool GtcsManager::StopAllThread()
-// {
-//     thread_tcpserver.join();
-//     return true;
-// }
+bool GtcsManager::StopAllThread()
+{
+    thread_tcpserver.join();
+    return true;
+}
 /******************************************************************************************
  *
  *  @author  Otto
@@ -1147,7 +1208,8 @@ bool GtcsManager::SetGtcsTcpSocketServerInfo(std::string ip ,int port)
 bool GtcsManager::InitialGtcsSystem()
 {
     // Initial MCB Com.
-    mcb->InitialMcbComPort(comport_name);
+    mcb->InitialMcbComPort(comport_name);    
+    // 
     std::this_thread::sleep_for(std::chrono::milliseconds(1));  // Thread sleep 1s.
     for(int index=0;index<5;index++)
     {
@@ -1155,7 +1217,8 @@ bool GtcsManager::InitialGtcsSystem()
         ConvertReadlTimeActuralValue();                                        // Calaulate RT actural value.
         mcb->telegram.status.last_status = mcb->telegram.status.current_status;// Storage last telegram status.
     }
-    mcb->telegram.ctrl.IsEnable = false;
+    bulletin->ScrewHandler.IsEnable = false;
+
     // Min fsm jump to Check system status.
     SetMainFSM(MAIN_FSM::CHECK_SYS);
     return false;
@@ -1238,15 +1301,32 @@ bool GtcsManager::CheckGtcsSystem()
     {
         // Display some informaiton.
         std::cout << "Gear Ratio = " << std::to_string(bulletin->McbBulletin.BasicPara.u16GearBoxRatio)<<std::endl;
-        mcb->telegram.ctrl.IsEnable = true;
+        bulletin->ScrewHandler.IsEnable = true;
         SetMainFSM(MAIN_FSM::READY);
+        
+        //
+        // Get Initial MCB ctrl telegram.
+        GetDatabaseUnscrewData(mcb->telegram.ctrl.loosen,0);        // Get normal unscrew data. 
+        #ifdef _DEBUG_MODE_
+        std::cout << "--------------------------------- " << std::endl; 
+        std::cout << "normal.unscrew.u16Ctrlflags     = " << mcb->telegram.ctrl.loosen.u16Ctrlflags<< std::endl;
+        std::cout << "normal.unscrew.u16ControlMode   = " << mcb->telegram.ctrl.loosen.u16ControlMode<< std::endl;
+        std::cout << "normal.unscrew.u16WorkProc      = " << mcb->telegram.ctrl.loosen.u16WorkProc<< std::endl;
+        std::cout << "normal.unscrew.u16CtrlProgram   = " << mcb->telegram.ctrl.loosen.u16CtrlProgram<< std::endl;
+        std::cout << "normal.unscrew.u16ManRpm        = " << mcb->telegram.ctrl.loosen.u16ManRpm<< std::endl;
+        std::cout << "normal.unscrew.u16ManSlope      = " << mcb->telegram.ctrl.loosen.u16ManSlope<< std::endl;
+        std::cout << "normal.unscrew.u16ManMaxTorque  = " << mcb->telegram.ctrl.loosen.u16ManMaxTorque<< std::endl;
+        std::cout << "normal.unscrew.u16ManMaxCurrent = " << mcb->telegram.ctrl.loosen.u16ManMaxCurrent<< std::endl;
+        std::cout << "normal.unscrew.u16ManRpmMode    = " << mcb->telegram.ctrl.loosen.u16ManRpmMode<< std::endl;
+        std::cout << "normal.unscrew.u8TMDControl     = " << mcb->telegram.ctrl.loosen.u8TMDControl<< std::endl;
+        std::cout << "--------------------------------- " << std::endl; 
+        #endif
     }
     else
     {
         SetDatabaseBasicParaToReq(bulletin->AmsBulletin.REQ301Struct,basic_ramdisk); // DB_basic -> ams_ans340.
         SetMainFSM(MAIN_FSM::SETTING);
     }
-
     return true;
 }
 /******************************************************************************************
@@ -1275,7 +1355,7 @@ bool GtcsManager::RunGtcsSystem()
     if (bulletin->uisetting==false)
     {     
         // step 1 = Check Job ID.
-        if (currentseqindex!=lastseqindex)
+        if (bulletin->ScrewHandler.currentseqeuceindex!=bulletin->ScrewHandler.lastseqeuceindex)
         {
             /* 讀DB拿program data */
             /* 讀DB拿program data */
@@ -1283,7 +1363,7 @@ bool GtcsManager::RunGtcsSystem()
         }   
 
         // step 2 = Check sequence list counter.
-        if (sequencelist.empty()==true)
+        if (bulletin->ScrewHandler.GtcsJob.seq_list.empty()==true)
         {
             /* 毒DB拿program data */
             /* 毒DB拿sequence list data */
@@ -1307,14 +1387,16 @@ bool GtcsManager::RunGtcsSystem()
         }        
         mcb->telegram.ctrl.SetCtrlFlags(ctrltelegram,CTRL_FLAGS_IDX::SHORT_UVW);
         mcb->telegram.ctrl.SetCtrlFlags(ctrltelegram,CTRL_FLAGS_IDX::EN_TIMEOUT_200MS);
+        
         // Enabale | Disable ?
-        if(mcb->telegram.ctrl.IsEnable == true)
+        if(bulletin->ScrewHandler.IsEnable == true)
         {
             mcb->telegram.ctrl.SetCtrlFlags(ctrltelegram,CTRL_FLAGS_IDX::SC_ENABLE);
         }    
 
         #ifdef _DEBUG_MODE_
-        std::cout << "telegram.ctrl.IsEnable status = "<<std::to_string(mcb->telegram.ctrl.IsEnable) << std::endl;   
+        // std::cout << "telegram.ctrl.IsEnable status = "<<std::to_string(mcb->telegram.ctrl.IsEnable) << std::endl;   
+        std::cout << "telegram.ctrl.IsEnable status = "<<std::to_string(bulletin->ScrewHandler.IsEnable) << std::endl;   
         #endif           
 
         // Step 4 = Polling to MCB & get MCB status.

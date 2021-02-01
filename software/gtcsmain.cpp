@@ -52,7 +52,12 @@ int main()
     #pragma region step 3
     // loop.
     while (true)
-    {
+    { 
+        #ifdef _DEBUG_JOB_SEQ_
+        manager.StopAllThread();
+        break;
+        #endif
+        
         switch(manager.GetMainFSM())
         {
             case MAIN_FSM::READY:

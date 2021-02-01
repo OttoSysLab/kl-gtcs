@@ -30,6 +30,132 @@
  *  @note    none
  *
  *******************************************************************************************/
+StepInfo::StepInfo()
+{}
+StepInfo::~StepInfo()
+{}
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+GtcsStepInfo::GtcsStepInfo()
+{}
+GtcsStepInfo::~GtcsStepInfo()
+{}
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+SequenceInfo::SequenceInfo()
+{}
+SequenceInfo::~SequenceInfo()
+{}
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+GtcsSequenceInfo::GtcsSequenceInfo()
+{}
+GtcsSequenceInfo::~GtcsSequenceInfo()
+{}
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+JobInfo::JobInfo()
+{}
+JobInfo::~JobInfo()
+{}
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+GtcsJobInfo::GtcsJobInfo()
+{}
+GtcsJobInfo::~GtcsJobInfo()
+{}
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 GtcsScrewSequenceHandler::GtcsScrewSequenceHandler()
 {}
 GtcsScrewSequenceHandler::~GtcsScrewSequenceHandler()
@@ -298,7 +424,7 @@ void GtcsDatabaseJobInfo::InitialColumnType()
     type.insert(std::pair<std::string,std::string>("id","INTEGER"));                  // column_index  = 0
     type.insert(std::pair<std::string,std::string>("job_id","INTEGER"));              // column_index  = 1
     type.insert(std::pair<std::string,std::string>("job_name","TEXT"));               // column_index  = 2
-    type.insert(std::pair<std::string,std::string>("unscrew","INTEGER"));             // column_index  = 3
+    type.insert(std::pair<std::string,std::string>("unscrew_direction","INTEGER"));   // column_index  = 3
     type.insert(std::pair<std::string,std::string>("force","INTEGER"));               // column_index  = 4
     type.insert(std::pair<std::string,std::string>("rpm","INTEGER"));                 // column_index  = 5
     type.insert(std::pair<std::string,std::string>("enable_unscrew_force","INTEGER"));// column_index  = 6            
@@ -325,7 +451,7 @@ void GtcsDatabaseJobInfo::InitialColumnName()
     columnnames.push_back("id");                   // column_index  = 0
     columnnames.push_back("job_id");               // column_index  = 1
     columnnames.push_back("job_name");             // column_index  = 2
-    columnnames.push_back("unscrew");              // column_index  = 3
+    columnnames.push_back("unscrew_direction");    // column_index  = 3
     columnnames.push_back("force");                // column_index  = 4
     columnnames.push_back("rpm");                  // column_index  = 5
     columnnames.push_back("enable_unscrew_force"); // column_index  = 6        
@@ -550,88 +676,4 @@ void GtcsDatabaseStepInfo ::InitialColumnName()
     columnnames.push_back("downshift_torque");      // colunm_index = 31
     columnnames.push_back("downshift_speed");       // colunm_index = 32
 }
-/******************************************************************************************
- *
- *  @author  Otto
- *
- *  @date    2016/06/21
- *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
- *
- *  @brief   ( Constructivist )
- *
- *  @param   QObject *parent
- *
- *  @return  none
- *
- *  @note    none
- *
- *******************************************************************************************/
-StepInfo::StepInfo()
-{}
-StepInfo::~StepInfo()
-{}
-/******************************************************************************************
- *
- *  @author  Otto
- *
- *  @date    2016/06/21
- *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
- *
- *  @brief   ( Constructivist )
- *
- *  @param   QObject *parent
- *
- *  @return  none
- *
- *  @note    none
- *
- *******************************************************************************************/
-GtcsStepInfo::GtcsStepInfo()
-{}
-GtcsStepInfo::~GtcsStepInfo()
-{}
-/******************************************************************************************
- *
- *  @author  Otto
- *
- *  @date    2016/06/21
- *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
- *
- *  @brief   ( Constructivist )
- *
- *  @param   QObject *parent
- *
- *  @return  none
- *
- *  @note    none
- *
- *******************************************************************************************/
-SequenceInfo::SequenceInfo()
-{}
-SequenceInfo::~SequenceInfo()
-{}
-/******************************************************************************************
- *
- *  @author  Otto
- *
- *  @date    2016/06/21
- *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
- *
- *  @brief   ( Constructivist )
- *
- *  @param   QObject *parent
- *
- *  @return  none
- *
- *  @note    none
- *
- *******************************************************************************************/
-GtcsSequenceInfo::GtcsSequenceInfo()
-{}
-GtcsSequenceInfo::~GtcsSequenceInfo()
-{}
 #pragma endregion

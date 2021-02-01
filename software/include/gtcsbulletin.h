@@ -133,7 +133,6 @@ public:
     static GtcsBulletin* GetInstance();
     AMSBulletin AmsBulletin;
     MCBBulletin McbBulletin;
-    // DatabasteBulletin  DbBulletin;
     GtcsScrewSequenceHandler ScrewHandler;
     bool checksysok = true;
     bool uisetting = false;

@@ -49,15 +49,15 @@ public:
     void SetDatabasePath(std::string Path);                          // 
        
     // Table = Basic parameter.  
-    bool ReadDatabaseBasicTable(GtcsDatabaseBasicInfo &db_basic);    // .
-    bool UpdateDatabaseBasicTable(GtcsDatabaseBasicInfo &db_basic);  // . 
+    bool ReadDatabaseBasicData(GtcsDatabaseBasicInfo &db_basic);    // 
+    bool UpdateDatabaseBasicData(GtcsDatabaseBasicInfo &db_basic);  //  
     
     // Table = jobsequence.
-    bool ReadDatabaseJobSequenceTable(GtcsDatabaseJobSequenceInfo &db_jbseq,int jobid);
-    bool UpdateDatabaseJobSequenceTable(GtcsDatabaseJobSequenceInfo &db_jbseq,int jobid);
+    bool ReadDatabaseJobData(GtcsDatabaseJobInfo &db_jbseq,int jobid);
+    bool UpdateDatabaseJobData(GtcsDatabaseJobInfo &db_jbseq,int jobid);
 
-    // Table = program.
-    int GetDatabaseSequenceList();
+    // Table = program.     
     
     // Table = step.
+    // bool GetDatabaseStepList(Gtcs);
 };

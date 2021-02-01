@@ -264,7 +264,7 @@ void GtcsDatabase::SetDatabasePath(std::string Path)
  *  @note    none
  *
  *******************************************************************************************/
-bool GtcsDatabase::ReadDatabaseBasicTable(GtcsDatabaseBasicInfo &db_basic)
+bool GtcsDatabase::ReadDatabaseBasicData(GtcsDatabaseBasicInfo &db_basic)
 {
     // Initial sqlcmd.
     std::string sqlcmd = "SELECT * from basic where rowid = 1;";
@@ -337,7 +337,7 @@ bool GtcsDatabase::ReadDatabaseBasicTable(GtcsDatabaseBasicInfo &db_basic)
  *  @note    none
  *
  *******************************************************************************************/
-bool GtcsDatabase::UpdateDatabaseBasicTable(GtcsDatabaseBasicInfo &db_basic)
+bool GtcsDatabase::UpdateDatabaseBasicData(GtcsDatabaseBasicInfo &db_basic)
 {
     // Initial sql command.
     std::string sqlcmd = "update " + db_basic.dbtablename + " set ";
@@ -411,7 +411,7 @@ bool GtcsDatabase::UpdateDatabaseBasicTable(GtcsDatabaseBasicInfo &db_basic)
  *  @note    none
  *
  *******************************************************************************************/
-bool GtcsDatabase::ReadDatabaseJobSequenceTable(GtcsDatabaseJobSequenceInfo &db_jobseq,int jobid)
+bool GtcsDatabase::ReadDatabaseJobData(GtcsDatabaseJobInfo &db_jobseq,int jobid)
 {
     // Initial sqlcmd.
     std::string sqlcmd = "SELECT * from basic where rowid = 1;";
@@ -484,7 +484,7 @@ bool GtcsDatabase::ReadDatabaseJobSequenceTable(GtcsDatabaseJobSequenceInfo &db_
  *  @note    none
  *
  *******************************************************************************************/
-bool GtcsDatabase::UpdateDatabaseJobSequenceTable(GtcsDatabaseJobSequenceInfo &db_basic,int jobid)
+bool GtcsDatabase::UpdateDatabaseJobData(GtcsDatabaseJobInfo &db_Jobseq,int jobid)
 {
 
     // Initial sql command.

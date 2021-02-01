@@ -1000,47 +1000,6 @@ typedef struct
 #pragma endregion
 #pragma endregion
 #pragma region GTCS Database Struct
-// typedef struct 
-// {
-//     /* data */
-//     std::string mintemp;           // Min temperature       (REAL)
-//     std::string maxtemp;           // Max temperature       (REAL)
-//     std::string maxcurrent;        // Max current           (INTEGER)
-//     std::string maxpeakcurrent;    // Max peak current      (INTEGER)
-//     std::string torquesensortype;  // torque sensor type    (INTEGER)
-//     std::string maxdutycycle;      // Max duty cycle        (REAL)
-//     std::string maxtorque;         // Max torque            (REAL)
-//     std::string pwmfreq;           // PWM frequency         (INTEGER)
-//     std::string maxrpm;            // Max rpm               (INTEGER)
-//     std::string maxslope;          // Max slope             (INTEGER)
-//     std::string minbusvolt;        // Min bus voltage       (REAL)
-//     std::string maxbusvolt;        // Max bus voltage       (REAL)
-//     std::string startdutycycle;    // Start duty cycle      (REAL)
-//     std::string gearboxratio;      // Gear box ratio        (REAL)
-//     std::string startinp;          // Start input source    (INTEGER)
-//     std::string revinp;            // Reverse ipnut source  (INTEGER)
-//     std::string revrpm;            // Reverse rpm           (INTEGER)
-//     std::string revslope;          // Reverse slope         (INTEGER)
-//     std::string revmaxcurrent;     // Reverse max current   (INTEGER)
-//     std::string revmaxtorque;      // Reverse max torque    (REAL)
-//     std::string erroridletime;     // Error idle time       (INTEGER)
-//     std::string backlash;          // Bachlash              (INTEGER)
-//     std::string pgain;             // Proportional gain     (INTEGER)
-//     std::string igain;             // Integral gain         (INTEGER)
-//     std::string encoder;           // Encoder               (INTEGER)
-//     // 
-//     std::string mintorque;         // (REAL)
-//     std::string minrpm;            // (INTEGER)
-//     std::string revminrpm;         // (INTEGER)
-//     std::string dmsswver;          // (INTEGER)
-//     std::string dmscoreid;         // (INTEGER)
-//     std::string dmssernr;          // (INTEGER)
-//     std::string led;               // (INTEGER)
-//     std::string lever_sensitivity; // (INTEGER)
-//     std::string push_sensitivity;  // (INTEGER) 
-//     std::string motswver;          // (TEXT)
-//     std::string end;               // CL,RF
-// }GtcsDatabaseBasicStruct;
 
 #pragma region  Screw sequence monitor
 class ScrewSequenceHanlder
@@ -1099,26 +1058,26 @@ public:
 };
 
 // Gtcs database program information.
-class GtcsDatabaseJobSequenceInfo : public GtcsDatabaseBaseInfo
+class GtcsDatabaseJobInfo : public GtcsDatabaseBaseInfo
 {
 private:
     /* data */
 public:
-    GtcsDatabaseJobSequenceInfo(/* args */);
-    ~GtcsDatabaseJobSequenceInfo();
+    GtcsDatabaseJobInfo(/* args */);
+    ~GtcsDatabaseJobInfo();
     std::string dbtablename = "jobsequecne";
     void InitialColumnType();
     void InitialColumnName();
 };
 
 // Gtcs database program information.
-class GtcsDatabaseProgramInfo : public GtcsDatabaseBaseInfo
+class GtcsDatabaseSequenceInfo : public GtcsDatabaseBaseInfo
 {
 private:
     /* data */
 public:
-    GtcsDatabaseProgramInfo (/* args */);
-    ~GtcsDatabaseProgramInfo();
+    GtcsDatabaseSequenceInfo (/* args */);
+    ~GtcsDatabaseSequenceInfo();
     std::string dbtablename = "program";    
     void InitialColumnType();
     void InitialColumnName();
@@ -1136,8 +1095,6 @@ public:
     void InitialColumnType();
     void InitialColumnName();
 };
-
-
 
 #pragma region sequence list 
 // step
@@ -1157,6 +1114,7 @@ public:
     GtcsStepInfo (/* args */);
     ~GtcsStepInfo ();
 };
+
 // sequence
 class SequenceInfo
 {
@@ -1175,6 +1133,7 @@ public:
     ~GtcsSequenceInfo();
     std::vector<GtcsStepInfo> step_list;
 };
+
 // Job
 class JobInfo
 {

@@ -648,7 +648,7 @@ bool GtcsManager::SetSystemBasicParameter(AmsCMD340Struct &amscmd,McbID2Struct &
     }
 
     // Step 2 : Read basic data from emmc database to dbstruct.
-    if (db_emmc.ReadDatabaseBasicTable(basic_emmc)==false)
+    if (db_emmc.ReadDatabaseBasicData(basic_emmc)==false)
     {
         std::cout << "Step 2 : Read basic data from emmc database to dbstruct." << std::endl;
         return false;
@@ -848,7 +848,7 @@ bool GtcsManager::UpdateMcbBasicParaToDB(GtcsDatabase &db,GtcsDatabaseBasicInfo 
     db_basic.data["encoder"]          = std::to_string(mcb_basic.u16Encoder);         // Encoder               (INTEGER)
 
     // Update database basic table.
-    db.UpdateDatabaseBasicTable(db_basic);
+    db.UpdateDatabaseBasicData(db_basic);
     return true;
 }
 /******************************************************************************************
@@ -1199,7 +1199,7 @@ bool GtcsManager::CheckGtcsSystem()
     CopyDatabase(db_ramdisk_Path,db_emmc_Path);
 
     // Step 3 : Read basic data from emmc database to dbstruct.
-    if (db_emmc.ReadDatabaseBasicTable(basic_emmc)==false)
+    if (db_emmc.ReadDatabaseBasicData(basic_emmc)==false)
     {
         std::cout << "Step 3 : Read basic data from emmc database to dbstruct." << std::endl;
         return false;
@@ -1217,14 +1217,14 @@ bool GtcsManager::CheckGtcsSystem()
     }
 
     // Step 5 = Read basic data from emmc database to dbstruct.
-    if (db_emmc.ReadDatabaseBasicTable(basic_emmc)==false)
+    if (db_emmc.ReadDatabaseBasicData(basic_emmc)==false)
     {
         std::cout << "Step 5 = Read basic data from emmc database to dbstruct." << std::endl;
         return false;
     }
 
     // Step 6 : Read basic data from ramdisk database to dbstruct.
-    if (db_ramdisk.ReadDatabaseBasicTable(basic_ramdisk)==false)
+    if (db_ramdisk.ReadDatabaseBasicData(basic_ramdisk)==false)
     {
         std::cout << "Step 6 : Read basic data from ramdisk database to dbstruct." << std::endl;
         return false;

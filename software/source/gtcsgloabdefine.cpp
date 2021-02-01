@@ -267,13 +267,13 @@ void GtcsDatabaseBasicInfo::InitialColumnName()
  *  @note    Initial Job sequence columnName
  *
  *******************************************************************************************/
-GtcsDatabaseJobSequenceInfo::GtcsDatabaseJobSequenceInfo()
+GtcsDatabaseJobInfo::GtcsDatabaseJobInfo()
 {
     InitialColumnType();
     InitialColumnName();
     InitialDataStruct();
 }
-GtcsDatabaseJobSequenceInfo::~GtcsDatabaseJobSequenceInfo()
+GtcsDatabaseJobInfo::~GtcsDatabaseJobInfo()
 {
 }
 /******************************************************************************************
@@ -293,7 +293,7 @@ GtcsDatabaseJobSequenceInfo::~GtcsDatabaseJobSequenceInfo()
  *  @note    Initial Job sequence columnName
  *
  *******************************************************************************************/
-void GtcsDatabaseJobSequenceInfo::InitialColumnType()
+void GtcsDatabaseJobInfo::InitialColumnType()
 {
     type.insert(std::pair<std::string,std::string>("id","INTEGER"));                  // column_index  = 0
     type.insert(std::pair<std::string,std::string>("job_id","INTEGER"));              // column_index  = 1
@@ -320,7 +320,7 @@ void GtcsDatabaseJobSequenceInfo::InitialColumnType()
  *  @note    Initial Job sequence columnName
  *
  *******************************************************************************************/
-void GtcsDatabaseJobSequenceInfo::InitialColumnName()
+void GtcsDatabaseJobInfo::InitialColumnName()
 {
     columnnames.push_back("id");                   // column_index  = 0
     columnnames.push_back("job_id");               // column_index  = 1
@@ -347,13 +347,13 @@ void GtcsDatabaseJobSequenceInfo::InitialColumnName()
  *  @note    none
  *
  *******************************************************************************************/
-GtcsDatabaseProgramInfo ::GtcsDatabaseProgramInfo (/* args */)
+GtcsDatabaseSequenceInfo ::GtcsDatabaseSequenceInfo (/* args */)
 {
     InitialColumnType();
     InitialColumnName();
     InitialDataStruct();
 }
-GtcsDatabaseProgramInfo ::~GtcsDatabaseProgramInfo ()
+GtcsDatabaseSequenceInfo ::~GtcsDatabaseSequenceInfo ()
 {
 }
 /******************************************************************************************
@@ -373,7 +373,7 @@ GtcsDatabaseProgramInfo ::~GtcsDatabaseProgramInfo ()
  *  @note    none
  *
  *******************************************************************************************/
-void GtcsDatabaseProgramInfo ::InitialColumnType()
+void GtcsDatabaseSequenceInfo ::InitialColumnType()
 {
     type.insert(std::pair<std::string,std::string>("job_id","INTEGER"));          // column_index  = 0
     type.insert(std::pair<std::string,std::string>("seq_id","INTEGER"));          // column_index  = 1
@@ -404,7 +404,7 @@ void GtcsDatabaseProgramInfo ::InitialColumnType()
  *  @note    none
  *
  *******************************************************************************************/
-void GtcsDatabaseProgramInfo ::InitialColumnName()
+void GtcsDatabaseSequenceInfo ::InitialColumnName()
 { 
     columnnames.push_back("job_id");          // column_index  = 0
     columnnames.push_back("seq_id");          // column_index  = 1

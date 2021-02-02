@@ -1,6 +1,6 @@
 #pragma once
-#define _DEBUG_MODE_
-#define _DEBUG_MODE_207_
+// #define _DEBUG_MODE_
+// #define _DEBUG_MODE_207_
 // #define _DEBUG_JOB_SEQ_
 /*=======================================================================================
  Program Nane  	: gtcs_tlg_decoder.c
@@ -1122,8 +1122,9 @@ typedef struct
     int ng_stop;
     float joint_offset;
     int offset;
+    int tr;
     int ok_seq;
-    int ok_seq_time;
+    float ok_seq_time;
     int seq_stop;
     // Step list. 
     std::vector<GtcsStepDataStruct> steplist;
@@ -1165,7 +1166,6 @@ public:
     bool loosen   = false;
     int currentseqeuceindex = 0;
     int lastseqeuceindex = 0;
-    // GtcsJobInfo GtcsJob;
     GtcsJobStruct GtcsJob;
 };
 #pragma endregion

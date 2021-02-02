@@ -1050,12 +1050,13 @@ bool GtcsManager::GetDatabaseUnscrewData(GtcsCtrlTelegramStrcut &telegram,int jo
  *  @note    Set AMS Bulletin Basic Parameter.
  *
  *******************************************************************************************/
-bool GtcsManager::GetDatabaseScrewSequenceListData(std::vector<GtcsSequenceDataStruct> &seqidlist,int jobid)
+bool GtcsManager::GetDatabaseScrewSequenceListData(std::vector<GtcsSequenceDataStruct> &seqlist,int jobid)
 {
     // Initial object.
     GtcsDatabase db_ramdisk(db_ramdisk_Path);
     std::vector<GtcsDatabaseSequenceInfo> db_seqlist;
     GtcsSequenceDataStruct seq;
+    std::string::size_type sz;     // alias of size_t
     
     // Read.
     if (db_ramdisk.ReadDataBaseSequenceList(db_seqlist,jobid)==false)
@@ -1063,7 +1064,7 @@ bool GtcsManager::GetDatabaseScrewSequenceListData(std::vector<GtcsSequenceDataS
         return false;
     }
     // Get data from database struct.
-    seqidlist.clear();
+    seqlist.clear();
     int row_size = db_seqlist.size();
     for (int i = 0;i<row_size;i++)
     {
@@ -1088,7 +1089,13 @@ bool GtcsManager::GetDatabaseScrewSequenceListData(std::vector<GtcsSequenceDataS
         seq.program_name = db_seqlist[i].data["program_name"];
         seq.ok_time      = std::stoi(db_seqlist[i].data["ok_time"]);
         seq.ng_stop      = std::stoi(db_seqlist[i].data["ng_stop"]);
-        seqidlist.push_back(seq);
+        seq.joint_offset = std::stof(db_seqlist[i].data["joint_offset"],&sz);
+        seq.offset       = std::stoi(db_seqlist[i].data["offset"]);
+        seq.tr           = std::stoi(db_seqlist[i].data["tr"]); 
+        seq.ok_seq       = std::stoi(db_seqlist[i].data["ok_seq"]); 
+        seq.ok_seq_time  = std::stof(db_seqlist[i].data["ok_seq_time"],&sz);
+        seq.seq_stop     = std::stoi(db_seqlist[i].data["seq_stop"]); 
+        seqlist.push_back(seq);
     }
     return true;
 }
@@ -1109,10 +1116,11 @@ bool GtcsManager::GetDatabaseScrewSequenceListData(std::vector<GtcsSequenceDataS
  *  @note    Set AMS Bulletin Basic Parameter.
  *
  *******************************************************************************************/
-// bool GtcsManager::GetDatabaseScrewStepListData(std::vector<> ,int jobid, int seqid)
-// {
-//     return true;
-// }
+bool GtcsManager::GetDatabaseScrewStepListData(std::vector<GtcsStepDataStruct> &steplist,int jobid, int seqid)
+{
+    
+    return true;
+}
 /******************************************************************************************
  *
  *  @author  Otto
@@ -1459,17 +1467,24 @@ bool GtcsManager::CheckGtcsSystem()
         // std::cout << "--------------------------------- " << std::endl; 
         #endif        
         // Get screw handler sequence list form database.
-        GetDatabaseScrewSequenceListData(bulletin->ScrewHandler.GtcsJob.sequencelist,0);
-        
-        #ifdef _DEBUG_MODE_
-        int seqlist_size = bulletin->ScrewHandler.GtcsJob.sequencelist.size();
-
-        for (int i = 0; i < seqlist_size; i++)
+        if (GetDatabaseScrewSequenceListData(bulletin->ScrewHandler.GtcsJob.sequencelist,0)==true)
         {
-            std::cout << "normal.screw.jobid = " << std::to_string(bulletin->ScrewHandler.GtcsJob.sequencelist[i].job_id);
-            std::cout << " sequence = " << std::to_string(bulletin->ScrewHandler.GtcsJob.sequencelist[i].seq_id)<< std::endl;
+            #ifdef _DEBUG_MODE_
+            int seqlist_size = bulletin->ScrewHandler.GtcsJob.sequencelist.size();
+
+            for (int i = 0; i < seqlist_size; i++)
+            {
+                std::cout << "normal.screw.jobid = " << std::to_string(bulletin->ScrewHandler.GtcsJob.sequencelist[i].job_id);
+                std::cout << " sequence = " << std::to_string(bulletin->ScrewHandler.GtcsJob.sequencelist[i].seq_id)<< std::endl;
+            }
+            #endif
         }
-        #endif
+        // Get screw handler sequence list form database.
+        if (GetDatabaseScrewStepListData(bulletin->ScrewHandler.GtcsJob.sequencelist[0].steplist,0,1))
+        {
+            int steplist_size = bulletin->ScrewHandler.GtcsJob.sequencelist[0].steplist.size();    
+        }
+
         bulletin->ScrewHandler.currentseqeuceindex = 1; // Set start index.
         #pragma endregion
 

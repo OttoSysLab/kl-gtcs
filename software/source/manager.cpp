@@ -726,7 +726,6 @@ bool GtcsManager::CheckUiSettingFSM(int uicmd)
         {
             return false;
         }
-
         break;
     default:
         return false;
@@ -776,6 +775,23 @@ std::string GtcsManager::GetUiResponseCmd(std::string uicmd_string)
     }
     return ams->GetAmsBulletin(uiresponsecmd);
 }
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    Copy database.
+ *
+ *******************************************************************************************/
 bool GtcsManager::GetUiSettingStatus()
 {
     return bulletin->uisetting;
@@ -784,8 +800,23 @@ void GtcsManager::SetUiSettingStatus(bool status)
 {
     bulletin->uisetting = status;
 }
-
-// Copy database.
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    Copy database.
+ *
+ *******************************************************************************************/
 bool GtcsManager::CopyDatabase(std::string destination ,std::string source)
 {
     std::string systemcmd = "sudo cp " + source + " " + destination;
@@ -882,9 +913,6 @@ bool GtcsManager::CompareBasicStruct(GtcsDatabaseBasicInfo &emmc,GtcsDatabaseBas
             std::cout << " emmc_value = " << emmc.data[emmc.columnnames[i]];
             std::cout << " ramdisk_value = " << ramdisk.data[ramdisk.columnnames[i]] << std::endl;  
         }
-        // std::cout << "check key = " << emmc.columnnames[i] ;
-        // std::cout << " emmc_value = " << emmc.data[emmc.columnnames[i]];
-        // std::cout << " ramdisk_value = " << ramdisk.data[ramdisk.columnnames[i]] << std::endl;
     }
     return result;
 }
@@ -1022,37 +1050,69 @@ bool GtcsManager::GetDatabaseUnscrewData(GtcsCtrlTelegramStrcut &telegram,int jo
  *  @note    Set AMS Bulletin Basic Parameter.
  *
  *******************************************************************************************/
-bool GtcsManager::GetDatabaseScrewSequenceListData(int jobid)
+bool GtcsManager::GetDatabaseScrewSequenceListData(std::vector<GtcsSequenceDataStruct> &seqidlist,int jobid)
 {
     // Initial object.
     GtcsDatabase db_ramdisk(db_ramdisk_Path);
     std::vector<GtcsDatabaseSequenceInfo> db_seqlist;
+    GtcsSequenceDataStruct seq;
     
-    // 
-    db_ramdisk.ReadDataBaseSequenceList(db_seqlist,jobid);
-
-    #ifdef _DEBUG_MODE_
+    // Read.
+    if (db_ramdisk.ReadDataBaseSequenceList(db_seqlist,jobid)==false)
+    {
+        return false;
+    }
+    // Get data from database struct.
+    seqidlist.clear();
     int row_size = db_seqlist.size();
     for (int i = 0;i<row_size;i++)
     {
-        std::cout << "--------------------------------- " << std::endl; 
-        std::cout << "db_seqlist["<<std::to_string(i)<<"] = " << db_seqlist[i].data["job_id"]       << std::endl;
-        std::cout << "db_seqlist["<<std::to_string(i)<<"] = " << db_seqlist[i].data["seq_id"]       << std::endl;
-        std::cout << "db_seqlist["<<std::to_string(i)<<"] = " << db_seqlist[i].data["program_name"] << std::endl;
-        std::cout << "db_seqlist["<<std::to_string(i)<<"] = " << db_seqlist[i].data["ok_time"]      << std::endl;
-        std::cout << "db_seqlist["<<std::to_string(i)<<"] = " << db_seqlist[i].data["ng_stop"]      << std::endl;
-        std::cout << "db_seqlist["<<std::to_string(i)<<"] = " << db_seqlist[i].data["joint_offset"] << std::endl;
-        std::cout << "db_seqlist["<<std::to_string(i)<<"] = " << db_seqlist[i].data["offset"]       << std::endl;
-        std::cout << "db_seqlist["<<std::to_string(i)<<"] = " << db_seqlist[i].data["tr"]           << std::endl;
-        std::cout << "db_seqlist["<<std::to_string(i)<<"] = " << db_seqlist[i].data["ok_seq"]       << std::endl;
-        std::cout << "db_seqlist["<<std::to_string(i)<<"] = " << db_seqlist[i].data["ok_seq_time"]  << std::endl;
-        std::cout << "db_seqlist["<<std::to_string(i)<<"] = " << db_seqlist[i].data["seq_stop"]     << std::endl;
-        std::cout << "--------------------------------- " << std::endl; 
+        #ifdef _DEBUG_MODE_    
+        // std::cout << "--------------------------------- " << std::endl; 
+        // std::cout << "db_seqlist["<<std::to_string(i)<<"] = " << db_seqlist[i].data["job_id"]       << std::endl;
+        // std::cout << "db_seqlist["<<std::to_string(i)<<"] = " << db_seqlist[i].data["seq_id"]       << std::endl;
+        // std::cout << "db_seqlist["<<std::to_string(i)<<"] = " << db_seqlist[i].data["program_name"] << std::endl;
+        // std::cout << "db_seqlist["<<std::to_string(i)<<"] = " << db_seqlist[i].data["ok_time"]      << std::endl;
+        // std::cout << "db_seqlist["<<std::to_string(i)<<"] = " << db_seqlist[i].data["ng_stop"]      << std::endl;
+        // std::cout << "db_seqlist["<<std::to_string(i)<<"] = " << db_seqlist[i].data["joint_offset"] << std::endl;
+        // std::cout << "db_seqlist["<<std::to_string(i)<<"] = " << db_seqlist[i].data["offset"]       << std::endl;
+        // std::cout << "db_seqlist["<<std::to_string(i)<<"] = " << db_seqlist[i].data["tr"]           << std::endl;
+        // std::cout << "db_seqlist["<<std::to_string(i)<<"] = " << db_seqlist[i].data["ok_seq"]       << std::endl;
+        // std::cout << "db_seqlist["<<std::to_string(i)<<"] = " << db_seqlist[i].data["ok_seq_time"]  << std::endl;
+        // std::cout << "db_seqlist["<<std::to_string(i)<<"] = " << db_seqlist[i].data["seq_stop"]     << std::endl;
+        // std::cout << "--------------------------------- " << std::endl;
+        #endif 
+        // Package to  ScrewHandler seqlist.
+        seq.job_id       = std::stoi(db_seqlist[i].data["job_id"]);
+        seq.seq_id       = std::stoi(db_seqlist[i].data["seq_id"]);
+        seq.program_name = db_seqlist[i].data["program_name"];
+        seq.ok_time      = std::stoi(db_seqlist[i].data["ok_time"]);
+        seq.ng_stop      = std::stoi(db_seqlist[i].data["ng_stop"]);
+        seqidlist.push_back(seq);
     }
-    #endif
-
     return true;
 }
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    Set AMS Bulletin Basic Parameter.
+ *
+ *******************************************************************************************/
+// bool GtcsManager::GetDatabaseScrewStepListData(std::vector<> ,int jobid, int seqid)
+// {
+//     return true;
+// }
 /******************************************************************************************
  *
  *  @author  Otto
@@ -1199,10 +1259,44 @@ std::string GtcsManager::GetGtcsTcpSocketServerIP()
 {
     return bulletin->TcpServer.GetIpAddress();
 }
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2021/01/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 int GtcsManager::GetGtcsTcpSocketServerPort()
 {
     return bulletin->TcpServer.GetPort();
 }
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2021/01/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 bool GtcsManager::SetGtcsTcpSocketServerInfo(std::string ip ,int port)
 {
     bulletin->TcpServer.SetIpAddress(ip);
@@ -1294,7 +1388,7 @@ bool GtcsManager::CheckGtcsSystem()
     GtcsDatabaseBasicInfo basic_ramdisk;    
     SetMainFSM(MAIN_FSM::SETTING);       // Default MAIN_FSM = SETTING. 
 
-
+    #pragma region check system sequence.
     // Step 1 : Read data from mcb basice parameter.
     if (mcb->ReadBasicParameter(bulletin->McbBulletin.BasicPara) == false)
     {
@@ -1336,32 +1430,65 @@ bool GtcsManager::CheckGtcsSystem()
         std::cout << "Step 6 : Read basic data from ramdisk database to dbstruct." << std::endl;
         return false;
     }
+    #pragma endregion
 
     // Step 7 = Jump to selected MAIN_FSM.
     bulletin->checksysok = CompareBasicStruct(basic_emmc,basic_ramdisk);
-    std::cout << " bulletin->checksysok = " << bulletin->checksysok << std::endl;
+    
+    #ifdef _DEBUG_MODE_
+    std::cout << "bulletin->checksysok = " << bulletin->checksysok << std::endl;
+    #endif
+
     if (bulletin->checksysok == true)
     {
-        // Get Initial MCB ctrl telegram form database.
+        #pragma region switch job function.
+        // Get screw handler unscrew information form database.
         GetDatabaseUnscrewData(mcb->telegram.ctrl.loosen,0);        // Get normal unscrew data. 
         #ifdef _DEBUG_MODE_
-        std::cout << "--------------------------------- " << std::endl; 
-        std::cout << "normal.unscrew.u16Ctrlflags     = " << mcb->telegram.ctrl.loosen.u16Ctrlflags<< std::endl;
-        std::cout << "normal.unscrew.u16ControlMode   = " << mcb->telegram.ctrl.loosen.u16ControlMode<< std::endl;
-        std::cout << "normal.unscrew.u16WorkProc      = " << mcb->telegram.ctrl.loosen.u16WorkProc<< std::endl;
-        std::cout << "normal.unscrew.u16CtrlProgram   = " << mcb->telegram.ctrl.loosen.u16CtrlProgram<< std::endl;
-        std::cout << "normal.unscrew.u16ManRpm        = " << mcb->telegram.ctrl.loosen.u16ManRpm<< std::endl;
-        std::cout << "normal.unscrew.u16ManSlope      = " << mcb->telegram.ctrl.loosen.u16ManSlope<< std::endl;
-        std::cout << "normal.unscrew.u16ManMaxTorque  = " << mcb->telegram.ctrl.loosen.u16ManMaxTorque<< std::endl;
-        std::cout << "normal.unscrew.u16ManMaxCurrent = " << mcb->telegram.ctrl.loosen.u16ManMaxCurrent<< std::endl;
-        std::cout << "normal.unscrew.u16ManRpmMode    = " << mcb->telegram.ctrl.loosen.u16ManRpmMode<< std::endl;
-        std::cout << "normal.unscrew.u8TMDControl     = " << mcb->telegram.ctrl.loosen.u8TMDControl<< std::endl;
-        std::cout << "--------------------------------- " << std::endl; 
+        // std::cout << "--------------------------------- " << std::endl; 
+        // std::cout << "normal.unscrew.u16Ctrlflags     = " << mcb->telegram.ctrl.loosen.u16Ctrlflags<< std::endl;
+        // std::cout << "normal.unscrew.u16ControlMode   = " << mcb->telegram.ctrl.loosen.u16ControlMode<< std::endl;
+        // std::cout << "normal.unscrew.u16WorkProc      = " << mcb->telegram.ctrl.loosen.u16WorkProc<< std::endl;
+        // std::cout << "normal.unscrew.u16CtrlProgram   = " << mcb->telegram.ctrl.loosen.u16CtrlProgram<< std::endl;
+        // std::cout << "normal.unscrew.u16ManRpm        = " << mcb->telegram.ctrl.loosen.u16ManRpm<< std::endl;
+        // std::cout << "normal.unscrew.u16ManSlope      = " << mcb->telegram.ctrl.loosen.u16ManSlope<< std::endl;
+        // std::cout << "normal.unscrew.u16ManMaxTorque  = " << mcb->telegram.ctrl.loosen.u16ManMaxTorque<< std::endl;
+        // std::cout << "normal.unscrew.u16ManMaxCurrent = " << mcb->telegram.ctrl.loosen.u16ManMaxCurrent<< std::endl;
+        // std::cout << "normal.unscrew.u16ManRpmMode    = " << mcb->telegram.ctrl.loosen.u16ManRpmMode<< std::endl;
+        // std::cout << "normal.unscrew.u8TMDControl     = " << mcb->telegram.ctrl.loosen.u8TMDControl<< std::endl;
+        // std::cout << "--------------------------------- " << std::endl; 
         #endif        
-        GetDatabaseScrewSequenceListData(1);
+        // Get screw handler sequence list form database.
+        GetDatabaseScrewSequenceListData(bulletin->ScrewHandler.GtcsJob.sequencelist,0);
+        
+        #ifdef _DEBUG_MODE_
+        int seqlist_size = bulletin->ScrewHandler.GtcsJob.sequencelist.size();
+
+        for (int i = 0; i < seqlist_size; i++)
+        {
+            std::cout << "normal.screw.jobid = " << std::to_string(bulletin->ScrewHandler.GtcsJob.sequencelist[i].job_id);
+            std::cout << " sequence = " << std::to_string(bulletin->ScrewHandler.GtcsJob.sequencelist[i].seq_id)<< std::endl;
+        }
+        #endif
+        bulletin->ScrewHandler.currentseqeuceindex = 1; // Set start index.
+        #pragma endregion
+
+        #pragma region switch sequence list function.
+        // Get step data list from tcs.db step table by JobID & seqID.
+        
+
+        // Package step data list to MCB Process and step telegram.
+        
+
+        // Send process and step telegram to MCB.
+        
+
+        #pragma endregion
 
         // Display some informaiton.
+        #ifdef _DEBUG_MODE_
         std::cout << "Gear Ratio = " << std::to_string(bulletin->McbBulletin.BasicPara.u16GearBoxRatio)<<std::endl;
+        #endif
         bulletin->ScrewHandler.IsEnable = true;
         SetMainFSM(MAIN_FSM::READY);
     }
@@ -1406,7 +1533,7 @@ bool GtcsManager::RunGtcsSystem()
         }   
 
         // step 2 = Check sequence list counter.
-        if (bulletin->ScrewHandler.GtcsJob.seq_list.empty()==true)
+        if (bulletin->ScrewHandler.GtcsJob.sequencelist.empty()==true)
         {
             /* 毒DB拿program data */
             /* 毒DB拿sequence list data */
@@ -1423,10 +1550,9 @@ bool GtcsManager::RunGtcsSystem()
         }
         else
         {
-            ctrltelegram = mcb->telegram.ctrl.loosen;                                      // Config loosen ctrl telegram.
+            ctrltelegram = mcb->telegram.ctrl.loosen;                                 // Config loosen ctrl telegram.
             mcb->telegram.ctrl.InitialCtrlFlags(ctrltelegram);
             mcb->telegram.ctrl.SetCtrlFlags(ctrltelegram,CTRL_FLAGS_IDX::SC_REVERSE); // Reverse 
-        
         }        
         mcb->telegram.ctrl.SetCtrlFlags(ctrltelegram,CTRL_FLAGS_IDX::SHORT_UVW);
         mcb->telegram.ctrl.SetCtrlFlags(ctrltelegram,CTRL_FLAGS_IDX::EN_TIMEOUT_200MS);
@@ -1435,10 +1561,13 @@ bool GtcsManager::RunGtcsSystem()
         if(bulletin->ScrewHandler.IsEnable == true)
         {
             mcb->telegram.ctrl.SetCtrlFlags(ctrltelegram,CTRL_FLAGS_IDX::SC_ENABLE);
+            // if (mcb->telegram.status.loosen_status==false)
+            // {
+            //     mcb->telegram.ctrl.SetCtrlFlags(ctrltelegram,CTRL_FLAGS_IDX::SC_ENABLE);
+            // }
         }    
 
         #ifdef _DEBUG_MODE_
-        // std::cout << "telegram.ctrl.IsEnable status = "<<std::to_string(mcb->telegram.ctrl.IsEnable) << std::endl;   
         std::cout << "telegram.ctrl.IsEnable status = "<<std::to_string(bulletin->ScrewHandler.IsEnable) << std::endl;   
         #endif           
 

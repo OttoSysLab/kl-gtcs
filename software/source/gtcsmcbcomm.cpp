@@ -806,6 +806,7 @@ int GtcsMcbComm::ReadBasicParameter(McbID2Struct &basic_para)
     #pragma endregion
 
     #ifdef _DEBUG_MODE_
+    std::cout << "----------------------------------------------------------------" << std::endl;
     // Display package 1.
     std::cout << "basic_para.s16MinTemp = " << std::to_string(basic_para.s16MinTemp) << std::endl;
     std::cout << "basic_para.s16MaxTemp = " << std::to_string(basic_para.s16MaxTemp) << std::endl;
@@ -2450,7 +2451,7 @@ int GtcsMcbComm::InitialMcbComPort(std::string com_name_string)
 int GtcsMcbComm::GetMcbPollingStatus(GtcsCtrlTelegramStrcut &ctrltelegram)
 {
     int result = 0;
-    int delaytime = 40;  // 20,30
+    int delaytime = 40;  // 20,30,40
     int MAX_READ = 1024; 
 
     // Encode ctrl telegram array.
@@ -2491,4 +2492,3 @@ int GtcsMcbComm::GetMcbPollingStatus(GtcsCtrlTelegramStrcut &ctrltelegram)
 }
 #pragma endregion
 #pragma endregion
-

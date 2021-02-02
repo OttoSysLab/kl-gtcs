@@ -1,8 +1,7 @@
 #pragma once
 #define _DEBUG_MODE_
-// #define _DEBUG_MODE_202_
 #define _DEBUG_MODE_207_
-#define _DEBUG_JOB_SEQ_
+// #define _DEBUG_JOB_SEQ_
 /*=======================================================================================
  Program Nane  	: gtcs_tlg_decoder.c
  Subject 		: SARM Serial Port Communication Driver Process
@@ -1001,93 +1000,6 @@ typedef struct
 #pragma endregion
 #pragma endregion
 #pragma region GTCS Database Struct
-
-#pragma region sequence list
-// step
-class StepInfo
-{
-private:
-    /* data */
-public:
-    StepInfo(/* args */);
-    ~StepInfo();
-};
-class GtcsStepInfo : public StepInfo
-{
-private:
-    /* data */
-public:
-    GtcsStepInfo (/* args */);
-    ~GtcsStepInfo ();
-};
-
-// sequence
-class SequenceInfo
-{
-private:
-    /* data */
-public:
-    SequenceInfo(/* args */);
-    ~SequenceInfo();
-};
-class GtcsSequenceInfo : public SequenceInfo
-{
-private:
-    /* data */
-public:
-    GtcsSequenceInfo(/* args */);
-    ~GtcsSequenceInfo();
-    std::vector<GtcsStepInfo> step_list;
-};
-
-// Job
-class JobInfo
-{
-private:
-    /* data */
-public:
-    JobInfo(/* args */);
-    ~JobInfo();
-    int JobID = 0;
-};
-class GtcsJobInfo : public JobInfo
-{
-private:
-    /* data */
-public:
-    GtcsJobInfo(/* args */);
-    ~GtcsJobInfo();
-    std::vector<GtcsSequenceInfo> seq_list;
-};
-#pragma endregion
-
-#pragma region  Screw sequence monitor
-class ScrewSequenceHanlder
-{
-public:
-    ScrewSequenceHanlder(){};
-    ~ScrewSequenceHanlder(){};
-    int statusnum = (int)LOCKED_STATUS::IDLE;
-};
-// Gtcs
-class GtcsScrewSequenceHandler : public ScrewSequenceHanlder
-{
-private:
-    /* data */
-public:
-    GtcsScrewSequenceHandler(/* args */);
-    ~GtcsScrewSequenceHandler();
-    std::string lockedmessage = "___________";
-    bool screwok  = false;
-    bool IsEnable = false;
-    bool loosen   = false;
-    int currentseqeuceindex = 0;
-    int lastseqeuceindex = 0;
-    GtcsJobInfo GtcsJob;
-};
-#pragma endregion
-
-#pragma region database
 // Database.
 class GtcsDatabaseBaseInfo
 {
@@ -1160,4 +1072,100 @@ public:
     void InitialColumnName();
 };
 #pragma endregion
+#pragma region GTCS JobSequence
+// Gtcs step data struct.
+typedef struct
+{
+    int job_id;
+    int seq_id;
+    int target_type;
+    std::string program_name;
+    int ScrewStepID;
+    std::string u8StepName;
+    int u16StepRpm;
+    float u16StepSlope;
+    int u16StepMaxCurrent;
+    float u16StepMaxTorque;
+    float u16StepMaxRevol;
+    float u16StepTime;
+    float u16StepAngle;
+    float u16StepAngleWindow;
+    float u16StepTorqueWindow;
+    float u16MinDutyCycle;
+    int u16StepFlags;
+    float ScrewHiTorque;
+    float ScrewLoTorque;
+    float ScrewHiAngle;
+    float ScrewLoAngle;
+    float TorqueThreshold;
+    float AngleThreshold;
+    float TorqueJointOffset;
+    float StepDelaytime;
+    int ScrewStepDirection;
+    int StepMonitoringMode;
+    int off_set;
+    int ScrewReverseForce;
+    int u16WindowModeFlags;
+    int enable_downshift;
+    float downshift_torque;
+    int downshift_speed;
+}GtcsStepDataStruct;
+
+// Gtcs Sequence struct.
+typedef struct 
+{
+    // Basic information.
+    int job_id;
+    int seq_id;
+    std::string program_name;
+    int ok_time;
+    int ng_stop;
+    float joint_offset;
+    int offset;
+    int ok_seq;
+    int ok_seq_time;
+    int seq_stop;
+    // Step list. 
+    std::vector<GtcsStepDataStruct> steplist;
+}GtcsSequenceDataStruct;
+
+// Gtcs Sequence struct.
+typedef struct
+{
+    // Basic information.
+    int jobid;    
+    std::string job_name;
+    int unscrew_direction;
+    int unscrew_force;
+    int unscrew_rpm;
+    int enable_unscrew_force;
+    // Sequemce list.
+    std::vector<GtcsSequenceDataStruct> sequencelist; 
+}GtcsJobStruct;
+#pragma endregion
+#pragma region GTCS Screw sequence handler
+class ScrewSequenceHandler
+{
+public:
+    ScrewSequenceHandler(){};
+    ~ScrewSequenceHandler(){};
+    int statusnum = (int)LOCKED_STATUS::IDLE;
+};
+// Gtcs
+class GtcsScrewSequenceHandler : public ScrewSequenceHandler
+{
+private:
+    /* data */
+public:
+    GtcsScrewSequenceHandler(/* args */);
+    ~GtcsScrewSequenceHandler();
+    std::string lockedmessage = "___________";
+    bool screwok  = false;
+    bool IsEnable = false;
+    bool loosen   = false;
+    int currentseqeuceindex = 0;
+    int lastseqeuceindex = 0;
+    // GtcsJobInfo GtcsJob;
+    GtcsJobStruct GtcsJob;
+};
 #pragma endregion

@@ -37,11 +37,10 @@ int main()
     // Ste 3 = Set tcpsocket thread and start.
     #pragma region step 2
     #ifdef _DEBUG_MODE_    
-    #if defined(_DEBUG_MODE_202_)
-    manager.SetGtcsTcpSocketServerInfo("127.0.0.1",9000); // OTTO : 207,ERIC : 202
-    #endif
     #if defined(_DEBUG_MODE_207_)
     manager.SetGtcsTcpSocketServerInfo("192.168.0.207",9000); // OTTO : 207,ERIC : 202
+    #else
+    manager.SetGtcsTcpSocketServerInfo("127.0.0.1",9000);     // Linux OTTO
     #endif    
     #else
     manager.SetGtcsTcpSocketServerInfo("127.0.0.1",9000);
@@ -82,7 +81,6 @@ int main()
     }
     #pragma endregion
     // Join thread.
-    // thread_tcpserver.join();
     // manager.StopAllThread();
     return 0;
 }

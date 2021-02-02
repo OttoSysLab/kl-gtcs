@@ -73,8 +73,8 @@ private:
 
     // Switch Job sequence.
     bool GetDatabaseUnscrewData(GtcsCtrlTelegramStrcut &telegram,int jobid);
-    bool GetDatabaseScrewSequenceListData(int jobid);
-
+    bool GetDatabaseScrewSequenceListData(std::vector<GtcsSequenceDataStruct> &seqidlist,int jobid);
+    // bool GetDatabaseScrewStepListData(std::vector<GtcsJobSequenceID> &seqidlist,int jobid);
 
     // AMS Protocol.
     bool SetDatabaseBasicParaToAns(AmsANS340Struct &amsans,GtcsDatabaseBasicInfo &db_basic);   // DB_BASIC  ->AMS_ANS340

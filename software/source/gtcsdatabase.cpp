@@ -490,82 +490,6 @@ bool GtcsDatabase::ReadDatabaseJobData(GtcsDatabaseJobInfo &dbstruct,int jobid)
  *  @note    none
  *
  *******************************************************************************************/
-bool GtcsDatabase::UpdateDatabaseJobData(GtcsDatabaseJobInfo &dbstruct,int jobid)
-{
-    // Initial sql command.
-    std::string sqlcmd = "";
-    
-    // std::string sqlcmd = "update " + dbstruct.dbtablename + " set ";
-    // int columnnames_size  = dbstruct.columnnames.size();
-    // for (int i = 0; i < columnnames_size; i++)
-    // {
-    //     if (dbstruct.type[dbstruct.columnnames[i]]!="TEXT")
-    //     {
-    //         sqlcmd += dbstruct.columnnames[i] + " = " + dbstruct.data[dbstruct.columnnames[i]] + ",";   
-    //     }   
-    //     else
-    //     {
-    //         sqlcmd += dbstruct.columnnames[i] + " = " + "'" + dbstruct.data[dbstruct.columnnames[i]] + "'" +",";   
-    //     }
-    //     // Test 
-    //     // std::cout << "sqlcmd " << dbstruct.columnnames[i] << " = " << dbstruct.data[dbstruct.columnnames[i]] <<std::endl;
-    // }
-    // sqlcmd = sqlcmd.replace(sqlcmd.end()-1,sqlcmd.end()," ");
-    // sqlcmd += "where rowid = 1;";
-    
-    // Initial value.
-    sqlite3 *db;
-    sqlite3_stmt *stmt;
-    int rc;
-    // Open database.
-    rc = sqlite3_open(dbPath.c_str(),&db);
-    if (rc)
-    {
-        std::cout<<"Can't open database : "<< sqlite3_errmsg(db) <<std::endl;
-        return false;
-    }
-    
-    // std::cout << "sqlcmd = " << sqlcmd <<std::endl;
-
-    // updata database.
-    rc = sqlite3_prepare_v2(db,sqlcmd.c_str(),-1,&stmt,NULL);
-    if (rc != SQLITE_OK)
-    {
-        std::cout<<"Write SQL error:"<<sqlite3_errmsg(db)<<std::endl;
-        sqlite3_finalize(stmt);
-        return false;
-    }
-
-    rc = sqlite3_step(stmt);
-    if (rc != SQLITE_ROW && rc != SQLITE_DONE)
-    {
-        std::cout<<"Write SQL error:"<<sqlite3_errmsg(db)<<std::endl;
-        sqlite3_finalize(stmt);
-        return false;
-    }
-
-    // Finialize process.
-    sqlite3_finalize(stmt);
-    sqlite3_close(db);
-    return true;
-}
-/******************************************************************************************
- *
- *  @author  Otto
- *
- *  @date    2016/06/21
- *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
- *
- *  @brief   ( Constructivist )
- *
- *  @param   QObject *parent
- *
- *  @return  none
- *
- *  @note    none
- *
- *******************************************************************************************/
 bool GtcsDatabase::ReadDataBaseSequenceList(std::vector<GtcsDatabaseSequenceInfo> &dblist,int jobid)
 {
     // Initial object 
@@ -598,7 +522,7 @@ bool GtcsDatabase::ReadDataBaseSequenceList(std::vector<GtcsDatabaseSequenceInfo
         return false;
     }
 
-    // Loop  
+    // Excute sqlcmd Loop.  
     for(;;)
     {
         // Excute step.
@@ -625,27 +549,12 @@ bool GtcsDatabase::ReadDataBaseSequenceList(std::vector<GtcsDatabaseSequenceInfo
             dblist.push_back(sequencedata);
         }        
     }
-
     if (rc != SQLITE_DONE) 
     {
         sqlite3_finalize(stmt);
         std::cout<<"customer not found"<<std::endl;
         return false;
     }
-
-    // Assign dat to bsic struct.    
-    // int columnname_size  = dbstruct.columnnames.size();    
-    // for (int i = 0; i < columnname_size; i++)
-    // {
-    //     if (sqlite3_column_text(stmt, i)==NULL) // If get data == null,break the while loop.
-    //     {
-    //         return false;
-    //     } 
-    //     else
-    //     {
-    //         dbstruct.data[dbstruct.columnnames[i]] = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, i)));
-    //     }
-    // }
 
     // Close sqlite3.
     sqlite3_finalize(stmt);

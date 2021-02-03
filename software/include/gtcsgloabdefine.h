@@ -1,7 +1,7 @@
 #pragma once
-// #define _DEBUG_MODE_
-// #define _DEBUG_MODE_207_
-// #define _DEBUG_JOB_SEQ_
+#define _DEBUG_MODE_
+#define _DEBUG_MODE_207_
+#define _DEBUG_JOB_SEQ_
 /*=======================================================================================
  Program Nane  	: gtcs_tlg_decoder.c
  Subject 		: SARM Serial Port Communication Driver Process
@@ -1076,56 +1076,49 @@ public:
 // Gtcs step data struct.
 typedef struct
 {
-    int job_id;
-    int seq_id;
-    int target_type;
-    std::string program_name;
-    int ScrewStepID;
-    std::string u8StepName;
-    int u16StepRpm;
-    float u16StepSlope;
-    int u16StepMaxCurrent;
-    float u16StepMaxTorque;
-    float u16StepMaxRevol;
-    float u16StepTime;
-    float u16StepAngle;
-    float u16StepAngleWindow;
-    float u16StepTorqueWindow;
-    float u16MinDutyCycle;
-    int u16StepFlags;
-    float ScrewHiTorque;
-    float ScrewLoTorque;
-    float ScrewHiAngle;
-    float ScrewLoAngle;
-    float TorqueThreshold;
-    float AngleThreshold;
-    float TorqueJointOffset;
-    float StepDelaytime;
-    int ScrewStepDirection;
-    int StepMonitoringMode;
-    int off_set;
-    int ScrewReverseForce;
-    int u16WindowModeFlags;
-    int enable_downshift;
-    float downshift_torque;
-    int downshift_speed;
+    int job_id;                // colunm index = 0
+    int seq_id;                // colunm index = 1
+    int target_type;           // colunm index = 2
+    std::string program_name;  // colunm index = 3
+    int ScrewStepID;           // colunm index = 4
+    std::string u8StepName;    // colunm index = 5
+    int u16StepRpm;            // colunm index = 6
+    float u16StepMaxTorque;    // colunm index = 7
+    float u16StepMaxRevol;     // colunm index = 8
+    float u16StepTime;         // colunm index = 9
+    float u16StepAngle;        // colunm index = 10
+    float u16StepAngleWindow;  // colunm index = 11
+    float u16StepTorqueWindow; // colunm index = 12
+    float ScrewHiTorque;       // colunm index = 13
+    float ScrewLoTorque;       // colunm index = 14
+    float ScrewHiAngle;        // colunm index = 15
+    float ScrewLoAngle;        // colunm index = 16
+    float TorqueThreshold;     // colunm index = 17
+    float TorqueJointOffset;   // colunm index = 18
+    float StepDelaytime;       // colunm index = 19
+    int ScrewStepDirection;    // colunm index = 20
+    int StepMonitoringMode;    // colunm index = 21
+    int off_set;               // colunm index = 22
+    int enable_downshift;      // colunm index = 23
+    float downshift_torque;    // colunm index = 24
+    int downshift_speed;       // colunm index = 25
 }GtcsStepDataStruct;
 
 // Gtcs Sequence struct.
 typedef struct 
 {
     // Basic information.
-    int job_id;
-    int seq_id;
-    std::string program_name;
-    int ok_time;
-    int ng_stop;
-    float joint_offset;
-    int offset;
-    int tr;
-    int ok_seq;
-    float ok_seq_time;
-    int seq_stop;
+    int job_id;               // colunm index = 0
+    int seq_id;               // colunm index = 1
+    std::string program_name; // colunm index = 2
+    int ok_time;              // colunm index = 3
+    int ng_stop;              // colunm index = 4
+    float joint_offset;       // colunm index = 5
+    int offset;               // colunm index = 6
+    int tr;                   // colunm index = 7
+    int ok_seq;               // colunm index = 8
+    float ok_seq_time;        // colunm index = 9
+    int seq_stop;             // colunm index = 10
     // Step list. 
     std::vector<GtcsStepDataStruct> steplist;
 }GtcsSequenceDataStruct;
@@ -1134,12 +1127,12 @@ typedef struct
 typedef struct
 {
     // Basic information.
-    int jobid;    
-    std::string job_name;
-    int unscrew_direction;
-    int unscrew_force;
-    int unscrew_rpm;
-    int enable_unscrew_force;
+    int jobid;                // colunm index = 1
+    std::string job_name;     // colunm index = 2
+    int unscrew_direction;    // colunm index = 3
+    int unscrew_force;        // colunm index = 4
+    int unscrew_rpm;          // colunm index = 5
+    int enable_unscrew_force; // colunm index = 6
     // Sequemce list.
     std::vector<GtcsSequenceDataStruct> sequencelist; 
 }GtcsJobStruct;

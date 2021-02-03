@@ -561,4 +561,95 @@ bool GtcsDatabase::ReadDataBaseSequenceList(std::vector<GtcsDatabaseSequenceInfo
     sqlite3_close(db);
     return true;
 }
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2016/06/21
+ *
+ *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   QObject *parent
+ *
+ *  @return  bool
+ *
+ *  @note    Get database step list.
+ *
+ *******************************************************************************************/
+bool GtcsDatabase::ReadDatabaseStepList(std::vector<GtcsDatabaseStepInfo> &dblist,int jobid,int seqid)
+{
+    // Initial object 
+    GtcsDatabaseStepInfo stepdata;
+    dblist.clear();
+
+    // Initial sqlcmd.
+    std::string sqlcmd = "SELECT * from step";
+    sqlcmd += " where job_id=";
+    sqlcmd += std::to_string(jobid);
+    sqlcmd += " and ";
+    sqlcmd += " seq_id=";
+    sqlcmd += std::to_string(seqid);
+    sqlcmd += ";";
+    
+    // Initial value.
+    sqlite3 *db;
+    sqlite3_stmt *stmt;
+    int rc;
+    // Open database.
+    rc = sqlite3_open(dbPath.c_str(),&db);
+    if (rc)
+    {
+        std::cout<<"Can't open database : "<< sqlite3_errmsg(db) <<std::endl;
+        return false;
+    }
+    // Send SQL statement to db.
+    rc = sqlite3_prepare_v2(db,sqlcmd.c_str(),-1,&stmt,NULL);
+    if (rc != SQLITE_OK)
+    {
+        std::cout<<"Read SQL error:"<<sqlite3_errmsg(db)<<std::endl;
+        sqlite3_finalize(stmt);
+        return false;
+    }
+
+    // Excute sqlcmd Loop.  
+    for(;;)
+    {
+        // Excute step.
+        rc = sqlite3_step(stmt);    
+        if (rc != SQLITE_ROW)
+        {
+            break;
+        }
+        else
+        {
+            // Assign dat to bsic struct.    
+            int columnname_size  = stepdata.columnnames.size();    
+            for (int i = 0; i < columnname_size; i++)
+            {
+                if (sqlite3_column_text(stmt, i)==NULL) // If get data == null,break the while loop.
+                {
+                    return false;
+                } 
+                else
+                {
+                    stepdata.data[stepdata.columnnames[i]] = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, i)));
+                }
+            }
+            dblist.push_back(stepdata);
+        }        
+    }
+    if (rc != SQLITE_DONE) 
+    {
+        sqlite3_finalize(stmt);
+        std::cout<<"customer not found"<<std::endl;
+        return false;
+    }
+
+    // Close sqlite3.
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+    return true;
+}
 #pragma endregion

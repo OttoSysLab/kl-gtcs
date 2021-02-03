@@ -59,5 +59,5 @@ public:
     bool ReadDataBaseSequenceList(std::vector<GtcsDatabaseSequenceInfo> &dblist,int jobid);
     
     // Table = step.
-    // bool GetDatabaseStepList(Gtcs);
+    bool ReadDatabaseStepList(std::vector<GtcsDatabaseStepInfo> &dblist,int jobid,int seqid);
 };

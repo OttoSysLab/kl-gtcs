@@ -1316,28 +1316,26 @@ bool GtcsManager::GetDatabaseScrewStepListData(std::vector<GtcsStepDataStruct> &
  *
  *  @param   McbID4Struct &mcbprocess
  * 
- *  @param   int jobid
+ *  @param   McbID2Struct &basic
  * 
- *  @param   int seqid 
+ *  @param   std::vector<GtcsStepDataStruct> &steplist
  *
  *  @return  bool
  *
  *  @note    none
  *
  *******************************************************************************************/
-bool GtcsManager::GetMcbProcessFromDatabase(McbID4Struct &mcbprocess,int jobid,int seqid)
+bool GtcsManager::GetMcbProcessFromDatabase(McbID4Struct &mcbprocess,McbID2Struct &mcbbasic,std::vector<GtcsStepDataStruct> &steplist)
 {   
-    // Initial object.
     // Package data to mcb telegram.
     mcbprocess.u8ProcID       = 4000;
     mcbprocess.u8ProcName     = "****";
-    mcbprocess.u16ProcPGain   = 0;  
-    mcbprocess.u16ProcIGain   = 0;
+    mcbprocess.u16ProcPGain   = mcbbasic.u16PGain;  
+    mcbprocess.u16ProcIGain   = mcbbasic.u16IGain;
     mcbprocess.u16ProcMaxTime = 0;
     mcbprocess.u16ProcMinTime = 0;
     mcbprocess.u16ProcRevFunc = 0;
-    mcbprocess.u16NbrSteps    = 0;    
-
+    mcbprocess.u16NbrSteps    = steplist.size();    
     return true;
 }
 /******************************************************************************************
@@ -1352,19 +1350,17 @@ bool GtcsManager::GetMcbProcessFromDatabase(McbID4Struct &mcbprocess,int jobid,i
  *
  *  @param   std::vector<McbID3Struct> &mcbsteplist
  * 
- *  @param   int jobid
+ *  @param   McbID2Struct &mcbbasic
  * 
- *  @param   int seqid
+ *  @param   std::vector<GtcsStepDataStruct> &steplist
  *
- *  @return  none
+ *  @return  bool
  *
  *  @note    none
  *
  *******************************************************************************************/
-bool GtcsManager::GetStepListFromDatabase(std::vector<McbID3Struct> &mcbsteplist,int jobid,int seqid)
+bool GtcsManager::GetStepListFromDatabase(McbID3Struct &mcbstep,McbID2Struct &mcbbasic,std::vector<GtcsStepDataStruct> &steplist)
 {
-    // Initial object.  
-
     // Package database step data to mcb telegram. 
     
     return true;
@@ -1617,12 +1613,12 @@ bool GtcsManager::SetGtcsTcpSocketServerInfo(std::string ip ,int port)
 }
 /******************************************************************************************
  *
- *  @author  Otto Chang
+ *  @author  Otto
  *
  *  @date    2021/02/04
  *
  *  @fn      GtcsManager::StopAllThread()
- *
+ *  
  *  @brief   ( Constructivist )
  *
  *  @param   none
@@ -1796,8 +1792,9 @@ bool GtcsManager::CheckGtcsSystem()
             #endif
         }
         // Package step data list to MCB Process telegram.
-        
-
+        GetMcbProcessFromDatabase(  bulletin->McbBulletin.ProcessPara,
+                                    bulletin->McbBulletin.BasicPara,
+                                    bulletin->ScrewHandler.GtcsJob.sequencelist[seqindex].steplist);
         // Send process telegram to MCB.
         
 

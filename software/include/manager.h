@@ -76,10 +76,17 @@ private:
     bool GetDatabaseScrewSequenceListData(std::vector<GtcsSequenceDataStruct> &seqlist,int jobid);
     bool GetDatabaseScrewStepListData(std::vector<GtcsStepDataStruct> &steplist,int jobid,int seqid);
 
+    // MCB qpi.
+    bool GetMcbProcessFromDatabase(McbID4Struct &mcbprocess,int jobid,int seqid);
+    bool GetStepListFromDatabase(std::vector<McbID3Struct> &mcbsteplist,int jobid,int seqid);
+    
+    bool SendProcessToMcb(McbID4Struct &mcbprocess);
+    bool SendStepToMcb(McbID3Struct &mcbstep);
+
     // AMS Protocol.
     bool SetDatabaseBasicParaToAns(AmsANS340Struct &amsans,GtcsDatabaseBasicInfo &db_basic);   // DB_BASIC  ->AMS_ANS340
     bool SetDatabaseBasicParaToReq(AmsREQ301Struct &amsreq,GtcsDatabaseBasicInfo &db_basic);   // DB_BASIC  ->AMS_REQ301
-    bool SetAmsCmdBaiscParaToAns(AmsANS340Struct &amsans,AmsCMD340Struct &amscmd);             // AMS_CMD340->AMS_ANS340
+    void SetAmsCmdBaiscParaToAns(AmsANS340Struct &amsans,AmsCMD340Struct &amscmd);             // AMS_CMD340->AMS_ANS340
     bool ConvertReadlTimeActuralValue();                                                       // GTCS AMS DATA300
     bool ConvertAmsBasicToMcbStruct(AmsCMD340Struct &amscmd,McbID2Struct &basic_para);         // AMC_CMD340->DB_Struct
 public:

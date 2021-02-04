@@ -14,38 +14,53 @@
 
 /******************************************************************************************
  *
- *  @author  Otto
+ *  @author  Otto Chang
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      TcpSocket::TcpSocket()
  *
- *  @brief   ( Constructivist )
+ *  @brief   TcpSocket constructor.
  *
- *  @param   QObject *parent
+ *  @param   none
  *
  *  @return  none
  *
  *  @note    none
  *
  *******************************************************************************************/
-// Constructor.
 TcpSocket::TcpSocket()
 {}
-// Distruct.
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
+ *  @date    2021/02/04
+ *
+ *  @fn      TcpSocket::~TcpSocket()
+ *
+ *  @brief   TcpSocket distructor.
+ *
+ *  @param   none
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 TcpSocket::~TcpSocket()
 {}
 /******************************************************************************************
  *
- *  @author  Otto
+ *  @author  Otto Chang
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsTcpSocket::GtcsTcpSocket()
  *
- *  @brief   ( Constructivist )
+ *  @brief   GtcsTcpSocket constructor.
  *
- *  @param   QObject *parent
+ *  @param   none
  *
  *  @return  none
  *
@@ -54,19 +69,36 @@ TcpSocket::~TcpSocket()
  *******************************************************************************************/
 GtcsTcpSocket::GtcsTcpSocket(/* args */)
 {}
-GtcsTcpSocket::~GtcsTcpSocket()
-{}
 /******************************************************************************************
  *
  *  @author  Otto
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsTcpSocket::~GtcsTcpSocket()
  *
- *  @brief   ( Constructivist )
+ *  @brief   GtcsTcpSocket distructor
  *
- *  @param   QObject *parent
+ *  @param   none
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+GtcsTcpSocket::~GtcsTcpSocket()
+{}
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
+ *  @date    2021/02/04
+ *
+ *  @fn      GtcsTcpSocket::GtcsTcpSocketServerHandler()
+ *
+ *  @brief   GtcsTcpSocketServerHandler
+ *
+ *  @param   none
  *
  *  @return  none
  *

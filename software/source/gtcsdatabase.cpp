@@ -13,48 +13,65 @@
 #include "gtcsdatabase.h"
 #include <sqlite3.h>
 
-#pragma region Sqlite3Manager
 /******************************************************************************************
  *
  *  @author  Otto
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      Sqlite3Manager::Sqlite3Manager()
  *
- *  @brief   ( Constructivist )
+ *  @brief   Constructor.
  *
- *  @param   QObject *parent
+ *  @param   none
  *
  *  @return  none
  *
  *  @note    none
  *
  *******************************************************************************************/
-// Constructor.
 Sqlite3Manager::Sqlite3Manager()
 {}
-// Disturctor.
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2021/02/04
+ *
+ *  @fn      Sqlite3Manager::~Sqlite3Manager()
+ *
+ *  @brief   Sqlite3Manager Distructer
+ *
+ *  @param   none
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 Sqlite3Manager::~Sqlite3Manager()
 {}
 /******************************************************************************************
  *
  *  @author  Otto
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      Sqlite3Manager::UpdateDatabase(std::string db_Path,std::string table,std::string sqlcmd)
  *
- *  @brief   ( Constructivist )
+ *  @brief   Write data to sqlite database.
  *
- *  @param   QObject *parent
+ *  @param   string db_Path
+ * 
+ *  @param   string table
+ * 
+ *  @param   string sqlcmd
  *
- *  @return  none
+ *  @return  bool
  *
  *  @note    none
  *
  *******************************************************************************************/
-// Write data to sqlite.
 bool Sqlite3Manager::UpdateDatabase(std::string db_Path,std::string table,std::string sqlcmd)
 {
     // Initial value.
@@ -95,20 +112,23 @@ bool Sqlite3Manager::UpdateDatabase(std::string db_Path,std::string table,std::s
  *
  *  @author  Otto
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      Sqlite3Manager::ReadDatabase(std::string db_Path, std::string table,std::string *ptr)
  *
- *  @brief   ( Constructivist )
+ *  @brief   Read data from sqlite database.
  *
- *  @param   QObject *parent
+ *  @param   string db_Path
+ * 
+ *  @param   string table
+ * 
+ *  @param   string *ptr
  *
- *  @return  none
+ *  @return  bool
  *
  *  @note    none
  *
  *******************************************************************************************/
-// Write data to sqlite.
 bool Sqlite3Manager::ReadDatabase(std::string db_Path, std::string table,std::string *ptr)
 {
     // Initial sql cmd.
@@ -176,48 +196,59 @@ bool Sqlite3Manager::ReadDatabase(std::string db_Path, std::string table,std::st
     sqlite3_close(db);
     return true;
 }
-#pragma endregion
-
-#pragma region GtcsDatabase
 /******************************************************************************************
  *
  *  @author  Otto
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsDatabase::GtcsDatabase(std::string Path)
  *
- *  @brief   ( Constructivist )
+ *  @brief   GtcsDatabase Constructor
  *
- *  @param   QObject *parent
+ *  @param   string Path
  *
  *  @return  none
  *
  *  @note    none
  *
  *******************************************************************************************/
-// Constructor
 GtcsDatabase::GtcsDatabase(std::string Path)
 {
     dbPath = Path;
-}
-// Distructor.
-GtcsDatabase::~GtcsDatabase()
-{
 }
 /******************************************************************************************
  *
  *  @author  Otto
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsDatabase::~GtcsDatabase()
+ *
+ *  @brief   GtcsDatabase Distructor.
+ *
+ *  @param   none
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+GtcsDatabase::~GtcsDatabase()
+{}
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2021/02/04
+ *
+ *  @fn      GtcsDatabase::GetDatabasePath()
  *
  *  @brief   ( Constructivist )
  *
- *  @param   QObject *parent
+ *  @param  none
  *
- *  @return  none
+ *  @return  string
  *
  *  @note    none
  *
@@ -230,13 +261,13 @@ std::string GtcsDatabase::GetDatabasePath()
  *
  *  @author  Otto
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsDatabase::SetDatabasePath(std::string Path)
  *
  *  @brief   ( Constructivist )
  *
- *  @param   QObject *parent
+ *  @param   string Path
  *
  *  @return  none
  *
@@ -251,15 +282,15 @@ void GtcsDatabase::SetDatabasePath(std::string Path)
  *
  *  @author  Otto
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsDatabase::ReadDatabaseBasicData(GtcsDatabaseBasicInfo &dbstruct)
  *
  *  @brief   ( Constructivist )
  *
- *  @param   QObject *parent
+ *  @param   GtcsDatabaseBasicInfo &dbstruct
  *
- *  @return  none
+ *  @return  bool
  *
  *  @note    none
  *
@@ -324,15 +355,15 @@ bool GtcsDatabase::ReadDatabaseBasicData(GtcsDatabaseBasicInfo &dbstruct)
  *
  *  @author  Otto
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsDatabase::UpdateDatabaseBasicData(GtcsDatabaseBasicInfo &dbstruct)
  *
  *  @brief   ( Constructivist )
  *
- *  @param   QObject *parent
+ *  @param   GtcsDatabaseBasicInfo &dbstruct
  *
- *  @return  none
+ *  @return  bool
  *
  *  @note    none
  *
@@ -398,13 +429,15 @@ bool GtcsDatabase::UpdateDatabaseBasicData(GtcsDatabaseBasicInfo &dbstruct)
  *
  *  @author  Otto
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsDatabase::ReadDatabaseJobData(GtcsDatabaseJobInfo &dbstruct,int jobid)
  *
  *  @brief   ( Constructivist )
  *
- *  @param   QObject *parent
+ *  @param   GtcsDatabaseJobInfo &dbstruct
+ * 
+ *  @param   int jobid
  *
  *  @return  none
  *
@@ -477,15 +510,17 @@ bool GtcsDatabase::ReadDatabaseJobData(GtcsDatabaseJobInfo &dbstruct,int jobid)
  *
  *  @author  Otto
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsDatabase::ReadDataBaseSequenceList(std::vector<GtcsDatabaseSequenceInfo> &dblist,int jobid)
  *
  *  @brief   ( Constructivist )
  *
- *  @param   QObject *parent
+ *  @param   std::vector<GtcsDatabaseSequenceInfo> &dblist
+ * 
+ *  @param   int jobid
  *
- *  @return  none
+ *  @return  bool
  *
  *  @note    none
  *
@@ -565,13 +600,17 @@ bool GtcsDatabase::ReadDataBaseSequenceList(std::vector<GtcsDatabaseSequenceInfo
  *
  *  @author  Otto
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsDatabase::ReadDatabaseStepList(std::vector<GtcsDatabaseStepInfo> &dblist,int jobid,int seqid)
  *
  *  @brief   ( Constructivist )
  *
- *  @param   QObject *parent
+ *  @param   vector<GtcsDatabaseStepInfo> &dblist
+ * 
+ *  @param   int jobid
+ * 
+ *  @param   int seqid
  *
  *  @return  bool
  *

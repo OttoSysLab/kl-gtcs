@@ -12,18 +12,17 @@
 =======================================================================================*/
 #include "../include/gtcsbulletin.h"
 
-#pragma region  
 /******************************************************************************************
  *
  *  @author  Otto
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      AMSBulletin ::AMSBulletin()
  *
  *  @brief   ( Constructivist )
  *
- *  @param   QObject *parent
+ *  @param   none
  *
  *  @return  none
  *
@@ -34,20 +33,36 @@ AMSBulletin ::AMSBulletin()
 {
     InitialStructValue();
 }
-AMSBulletin ::~AMSBulletin()
-{
-}
 /******************************************************************************************
  *
  *  @author  Otto
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      AMSBulletin ::~AMSBulletin()
  *
  *  @brief   ( Constructivist )
  *
- *  @param   QObject *parent
+ *  @param   none
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+AMSBulletin ::~AMSBulletin()
+{}
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2021/02/04
+ *
+ *  @fn      AMSBulletin::InitialStructValue()
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   none
  *
  *  @return  none
  *
@@ -566,13 +581,13 @@ void AMSBulletin::InitialStructValue()
  *
  *  @author  Otto
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      MCBBulletin :: MCBBulletin()
  *
  *  @brief   ( Constructivist )
  *
- *  @param   QObject *parent
+ *  @param   none
  *
  *  @return  none
  *
@@ -583,20 +598,36 @@ MCBBulletin :: MCBBulletin()
 {
     InitialStructValue();
 }
-MCBBulletin ::~MCBBulletin()
-{
-}
 /******************************************************************************************
  *
  *  @author  Otto
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      MCBBulletin ::~MCBBulletin()
  *
  *  @brief   ( Constructivist )
  *
- *  @param   QObject *parent
+ *  @param   none
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+MCBBulletin ::~MCBBulletin()
+{}
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2021/02/04
+ *
+ *  @fn      MCBBulletin::InitialStructValue()
+ *
+ *  @brief   Initial mcb bulletin Struct Value
+ *
+ *  @param   none
  *
  *  @return  none
  *
@@ -795,36 +826,65 @@ void MCBBulletin::InitialStructValue()
     };
     #pragma endregion
 }
-#pragma endregion
-#pragma region Signalton.
 /******************************************************************************************
  *
  *  @author  Otto
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsBulletin::GtcsBulletin()
  *
- *  @brief   ( Constructivist )
+ *  @brief   Constructor.
  *
- *  @param   QObject *parent
+ *  @param   none
  *
  *  @return  none
  *
  *  @note    none
  *
  *******************************************************************************************/
-// Constructor.
 GtcsBulletin::GtcsBulletin(/* args */)
 {
     // InitialGtcsBulletin();
 }
-// Distructor.
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2021/02/04
+ *
+ *  @fn      GtcsBulletin::~GtcsBulletin()
+ *
+ *  @brief   Distructor.
+ *
+ *  @param   none
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 GtcsBulletin::~GtcsBulletin()
 {}
 // SignleTon instance object.
 GtcsBulletin* GtcsBulletin::instance = 0;
-// Get Instance.
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2021/02/04
+ *
+ *  @fn      GtcsBulletin::GetInstance()
+ *
+ *  @brief   Get Instance.
+ *
+ *  @param   none
+ *
+ *  @return  GtcsBulletin*
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 GtcsBulletin* GtcsBulletin::GetInstance()
 {
     if(instance == 0){
@@ -832,4 +892,3 @@ GtcsBulletin* GtcsBulletin::GetInstance()
     }
     return instance;
 }
-#pragma endregion

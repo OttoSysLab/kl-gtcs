@@ -17,20 +17,21 @@
  *
  *  @author  Otto
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      StatusTelegram::CheckLoosenStatus(uint16_t last_status_flags,uint16_t current_status_flags)
  *
- *  @brief   ( Constructivist )
+ *  @brief   Check TMS status
  *
- *  @param   QObject *parent
+ *  @param   uint16_t last_status_flags
+ * 
+ *  @param   uint16_t current_status_flags
  *
- *  @return  none
+ *  @return  int
  *
  *  @note    none
  *
  *******************************************************************************************/
-// Check TMS status.
 int StatusTelegram::CheckLoosenStatus(uint16_t last_status_flags,uint16_t current_status_flags)
 {
     int result = 0;
@@ -52,33 +53,61 @@ int StatusTelegram::CheckLoosenStatus(uint16_t last_status_flags,uint16_t curren
     }
     return result;
 }
-#pragma endregion
-
-#pragma region telegram strcut define.
 /******************************************************************************************
  *
  *  @author  Otto
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      TelegramStruct::TelegramStruct()
  *
- *  @brief   ( Constructivist )
+ *  @brief   Telegram Construct.
  *
- *  @param   QObject *parent
+ *  @param   none
  *
  *  @return  none
  *
  *  @note    none
  *
  *******************************************************************************************/
-// Telegram Construct.
 TelegramStruct::TelegramStruct()
 {}
-// Telegram Distruct.
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2021/02/04
+ *
+ *  @fn      TelegramStruct::~TelegramStruct()
+ *
+ *  @brief   Telegram Distruct.
+ *
+ *  @param   none
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 TelegramStruct::~TelegramStruct()
 {}
-// Initail telegram array.
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2021/02/04
+ *
+ *  @fn      TelegramStruct::InitialTelegramArray()
+ *
+ *  @brief   Initail telegram array.
+ *
+ *  @param   none
+ *
+ *  @return  int
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 int TelegramStruct::InitialTelegramArray()
 {
     int result = -1;
@@ -93,20 +122,19 @@ int TelegramStruct::InitialTelegramArray()
  *
  *  @author  Otto
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      TelegramStruct::EncodeTelegramArray()
  *
- *  @brief   ( Constructivist )
+ *  @brief   Encode Ctrl telegram payload array.
  *
- *  @param   QObject *parent
+ *  @param   none
  *
  *  @return  none
  *
  *  @note    none
  *
  *******************************************************************************************/
-// Encode Ctrl telegram payload array.
 int TelegramStruct::EncodeTelegramArray()
 {
     int result = -1;
@@ -123,24 +151,22 @@ int TelegramStruct::EncodeTelegramArray()
  *
  *  @author  Otto
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      TelegramStruct::EncodeHeaderArray()
  *
- *  @brief   ( Constructivist )
+ *  @brief   Encode Header array.
  *
- *  @param   QObject *parent
+ *  @param   none
  *
- *  @return  none
+ *  @return  int
  *
  *  @note    none
  *
  *******************************************************************************************/
-// Encode Header array.
 int TelegramStruct::EncodeHeaderArray()
 {
     int result = -1;
-    // Header* ptr_header = &header;
     uint8_t* ptr = &(&header)->type_num;
     int array_length = 8;
     ptr = (uint8_t*)(void**)(ptr);
@@ -148,7 +174,6 @@ int TelegramStruct::EncodeHeaderArray()
     for(int index = 1;index<array_length;index++)
     {
         ptr = (uint8_t*)(void**)(ptr+1);
-        // std::cout<<*ptr<<std::endl;
         telegram_array[index] = *ptr;
     }
     return result;
@@ -157,24 +182,42 @@ int TelegramStruct::EncodeHeaderArray()
  *
  *  @author  Otto
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      CtrlTelegram::InitialCtrlFlags(GtcsCtrlTelegramStrcut &telegram)
  *
- *  @brief   ( Constructivist )
+ *  @brief   Initial Ctrl telegram flags.
  *
- *  @param   QObject *parent
+ *  @param   GtcsCtrlTelegramStrcut &telegram
  *
  *  @return  none
  *
  *  @note    none
  *
  *******************************************************************************************/
-// Ctrl telegram flags configuration.
 void CtrlTelegram::InitialCtrlFlags(GtcsCtrlTelegramStrcut &telegram)
 {
     telegram.u16Ctrlflags = 0;
 }
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2021/02/04
+ *
+ *  @fn      CtrlTelegram::SetCtrlFlags(GtcsCtrlTelegramStrcut &telegram,int flagIdx)
+ *
+ *  @brief   Set Ctrl telegram flags.
+ *
+ *  @param   GtcsCtrlTelegramStrcut &telegram
+ *  
+ *  @param   int flagIdx
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 void CtrlTelegram::SetCtrlFlags(GtcsCtrlTelegramStrcut &telegram,int flagIdx)
 {
     telegram.u16Ctrlflags |= 1<<flagIdx;
@@ -183,20 +226,21 @@ void CtrlTelegram::SetCtrlFlags(GtcsCtrlTelegramStrcut &telegram,int flagIdx)
  *
  *  @author  Otto
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      CtrlTelegram::EncodeTelegramArray(GtcsCtrlTelegramStrcut *ptr_ctrl_telegram,int length)
  *
- *  @brief   ( Constructivist )
+ *  @brief   Encode Ctrl telegram payload array.
  *
- *  @param   QObject *parent
+ *  @param   GtcsCtrlTelegramStrcut *ptr_ctrl_telegram
+ * 
+ *  @param   int length
  *
  *  @return  none
  *
  *  @note    none
  *
  *******************************************************************************************/
-// Encode Ctrl telegram payload array.
 int CtrlTelegram::EncodeTelegramArray(GtcsCtrlTelegramStrcut *ptr_ctrl_telegram,int length)
 {
     int result = -1;
@@ -227,13 +271,13 @@ int CtrlTelegram::EncodeTelegramArray(GtcsCtrlTelegramStrcut *ptr_ctrl_telegram,
  *
  *  @author  Otto
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      StatusTelegram::DecodeTelegramArray()
  *
- *  @brief   ( Constructivist )
+ *  @brief   Decode MCB Telegram Array.
  *
- *  @param   QObject *parent
+ *  @param   none
  *
  *  @return  none
  *
@@ -281,33 +325,63 @@ int StatusTelegram::DecodeTelegramArray()
                                     ((uint32_t)telegram_array[payload_start_index+35]<<24);
     return result;
 }
-#pragma endregion
 /******************************************************************************************
  *
  *  @author  Otto
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsMcbComm::GtcsMcbComm()
  *
- *  @brief   ( Constructivist )
+ *  @brief   GtcsMcbComm constructor
  *
- *  @param   QObject *parent
+ *  @param   none
  *
  *  @return  none
  *
  *  @note    none
  *
  *******************************************************************************************/
-// Constructor.
 GtcsMcbComm::GtcsMcbComm(/* args */)
 {}
-// Distructor.
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2021/02/04
+ *
+ *  @fn      GtcsMcbComm::~GtcsMcbComm()
+ *
+ *  @brief   GtcsMcbComm disstructor
+ *
+ *  @param   none
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 GtcsMcbComm::~GtcsMcbComm()
 {}
 // SignleTon instance object.
 GtcsMcbComm* GtcsMcbComm::instance = 0;
-// Get Instance.
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2021/02/04
+ *
+ *  @fn      GtcsMcbComm* GtcsMcbComm::GetInstance()
+ *
+ *  @brief   Get Instance.
+ *
+ *  @param   none
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 GtcsMcbComm* GtcsMcbComm::GetInstance()
 {
     if(instance == 0)
@@ -316,30 +390,45 @@ GtcsMcbComm* GtcsMcbComm::GetInstance()
     }
     return instance;
 }
-#pragma region RW MCB Paramter.
 /******************************************************************************************
  *
  *  @author  Otto
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsMcbComm::ReadIdentificationParameter()
  *
- *  @brief   ( Constructivist )
+ *  @brief   Identification Parameter.(MainID = 1)
  *
- *  @param   QObject *parent
+ *  @param   none
  *
- *  @return  none
+ *  @return  int
  *
  *  @note    none
  *
  *******************************************************************************************/
-// Identification Parameter.(MainID = 1)
 int GtcsMcbComm::ReadIdentificationParameter()
 {
     int result = -1;
     return result;
 }
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2021/02/04
+ *
+ *  @fn      GtcsMcbComm::WriteIdentificationParameter()
+ *
+ *  @brief   Identification Parameter.(MainID = 1)
+ *
+ *  @param   none
+ *
+ *  @return  int
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 int GtcsMcbComm::WriteIdentificationParameter()
 {
     int result = -1;
@@ -349,20 +438,19 @@ int GtcsMcbComm::WriteIdentificationParameter()
  *
  *  @author  Otto
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsMcbComm::ReadBasicParameter(McbID2Struct &basic_para)
  *
- *  @brief   ( Constructivist )
+ *  @brief   Basic Parameter.(MainID = 2)
  *
- *  @param   QObject *parent
+ *  @param   McbID2Struct &basic_para
  *
- *  @return  none
+ *  @return  int
  *
  *  @note    none
  *
  *******************************************************************************************/
-// Basic Parameter.(MainID = 2)
 int GtcsMcbComm::ReadBasicParameter(McbID2Struct &basic_para)
 {
     int result = -1;
@@ -844,15 +932,15 @@ int GtcsMcbComm::ReadBasicParameter(McbID2Struct &basic_para)
  *
  *  @author  Otto
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsMcbComm::WriteBasicParameter(McbID2Struct &basic)
  *
  *  @brief   ( Constructivist )
  *
- *  @param   QObject *parent
+ *  @param   McbID2Struct &basic
  *
- *  @return  none
+ *  @return  int 
  *
  *  @note    none
  *
@@ -1223,20 +1311,23 @@ int GtcsMcbComm::WriteBasicParameter(McbID2Struct &basic)
  *
  *  @author  Otto
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsMcbComm::WriteToMcbFlash(int mainid,int subid,int addr_num)
  *
- *  @brief   ( Constructivist )
+ *  @brief   Write to mcb flash.
  *
- *  @param   QObject *parent
+ *  @param   int mainid
+ *  
+ *  @param   int subid
+ * 
+ *  @param   int addr_num
  *
  *  @return  none
  *
  *  @note    none
  *
  *******************************************************************************************/
-// Write to mcb flash.
 int GtcsMcbComm::WriteToMcbFlash(int mainid,int subid,int addr_num)
 {
     int result = -1;
@@ -1320,20 +1411,21 @@ int GtcsMcbComm::WriteToMcbFlash(int mainid,int subid,int addr_num)
  *
  *  @author  Otto
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsMcbComm::ReadStepParametrer(McbID3Struct &step_para,int mainid)
  *
- *  @brief   ( Constructivist )
+ *  @brief   Step Parameter. (Main ID = 3XXX)
  *
- *  @param   QObject *parent
+ *  @param   McbID3Struct &step_para
+ * 
+ *  @param   int mainid
  *
- *  @return  none
+ *  @return  int
  *
  *  @note    none
  *
  *******************************************************************************************/
-// Step Parameter. (Main ID = 3XXX)
 int GtcsMcbComm::ReadStepParametrer(McbID3Struct &step_para,int mainid)
 {
     int result = -1;
@@ -1613,20 +1705,21 @@ int GtcsMcbComm::ReadStepParametrer(McbID3Struct &step_para,int mainid)
  *
  *  @author  Otto
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsMcbComm::WriteStepParameter(McbID3Struct &step, int mainid)
  *
- *  @brief   ( Constructivist )
+ *  @brief   Write Step Parameter. (Main ID = 3XXX)
  *
- *  @param   QObject *parent
+ *  @param   McbID3Struct &step
+ * 
+ *  @param   int mainid
  *
- *  @return  none
+ *  @return  int
  *
  *  @note    none
  *
  *******************************************************************************************/
-// Write Step Parameter. (Main ID = 3XXX)
 int GtcsMcbComm::WriteStepParameter(McbID3Struct &step, int mainid)
 {
     int result = -1;
@@ -1854,20 +1947,21 @@ int GtcsMcbComm::WriteStepParameter(McbID3Struct &step, int mainid)
  *
  *  @author  Otto
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsMcbComm::ReadProcessParameter(McbID4Struct &process,int processnum)
  *
- *  @brief   ( Constructivist )
+ *  @brief   Prcoess Parameter.(Main ID = 4XXX)
  *
- *  @param   QObject *parent
+ *  @param   McbID4Struct &process
+ * 
+ *  @param   int processnum
  *
- *  @return  none
+ *  @return  int
  *
  *  @note    none
  *
  *******************************************************************************************/
-// Prcoess Parameter.(Main ID = 4XXX)
 int GtcsMcbComm::ReadProcessParameter(McbID4Struct &process,int processnum)
 { 
     // Initial local parameter.
@@ -2158,15 +2252,17 @@ int GtcsMcbComm::ReadProcessParameter(McbID4Struct &process,int processnum)
  *
  *  @author  Otto
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsMcbComm::WriteProcessParameter(McbID4Struct &process, int processid)
  *
- *  @brief   ( Constructivist )
+ *  @brief   Write MCB Process Parameter to MCB board.
  *
- *  @param   QObject *parent
+ *  @param   McbID4Struct &process
+ *  
+ *  @param   int processid
  *
- *  @return  none
+ *  @return  int
  *
  *  @note    none
  *
@@ -2396,27 +2492,23 @@ int GtcsMcbComm::WriteProcessParameter(McbID4Struct &process, int processid)
     #pragma endregion
     return result;
 }
-#pragma endregion
-
-#pragma region FSM method.
 /******************************************************************************************
  *
- *  @author  Otto
+ *  @author  Otto Chang
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsMcbComm::InitialMcbComPort(std::string com_name_string)
  *
- *  @brief   ( Constructivist )
+ *  @brief   Initial MCB comport.
  *
- *  @param   QObject *parent
+ *  @param   std::string com_name_string
  *
- *  @return  none
+ *  @return  int
  *
  *  @note    none
  *
  *******************************************************************************************/
-// Initial MCB comport.
 int GtcsMcbComm::InitialMcbComPort(std::string com_name_string)
 {
     int result = 0;
@@ -2432,22 +2524,21 @@ int GtcsMcbComm::InitialMcbComPort(std::string com_name_string)
 }
 /******************************************************************************************
  *
- *  @author  Otto
+ *  @author  Otto Chang
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsMcbComm::GetMcbPollingStatus(GtcsCtrlTelegramStrcut &ctrltelegram)
  *
- *  @brief   ( Constructivist )
+ *  @brief   Normal polling to MCB.
  *
- *  @param   QObject *parent
+ *  @param   GtcsCtrlTelegramStrcut &ctrltelegram
  *
  *  @return  none
  *
  *  @note    none
  *
  *******************************************************************************************/
-// Normal polling to MCB.
 int GtcsMcbComm::GetMcbPollingStatus(GtcsCtrlTelegramStrcut &ctrltelegram)
 {
     int result = 0;

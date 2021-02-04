@@ -12,18 +12,17 @@
 =======================================================================================*/
 #include "gtcsgloabdefine.h"
 
-#pragma region GtcsScrewSequenceHandler
 /******************************************************************************************
  *
  *  @author  Otto
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsScrewSequenceHandler::GtcsScrewSequenceHandler()
  *
- *  @brief   ( Constructivist )
+ *  @brief   GtcsScrewSequenceHandler constructor
  *
- *  @param   QObject *parent
+ *  @param   none
  *
  *  @return  none
  *
@@ -32,22 +31,36 @@
  *******************************************************************************************/
 GtcsScrewSequenceHandler::GtcsScrewSequenceHandler()
 {}
-GtcsScrewSequenceHandler::~GtcsScrewSequenceHandler()
-{}
-#pragma endregion
-
-#pragma region database base.
 /******************************************************************************************
  *
  *  @author  Otto
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsScrewSequenceHandler::~GtcsScrewSequenceHandler()
  *
- *  @brief   ( Constructivist )
+ *  @brief   GtcsScrewSequenceHandler distructor
  *
- *  @param   QObject *parent
+ *  @param   none
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+GtcsScrewSequenceHandler::~GtcsScrewSequenceHandler()
+{}
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2021/02/04
+ *
+ *  @fn      GtcsDatabaseBaseInfo::GtcsDatabaseBaseInfo()
+ *
+ *  @brief   GtcsDatabaseBaseInfo constructor
+ *
+ *  @param   none
  *
  *  @return  none
  *
@@ -56,19 +69,36 @@ GtcsScrewSequenceHandler::~GtcsScrewSequenceHandler()
  *******************************************************************************************/
 GtcsDatabaseBaseInfo::GtcsDatabaseBaseInfo()
 {}
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2021/02/04
+ *
+ *  @fn      GtcsDatabaseBaseInfo::~GtcsDatabaseBaseInfo()
+ *
+ *  @brief   GtcsDatabaseBaseInfo distructor
+ *
+ *  @param   none
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 GtcsDatabaseBaseInfo::~GtcsDatabaseBaseInfo()
 {}
 /******************************************************************************************
  *
  *  @author  Otto
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsDatabaseBaseInfo::InitialDataStruct()
  *
- *  @brief   ( Constructivist )
- *
- *  @param   QObject *parent
+ *  @brief   Initial Gtcsdata structor.
+ * 
+ *  @param   none
  *
  *  @return  none
  *
@@ -87,13 +117,13 @@ void GtcsDatabaseBaseInfo::InitialDataStruct()
  *
  *  @author  Otto
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsDatabaseBaseInfo::SetDataValue(std::map<std::string,std::string> &pDataValue)
  *
  *  @brief   ( Constructivist )
  *
- *  @param   QObject *parent
+ *  @param   std::map<std::string,std::string> &pDataValue
  *
  *  @return  none
  *
@@ -114,40 +144,55 @@ void GtcsDatabaseBaseInfo::SetDataValue(std::map<std::string,std::string> &pData
  *
  *  @author  Otto
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsDatabaseBasicInfo::GtcsDatabaseBasicInfo()
  *
- *  @brief   ( Constructivist )
+ *  @brief   GtcsDatabaseBasicInfo constructor.
  *
- *  @param   QObject *parent
+ *  @param   none
  *
  *  @return  none
  *
  *  @note    none
  *
  *******************************************************************************************/
-// Constructor.
 GtcsDatabaseBasicInfo::GtcsDatabaseBasicInfo()
 {
     InitialColumnType();
     InitialColumnName();
     InitialDataStruct();
 }
-// Distructor.
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2021/02/04
+ *
+ *  @fn      GtcsDatabaseBasicInfo::~GtcsDatabaseBasicInfo()
+ *
+ *  @brief   GtcsDatabaseBasicInfo distructor.
+ *
+ *  @param   none
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 GtcsDatabaseBasicInfo::~GtcsDatabaseBasicInfo()
 {}
 /******************************************************************************************
  *
  *  @author  Otto
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsDatabaseBasicInfo::InitialColumnType()
  *
- *  @brief   ( Constructivist )
+ *  @brief   Initial Gtcs database basice table columntype list.
  *
- *  @param   QObject *parent
+ *  @param   none
  *
  *  @return  none
  *
@@ -197,17 +242,17 @@ void GtcsDatabaseBasicInfo::InitialColumnType()
  *
  *  @author  Otto
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsDatabaseBasicInfo::InitialColumnName()
  *
- *  @brief   ( Constructivist )
+ *  @brief   Initial Gtcs database basice table columnname list.
  *
- *  @param   QObject *parent
+ *  @param   none
  *
  *  @return  none
  *
- *  @note    Initial basic columnName
+ *  @note    none
  *
  *******************************************************************************************/
 void GtcsDatabaseBasicInfo::InitialColumnName()
@@ -254,17 +299,17 @@ void GtcsDatabaseBasicInfo::InitialColumnName()
  *
  *  @author  Otto Chang
  *
- *  @date    2021/01/30
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsDatabaseJobInfo::GtcsDatabaseJobInfo()
  *
- *  @brief   ( Constructivist )
+ *  @brief   GtcsDatabaseJobInfo constructor
  *
- *  @param   QObject *parent
+ *  @param   none
  *
  *  @return  none
  *
- *  @note    Initial Job sequence columnName
+ *  @note    none
  *
  *******************************************************************************************/
 GtcsDatabaseJobInfo::GtcsDatabaseJobInfo()
@@ -273,24 +318,40 @@ GtcsDatabaseJobInfo::GtcsDatabaseJobInfo()
     InitialColumnName();
     InitialDataStruct();
 }
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
+ *  @date    2021/02/04
+ *
+ *  @fn      GtcsDatabaseJobInfo::~GtcsDatabaseJobInfo()
+ *
+ *  @brief   GtcsDatabaseJobInfo distructor
+ *
+ *  @param   none
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 GtcsDatabaseJobInfo::~GtcsDatabaseJobInfo()
-{
-}
+{}
 /******************************************************************************************
  *
  *  @author  Otto
  *
- *  @date    2021/01/30
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsDatabaseJobInfo::InitialColumnType()
  *
- *  @brief   ( Constructivist )
+ *  @brief   Initial Gtcs database Jobsequence table columntype list.
  *
- *  @param   QObject *parent
+ *  @param   none
  *
  *  @return  none
  *
- *  @note    Initial Job sequence columnName
+ *  @note    none
  *
  *******************************************************************************************/
 void GtcsDatabaseJobInfo::InitialColumnType()
@@ -307,17 +368,17 @@ void GtcsDatabaseJobInfo::InitialColumnType()
  *
  *  @author  Otto
  *
- *  @date    2021/01/30
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsDatabaseJobInfo::InitialColumnName()
  *
- *  @brief   ( Constructivist )
+ *  @brief   Initial Gtcs database Jobsequence table columnname list.
  *
- *  @param   QObject *parent
+ *  @param   none
  *
  *  @return  none
  *
- *  @note    Initial Job sequence columnName
+ *  @note    none
  *
  *******************************************************************************************/
 void GtcsDatabaseJobInfo::InitialColumnName()
@@ -334,13 +395,13 @@ void GtcsDatabaseJobInfo::InitialColumnName()
  *
  *  @author  Otto
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsDatabaseSequenceInfo ::GtcsDatabaseSequenceInfo()
  *
- *  @brief   ( Constructivist )
+ *  @brief   GtcsDatabaseSequenceInfo constructor
  *
- *  @param   QObject *parent
+ *  @param   none
  *
  *  @return  none
  *
@@ -353,20 +414,36 @@ GtcsDatabaseSequenceInfo ::GtcsDatabaseSequenceInfo (/* args */)
     InitialColumnName();
     InitialDataStruct();
 }
-GtcsDatabaseSequenceInfo ::~GtcsDatabaseSequenceInfo ()
-{
-}
 /******************************************************************************************
  *
  *  @author  Otto
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsDatabaseSequenceInfo ::~GtcsDatabaseSequenceInfo()
  *
- *  @brief   ( Constructivist )
+ *  @brief   GtcsDatabaseSequenceInfo distructor
  *
- *  @param   QObject *parent
+ *  @param   none
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+GtcsDatabaseSequenceInfo ::~GtcsDatabaseSequenceInfo ()
+{}
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2021/02/04
+ *
+ *  @fn      GtcsDatabaseSequenceInfo ::InitialColumnType()
+ *
+ *  @brief   Initial Gtcs database program table columntype list.
+ *
+ *  @param   none
  *
  *  @return  none
  *
@@ -391,13 +468,13 @@ void GtcsDatabaseSequenceInfo ::InitialColumnType()
  *
  *  @author  Otto
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsDatabaseSequenceInfo ::InitialColumnName()
  *
- *  @brief   ( Constructivist )
+ *  @brief   Initial Gtcs database program table columnname list.
  *
- *  @param   QObject *parent
+ *  @param   none
  *
  *  @return  none
  *
@@ -422,13 +499,13 @@ void GtcsDatabaseSequenceInfo ::InitialColumnName()
  *
  *  @author  Otto
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsDatabaseStepInfo::GtcsDatabaseStepInfo ()
  *
- *  @brief   ( Constructivist )
+ *  @brief   GtcsDatabaseStepInfo constructor.
  *
- *  @param   QObject *parent
+ *  @param   none
  *
  *  @return  none
  *
@@ -441,20 +518,36 @@ GtcsDatabaseStepInfo::GtcsDatabaseStepInfo (/* args */)
     InitialColumnName();
     InitialDataStruct();
 }
-GtcsDatabaseStepInfo::~GtcsDatabaseStepInfo ()
-{
-}
 /******************************************************************************************
  *
  *  @author  Otto
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsDatabaseStepInfo::GtcsDatabaseStepInfo ()
  *
- *  @brief   ( Constructivist )
+ *  @brief   GtcsDatabaseStepInfo constructor.
  *
- *  @param   QObject *parent
+ *  @param   none
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+GtcsDatabaseStepInfo::~GtcsDatabaseStepInfo ()
+{}
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2021/02/04
+ *
+ *  @fn      GtcsDatabaseStepInfo ::InitialColumnType()
+ *
+ *  @brief   Initial Gtcs database step table columntype list.
+ *
+ *  @param   none
  *
  *  @return  none
  *
@@ -494,13 +587,13 @@ void GtcsDatabaseStepInfo ::InitialColumnType()
  *
  *  @author  Otto
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsDatabaseStepInfo ::InitialColumnName()
  *
- *  @brief   ( Constructivist )
+ *  @brief   Initial Gtcs database step table columnname list.
  *
- *  @param   QObject *parent
+ *  @param   none
  *
  *  @return  none
  *

@@ -32,8 +32,12 @@ int main()
     manager.InitialGtcsSystem();
     
     // Check GTCS System.
-    manager.CheckGtcsSystem();
-
+    if (manager.CheckGtcsSystem()==true)
+    {
+        #ifdef _DEBUG_MODE_
+        std::cout << "Check Gtcs System = OK!! " <<std::endl;
+        #endif 
+    }
     // Ste 3 = Set tcpsocket thread and start.
     #pragma region step 2
     #ifdef _DEBUG_MODE_207_

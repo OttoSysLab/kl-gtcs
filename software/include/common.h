@@ -24,7 +24,7 @@ public:
     ~Common();                      // 
     // Send Char.
 };
-
+// 
 class BitArray
 {
 private:
@@ -47,7 +47,7 @@ public:
     static uint16_t ToUInt16(std::array<bool,16> array);
     static uint32_t ToUInt32(std::array<bool,32> array);
 };
-
+// DataSorter
 class DataSorter
 {
 public:

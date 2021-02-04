@@ -28,7 +28,7 @@ public:
     // Initial Comm port.              
     int InitialComm(char *P_port_name);
     // Send Char.
-    int SendChar(int P_CommPort, unsigned char P_Value);
+    int SendChar(int P_CommPort, uint8_t P_Value);
     // Read Data.
     int ReadData(int openCommPort,std::array<uint8_t,1024> &read_array);
 };

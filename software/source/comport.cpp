@@ -16,21 +16,21 @@
  *
  *  @author  Otto
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      ComPort::InitialComm(char *P_port_name)
  *
- *  @brief   ( Constructivist )
+ *  @brief   Initial comport.
  *
- *  @param   QObject *parent
+ *  @param   char *P_port_name
  *
- *  @return  none
+ *  @return  int
  *
  *  @note    none
  *
  *******************************************************************************************/
-// Initial.
-int ComPort::InitialComm(char *P_port_name){
+int ComPort::InitialComm(char *P_port_name)
+{
     int 			L_fd;
     struct termios	L_SerialPortSettings;	/* Create the structure                          */
     /*------------------------------- Opening the Serial Port -------------------------------*/
@@ -91,20 +91,23 @@ int ComPort::InitialComm(char *P_port_name){
  *
  *  @author  Otto
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      ComPort::SendChar(int P_CommPort, uint8_t P_Value)
  *
  *  @brief   ( Constructivist )
  *
- *  @param   QObject *parent
+ *  @param   int P_CommPort
+ * 
+ *  @param   uint8_t P_Value
  *
- *  @return  none
+ *  @return  int
  *
  *  @note    none
  *
  *******************************************************************************************/
-int ComPort::SendChar(int P_CommPort, unsigned char P_Value){
+int ComPort::SendChar(int P_CommPort, uint8_t P_Value)
+{
     char L_WriteBuffer[1];
     int  L_BytesWritten = 0;
     try{
@@ -121,11 +124,11 @@ int ComPort::SendChar(int P_CommPort, unsigned char P_Value){
  *
  *  @author  Otto
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
  *  @fn      TInterpolation::TInterpolation(QObject *parent)
  *
- *  @brief   ( Constructivist )
+ *  @brief   Read cpomport data.
  *
  *  @param   QObject *parent
  *
@@ -134,7 +137,6 @@ int ComPort::SendChar(int P_CommPort, unsigned char P_Value){
  *  @note    none
  *
  *******************************************************************************************/
-// Read cpomport data.
 int ComPort::ReadData(int openCommPort,std::array<uint8_t,1024> &read_array)
 {
     int BytesRead = 0;    

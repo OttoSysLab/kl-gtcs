@@ -16,25 +16,59 @@
  *
  *  @author  Otto
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      CrcChecker::CrcChecker()
  *
- *  @brief   ( Constructivist )
- *
- *  @param   QObject *parent
- *
+ *  @brief   Initial CrcDecoder function.
+ * 
+ *  @param   none
+ * 
  *  @return  none
  *
  *  @note    none
  *
  *******************************************************************************************/
-// Initial CrcDecoder function.
 CrcChecker::CrcChecker()
 {}
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2021/02/04
+ *
+ *  @fn      CrcChecker::~CrcChecker()
+ *
+ *  @brief   Distruct CrcChecker.
+ * 
+ *  @param   none
+ * 
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 CrcChecker::~CrcChecker()
 {}
-// Check CRC32 .
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2021/02/04
+ *
+ *  @fn      CrcChecker::u32CRC32(uint32_t u32CRC, uint8_t *pData)
+ *
+ *  @brief   Check CRC32.
+ * 
+ *  @param   uint32_t u32CRC
+ * 
+ *  @param   uint8_t *pData
+ * 
+ *  @return  uint32_t
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 uint32_t CrcChecker::u32CRC32(uint32_t u32CRC, uint8_t *pData)
 {
     uint32_t CRC32 = u32CRC;
@@ -49,15 +83,15 @@ uint32_t CrcChecker::u32CRC32(uint32_t u32CRC, uint8_t *pData)
  *
  *  @author  Otto
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      CrcChecker::u32Bitrevers(uint32_t dwValue)
  *
- *  @brief   ( Constructivist )
+ *  @brief   Convert uint32_t to reverse.
  *
- *  @param   QObject *parent
+ *  @param   uint32_t dwValue
  *
- *  @return  none
+ *  @return  uint32_t
  *
  *  @note    none
  *
@@ -96,15 +130,17 @@ uint32_t CrcChecker::u32Bitrevers(uint32_t dwValue)
  *
  *  @author  Otto
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      CrcChecker::u32CRC32_function(uint8_t* pData, uint32_t u32DWORDCount)
  *
  *  @brief   ( Constructivist )
  *
- *  @param   QObject *parent
+ *  @param   uint8_t* pData
+ * 
+ *  @param   uint32_t u32DWORDCount
  *
- *  @return  none
+ *  @return  std::array<uint8_t,4>
  *
  *  @note    none
  *
@@ -141,55 +177,60 @@ std::array<uint8_t,4> CrcChecker::u32CRC32_function(uint8_t* pData, uint32_t u32
  *
  *  @author  Otto
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      CrcChecker::checkCrc32(uint8_t* pData)
  *
- *  @brief   ( Constructivist )
+ *  @brief   Check pData CRC23 is current.
  *
- *  @param   QObject *parent
- *
- *  @return  none
+ *  @param   uint8_t* pData
+ * 
+ *  @return  int
  *
  *  @note    none
  *
  *******************************************************************************************/
-// Check pData CRC23 is current.
-int CrcChecker::checkCrc32(uint8_t* pData){
+int CrcChecker::checkCrc32(uint8_t* pData)
+{
     int check_ok = 0;
     std::array<uint8_t,4> check_buf = u32CRC32_function(pData,11);
-    if(pData[44]==check_buf[0]){
-        if (pData[45]==check_buf[1]){
-            if (pData[46]==check_buf[2]){
-                if(pData[47]==check_buf[3]){
+    if(pData[44]==check_buf[0])
+    {
+        if (pData[45]==check_buf[1])
+        {
+            if (pData[46]==check_buf[2])
+            {
+                if(pData[47]==check_buf[3])
+                {
                     check_ok = 1;
                 }
             }
         }
     }
     return check_ok;
-};
+}
 /******************************************************************************************
  *
  *  @author  Otto
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      CrcChecker::calculateCrc32(uint8_t* pData)
  *
- *  @brief   ( Constructivist )
+ *  @brief   CRC32 Checker.
  *
- *  @param   QObject *parent
+ *  @param   uint8_t* pData
  *
  *  @return  none
  *
  *  @note    none
  *
  *******************************************************************************************/
-// CRC32 Checker.
-void CrcChecker::calculateCrc32(uint8_t* pData){
+void CrcChecker::calculateCrc32(uint8_t* pData)
+{
     std::array<uint8_t,4> check_buf = u32CRC32_function(pData,11);
-    for(int idx=0;idx<4;idx++){
+    for(int idx=0;idx<4;idx++)
+    {
         crc32_value[idx]=check_buf[idx];
     }
-};
+}

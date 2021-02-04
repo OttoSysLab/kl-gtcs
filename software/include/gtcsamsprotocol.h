@@ -37,7 +37,7 @@ public:
     static GtcsAmsProtocol* GetInstance();
     // AMSBulletin amsprotocol;
     int GetAmsCmdNum(std::string amscmd);
-    int GetAmsSymmetryCmdNumver(int amscmd);
+    int GetAmsSymmetryCmdNumber(int amscmd);
     std::string GetAmsBulletin(int amscmd);
     bool SetAmsBulletin(std::string ams_string);
     std::string GetAmsCmd(std::string ams_string); 

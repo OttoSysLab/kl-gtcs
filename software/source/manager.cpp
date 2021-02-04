@@ -12,54 +12,97 @@
 =======================================================================================*/
 #include "../include/manager.h"
 
-#pragma region manager
 /******************************************************************************************
  *
- *  @author  Otto
+ *  @author  Otto Chang
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      Manager::Manager()
  *
- *  @brief   ( Constructivist )
+ *  @brief   Manager constructor.
  *
- *  @param   QObject *parent
+ *  @param   none
  *
  *  @return  none
  *
  *  @note    none
  *
  *******************************************************************************************/
-// Constructor.
 Manager::Manager(/* args */)
 {}
-// Distructor.
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
+ *  @date    2021/02/04
+ *
+ *  @fn      Manager::Manager()
+ *
+ *  @brief   Manager distructor.
+ *
+ *  @param   none
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 Manager::~Manager()
 {}
-// Get main FSM
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
+ *  @date    2021/02/04
+ *
+ *  @fn      Manager::GetMainFSM()
+ *
+ *  @brief   Get main fasm.
+ *
+ *  @param   none
+ *
+ *  @return  int
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 int Manager::GetMainFSM()
 {
     return MainFSM;
 }
-// Set Miain fsm.
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
+ *  @date    2021/02/04
+ *
+ *  @fn      Manager::Manager()
+ *
+ *  @brief   Set Miain fsm.
+ *
+ *  @param   int main_fsm
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 void Manager::SetMainFSM(int main_fsm)
 {
     MainFSM = main_fsm;
 }
-#pragma endregion
-
-#pragma region NTCS manager
 /******************************************************************************************
  *
- *  @author  Otto
+ *  @author  Otto Chang
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      NtcsManager::NtcsManager()
  *
- *  @brief   ( Constructivist )
+ *  @brief   NtcsManager constructor.
  *
- *  @param   QObject *parent
+ *  @param   none
  *
  *  @return  none
  *
@@ -68,47 +111,76 @@ void Manager::SetMainFSM(int main_fsm)
  *******************************************************************************************/
 NtcsManager::NtcsManager()
 {}
-NtcsManager::~NtcsManager()
-{}
-#pragma endregion
-
-#pragma region GTCS manager
 /******************************************************************************************
  *
- *  @author  Otto
+ *  @author  Otto Chang
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      NtcsManager::~NtcsManager()
  *
- *  @brief   ( Constructivist )
+ *  @brief   NtcsManager distructor.
  *
- *  @param   QObject *parent
+ *  @param   none
  *
  *  @return  none
  *
  *  @note    none
  *
  *******************************************************************************************/
-// Constructor
+NtcsManager::~NtcsManager()
+{}
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
+ *  @date    2021/02/04
+ *
+ *  @fn      GtcsManager::GtcsManager()
+ *
+ *  @brief   GtcsManager Constructor.
+ *
+ *  @param   none
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 GtcsManager::GtcsManager()
 {}
-// Distructor
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
+ *  @date    2021/02/04
+ *
+ *  @fn      GtcsManager::~GtcsManager()
+ *
+ *  @brief   GtcsManager distructor.
+ *
+ *  @param   none
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 GtcsManager::~GtcsManager()
 {}
 /******************************************************************************************
  *
- *  @author  Otto
+ *  @author  Otto Chang
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsManager::GetRtLockedStatusMessage(int lcstatusnum)
  *
  *  @brief   ( Constructivist )
  *
- *  @param   QObject *parent
+ *  @param   int lcstatusnum
  *
- *  @return  none
+ *  @return  string
  *
  *  @note    none
  *
@@ -165,25 +237,24 @@ std::string GtcsManager::GetRtLockedStatusMessage(int lcstatusnum)
 }
 /******************************************************************************************
  *
- *  @author  Otto
+ *  @author  Otto Chang
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsManager::GetToolRunTimeStatus(GtcsScrewSequenceHandler &ScrewHandler)
  *
- *  @brief   ( Constructivist )
+ *  @brief   Get real time tool status.
  *
- *  @param   QObject *parent
+ *  @param   GtcsScrewSequenceHandler &ScrewHandler
  *
- *  @return  none
+ *  @return  std::string
  *
  *  @note    none
  *
  *******************************************************************************************/
-// Get real time tool status
 std::string GtcsManager::GetToolRunTimeStatus(GtcsScrewSequenceHandler &ScrewHandler)
 {
-    // Checl flags
+    // Check flags.
     std::array<bool,16> current_status_flags = BitArray::To16BiteArray(mcb->telegram.status.current_status.u16Statusflags);
     std::array<bool,16> last_status_lags     = BitArray::To16BiteArray(mcb->telegram.status.last_status.u16Statusflags);
     std::array<bool,16> tmd_flags            = BitArray::To16BiteArray(mcb->telegram.status.current_status.u16TMDFlags);
@@ -199,6 +270,7 @@ std::string GtcsManager::GetToolRunTimeStatus(GtcsScrewSequenceHandler &ScrewHan
     bool proc_status      = current_status_flags[STATUS_FlAGS_IDX::PROC_STATUS];
 
     int lc_statusnum = ScrewHandler.statusnum;
+
     #pragma region Check current RT Status.
     if (tool_NG==true)
     {
@@ -243,17 +315,17 @@ std::string GtcsManager::GetToolRunTimeStatus(GtcsScrewSequenceHandler &ScrewHan
 }
 /******************************************************************************************
  *
- *  @author  Otto
+ *  @author  Otto Chang
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsManager::GetMCBErrMessageString(uint32_t errorflagindex)
  *
  *  @brief   ( Constructivist )
  *
- *  @param   QObject *parent
+ *  @param   uint32_t errorflagindex
  *
- *  @return  none
+ *  @return  std::string
  *
  *  @note    none
  *
@@ -346,17 +418,17 @@ std::string GtcsManager::GetMCBErrMessageString(uint32_t errorflagindex)
 }
 /******************************************************************************************
  *
- *  @author  Otto
+ *  @author  Otto Chang
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsManager::GetCurrentMCBErrorMessage(uint32_t errorflags) 
  *
  *  @brief   ( Constructivist )
  *
- *  @param   QObject *parent
+ *  @param   uint32_t errorflags
  *
- *  @return  none
+ *  @return  std::string
  *
  *  @note    none
  *
@@ -365,7 +437,6 @@ std::string GtcsManager::GetCurrentMCBErrorMessage(uint32_t errorflags)
 {
     std::string result = "NO-ERR______________";
     std::array<bool,32> errorflagarray = BitArray::To32BiteArray(errorflags);
-    // int count  = sizeof(errorflagarray);
     int count = 24;
 
     for (uint32_t i = 0; i < count; i++)
@@ -382,22 +453,21 @@ std::string GtcsManager::GetCurrentMCBErrorMessage(uint32_t errorflags)
 }
 /******************************************************************************************
  *
- *  @author  Otto
+ *  @author  Otto Chang
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsManager::ConvertReadlTimeActuralValue()
+ * 
+ *  @brief   Get MCB realy time status string.
  *
- *  @brief   ( Constructivist )
+ *  @param   none
  *
- *  @param   QObject *parent
- *
- *  @return  none
+ *  @return  bool
  *
  *  @note    none
  *
  *******************************************************************************************/
-// Get MCB realy time status string.
 bool GtcsManager::ConvertReadlTimeActuralValue()
 {
     AmsDATA300Struct *data300 = &bulletin->AmsBulletin.DATA300Struct;
@@ -465,17 +535,19 @@ bool GtcsManager::ConvertReadlTimeActuralValue()
 }
 /******************************************************************************************
  *
- *  @author  Otto
+ *  @author  Otto Chang
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsManager::ConvertAmsBasicToMcbStruct(AmsCMD340Struct &amscmd,McbID2Struct &mcb_basic)
  *
  *  @brief   ( Constructivist )
  *
- *  @param   QObject *parent
+ *  @param   AmsCMD340Struct &amscmd
+ * 
+ *  @param   McbID2Struct &mcb_basic
  *
- *  @return  none
+ *  @return  bool
  *
  *  @note    none
  *
@@ -560,22 +632,24 @@ bool GtcsManager::ConvertAmsBasicToMcbStruct(AmsCMD340Struct &amscmd,McbID2Struc
 }
 /******************************************************************************************
  *
- *  @author  Otto
+ *  @author  Otto Chang
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsManager::SetAmsCmdBaiscParaToAns(AmsANS340Struct &amsans,AmsCMD340Struct &amscmd)
  *
- *  @brief   ( Constructivist )
+ *  @brief   CMD340->ANS340
  *
- *  @param   QObject *parent
+ *  @param   AmsANS340Struct &amsans
+ * 
+ *  @param   AmsCMD340Struct &amscmd
  *
  *  @return  none
  *
  *  @note    none
  *
  *******************************************************************************************/
-bool GtcsManager::SetAmsCmdBaiscParaToAns(AmsANS340Struct &amsans,AmsCMD340Struct &amscmd)   // CMD340->ANS340
+void GtcsManager::SetAmsCmdBaiscParaToAns(AmsANS340Struct &amsans,AmsCMD340Struct &amscmd)   
 {
     amsans.str5 = amscmd.str5;
     amsans.str6 = amscmd.str6;
@@ -616,22 +690,23 @@ bool GtcsManager::SetAmsCmdBaiscParaToAns(AmsANS340Struct &amsans,AmsCMD340Struc
 }
 /******************************************************************************************
  *
- *  @author  Otto
+ *  @author  Otto Chang
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsManager::SetSystemBasicParameter(AmsCMD340Struct &amscmd,McbID2Struct &mcb_basic)
  *
  *  @brief   ( Constructivist )
  *
- *  @param   QObject *parent
+ *  @param   AmsCMD340Struct &amscmd
+ * 
+ *  @param   McbID2Struct &mcb_basic
  *
- *  @return  none
+ *  @return  bool
  *
  *  @note    none
  *
  *******************************************************************************************/
-// bool GtcsManager::SetSystemBasicParameter(AmsCMD340Struct &amscmd,GtcsDatabaseBasicStruct &db_basic,McbID2Struct &mcb_basic)
 bool GtcsManager::SetSystemBasicParameter(AmsCMD340Struct &amscmd,McbID2Struct &mcb_basic)
 {
     // Initial value.
@@ -674,22 +749,21 @@ bool GtcsManager::SetSystemBasicParameter(AmsCMD340Struct &amscmd,McbID2Struct &
 }
 /******************************************************************************************
  *
- *  @author  Otto
+ *  @author  Otto Chang
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsManager::CheckUiSettingFSM(int uicmd)
  *
- *  @brief   ( Constructivist )
+ *  @brief   Check Ui Setting FSM.
  *
- *  @param   QObject *parent
+ *  @param   int uicmd
  *
- *  @return  none
+ *  @return  bool
  *
  *  @note    none
  *
  *******************************************************************************************/
-// Check Ui Setting FSM.
 bool GtcsManager::CheckUiSettingFSM(int uicmd)
 {
     switch (uicmd)
@@ -735,22 +809,21 @@ bool GtcsManager::CheckUiSettingFSM(int uicmd)
 }
 /******************************************************************************************
  *
- *  @author  Otto
+ *  @author  Otto Chang
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsManager::GetUiResponseCmd(std::string uicmd_string)
  *
- *  @brief   ( Constructivist )
+ *  @brief   Get Ui Cmd Response.
  *
- *  @param   QObject *parent
+ *  @param   std::string uicmd_string
  *
- *  @return  none
+ *  @return  std::string
  *
  *  @note    none
  *
  *******************************************************************************************/
-// Get Ui Cmd Response.
 std::string GtcsManager::GetUiResponseCmd(std::string uicmd_string)
 {
     int uiresponsecmd = 0;
@@ -766,55 +839,74 @@ std::string GtcsManager::GetUiResponseCmd(std::string uicmd_string)
             uiresponsecmd = AMSCMD::REQ301;
         }
     }
-    else                          // Setting
+    else  // Setting
     {
         // std::cout << "ams->GetAmsCmdNum(uicmd_string) = "  << std::to_string(ams->GetAmsCmdNum(uicmd_string))<<std::endl;
         std::cout << "Ui setting cmd = " <<uicmd_string << std::endl;
-        uiresponsecmd = ams->GetAmsSymmetryCmdNumver(ams->GetAmsCmdNum(uicmd_string));
+        uiresponsecmd = ams->GetAmsSymmetryCmdNumber(ams->GetAmsCmdNum(uicmd_string));
         // std::cout << "std::to_string(uiresponsecmd) = " << std::to_string(uiresponsecmd) << std::endl;
     }
     return ams->GetAmsBulletin(uiresponsecmd);
 }
 /******************************************************************************************
  *
- *  @author  Otto
+ *  @author  Otto Chang
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsManager::GetUiSettingStatus()
  *
  *  @brief   ( Constructivist )
  *
- *  @param   QObject *parent
+ *  @param   none
  *
  *  @return  none
  *
- *  @note    Copy database.
+ *  @note    none.
  *
  *******************************************************************************************/
 bool GtcsManager::GetUiSettingStatus()
 {
     return bulletin->uisetting;
 }
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
+ *  @date    2021/02/04
+ *
+ *  @fn      GtcsManager::SetUiSettingStatus(bool status)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   bool status
+ *
+ *  @return  none
+ *
+ *  @note    none.
+ *
+ *******************************************************************************************/
 void GtcsManager::SetUiSettingStatus(bool status)
 {
     bulletin->uisetting = status;
 }
 /******************************************************************************************
  *
- *  @author  Otto
+ *  @author  Otto Chang
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsManager::CopyDatabase(std::string destination ,std::string source)
  *
  *  @brief   ( Constructivist )
  *
- *  @param   QObject *parent
+ *  @param   std::string destination
+ *  
+ *  @param   std::string source
  *
- *  @return  none
+ *  @return  bool
  *
- *  @note    Copy database.
+ *  @note    none.
  *
  *******************************************************************************************/
 bool GtcsManager::CopyDatabase(std::string destination ,std::string source)
@@ -827,17 +919,21 @@ bool GtcsManager::CopyDatabase(std::string destination ,std::string source)
 }
 /******************************************************************************************
  *
- *  @author  Otto
+ *  @author  Otto Chang
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsManager::UpdateMcbBasicParaToDB(GtcsDatabase &db,GtcsDatabaseBasicInfo &db_basic,McbID2Struct &mcb_basic)
  *
  *  @brief   ( Constructivist )
  *
- *  @param   QObject *parent
+ *  @param   GtcsDatabase &db
+ * 
+ *  @param   GtcsDatabaseBasicInfo &db_basic
+ * 
+ *  @param   McbID2Struct &mcb_basic
  *
- *  @return  none
+ *  @return  bool
  *
  *  @note    none
  *
@@ -884,22 +980,23 @@ bool GtcsManager::UpdateMcbBasicParaToDB(GtcsDatabase &db,GtcsDatabaseBasicInfo 
 }
 /******************************************************************************************
  *
- *  @author  Otto
+ *  @author  Otto Chang
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsManager::CompareBasicStruct(GtcsDatabaseBasicInfo &emmc,GtcsDatabaseBasicInfo &ramdisk)
  *
- *  @brief   ( Constructivist )
+ *  @brief   Compare Basic Struct.
  *
- *  @param   QObject *parent
+ *  @param   GtcsDatabaseBasicInfo &emmc
+ * 
+ *  @param   GtcsDatabaseBasicInfo &ramdisk
  *
- *  @return  none
+ *  @return  bool
  *
  *  @note    none
  *
  *******************************************************************************************/
-// Compare Basic Struct.
 bool GtcsManager::CompareBasicStruct(GtcsDatabaseBasicInfo &emmc,GtcsDatabaseBasicInfo &ramdisk)
 {
     bool result = true;
@@ -918,19 +1015,21 @@ bool GtcsManager::CompareBasicStruct(GtcsDatabaseBasicInfo &emmc,GtcsDatabaseBas
 }
 /******************************************************************************************
  *
- *  @author  Otto
+ *  @author  Otto Chang
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsManager::SetDatabaseBasicParaToAns(AmsANS340Struct &amsans,GtcsDatabaseBasicInfo &db_basic)
  *
- *  @brief   ( Constructivist )
+ *  @brief   Set AMS Bulletin Basic Parameter.
  *
- *  @param   QObject *parent
+ *  @param   AmsANS340Struct &amsans
+ * 
+ *  @param   GtcsDatabaseBasicInfo &db_basic
  *
  *  @return  none
  *
- *  @note    Set AMS Bulletin Basic Parameter.
+ *  @note    none
  *
  *******************************************************************************************/
 bool GtcsManager::SetDatabaseBasicParaToAns(AmsANS340Struct &amsans,GtcsDatabaseBasicInfo &db_basic)
@@ -977,19 +1076,21 @@ bool GtcsManager::SetDatabaseBasicParaToAns(AmsANS340Struct &amsans,GtcsDatabase
 }
 /******************************************************************************************
  *
- *  @author  Otto
+ *  @author  Otto Chang
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsManager::GetDatabaseUnscrewData(GtcsCtrlTelegramStrcut &telegram,int jobid)
  *
- *  @brief   ( Constructivist )
+ *  @brief   Set AMS Bulletin Basic Parameter.
  *
- *  @param   QObject *parent
+ *  @param   GtcsCtrlTelegramStrcut &telegram
+ * 
+ *  @param   int jobid
  *
  *  @return  none
  *
- *  @note    Set AMS Bulletin Basic Parameter.
+ *  @note    none
  *
  *******************************************************************************************/
 bool GtcsManager::GetDatabaseUnscrewData(GtcsCtrlTelegramStrcut &telegram,int jobid)
@@ -1035,19 +1136,21 @@ bool GtcsManager::GetDatabaseUnscrewData(GtcsCtrlTelegramStrcut &telegram,int jo
 }
 /******************************************************************************************
  *
- *  @author  Otto
+ *  @author  Otto Chang
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsManager::GetDatabaseScrewSequenceListData(std::vector<GtcsSequenceDataStruct> &seqlist,int jobid)
  *
- *  @brief   ( Constructivist )
+ *  @brief   Set AMS Bulletin Basic Parameter.
  *
- *  @param   QObject *parent
+ *  @param   std::vector<GtcsSequenceDataStruct> &seqlist
+ * 
+ *  @param   int jobid
  *
- *  @return  none
+ *  @return  bool
  *
- *  @note    Set AMS Bulletin Basic Parameter.
+ *  @note    none
  *
  *******************************************************************************************/
 bool GtcsManager::GetDatabaseScrewSequenceListData(std::vector<GtcsSequenceDataStruct> &seqlist,int jobid)
@@ -1101,19 +1204,23 @@ bool GtcsManager::GetDatabaseScrewSequenceListData(std::vector<GtcsSequenceDataS
 }
 /******************************************************************************************
  *
- *  @author  Otto
+ *  @author  Otto Chang
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsManager::GetDatabaseScrewStepListData(std::vector<GtcsStepDataStruct> &steplist,int jobid, int seqid)
  *
- *  @brief   ( Constructivist )
+ *  @brief   Set AMS Bulletin Basic Parameter.
  *
- *  @param   QObject *parent
+ *  @param   std::vector<GtcsStepDataStruct> &steplist
+ * 
+ *  @param   int jobid
+ * 
+ *  @param   int seqid
  *
- *  @return  none
+ *  @return  bool
  *
- *  @note    Set AMS Bulletin Basic Parameter.
+ *  @note    none
  *
  *******************************************************************************************/
 bool GtcsManager::GetDatabaseScrewStepListData(std::vector<GtcsStepDataStruct> &steplist,int jobid, int seqid)
@@ -1199,17 +1306,84 @@ bool GtcsManager::GetDatabaseScrewStepListData(std::vector<GtcsStepDataStruct> &
 }
 /******************************************************************************************
  *
- *  @author  Otto
+ *  @author  Otto Chang
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsManager::GetMcbProcessFromDatabase(McbID4Struct &mcbprocess,int jobid,int seqid)
+ *
+ *  @brief   Set AMS Bulletin Basic Parameter.
+ *
+ *  @param   McbID4Struct &mcbprocess
+ * 
+ *  @param   int jobid
+ * 
+ *  @param   int seqid 
+ *
+ *  @return  bool
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+bool GtcsManager::GetMcbProcessFromDatabase(McbID4Struct &mcbprocess,int jobid,int seqid)
+{   
+    // Initial object.
+    // Package data to mcb telegram.
+    mcbprocess.u8ProcID       = 4000;
+    mcbprocess.u8ProcName     = "****";
+    mcbprocess.u16ProcPGain   = 0;  
+    mcbprocess.u16ProcIGain   = 0;
+    mcbprocess.u16ProcMaxTime = 0;
+    mcbprocess.u16ProcMinTime = 0;
+    mcbprocess.u16ProcRevFunc = 0;
+    mcbprocess.u16NbrSteps    = 0;    
+
+    return true;
+}
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
+ *  @date    2021/02/04
+ *
+ *  @fn      GtcsManager::GetStepListFromDatabase(std::vector<McbID3Struct> &mcbsteplist,int jobid,int seqid)
+ *
+ *  @brief   Set AMS Bulletin Basic Parameter.
+ *
+ *  @param   std::vector<McbID3Struct> &mcbsteplist
+ * 
+ *  @param   int jobid
+ * 
+ *  @param   int seqid
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+bool GtcsManager::GetStepListFromDatabase(std::vector<McbID3Struct> &mcbsteplist,int jobid,int seqid)
+{
+    // Initial object.  
+
+    // Package database step data to mcb telegram. 
+    
+    return true;
+}
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
+ *  @date    2021/02/04
+ *
+ *  @fn      GtcsManager::SetDatabaseBasicParaToReq(AmsREQ301Struct &amsreq,GtcsDatabaseBasicInfo &db_basic)
  *
  *  @brief   ( Constructivist )
  *
- *  @param   QObject *parent
+ *  @param   AmsREQ301Struct &amsreq
+ * 
+ *  @param   GtcsDatabaseBasicInfo &db_basic
  *
- *  @return  none
+ *  @return  bool
  *
  *  @note    none
  *
@@ -1258,17 +1432,17 @@ bool GtcsManager::SetDatabaseBasicParaToReq(AmsREQ301Struct &amsreq,GtcsDatabase
 }
 /******************************************************************************************
  *
- *  @author  Otto
+ *  @author  Otto Chang
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsManager::CheckUiRequestCmd(std::string reqest_string)
  *
  *  @brief   ( Constructivist )
  *
- *  @param   QObject *parent
+ *  @param   std::string reqest_string
  *
- *  @return  none
+ *  @return  bool
  *
  *  @note    none
  *
@@ -1289,21 +1463,38 @@ bool GtcsManager::CheckUiRequestCmd(std::string reqest_string)
     }        
     return true;
 }
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
+ *  @date    2021/02/04
+ *
+ *  @fn      GtcsManager::GetUiRequestCmd()
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   none
+ *
+ *  @return  std::string
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 std::string GtcsManager::GetUiRequestCmd()
 {
     return bulletin->uisockrevcmd;
 }
 /******************************************************************************************
  *
- *  @author  Otto
+ *  @author  Otto Chang
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsManager::SetMcbPortName(std::string com_name)
  *
  *  @brief   ( Constructivist )
  *
- *  @param   QObject *parent
+ *  @param   std::string com_name
  *
  *  @return  none
  *
@@ -1314,27 +1505,61 @@ void GtcsManager::SetMcbPortName(std::string com_name)
 {
     comport_name = com_name;
 }
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
+ *  @date    2021/02/04
+ *
+ *  @fn      GtcsManager::SetEmmcDatabasePath(std::string Path)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   std::string Path
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 void GtcsManager::SetEmmcDatabasePath(std::string Path)
 {
     db_emmc_Path = Path;
 }
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
+ *  @date    2021/02/04
+ *
+ *  @fn      GtcsManager::SetRamdiskDatabasePath(std::string Path)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   std::string Path
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
 void GtcsManager::SetRamdiskDatabasePath(std::string Path)
 {
     db_ramdisk_Path = Path;
 }
 /******************************************************************************************
  *
- *  @author  Otto
+ *  @author  Otto Chang
  *
- *  @date    2021/01/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsManager::GetGtcsTcpSocketServerIP()
  *
  *  @brief   ( Constructivist )
  *
- *  @param   QObject *parent
+ *  @param   none
  *
- *  @return  none
+ *  @return  std::string
  *
  *  @note    none
  *
@@ -1345,17 +1570,17 @@ std::string GtcsManager::GetGtcsTcpSocketServerIP()
 }
 /******************************************************************************************
  *
- *  @author  Otto
+ *  @author  Otto Chang
  *
- *  @date    2021/01/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsManager::GetGtcsTcpSocketServerPort()
  *
  *  @brief   ( Constructivist )
  *
- *  @param   QObject *parent
+ *  @param   none
  *
- *  @return  none
+ *  @return  int
  *
  *  @note    none
  *
@@ -1366,17 +1591,19 @@ int GtcsManager::GetGtcsTcpSocketServerPort()
 }
 /******************************************************************************************
  *
- *  @author  Otto
+ *  @author  Otto Chang
  *
- *  @date    2021/01/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsManager::SetGtcsTcpSocketServerInfo(std::string ip ,int port)
  *
  *  @brief   ( Constructivist )
  *
- *  @param   QObject *parent
+ *  @param   std::string ip
+ * 
+ *  @param   int port
  *
- *  @return  none
+ *  @return  bool
  *
  *  @note    none
  *
@@ -1390,17 +1617,17 @@ bool GtcsManager::SetGtcsTcpSocketServerInfo(std::string ip ,int port)
 }
 /******************************************************************************************
  *
- *  @author  Otto
+ *  @author  Otto Chang
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsManager::StopAllThread()
  *
  *  @brief   ( Constructivist )
  *
- *  @param   QObject *parent
+ *  @param   none
  *
- *  @return  none
+ *  @return  bool
  *
  *  @note    none
  *
@@ -1412,17 +1639,17 @@ bool GtcsManager::StopAllThread()
 }
 /******************************************************************************************
  *
- *  @author  Otto
+ *  @author  Otto Chang
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsManager::InitialGtcsSystem()
  *
  *  @brief   ( Constructivist )
  *
- *  @param   QObject *parent
+ *  @param   none
  *
- *  @return  none
+ *  @return  bool
  *
  *  @note    none
  *
@@ -1447,17 +1674,17 @@ bool GtcsManager::InitialGtcsSystem()
 }
 /******************************************************************************************
  *
- *  @author  Otto
+ *  @author  Otto Chang
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsManager::CheckGtcsSystem()
  *
  *  @brief   ( Constructivist )
  *
- *  @param   QObject *parent
+ *  @param   none
  *
- *  @return  none
+ *  @return  bool
  *
  *  @note    none
  *
@@ -1526,7 +1753,7 @@ bool GtcsManager::CheckGtcsSystem()
     if (bulletin->checksysok == true)
     {
         #pragma region switch job function.
-        // Get nirmal unscrew data form database.
+        // Get normal unscrew data form database.
         if (GetDatabaseUnscrewData(mcb->telegram.ctrl.loosen,0)==false)
         {
             return false;
@@ -1572,7 +1799,7 @@ bool GtcsManager::CheckGtcsSystem()
         
 
         // Send process telegram to MCB.
-
+        
 
         // Package step data list to MCB Step telegram.
 
@@ -1600,15 +1827,15 @@ bool GtcsManager::CheckGtcsSystem()
 }
 /******************************************************************************************
  *
- *  @author  Otto
+ *  @author  Otto Chang
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsManager::RunGtcsSystem()
  *
  *  @brief   ( Constructivist )
  *
- *  @param   QObject *parent
+ *  @param   none
  *
  *  @return  none
  *
@@ -1687,17 +1914,17 @@ bool GtcsManager::RunGtcsSystem()
 }
 /******************************************************************************************
  *
- *  @author  Otto
+ *  @author  Otto Chang
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsManager::ClearGtcsSystemAlarm()
  *
  *  @brief   ( Constructivist )
  *
- *  @param   QObject *parent
+ *  @param   none
  *
- *  @return  none
+ *  @return  bool
  *
  *  @note    none
  *
@@ -1709,15 +1936,15 @@ bool GtcsManager::ClearGtcsSystemAlarm()
 }
 /******************************************************************************************
  *
- *  @author  Otto
+ *  @author  Otto Chang
  *
- *  @date    2016/06/21
+ *  @date    2021/02/04
  *
- *  @fn      TInterpolation::TInterpolation(QObject *parent)
+ *  @fn      GtcsManager::SettingGtcsSystem()
  *
  *  @brief   ( Constructivist )
  *
- *  @param   QObject *parent
+ *  @param   none
  *
  *  @return  none
  *

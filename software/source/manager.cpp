@@ -1325,7 +1325,7 @@ bool GtcsManager::GetDatabaseScrewStepListData(std::vector<GtcsStepDataStruct> &
  *  @note    none
  *
  *******************************************************************************************/
-bool GtcsManager::GetMcbProcessFromDatabase(McbID4Struct &mcbprocess,McbID2Struct &mcbbasic,std::vector<GtcsStepDataStruct> &steplist)
+bool GtcsManager::GetMcbProcessTelegramFromDBData(McbID4Struct &mcbprocess,McbID2Struct &mcbbasic,std::vector<GtcsStepDataStruct> &steplist)
 {   
     // Package data to mcb telegram.
     mcbprocess.u8ProcID       = 4000;
@@ -1359,10 +1359,32 @@ bool GtcsManager::GetMcbProcessFromDatabase(McbID4Struct &mcbprocess,McbID2Struc
  *  @note    none
  *
  *******************************************************************************************/
-bool GtcsManager::GetStepListFromDatabase(McbID3Struct &mcbstep,McbID2Struct &mcbbasic,std::vector<GtcsStepDataStruct> &steplist)
+bool GtcsManager::GetMcbStepTelegramFromDBData(McbID3Struct &mcbstep,McbID2Struct &mcbbasic,GtcsStepDataStruct &step)
 {
-    // Package database step data to mcb telegram. 
-    
+    // Package database step data to mcb telegram.
+    // Step name.
+    // mcbstep.u8StepID            = 3000 + stepindex; // 3XXX 
+    mcbstep.u8StepName          = step.u8StepName;// SID = 1,32 byte long string which contains the name of the step.
+    // property.
+    mcbstep.u16StepRpm          = 0;                // SID = 2,Rpm of this screwing step. Unit is [rpm] (after the Gearbox)
+    mcbstep.u16StepSlope        = 0;                // SID = 3,Start slope of this screwing step. Unit is [rpm/s] (after the Gearbox).
+    mcbstep.u16StepMaxCurrent   = 0;                // SID = 4,Maximum current of this step. Unit is [mA].
+    mcbstep.u16StepMaxTorque    = 0;                // SID = 5,Maximum Torque Value is 0- 1862 (max Raw TMD Value)
+    mcbstep.u16StepMaxRevol     = 0;                // SID = 6,Maximum Revolutions (after the Gearbox) of this step.
+                                                    // Unit is [0,01] (1000 = 10,00 Revolutions)
+    mcbstep.u16StepTime         = 0;                // SID = 7,Execution Time- time. Unit is [ms].
+    mcbstep.s32StepAngle        = 0;                // SID = 8,Position to Angle. Unit is [0,1 °] (10 = 1°)
+    mcbstep.u16StepAngleWindow  = 0;                // SID = 9,Window of the Angle Monitoring. Unit is [0,1°] (10 = 1°)
+    mcbstep.u16StepTorqueWindow = 0;                // SID = 10,Window of the torque monitoring.
+                                                    // Unit is digits related to maximum Torque Value 1862 (max Raw TMD Value).
+    mcbstep.u16MinDutyCycle     = 0;                // SID = 11,Minimum Duty Cycle Unit is [0,1%]. (10 = 1%)
+    mcbstep.u16StepFlags        = 0;                // SID = 12,See description of step flags.
+
+    // New
+    mcbstep.u16WindowMode       = 0;                // SID = 13
+    mcbstep.u16AngleWindow2     = 0;                // SID = 14
+    mcbstep.u16TorqueWindow2    = 0;                // SID = 15
+
     return true;
 }
 /******************************************************************************************
@@ -1792,14 +1814,15 @@ bool GtcsManager::CheckGtcsSystem()
             #endif
         }
         // Package step data list to MCB Process telegram.
-        GetMcbProcessFromDatabase(  bulletin->McbBulletin.ProcessPara,
-                                    bulletin->McbBulletin.BasicPara,
-                                    bulletin->ScrewHandler.GtcsJob.sequencelist[seqindex].steplist);
+        GetMcbProcessTelegramFromDBData(bulletin->McbBulletin.ProcessPara,
+                                        bulletin->McbBulletin.BasicPara,
+                                        bulletin->ScrewHandler.GtcsJob.sequencelist[seqindex].steplist);
         // Send process telegram to MCB.
-        
 
         // Package step data list to MCB Step telegram.
-
+        // GetMcbStepTelegramFromDBData(bulletin->McbBulletin.StepPara,
+        //                             bulletin->McbBulletin.BasicPara,
+        //                             bulletin->ScrewHandler.GtcsJob.sequencelist[seqindex].steplist[0]);
 
         // Send step telegram to MCB.
 

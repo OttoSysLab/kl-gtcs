@@ -225,7 +225,7 @@ typedef struct
     uint16_t u16AngleWindow2;        // SID = 14
     uint16_t u16TorqueWindow2;       // SID = 15
 
-    // Stepo list in porcess,SID = 8,"Screwing process step ID Number 3000 -3499"
+    // Step list in porcess,SID = 8,"Screwing process step ID Number 3000 -3499"
     // "u16ProcStepId":self.u16ProcStepId,
 }McbID3Struct;
 // Process Parameter.(ID4)

@@ -12,7 +12,6 @@
 =======================================================================================*/
 #include "../include/gtcsmcbcomm.h"
 
-#pragma region Status
 /******************************************************************************************
  *
  *  @author  Otto
@@ -2581,5 +2580,3 @@ int GtcsMcbComm::GetMcbPollingStatus(GtcsCtrlTelegramStrcut &ctrltelegram)
 	tcflush(com_num, TCOFLUSH);
     return result;
 }
-#pragma endregion
-#pragma endregion

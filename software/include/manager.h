@@ -77,8 +77,8 @@ private:
     bool GetDatabaseScrewStepListData(std::vector<GtcsStepDataStruct> &steplist,int jobid,int seqid);
 
     // MCB qpi.
-    bool GetMcbProcessFromDatabase(McbID4Struct &mcbprocess,McbID2Struct &mcbbasic,std::vector<GtcsStepDataStruct> &steplist);
-    bool GetStepListFromDatabase(McbID3Struct &mcbstep,McbID2Struct &mcbbasic,std::vector<GtcsStepDataStruct> &steplist);
+    bool GetMcbProcessTelegramFromDBData(McbID4Struct &mcbprocess,McbID2Struct &mcbbasic,std::vector<GtcsStepDataStruct> &steplist);
+    bool GetMcbStepTelegramFromDBData(McbID3Struct &mcbstep,McbID2Struct &mcbbasic,GtcsStepDataStruct &step);
     
     bool SendProcessToMcb(McbID4Struct &mcbprocess);
     bool SendStepToMcb(McbID3Struct &mcbstep);

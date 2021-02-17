@@ -1093,6 +1093,9 @@ int GtcsMcbComm::WriteBasicParameter(McbID2Struct &basic)
     telegram.rw_response.InitialTelegramArray();
     // comm.ReadData(com_num,telegram.rw_response.telegram_array);
     result = read(com_num, &telegram.rw_response.telegram_array, 1024);
+    // flush buffer.
+    tcflush(com_num, TCIFLUSH);   	/* Discards old data in the rx buffer            */
+	tcflush(com_num, TCOFLUSH);
     #pragma endregion
     #pragma region third send. (SID13-18)
      telegram.w_request.InitialTelegramArray();
@@ -1163,6 +1166,9 @@ int GtcsMcbComm::WriteBasicParameter(McbID2Struct &basic)
     std::this_thread::sleep_for(std::chrono::milliseconds(delaytime));
     telegram.rw_response.InitialTelegramArray();
     result = read(com_num, &telegram.rw_response.telegram_array, 1024);
+    // flush buffer.
+    tcflush(com_num, TCIFLUSH);   	/* Discards old data in the rx buffer            */
+	tcflush(com_num, TCOFLUSH);
     #pragma endregion
     #pragma region fourth package. (SID19-24)
     telegram.w_request.InitialTelegramArray();
@@ -1233,6 +1239,9 @@ int GtcsMcbComm::WriteBasicParameter(McbID2Struct &basic)
     std::this_thread::sleep_for(std::chrono::milliseconds(delaytime));
     telegram.rw_response.InitialTelegramArray();
     result = read(com_num, &telegram.rw_response.telegram_array, 1024);
+    // flush buffer.
+    tcflush(com_num, TCIFLUSH);   	/* Discards old data in the rx buffer            */
+	tcflush(com_num, TCOFLUSH);
     #pragma endregion
     #pragma region fifth (SID25)
     telegram.w_request.InitialTelegramArray();
@@ -1303,6 +1312,9 @@ int GtcsMcbComm::WriteBasicParameter(McbID2Struct &basic)
     std::this_thread::sleep_for(std::chrono::milliseconds(delaytime));
     telegram.rw_response.InitialTelegramArray();
     result = read(com_num, &telegram.rw_response.telegram_array, 1024);
+    // flush buffer.
+    tcflush(com_num, TCIFLUSH);   	/* Discards old data in the rx buffer            */
+	tcflush(com_num, TCOFLUSH);
     #pragma endregion
     return result;
 }
@@ -1403,6 +1415,9 @@ int GtcsMcbComm::WriteToMcbFlash(int mainid,int subid,int addr_num)
     std::this_thread::sleep_for(std::chrono::milliseconds(delaytime));
     telegram.rw_response.InitialTelegramArray();
     result = read(com_num, &telegram.rw_response.telegram_array, 1024);
+    // flush buffer.
+    tcflush(com_num, TCIFLUSH);   	/* Discards old data in the rx buffer            */
+	tcflush(com_num, TCOFLUSH);
     #pragma endregion
     return result;
 }
@@ -1516,6 +1531,9 @@ int GtcsMcbComm::ReadStepParametrer(McbID3Struct &step_para,int mainid)
                                      ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+29]<<8); // SID = 6
     step_para.u16StepTime         = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+34]+
                                      ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+35]<<8); // SID = 7
+    // flush buffer.
+    tcflush(com_num, TCIFLUSH);   	/* Discards old data in the rx buffer            */
+	tcflush(com_num, TCOFLUSH);
     #pragma endregion
     #pragma region Second package.(SID8-12)
     telegram.r_request.InitialTelegramArray();
@@ -1599,6 +1617,9 @@ int GtcsMcbComm::ReadStepParametrer(McbID3Struct &step_para,int mainid)
                                      ((uint32_t)telegram.rw_response.telegram_array[payload_start_index+29]<<8);
                                      ((uint32_t)telegram.rw_response.telegram_array[payload_start_index+30]<<16);
                                      ((uint32_t)telegram.rw_response.telegram_array[payload_start_index+31]<<24); // SID = 8
+    // flush buffer.
+    tcflush(com_num, TCIFLUSH);   	/* Discards old data in the rx buffer            */
+	tcflush(com_num, TCOFLUSH);
     #pragma endregion.
     #pragma region Thrid package. (SID13-15)
     telegram.r_request.InitialTelegramArray();
@@ -1676,6 +1697,9 @@ int GtcsMcbComm::ReadStepParametrer(McbID3Struct &step_para,int mainid)
                                   ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+11]<<8); // SID = 14
     step_para.u16TorqueWindow2 = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+16]+
                                   ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+17]<<8); // SID = 15
+    // flush buffer.
+    tcflush(com_num, TCIFLUSH);   	/* Discards old data in the rx buffer            */
+	tcflush(com_num, TCOFLUSH);
     #pragma endregion
     
     #ifdef _DEBUG_MODE_
@@ -1796,6 +1820,9 @@ int GtcsMcbComm::WriteStepParameter(McbID3Struct &step, int mainid)
     std::this_thread::sleep_for(std::chrono::milliseconds(delaytime));
     telegram.rw_response.InitialTelegramArray();
     result = read(com_num, &telegram.rw_response.telegram_array, 1024);
+    // flush buffer.
+    tcflush(com_num, TCIFLUSH);   	/* Discards old data in the rx buffer            */
+	tcflush(com_num, TCOFLUSH);
     #pragma endregion
     #pragma region Second package. (SID8-12)
     telegram.w_request.InitialTelegramArray();
@@ -1866,6 +1893,9 @@ int GtcsMcbComm::WriteStepParameter(McbID3Struct &step, int mainid)
     std::this_thread::sleep_for(std::chrono::milliseconds(delaytime));
     telegram.rw_response.InitialTelegramArray();
     result = read(com_num, &telegram.rw_response.telegram_array, 1024);
+    // flush buffer.
+    tcflush(com_num, TCIFLUSH);   	/* Discards old data in the rx buffer            */
+	tcflush(com_num, TCOFLUSH);
     #pragma endregion.
     #pragma region thrid package. (SID13-15)
     telegram.w_request.InitialTelegramArray();
@@ -1936,6 +1966,9 @@ int GtcsMcbComm::WriteStepParameter(McbID3Struct &step, int mainid)
     std::this_thread::sleep_for(std::chrono::milliseconds(delaytime));
     telegram.rw_response.InitialTelegramArray();
     result = read(com_num, &telegram.rw_response.telegram_array, 1024);
+    // flush buffer.
+    tcflush(com_num, TCIFLUSH);   	/* Discards old data in the rx buffer            */
+	tcflush(com_num, TCOFLUSH);
     #pragma endregion
     #pragma region Write to mcb flash.
     WriteToMcbFlash(7,11,main_id);// Write to mcb flach,step number = mainid,
@@ -2054,6 +2087,9 @@ int GtcsMcbComm::ReadProcessParameter(McbID4Struct &process,int processnum)
                               ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+29]<<8); // SID = 5
     process.u16NbrSteps    = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+34]+
                               ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+35]<<8); // SID = 4
+    // flush buffer.
+    tcflush(com_num, TCIFLUSH);   	/* Discards old data in the rx buffer            */
+	tcflush(com_num, TCOFLUSH);
     #pragma endregion
     #pragma region Second package 2. (Step list 1-6)
     telegram.r_request.InitialTelegramArray();
@@ -2125,18 +2161,21 @@ int GtcsMcbComm::ReadProcessParameter(McbID4Struct &process,int processnum)
     telegram.rw_response.InitialTelegramArray();
     result = read(com_num, &telegram.rw_response.telegram_array, 1024);
     // Get basic parameter from telegram.
-    process.step_id_1 = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+4]+
-                         ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+5]<<8);  // SID = 1
-    process.step_id_2 = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+10]+
-                         ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+11]<<8); // SID = 2
-    process.step_id_3 = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+16]+
-                         ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+17]<<8); // SID = 3
-    process.step_id_4 = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+22]+
-                         ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+23]<<8); // SID = 4
-    process.step_id_5 = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+28]+
-                         ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+29]<<8); // SID = 5
-    process.step_id_6 = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+34]+
-                         ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+35]<<8); // SID = 4
+    process.stepid_list[0] = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+4]+
+                            ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+5]<<8);  // SID = 1
+    process.stepid_list[1] = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+10]+
+                            ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+11]<<8); // SID = 2
+    process.stepid_list[2] = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+16]+
+                            ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+17]<<8); // SID = 3
+    process.stepid_list[3] = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+22]+
+                            ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+23]<<8); // SID = 4
+    process.stepid_list[4] = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+28]+
+                            ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+29]<<8); // SID = 5
+    process.stepid_list[5] = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+34]+
+                            ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+35]<<8); // SID = 4
+    // flush buffer.
+    tcflush(com_num, TCIFLUSH);   	/* Discards old data in the rx buffer            */
+	tcflush(com_num, TCOFLUSH);
     #pragma endregion
     #pragma region Second package 3. (Step list 1-6)
     telegram.r_request.InitialTelegramArray();
@@ -2208,18 +2247,21 @@ int GtcsMcbComm::ReadProcessParameter(McbID4Struct &process,int processnum)
     telegram.rw_response.InitialTelegramArray();
     result = read(com_num, &telegram.rw_response.telegram_array, 1024);
     // Get basic parameter from telegram.
-    process.step_id_7 = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+4]+
-                         ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+5]<<8);  // SID = 1
-    process.step_id_8 = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+10]+
-                         ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+11]<<8); // SID = 2
-    process.step_id_9 = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+16]+
-                         ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+17]<<8); // SID = 3
-    process.step_id_10 = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+22]+
-                         ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+23]<<8); // SID = 4
-    process.step_id_11 = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+28]+
-                         ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+29]<<8); // SID = 5
-    process.step_id_12 = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+34]+
-                         ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+35]<<8); // SID = 4
+    process.stepid_list[6] = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+4]+
+                            ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+5]<<8);  // SID = 1
+    process.stepid_list[7] = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+10]+
+                            ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+11]<<8); // SID = 2
+    process.stepid_list[8] = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+16]+
+                            ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+17]<<8); // SID = 3
+    process.stepid_list[9] = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+22]+
+                            ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+23]<<8); // SID = 4
+    process.stepid_list[10] = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+28]+
+                            ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+29]<<8); // SID = 5
+    process.stepid_list[11] = (uint16_t)telegram.rw_response.telegram_array[payload_start_index+34]+
+                            ((uint16_t)telegram.rw_response.telegram_array[payload_start_index+35]<<8); // SID = 4
+    // flush buffer.
+    tcflush(com_num, TCIFLUSH);   	/* Discards old data in the rx buffer            */
+	tcflush(com_num, TCOFLUSH);
     #pragma endregion
     
     #ifdef _DEBUG_MODE_
@@ -2231,19 +2273,19 @@ int GtcsMcbComm::ReadProcessParameter(McbID4Struct &process,int processnum)
     std::cout << "process.u16ProcRevFunc = " << std::to_string(process.u16ProcRevFunc) << std::endl;
     std::cout << "process.u16NbrSteps = " << std::to_string(process.u16NbrSteps) << std::endl;
     // package 2.
-    std::cout << "process.step_id_1 = " << std::to_string(process.step_id_1) << std::endl;
-    std::cout << "process.step_id_2 = " << std::to_string(process.step_id_2) << std::endl;
-    std::cout << "process.step_id_3 = " << std::to_string(process.step_id_3) << std::endl;
-    std::cout << "process.step_id_4 = " << std::to_string(process.step_id_4) << std::endl;
-    std::cout << "process.step_id_5 = " << std::to_string(process.step_id_5) << std::endl;
-    std::cout << "process.step_id_6 = " << std::to_string(process.step_id_6) << std::endl;
+    std::cout << "process.step_id_1 = " << std::to_string(process.stepid_list[0]) << std::endl;
+    std::cout << "process.step_id_2 = " << std::to_string(process.stepid_list[1]) << std::endl;
+    std::cout << "process.step_id_3 = " << std::to_string(process.stepid_list[2]) << std::endl;
+    std::cout << "process.step_id_4 = " << std::to_string(process.stepid_list[3]) << std::endl;
+    std::cout << "process.step_id_5 = " << std::to_string(process.stepid_list[4]) << std::endl;
+    std::cout << "process.step_id_6 = " << std::to_string(process.stepid_list[5]) << std::endl;
     // package 3.
-    std::cout << "process.step_id_7 = " << std::to_string(process.step_id_7) << std::endl;
-    std::cout << "process.step_id_8 = " << std::to_string(process.step_id_8) << std::endl;
-    std::cout << "process.step_id_9 = " << std::to_string(process.step_id_9) << std::endl;
-    std::cout << "process.step_id_10 = " << std::to_string(process.step_id_10) << std::endl;
-    std::cout << "process.step_id_11 = " << std::to_string(process.step_id_11) << std::endl;
-    std::cout << "process.step_id_12 = " << std::to_string(process.step_id_12) << std::endl;
+    std::cout << "process.step_id_7 = " << std::to_string(process.stepid_list[6]) << std::endl;
+    std::cout << "process.step_id_8 = " << std::to_string(process.stepid_list[7]) << std::endl;
+    std::cout << "process.step_id_9 = " << std::to_string(process.stepid_list[8]) << std::endl;
+    std::cout << "process.step_id_10 = " << std::to_string(process.stepid_list[9]) << std::endl;
+    std::cout << "process.step_id_11 = " << std::to_string(process.stepid_list[10]) << std::endl;
+    std::cout << "process.step_id_12 = " << std::to_string(process.stepid_list[11]) << std::endl;
     #endif
     return result;
 }
@@ -2273,7 +2315,7 @@ int GtcsMcbComm::WriteProcessParameter(McbID4Struct &process, int processid)
     int main_id = processid;
     uint16_t sub_id[6];
     uint16_t payload_start_index = 8;
-    int delaytime = 20;
+    int delaytime = 50;
 
     #pragma region First package. (SID1-6)
     telegram.w_request.InitialTelegramArray();
@@ -2344,6 +2386,9 @@ int GtcsMcbComm::WriteProcessParameter(McbID4Struct &process, int processid)
     std::this_thread::sleep_for(std::chrono::milliseconds(delaytime));
     telegram.rw_response.InitialTelegramArray();
     result = read(com_num, &telegram.rw_response.telegram_array, 1024);
+    // flush buffer.
+    tcflush(com_num, TCIFLUSH);   	/* Discards old data in the rx buffer            */
+	tcflush(com_num, TCOFLUSH);
     #pragma endregion
     #pragma region First package. (SID1-6)
     telegram.w_request.InitialTelegramArray();
@@ -2366,43 +2411,43 @@ int GtcsMcbComm::WriteProcessParameter(McbID4Struct &process, int processid)
     telegram.w_request.telegram_array[payload_start_index+1]  = (uint8_t)(main_id/256);
     telegram.w_request.telegram_array[payload_start_index+2]  = (uint8_t)(sub_id[0]%256);
     telegram.w_request.telegram_array[payload_start_index+3]  = (uint8_t)(sub_id[0]/256);
-    telegram.w_request.telegram_array[payload_start_index+4]  = (uint8_t)(process.step_id_1%256);
-    telegram.w_request.telegram_array[payload_start_index+5]  = (uint8_t)(process.step_id_1/256);
+    telegram.w_request.telegram_array[payload_start_index+4]  = (uint8_t)(process.stepid_list[0]%256);
+    telegram.w_request.telegram_array[payload_start_index+5]  = (uint8_t)(process.stepid_list[0]/256);
     // Package SID = 2
     telegram.w_request.telegram_array[payload_start_index+6]  = (uint8_t)(main_id%256);
     telegram.w_request.telegram_array[payload_start_index+7]  = (uint8_t)(main_id/256);
     telegram.w_request.telegram_array[payload_start_index+8]  = (uint8_t)(sub_id[1]%256);
     telegram.w_request.telegram_array[payload_start_index+9]  = (uint8_t)(sub_id[1]/256);
-    telegram.w_request.telegram_array[payload_start_index+10] = (uint8_t)(process.step_id_2%256);
-    telegram.w_request.telegram_array[payload_start_index+11] = (uint8_t)(process.step_id_2/256);
+    telegram.w_request.telegram_array[payload_start_index+10] = (uint8_t)(process.stepid_list[1]%256);
+    telegram.w_request.telegram_array[payload_start_index+11] = (uint8_t)(process.stepid_list[1]/256);
     // Package SID = 3
     telegram.w_request.telegram_array[payload_start_index+12] = (uint8_t)(main_id%256);
     telegram.w_request.telegram_array[payload_start_index+13] = (uint8_t)(main_id/256);
     telegram.w_request.telegram_array[payload_start_index+14] = (uint8_t)(sub_id[2]%256);
     telegram.w_request.telegram_array[payload_start_index+15] = (uint8_t)(sub_id[2]/256);
-    telegram.w_request.telegram_array[payload_start_index+16] = (uint8_t)(process.step_id_3%256);
-    telegram.w_request.telegram_array[payload_start_index+17] = (uint8_t)(process.step_id_3/256);
+    telegram.w_request.telegram_array[payload_start_index+16] = (uint8_t)(process.stepid_list[2]%256);
+    telegram.w_request.telegram_array[payload_start_index+17] = (uint8_t)(process.stepid_list[2]/256);
     // Package SID = 4
     telegram.w_request.telegram_array[payload_start_index+18] = (uint8_t)(main_id%256);
     telegram.w_request.telegram_array[payload_start_index+19] = (uint8_t)(main_id/256);
     telegram.w_request.telegram_array[payload_start_index+20] = (uint8_t)(sub_id[3]%256);
     telegram.w_request.telegram_array[payload_start_index+21] = (uint8_t)(sub_id[3]/256);
-    telegram.w_request.telegram_array[payload_start_index+22] = (uint8_t)(process.step_id_4%256);
-    telegram.w_request.telegram_array[payload_start_index+23] = (uint8_t)(process.step_id_4/256);
+    telegram.w_request.telegram_array[payload_start_index+22] = (uint8_t)(process.stepid_list[3]%256);
+    telegram.w_request.telegram_array[payload_start_index+23] = (uint8_t)(process.stepid_list[3]/256);
     // Package SID = 5
     telegram.w_request.telegram_array[payload_start_index+24] = (uint8_t)(main_id%256);
     telegram.w_request.telegram_array[payload_start_index+25] = (uint8_t)(main_id/256);
     telegram.w_request.telegram_array[payload_start_index+26] = (uint8_t)(sub_id[4]%256);
-    telegram.w_request.telegram_array[payload_start_index+27] = (uint8_t)(sub_id[4]%256);
-    telegram.w_request.telegram_array[payload_start_index+28] = (uint8_t)(process.step_id_5%256);
-    telegram.w_request.telegram_array[payload_start_index+29] = (uint8_t)(process.step_id_5/256);
+    telegram.w_request.telegram_array[payload_start_index+27] = (uint8_t)(sub_id[4]/256);
+    telegram.w_request.telegram_array[payload_start_index+28] = (uint8_t)(process.stepid_list[4]%256);
+    telegram.w_request.telegram_array[payload_start_index+29] = (uint8_t)(process.stepid_list[4]/256);
     // Package SID = .G.?
     telegram.w_request.telegram_array[payload_start_index+30] = (uint8_t)(main_id%256);
     telegram.w_request.telegram_array[payload_start_index+31] = (uint8_t)(main_id/256);
     telegram.w_request.telegram_array[payload_start_index+32] = (uint8_t)(sub_id[5]%256);
-    telegram.w_request.telegram_array[payload_start_index+33] = (uint8_t)(sub_id[5]%256);
-    telegram.w_request.telegram_array[payload_start_index+34] = (uint8_t)(process.step_id_6%256);
-    telegram.w_request.telegram_array[payload_start_index+35] = (uint8_t)(process.step_id_6/256);
+    telegram.w_request.telegram_array[payload_start_index+33] = (uint8_t)(sub_id[5]/256);
+    telegram.w_request.telegram_array[payload_start_index+34] = (uint8_t)(process.stepid_list[5]%256);
+    telegram.w_request.telegram_array[payload_start_index+35] = (uint8_t)(process.stepid_list[5]/256);
     // Package.
     telegram.w_request.EncodeTelegramArray();
     // Send to MCB.
@@ -2414,6 +2459,9 @@ int GtcsMcbComm::WriteProcessParameter(McbID4Struct &process, int processid)
     std::this_thread::sleep_for(std::chrono::milliseconds(delaytime));
     telegram.rw_response.InitialTelegramArray();
     result = read(com_num, &telegram.rw_response.telegram_array, 1024);
+    // flush buffer.
+    tcflush(com_num, TCIFLUSH);   	/* Discards old data in the rx buffer            */
+	tcflush(com_num, TCOFLUSH);
     // Get basic parameter from telegram.
     #pragma endregion
     #pragma region First package. (SID1-6)
@@ -2437,43 +2485,43 @@ int GtcsMcbComm::WriteProcessParameter(McbID4Struct &process, int processid)
     telegram.w_request.telegram_array[payload_start_index+1]  = (uint8_t)(main_id/256);
     telegram.w_request.telegram_array[payload_start_index+2]  = (uint8_t)(sub_id[0]%256);
     telegram.w_request.telegram_array[payload_start_index+3]  = (uint8_t)(sub_id[0]/256);
-    telegram.w_request.telegram_array[payload_start_index+4]  = (uint8_t)(process.step_id_7%256);
-    telegram.w_request.telegram_array[payload_start_index+5]  = (uint8_t)(process.step_id_7/256);
+    telegram.w_request.telegram_array[payload_start_index+4]  = (uint8_t)(process.stepid_list[6]%256);
+    telegram.w_request.telegram_array[payload_start_index+5]  = (uint8_t)(process.stepid_list[6]/256);
     // Package SID = 2
     telegram.w_request.telegram_array[payload_start_index+6]  = (uint8_t)(main_id%256);
     telegram.w_request.telegram_array[payload_start_index+7]  = (uint8_t)(main_id/256);
     telegram.w_request.telegram_array[payload_start_index+8]  = (uint8_t)(sub_id[1]%256);
     telegram.w_request.telegram_array[payload_start_index+9]  = (uint8_t)(sub_id[1]/256);
-    telegram.w_request.telegram_array[payload_start_index+10] = (uint8_t)(process.step_id_8%256);
-    telegram.w_request.telegram_array[payload_start_index+11] = (uint8_t)(process.step_id_8/256);
+    telegram.w_request.telegram_array[payload_start_index+10] = (uint8_t)(process.stepid_list[7]%256);
+    telegram.w_request.telegram_array[payload_start_index+11] = (uint8_t)(process.stepid_list[7]/256);
     // Package SID = 3
     telegram.w_request.telegram_array[payload_start_index+12] = (uint8_t)(main_id%256);
     telegram.w_request.telegram_array[payload_start_index+13] = (uint8_t)(main_id/256);
     telegram.w_request.telegram_array[payload_start_index+14] = (uint8_t)(sub_id[2]%256);
     telegram.w_request.telegram_array[payload_start_index+15] = (uint8_t)(sub_id[2]/256);
-    telegram.w_request.telegram_array[payload_start_index+16] = (uint8_t)(process.step_id_9%256);
-    telegram.w_request.telegram_array[payload_start_index+17] = (uint8_t)(process.step_id_9/256);
+    telegram.w_request.telegram_array[payload_start_index+16] = (uint8_t)(process.stepid_list[8]%256);
+    telegram.w_request.telegram_array[payload_start_index+17] = (uint8_t)(process.stepid_list[8]/256);
     // Package SID = 4
     telegram.w_request.telegram_array[payload_start_index+18] = (uint8_t)(main_id%256);
     telegram.w_request.telegram_array[payload_start_index+19] = (uint8_t)(main_id/256);
     telegram.w_request.telegram_array[payload_start_index+20] = (uint8_t)(sub_id[3]%256);
     telegram.w_request.telegram_array[payload_start_index+21] = (uint8_t)(sub_id[3]/256);
-    telegram.w_request.telegram_array[payload_start_index+22] = (uint8_t)(process.step_id_10%256);
-    telegram.w_request.telegram_array[payload_start_index+23] = (uint8_t)(process.step_id_10/256);
+    telegram.w_request.telegram_array[payload_start_index+22] = (uint8_t)(process.stepid_list[9]%256);
+    telegram.w_request.telegram_array[payload_start_index+23] = (uint8_t)(process.stepid_list[9]/256);
     // Package SID = 5
     telegram.w_request.telegram_array[payload_start_index+24] = (uint8_t)(main_id%256);
     telegram.w_request.telegram_array[payload_start_index+25] = (uint8_t)(main_id/256);
     telegram.w_request.telegram_array[payload_start_index+26] = (uint8_t)(sub_id[4]%256);
-    telegram.w_request.telegram_array[payload_start_index+27] = (uint8_t)(sub_id[4]%256);
-    telegram.w_request.telegram_array[payload_start_index+28] = (uint8_t)(process.step_id_11%256);
-    telegram.w_request.telegram_array[payload_start_index+29] = (uint8_t)(process.step_id_11/256);
+    telegram.w_request.telegram_array[payload_start_index+27] = (uint8_t)(sub_id[4]/256);
+    telegram.w_request.telegram_array[payload_start_index+28] = (uint8_t)(process.stepid_list[10]%256);
+    telegram.w_request.telegram_array[payload_start_index+29] = (uint8_t)(process.stepid_list[10]/256);
     // Package SID = .G.?
     telegram.w_request.telegram_array[payload_start_index+30] = (uint8_t)(main_id%256);
     telegram.w_request.telegram_array[payload_start_index+31] = (uint8_t)(main_id/256);
     telegram.w_request.telegram_array[payload_start_index+32] = (uint8_t)(sub_id[5]%256);
-    telegram.w_request.telegram_array[payload_start_index+33] = (uint8_t)(sub_id[5]%256);
-    telegram.w_request.telegram_array[payload_start_index+34] = (uint8_t)(process.step_id_12%256);
-    telegram.w_request.telegram_array[payload_start_index+35] = (uint8_t)(process.step_id_12/256);
+    telegram.w_request.telegram_array[payload_start_index+33] = (uint8_t)(sub_id[5]/256);
+    telegram.w_request.telegram_array[payload_start_index+34] = (uint8_t)(process.stepid_list[11]%256);
+    telegram.w_request.telegram_array[payload_start_index+35] = (uint8_t)(process.stepid_list[11]/256);
     // Package.
     telegram.w_request.EncodeTelegramArray();
     // Send to MCB.
@@ -2485,6 +2533,9 @@ int GtcsMcbComm::WriteProcessParameter(McbID4Struct &process, int processid)
     std::this_thread::sleep_for(std::chrono::milliseconds(delaytime));
     telegram.rw_response.InitialTelegramArray();
     result = read(com_num, &telegram.rw_response.telegram_array, 1024);
+    // flush buffer.
+    tcflush(com_num, TCIFLUSH);   	/* Discards old data in the rx buffer            */
+	tcflush(com_num, TCOFLUSH);
     #pragma endregion
     #pragma region display 
     WriteToMcbFlash(7,12,main_id);// Write to mcb flach,step number = mainid,

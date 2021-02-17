@@ -20,11 +20,9 @@
 // main.
 int main()
 {
+    #pragma region  step 1
     // Initial GtcsManager object.
     GtcsManager manager;
-    // GtcsTcpSocket tcpserver;
-
-    #pragma region  step 1
     // Initial GTCS system.
     manager.SetMcbPortName("/dev/ttymxc3");
     manager.SetEmmcDatabasePath("/var/www/html/database/tcs.db");
@@ -38,6 +36,8 @@ int main()
         std::cout << "Check Gtcs System = OK!! " <<std::endl;
         #endif 
     }
+    #pragma endregion
+    
     // Ste 3 = Set tcpsocket thread and start.
     #pragma region step 2
     #ifdef _DEBUG_MODE_207_
@@ -71,7 +71,7 @@ int main()
                 manager.ClearGtcsSystemAlarm();
                 break;
             case MAIN_FSM::SETTING:
-                #ifdef _DEBUG_MODE_
+                #ifdef _DEBUG_MODE_s
                 std::cout << "CheckMainFSM = SETTING" << std::endl;
                 #endif
                 manager.SettingGtcsSystem();

@@ -12,7 +12,6 @@
 =======================================================================================*/
 #include "../include/gtcsamsprotocol.h"
 
-#pragma region Signalton.
 /******************************************************************************************
  *
  *  @author  Otto
@@ -27,7 +26,7 @@
  *
  *  @return  none
  *
- *  @note    none
+ *  @note    GtcsAmsProtocol Signalton.
  *
  *******************************************************************************************/
 GtcsAmsProtocol::GtcsAmsProtocol(/* args */)
@@ -46,7 +45,7 @@ GtcsAmsProtocol::GtcsAmsProtocol(/* args */)
  *
  *  @return  none
  *
- *  @note    none
+ *  @note    GtcsAmsProtocol Signalton.
  *
  *******************************************************************************************/
 GtcsAmsProtocol::~GtcsAmsProtocol()

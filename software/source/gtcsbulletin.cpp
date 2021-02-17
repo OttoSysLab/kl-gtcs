@@ -726,37 +726,37 @@ void MCBBulletin::InitialStructValue()
     //  Process Parameter.
     ProcessPara = {
         // Process ID
-        .u8ProcID           = 0, // Process ID
+        .u8ProcID           = 0,    // Process ID
         // Process name.
-        .u8ProcName         = "-", // SID = 1,"32 byte long string which contains the name of the
-                                   // screwing process."
+        .u8ProcName         = "-",  // SID = 1,"32 byte long string which contains the name of the
+                                    // screwing process."
         // Process parameter.
-        .u16ProcPGain       = 0, // SID = 2,Proportional Gain of the screwing process.
-        .u16ProcIGain       = 0, // SID = 3,Integral Gain of the screwing process.
-        .u16ProcMaxTime     = 0, // SID = 4,"0 = No maximum process time.
-                                 // Every other value in [ms] is the timemonitoring of this process.
-                                 // It leads to an error, when the process exceeds this time."
-        .u16ProcMinTime     = 0, // SID = 5,"0 = No minimum process time.
-                                 // Every other value in [ms] is the time monitoring of this process.
-                                 // It leads to an error, when the process undershoots this time."
-        .u16ProcRevFunc     = 0, // SID = 6,"0 = Screwing direction of the whole process normal
-                                   // (tightening right) 1 = Screwing direction of the whole process
-                                   // reverse (tightening left)"
-        .u16NbrSteps        = 0, // SID = 7,Number of Steps in this Process
+        .u16ProcPGain       = 0,    // SID = 2,Proportional Gain of the screwing process.
+        .u16ProcIGain       = 0,    // SID = 3,Integral Gain of the screwing process.
+        .u16ProcMaxTime     = 0,    // SID = 4,"0 = No maximum process time.
+                                    // Every other value in [ms] is the timemonitoring of this process.
+                                    // It leads to an error, when the process exceeds this time."
+        .u16ProcMinTime     = 0,    // SID = 5,"0 = No minimum process time.
+                                    // Every other value in [ms] is the time monitoring of this process.
+                                    // It leads to an error, when the process undershoots this time."
+        .u16ProcRevFunc     = 0,    // SID = 6,"0 = Screwing direction of the whole process normal
+                                    // (tightening right) 1 = Screwing direction of the whole process
+                                    // reverse (tightening left)"
+        .u16NbrSteps        = 0,    // SID = 7,Number of Steps in this Process
 
         // Step list.
-        .step_id_1          = 0,
-        .step_id_2          = 0,
-        .step_id_3          = 0,
-        .step_id_4          = 0,
-        .step_id_5          = 0,
-        .step_id_6          = 0,
-        .step_id_7          = 0,
-        .step_id_8          = 0,
-        .step_id_9          = 0,
-        .step_id_10         = 0,
-        .step_id_11         = 0,
-        .step_id_12         = 0,
+        // .step_id_1          = 0,
+        // .step_id_2          = 0,
+        // .step_id_3          = 0,
+        // .step_id_4          = 0,
+        // .step_id_5          = 0,
+        // .step_id_6          = 0,
+        // .step_id_7          = 0,
+        // .step_id_8          = 0,
+        // .step_id_9          = 0,
+        // .step_id_10         = 0,
+        // .step_id_11         = 0,
+        // .step_id_12         = 0,        
     };
     // Program Parameter.
     ProgPara = {

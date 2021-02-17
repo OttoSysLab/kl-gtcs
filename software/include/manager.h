@@ -76,12 +76,16 @@ private:
     bool GetDatabaseScrewSequenceListData(std::vector<GtcsSequenceDataStruct> &seqlist,int jobid);
     bool GetDatabaseScrewStepListData(std::vector<GtcsStepDataStruct> &steplist,int jobid,int seqid);
 
-    // MCB qpi.
+    // MCB api.
     bool GetMcbProcessTelegramFromDBData(McbID4Struct &mcbprocess,McbID2Struct &mcbbasic,std::vector<GtcsStepDataStruct> &steplist);
-    bool GetMcbStepTelegramFromDBData(McbID3Struct &mcbstep,McbID2Struct &mcbbasic,GtcsStepDataStruct &step);
+    bool GetMcbStepTelegramFromDBData(McbID3Struct &mcbstep,McbID2Struct &mcbbasic,GtcsStepDataStruct &dbstep);
     
-    bool SendProcessToMcb(McbID4Struct &mcbprocess);
-    bool SendStepToMcb(McbID3Struct &mcbstep);
+    // Configure Mcb Process parameter.
+    bool GetMcbProcessParameter(McbID4Struct &mcbprocess);
+    bool SetMcbProcessParameter(McbID4Struct &mcbprocess);
+    // Configure Mcb Process step.
+    bool GetMcbStepParameter(McbID3Struct &mcbstep);
+    bool SetMcbStepParameter(McbID3Struct &mcbstep);
 
     // AMS Protocol.
     bool SetDatabaseBasicParaToAns(AmsANS340Struct &amsans,GtcsDatabaseBasicInfo &db_basic);   // DB_BASIC  ->AMS_ANS340

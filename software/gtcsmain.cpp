@@ -20,7 +20,7 @@
 // main.
 int main()
 {
-    #pragma region  step 1
+    #pragma region step 1
     // Initial GtcsManager object.
     GtcsManager manager;
     // Initial GTCS system.
@@ -28,57 +28,57 @@ int main()
     manager.SetEmmcDatabasePath("/var/www/html/database/tcs.db");
     manager.SetRamdiskDatabasePath("/mnt/ramdisk/tcs.db");
     manager.InitialGtcsSystem();
-    
+
     // Check GTCS System.
-    if (manager.CheckGtcsSystem()==true)
+    if (manager.CheckGtcsSystem() == true)
     {
         #ifdef _DEBUG_MODE_
-        std::cout << "Check Gtcs System = OK!! " <<std::endl;
-        #endif 
+        std::cout << "Check Gtcs System = OK!! " << std::endl;
+        #endif
     }
     #pragma endregion
-    
+
     // Ste 3 = Set tcpsocket thread and start.
     #pragma region step 2
     #ifdef _DEBUG_MODE_207_
-    manager.SetGtcsTcpSocketServerInfo("192.168.0.207",9000); // OTTO : 207,ERIC : 202
+    manager.SetGtcsTcpSocketServerInfo("192.168.0.207", 9000); // OTTO : 207,ERIC : 202
     #else
-    manager.SetGtcsTcpSocketServerInfo("127.0.0.1",9000);     // Linux OTTO
-    #endif 
+    manager.SetGtcsTcpSocketServerInfo("127.0.0.1", 9000); // Linux OTTO
+    #endif
     #pragma endregion
 
     #pragma region step 3
     // loop.
     while (true)
-    { 
+    {
         #ifdef _DEBUG_JOB_SEQ_
-        manager.StopAllThread();
-        break;
+        // manager.StopAllThread();
+        // break;
         #endif
-
-        switch(manager.GetMainFSM())
+        
+        switch (manager.GetMainFSM())
         {
-            case MAIN_FSM::READY:
-                #ifdef _DEBUG_MODE_
-                std::cout << "CheckMainFSM = READY" << std::endl;
-                #endif
-                manager.RunGtcsSystem();
-                break;
-            case MAIN_FSM::ALARM:
-                #ifdef _DEBUG_MODE_
-                std::cout << "CheckMainFSM = ALARM" << std::endl;
-                #endif
-                manager.ClearGtcsSystemAlarm();
-                break;
-            case MAIN_FSM::SETTING:
-                #ifdef _DEBUG_MODE_s
-                std::cout << "CheckMainFSM = SETTING" << std::endl;
-                #endif
-                manager.SettingGtcsSystem();
-                break;
+        case MAIN_FSM::READY:
+            #ifdef _DEBUG_MODE_
+            std::cout << "CheckMainFSM = READY" << std::endl;
+            #endif
+            manager.RunGtcsSystem();
+            break;
+        case MAIN_FSM::ALARM:
+            #ifdef _DEBUG_MODE_
+            std::cout << "CheckMainFSM = ALARM" << std::endl;
+            #endif
+            manager.ClearGtcsSystemAlarm();
+            break;
+        case MAIN_FSM::SETTING:
+            #ifdef _DEBUG_MODE_
+            std::cout << "CheckMainFSM = SETTING" << std::endl;
+            #endif
+            manager.SettingGtcsSystem();
+            break;
         }
     }
-    #pragma endregion
+#pragma endregion
     // Join thread.
     // manager.StopAllThread();
     return 0;

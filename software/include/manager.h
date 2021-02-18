@@ -78,14 +78,23 @@ private:
 
     // MCB api.
     bool GetMcbProcessTelegramFromDBData(McbID4Struct &mcbprocess,McbID2Struct &mcbbasic,std::vector<GtcsStepDataStruct> &steplist);
-    bool GetMcbStepTelegramFromDBData(McbID3Struct &mcbstep,McbID2Struct &mcbbasic,GtcsStepDataStruct &dbstep);
+    bool GetMcbStepTelegramFromDBData(McbID3Struct &mcbstep,McbID2Struct &mcbbasic,GtcsStepDataStruct &dbstep,int stepindex);
     
     // Configure Mcb Process parameter.
     bool GetMcbProcessParameter(McbID4Struct &mcbprocess);
     bool SetMcbProcessParameter(McbID4Struct &mcbprocess);
+
     // Configure Mcb Process step.
     bool GetMcbStepParameter(McbID3Struct &mcbstep);
     bool SetMcbStepParameter(McbID3Struct &mcbstep);
+
+    // Configure Mcb StepFlags.
+    bool GetMcbScrewStepFlags(McbID3Struct &mcbstep);
+    bool SetMcbScrewStepFlags(McbID3Struct &mcbstep,GtcsStepDataStruct &dbstep);
+    
+    // Configure Mcb WindowModeFlags.
+    bool GetMcbStepWindowModeFlags(McbID3Struct &mcbstep);
+    bool SetMcbStepWindowModeFlags(McbID3Struct &mcbstep,GtcsStepDataStruct &dbstep);
 
     // AMS Protocol.
     bool SetDatabaseBasicParaToAns(AmsANS340Struct &amsans,GtcsDatabaseBasicInfo &db_basic);   // DB_BASIC  ->AMS_ANS340

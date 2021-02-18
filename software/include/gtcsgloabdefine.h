@@ -24,7 +24,7 @@
 
 #pragma region GTCS MCB Protcol
 #pragma region Parameter
-//
+// MCB_TELEGRAM_TYPE
 enum MCB_TELEGRAM_TYPE : uint8_t{
     CTRL             = 1,
     STATUS           = 2,
@@ -77,6 +77,41 @@ enum CTRL_FLAGS_IDX:int{
     SC_ENABLE         = 13,
     SC_REVERSE        = 14,
     SC_START          = 15,
+};
+// Target type
+enum TARGET_TYPE:int{
+    TORQUE     = 1,
+    ANGLE      = 2,
+    REVOLUTION = 3,
+    TIME       = 4,
+};
+// Configure Mcb StepFlags.
+enum SCREW_STEP_FLAG : int{
+    TIGHTENING_STEP      = 0,
+    PROCESS_GAIN         = 1,
+    STOP_MOTOR_END_STEP  = 2,
+    RESET_REV_STA        = 3,
+    RESET_ANGLE_STA      = 4,
+    STEP_REVERSE         = 5,
+    ERR_REVL_REACHED     = 6,
+    ERR_TRQ_REACHED      = 7,
+    ERR_ANGLE_REACJED    = 8,
+    REVERSED             = 9,
+    NEXT_ANGLE           = 10,
+    NEXT_REVOLUTION      = 11,
+    NEXT_CURRENT         = 12,
+    NEXT_TORQUE          = 13,
+    NEXT_RPM             = 14,
+    NEXT_TIME            = 15, 
+};
+// Configure Mcb WindowModeFlags.
+enum STEP_WINDOW_MODE_FLAG : int {
+    LQ = 10,
+    HQ = 11,
+    WQ = 12,
+    LA = 13,
+    HA = 14,
+    WA = 15,
 };
 //
 enum LOCKED_STATUS : int {

@@ -463,22 +463,23 @@ std::string GtcsManager::GetCurrentMCBErrorMessage(uint32_t errorflags)
  *
  *  @date    2021/02/04
  *
- *  @fn      GtcsManager::ConvertReadlTimeActuralValue()
+ *  @fn      GtcsManager::ConvertReadlTimeActuralValue(AmsDATA300Struct &data300,GtcsStatusTelegramStrcut &mcbstatus)
  * 
  *  @brief   Get MCB realy time status string.
  *
- *  @param   none
+ *  @param   AmsDATA300Struct &data300
+ * 
+ *  @param   McbID2Struct &basic
+ * 
+ *  @param   GtcsStatusTelegramStrcut &mcbstatus
  *
  *  @return  bool
  *
  *  @note    none
  *
  *******************************************************************************************/
-bool GtcsManager::ConvertReadlTimeActuralValue()
+bool GtcsManager::ConvertReadlTimeActuralValue(AmsDATA300Struct &data300,McbID2Struct &basic,GtcsStatusTelegramStrcut &mcbstatus)
 {
-    AmsDATA300Struct *data300 = &bulletin->AmsBulletin.DATA300Struct;
-    GtcsStatusTelegramStrcut *mcbstatus = &mcb->telegram.status.current_status;
-
     // Get status.
     float toolmaxtorque = 5;
     std::array<bool, 16> current_status_flags = BitArray::To16BiteArray(mcb->telegram.status.current_status.u16Statusflags);
@@ -486,19 +487,17 @@ bool GtcsManager::ConvertReadlTimeActuralValue()
     std::array<bool, 32> error_flags = BitArray::To32BiteArray(mcb->telegram.status.current_status.u32ActError);
 
     // Calcuate angle & revalution.
-    float gear = (float)bulletin->McbBulletin.BasicPara.u16GearBoxRatio / 100;                                               // Get gear box.
-    std::string acttorque = DataSorter::GetFloatScaleSortString(((float)mcbstatus->u16ActTorque / 1862) * toolmaxtorque, 4); // Calculate Act torque.
-    std::string angle = DataSorter::GetFloatScaleSortString((float)mcbstatus->u32Angle / (gear * 200) * 360, 1);             // Calculate angle.
-    std::string maxtorque = DataSorter::GetFloatScaleSortString(((float)mcbstatus->u16MaxTorque / 1862) * toolmaxtorque, 4); // Calculate max torque.
-    std::string revolution = DataSorter::GetFloatScaleSortString((float)mcbstatus->u32Revolutions / (gear * 200) * 360, 4);  // Calculate revalution.
+    float gear = (float)basic.u16GearBoxRatio / 100;             // Get gear box.
+    std::string acttorque = DataSorter::GetFloatScaleSortString(((float)mcbstatus.u16ActTorque / 1862) * toolmaxtorque, 4); // Calculate Act torque.
+    std::string angle = DataSorter::GetFloatScaleSortString((float)mcbstatus.u32Angle / (gear * 200) * 360, 1);             // Calculate angle.
+    std::string maxtorque = DataSorter::GetFloatScaleSortString(((float)mcbstatus.u16MaxTorque / 1862) * toolmaxtorque, 4); // Calculate max torque.
+    std::string revolution = DataSorter::GetFloatScaleSortString((float)mcbstatus.u32Revolutions / (gear * 200) * 360, 4);  // Calculate revalution.
     std::string current_rt_status = GetToolRunTimeStatus(bulletin->ScrewHandler);
-    // std::string current_mcb_err = "NO-ERR______________";
-    std::string current_mcb_err = GetCurrentMCBErrorMessage(mcbstatus->u32ActError);
-    // data300->header = std::to_string(0);      // str1:Header+DATA
+    std::string current_mcb_err = GetCurrentMCBErrorMessage(mcbstatus.u32ActError);
     // time.
     time_t now = time(0);
     tm *ltm = localtime(&now);
-    data300->datetime = std::to_string(ltm->tm_year) +
+    data300.datetime = std::to_string(ltm->tm_year) +
                         std::to_string(ltm->tm_mon) +
                         std::to_string(ltm->tm_mday) +
                         '_' +
@@ -506,32 +505,32 @@ bool GtcsManager::ConvertReadlTimeActuralValue()
                         ':' +
                         std::to_string(ltm->tm_min) +
                         ':' +
-                        std::to_string(ltm->tm_sec);           // str2:yyyyMMdd HH:mm:ss
-    data300->checksum = std::to_string(0);                     // str3:check sum ,4 chars
-    data300->cmdsn = std::to_string(0);                        // str4:Command_sn
-    data300->dervicetype = std::to_string(0);                  // str5:Device type
-    data300->toolsn = std::to_string(0);                       // str6:Tool SN
-    data300->dervicesn = std::to_string(0);                    // str7:Device SN
-    data300->jobid = std::to_string(0);                        // str8:Job ID
-    data300->seqid = std::to_string(0);                        // str9:Sequence ID
-    data300->progid = std::to_string(mcbstatus->u16ActProcNr); // str10:Program ID
-    data300->stepid = std::to_string(mcbstatus->u16ActStepNr); // str11:Step ID
-    data300->dircetion = std::to_string(0);                    // str12:Direction
-    data300->torqueuint = std::to_string(0);                   // str13:Torque unit
-    data300->inc_dec = std::to_string(0);                      // str14:INC/DEC
-    data300->last_screwcnt = std::to_string(0);                // str15:Last_screw_count
-    data300->max_screwcnd = std::to_string(0);                 // str16:Max_screw_count
-    data300->fasteningtime = std::to_string(0);                // str17:Fastening time
-    data300->acttorque = acttorque;                            // str18:Torque
-    data300->actangle = angle;                                 // str19:Angle
-    data300->maxtorque = maxtorque;                            // str20:Max Torque
-    data300->revolutions = revolution;                         // str21:Revolutions
-    data300->status = current_rt_status;                       // str22:Status // data300->status        = std::to_string(0); // str22:Status
-    data300->inputio = std::to_string(0);                      // str23:Inputio
-    data300->outputio = std::to_string(0);                     // str24:Outputio
-    data300->errmsg = current_mcb_err;                         // str25:Error Masseage
-    data300->toolcnt = std::to_string(0);                      // str26:Tool Count
-    data300->actrpm = std::to_string(mcbstatus->u16ActRPM);    // str27:RPM
+                        std::to_string(ltm->tm_sec);          // str2:yyyyMMdd HH:mm:ss
+    data300.checksum = std::to_string(0);                     // str3:check sum ,4 chars
+    data300.cmdsn = std::to_string(0);                        // str4:Command_sn
+    data300.dervicetype = std::to_string(0);                  // str5:Device type
+    data300.toolsn = std::to_string(0);                       // str6:Tool SN
+    data300.dervicesn = std::to_string(0);                    // str7:Device SN
+    data300.jobid = std::to_string(0);                        // str8:Job ID
+    data300.seqid = std::to_string(0);                        // str9:Sequence ID
+    data300.progid = std::to_string(mcbstatus.u16ActProcNr);  // str10:Program ID
+    data300.stepid = std::to_string(mcbstatus.u16ActStepNr);  // str11:Step ID
+    data300.dircetion = std::to_string(0);                    // str12:Direction
+    data300.torqueuint = std::to_string(0);                   // str13:Torque unit
+    data300.inc_dec = std::to_string(0);                      // str14:INC/DEC
+    data300.last_screwcnt = std::to_string(0);                // str15:Last_screw_count
+    data300.max_screwcnd = std::to_string(0);                 // str16:Max_screw_count
+    data300.fasteningtime = std::to_string(0);                // str17:Fastening time
+    data300.acttorque = acttorque;                            // str18:Torque
+    data300.actangle = angle;                                 // str19:Angle
+    data300.maxtorque = maxtorque;                            // str20:Max Torque
+    data300.revolutions = revolution;                         // str21:Revolutions
+    data300.status = current_rt_status;                       // str22:Status // data300.status        = std::to_string(0); // str22:Status
+    data300.inputio = std::to_string(0);                      // str23:Inputio
+    data300.outputio = std::to_string(0);                     // str24:Outputio
+    data300.errmsg = current_mcb_err;                         // str25:Error Masseage
+    data300.toolcnt = std::to_string(0);                      // str26:Tool Count
+    data300.actrpm = std::to_string(mcbstatus.u16ActRPM);     // str27:RPM
 
     return true;
 }
@@ -556,7 +555,7 @@ bool GtcsManager::ConvertReadlTimeActuralValue()
  *******************************************************************************************/
 bool GtcsManager::ConvertAmsBasicToMcbStruct(AmsCMD340Struct &amscmd, McbID2Struct &mcb_basic)
 {
-    //
+    // 
     mcb_basic.s16MinTemp = (uint16_t)(std::stof(amscmd.str5) * 10);       // SID = 1,Minimal Temperature of the motor and the motorcontroller.
                                                                           // Underneath this temperature the tool doesn’t work. Unit is [0,1 °C]."
     mcb_basic.s16MaxTemp = (uint16_t)(std::stof(amscmd.str6) * 10);       // SID = 2,Maximal Temperature of the motor and the motorcontroller.
@@ -1363,7 +1362,7 @@ bool GtcsManager::GetMcbStepTelegramFromDBData(McbID3Struct &mcbstep, McbID2Stru
     mcbstep.u16StepMaxCurrent   = mcbbasic.u16MaxCurrent;    // SID = 4,Maximum current of this step. Unit is [mA].
     
     mcbstep.u16StepMaxTorque    = (uint16_t)((dbstep.u16StepMaxTorque/5)*1862);   // SID = 5,Maximum Torque Value is 0- 1862 (max Raw TMD Value)
-    std::cout << "mcbstep.u16StepMaxTorque = "<<std::to_string(mcbstep.u16StepMaxTorque) << std::endl;
+    // std::cout << "mcbstep.u16StepMaxTorque = "<<std::to_string(mcbstep.u16StepMaxTorque) << std::endl;
 
     mcbstep.u16StepMaxRevol     = dbstep.u16StepMaxRevol;    // SID = 6,Maximum Revolutions (after the Gearbox) of this step.
                                                              // Unit is [0,01] (1000 = 10,00 Revolutions)
@@ -1885,7 +1884,10 @@ bool GtcsManager::InitialGtcsSystem()
     for (int index = 0; index < 5; index++)
     {
         mcb->GetMcbPollingStatus(mcb->telegram.ctrl.fasten);
-        ConvertReadlTimeActuralValue();                                         // Calaulate RT actural value.
+        // Calaulate RT actural value.
+        ConvertReadlTimeActuralValue(bulletin->AmsBulletin.DATA300Struct,
+                                    bulletin->McbBulletin.BasicPara,
+                                    mcb->telegram.status.current_status);  
         mcb->telegram.status.last_status = mcb->telegram.status.current_status; // Storage last telegram status.
     }
     bulletin->ScrewHandler.IsEnable = false;
@@ -2102,16 +2104,21 @@ bool GtcsManager::RunGtcsSystem()
         if (bulletin->ScrewHandler.currentseqeuceindex != bulletin->ScrewHandler.lastseqeuceindex)
         {
             /* 讀DB拿program data */
+            
             /* 讀DB拿program data */
+            
             /* 設定list index */
         }
 
         // step 2 = Check sequence list counter.
         if (bulletin->ScrewHandler.GtcsJob.sequencelist.empty() == true)
         {
-            /* 毒DB拿program data */
+            /* 讀DB拿program data */
+            
             /* 毒DB拿sequence list data */
+            
             /* 跳到設定流程 */
+            
             // SetMainFSM(MAIN_FSM::SETTING); // MAIN_FSM Jump to setting mode.
             // return false;
         }
@@ -2144,8 +2151,12 @@ bool GtcsManager::RunGtcsSystem()
         // Step 4 = Polling to MCB & get MCB status.
         if (mcb->GetMcbPollingStatus(ctrltelegram))
         {
-            ConvertReadlTimeActuralValue(); // Calaulate RT actural value.
-            // ...
+            // Calaulate TR.
+            
+            // Calaulate RT actural value.
+            ConvertReadlTimeActuralValue(bulletin->AmsBulletin.DATA300Struct,
+                                        bulletin->McbBulletin.BasicPara,
+                                        mcb->telegram.status.current_status); 
         }
         // Step ? = Package system status to bulletin.
         mcb->telegram.status.last_status = mcb->telegram.status.current_status; //

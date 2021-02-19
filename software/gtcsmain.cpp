@@ -52,8 +52,8 @@ int main()
     while (true)
     {    
         #ifdef _DEBUG_JOB_SEQ_
-        // manager.StopAllThread();
-        // break;
+        manager.StopAllThread();
+        break;
         #endif    
         switch (manager.GetMainFSM())
         {

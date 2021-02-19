@@ -746,8 +746,29 @@ bool GtcsManager::CheckUiSettingFSM(int uicmd)
 {
     switch (uicmd)
     {
+    case AMSCMD::CMD301:
+        #pragma region CMD301 Setting sequence.
+        bulletin->ScrewHandler.GtcsJob.jobid = std::stoi(bulletin->AmsBulletin.CMD301Struct.str5);
+        if (ScrewDriverSwitchJobHandler(bulletin->ScrewHandler.GtcsJob.jobid)==false)
+        {
+            std::cout << "Error to use CMD301 set ScrewDriverSwitchJobHandler." <<std::endl;
+            return false;
+        }
+        else
+        {
+            bulletin->ScrewHandler.currentseqeuceindex  = 0;
+            if(ScrewDriverSwitchSequenceHandler(bulletin->ScrewHandler.GtcsJob.jobid,
+                                    bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentseqeuceindex].seq_id)==false)
+            {
+                std::cout << "Error to use CMD301 set ScrewDriverSwitchSequecneHandler." <<std::endl;
+                return false;
+            }
+            bulletin->ScrewHandler.lastseqeuceindex = bulletin->ScrewHandler.currentseqeuceindex; 
+        }
+        #pragma endregion
+        break;
     case AMSCMD::CMD302:
-#pragma region cmd302 sequence
+        #pragma region cmd302 sequence
         if (bulletin->AmsBulletin.CMD302Struct.str5 == "0")
         {
             bulletin->ScrewHandler.IsEnable = true;
@@ -772,11 +793,12 @@ bool GtcsManager::CheckUiSettingFSM(int uicmd)
         {
             return false;
         }
-#pragma endregion
+        #pragma endregion
         break;
     case AMSCMD::CMD340:
         if (SetSystemBasicParameter(bulletin->AmsBulletin.CMD340Struct, bulletin->McbBulletin.BasicPara) == false)
         {
+            std::cout << "Error to use CMD340 set SetSystemBasicParameter." <<std::endl;
             return false;
         }
         break;
@@ -1675,7 +1697,7 @@ bool GtcsManager::ScrewDriverSwitchJobHandler(int jobid)
  *  @note    none
  *
  *******************************************************************************************/
-bool GtcsManager::ScrewDriverSwitchSequecneHandler(int jobid,int seqid)
+bool GtcsManager::ScrewDriverSwitchSequenceHandler(int jobid,int seqid)
 {
     // Get step data list from tcs.db step table by JobID & seqID.
     int seqindex = bulletin->ScrewHandler.currentseqeuceindex;
@@ -1812,7 +1834,7 @@ bool GtcsManager::SetDatabaseBasicParaToReq(AmsREQ301Struct &amsreq, GtcsDatabas
  *******************************************************************************************/
 bool GtcsManager::CheckUiRequestCmd(std::string reqest_string)
 {
-    // 
+    // Set AMS bulletin.
     if (ams->SetAmsBulletin(reqest_string) == false)
     {
         #ifdef _DEBUG_MODE_
@@ -2119,13 +2141,13 @@ bool GtcsManager::CheckGtcsSystem()
     if (bulletin->checksysok == true)
     {
         // Switch job to normal mode.
-        // ScrewDriverSwitchJobHandler(bulletin->ScrewHandler.GtcsJob.jobid);
-        ScrewDriverSwitchJobHandler(1);
+        ScrewDriverSwitchJobHandler(bulletin->ScrewHandler.GtcsJob.jobid);
+        // ScrewDriverSwitchJobHandler(1);
 
         // Switch sequence list to normal mode.
-        // ScrewDriverSwitchSequecneHandler(bulletin->ScrewHandler.GtcsJob.jobid,
-        //                             bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentseqeuceindex].seq_id);
-        ScrewDriverSwitchSequecneHandler(1,1);
+        ScrewDriverSwitchSequenceHandler(bulletin->ScrewHandler.GtcsJob.jobid,
+                                    bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentseqeuceindex].seq_id);
+        // ScrewDriverSwitchSequenceHandler(1,1);
         // Display some informaiton.
         #ifdef _DEBUG_MODE_
         std::cout << "Gear Ratio = " << std::to_string(bulletin->McbBulletin.BasicPara.u16GearBoxRatio) << std::endl;
@@ -2169,7 +2191,8 @@ bool GtcsManager::RunGtcsSystem()
         if (bulletin->ScrewHandler.lastseqeuceindex!=bulletin->ScrewHandler.currentseqeuceindex)
         {
             // Get MCB program data from database. 
-            ScrewDriverSwitchSequecneHandler(bulletin->ScrewHandler.GtcsJob.jobid,bulletin->ScrewHandler.currentseqeuceindex);
+            ScrewDriverSwitchSequenceHandler(bulletin->ScrewHandler.GtcsJob.jobid,
+                                bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentseqeuceindex].seq_id);
             // 設定list index 
             bulletin->ScrewHandler.lastseqeuceindex = bulletin->ScrewHandler.currentseqeuceindex;
         }
@@ -2202,7 +2225,8 @@ bool GtcsManager::RunGtcsSystem()
         // Step 3 = Polling to MCB & get MCB status.
         if (mcb->GetMcbPollingStatus(ctrltelegram))
         {
-            // Calaulate TR.
+            // Calaulate tigthtening repeat times.
+            
             
             // Calaulate RT actural value.
             ConvertReadlTimeActuralValue(bulletin->AmsBulletin.DATA300Struct,

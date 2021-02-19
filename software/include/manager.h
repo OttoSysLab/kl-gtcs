@@ -98,7 +98,7 @@ private:
 
     // Switch sequence function.
     bool ScrewDriverSwitchJobHandler(int jobid);
-    bool ScrewDriverSwitchSequecneHandler(int jobid,int seqid);
+    bool ScrewDriverSwitchSequenceHandler(int jobid,int seqid);
 
     // AMS Protocol.
     bool SetDatabaseBasicParaToAns(AmsANS340Struct &amsans,GtcsDatabaseBasicInfo &db_basic);   // DB_BASIC  ->AMS_ANS340

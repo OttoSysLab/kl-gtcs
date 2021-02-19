@@ -1,7 +1,7 @@
 #pragma once
 #define _DEBUG_MODE_
 #define _DEBUG_MODE_207_
-#define _DEBUG_JOB_SEQ_
+// #define _DEBUG_JOB_SEQ_
 /*=======================================================================================
  Program Nane  	: gtcs_tlg_decoder.c
  Subject 		: SARM Serial Port Communication Driver Process

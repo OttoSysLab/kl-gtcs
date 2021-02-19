@@ -50,12 +50,11 @@ int main()
     #pragma region step 3
     // loop.
     while (true)
-    {
+    {    
         #ifdef _DEBUG_JOB_SEQ_
         // manager.StopAllThread();
         // break;
-        #endif
-        
+        #endif    
         switch (manager.GetMainFSM())
         {
         case MAIN_FSM::READY:
@@ -78,8 +77,8 @@ int main()
             break;
         }
     }
-#pragma endregion
+    #pragma endregion
     // Join thread.
-    // manager.StopAllThread();
+    manager.StopAllThread();
     return 0;
 }

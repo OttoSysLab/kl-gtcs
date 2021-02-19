@@ -1345,13 +1345,15 @@ bool GtcsManager::GetMcbProcessTelegramFromDBData(McbID4Struct &mcbprocess, McbI
  *  @param   McbID2Struct &mcbbasic
  * 
  *  @param   std::vector<GtcsStepDataStruct> &steplist
+ * 
+ *  @param   bool stopmotorflag
  *
  *  @return  bool
  *
  *  @note    none
  *
  *******************************************************************************************/
-bool GtcsManager::GetMcbStepTelegramFromDBData(McbID3Struct &mcbstep, McbID2Struct &mcbbasic, GtcsStepDataStruct &dbstep,int stepindex)
+bool GtcsManager::GetMcbStepTelegramFromDBData(McbID3Struct &mcbstep, McbID2Struct &mcbbasic, GtcsStepDataStruct &dbstep,int stepindex,bool endstepflag)
 {
     // Package database step data to mcb telegram.
     mcbstep.u8StepID            = 3000 + stepindex;          // 3XXX
@@ -1379,7 +1381,7 @@ bool GtcsManager::GetMcbStepTelegramFromDBData(McbID3Struct &mcbstep, McbID2Stru
     
     // Get Mcb step flags.
     // mcbstep.u16StepFlags        = 0;                         // SID = 12,See description of step flags.
-    SetMcbScrewStepFlags(mcbstep,dbstep);                       // SID = 12,See description of step flags.
+    SetMcbScrewStepFlags(mcbstep,dbstep,endstepflag);                       // SID = 12,See description of step flags.
     
     // Get Mcb windows mode flags.
     // mcbstep.u16WindowMode       = 0;                         // SID = 13,
@@ -1512,13 +1514,15 @@ bool GtcsManager::GetMcbScrewStepFlags(McbID3Struct &mcbstep)
  *  @param   McbID3Struct &mcbstep
  * 
  *  @param   GtcsStepDataStruct &dbstep
+ * 
+ *  @param   bool stopmotor
  *
  *  @return  bool
  *
  *  @note    none
  *
  *******************************************************************************************/
-bool GtcsManager::SetMcbScrewStepFlags(McbID3Struct &mcbstep,GtcsStepDataStruct &dbstep)
+bool GtcsManager::SetMcbScrewStepFlags(McbID3Struct &mcbstep,GtcsStepDataStruct &dbstep,bool stopmotor)
 {
     // Initial step flags. 
     mcbstep.u16StepFlags = 0;
@@ -1535,15 +1539,17 @@ bool GtcsManager::SetMcbScrewStepFlags(McbID3Struct &mcbstep,GtcsStepDataStruct 
             mcbstep.u16StepFlags |= 1<<(uint16_t)SCREW_STEP_FLAG::NEXT_REVOLUTION;
             break;
         case (uint16_t)TARGET_TYPE::TIME:
-            mcbstep.u16StepFlags |= 1<<(uint16_t)SCREW_STEP_FLAG::NEXT_TORQUE;
+            mcbstep.u16StepFlags |= 1<<(uint16_t)SCREW_STEP_FLAG::NEXT_TIME;
             break;
     }        
     
     mcbstep.u16StepFlags |= 1<<(uint16_t)SCREW_STEP_FLAG::RESET_ANGLE_STA;     // 
     mcbstep.u16StepFlags |= 1<<(uint16_t)SCREW_STEP_FLAG::RESET_REV_STA;       //
-    mcbstep.u16StepFlags |= 1<<(uint16_t)SCREW_STEP_FLAG::STOP_MOTOR_END_STEP; //
-    mcbstep.u16StepFlags |= 1<<(uint16_t)SCREW_STEP_FLAG::TIGHTENING_STEP;     //    
-    
+    if (stopmotor==true)
+    {
+        mcbstep.u16StepFlags |= 1<<(uint16_t)SCREW_STEP_FLAG::STOP_MOTOR_END_STEP; //
+        mcbstep.u16StepFlags |= 1<<(uint16_t)SCREW_STEP_FLAG::TIGHTENING_STEP;     //
+    }   
     return true;
 }
 /******************************************************************************************
@@ -1571,7 +1577,7 @@ bool GtcsManager::GetMcbStepWindowModeFlags(McbID3Struct &mcbstep)
  *
  *  @author  Otto Chang
  *
- *  @date    2021/02/17
+ *  @date    2021/02/18
  *
  *  @fn      GtcsManager::SetMcbStepWindowModeFlags(uint16_t &windowmodeflags,GtcsStepDataStruct &dbstep)
  *
@@ -1588,6 +1594,142 @@ bool GtcsManager::GetMcbStepWindowModeFlags(McbID3Struct &mcbstep)
  *******************************************************************************************/
 bool GtcsManager::SetMcbStepWindowModeFlags(McbID3Struct &mcbstep,GtcsStepDataStruct &dbstep)
 {
+    return true;
+}
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
+ *  @date    2021/02/18
+ *
+ *  @fn      GtcsManager::ScrewDriverSwitchJobHandler(int jobid)
+ *
+ *  @brief   ( Constructivist )
+ * 
+ *  @param   int jobid
+ *  
+ *  @return  bool
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+bool GtcsManager::ScrewDriverSwitchJobHandler(int jobid)
+{
+    // Get normal unscrew data form database.
+    if (GetDatabaseUnscrewData(mcb->telegram.ctrl.loosen, jobid) == false)
+    {
+        std::cout << " Error to get unscrew data form database." << std::endl;
+        return false;
+    }
+
+    #ifdef _DEBUG_MODE_
+    std::cout << "--------------------------------- " << std::endl;
+    std::cout << "normal.unscrew.u16Ctrlflags     = " << mcb->telegram.ctrl.loosen.u16Ctrlflags<< std::endl;
+    std::cout << "normal.unscrew.u16ControlMode   = " << mcb->telegram.ctrl.loosen.u16ControlMode<< std::endl;
+    std::cout << "normal.unscrew.u16WorkProc      = " << mcb->telegram.ctrl.loosen.u16WorkProc<< std::endl;
+    std::cout << "normal.unscrew.u16CtrlProgram   = " << mcb->telegram.ctrl.loosen.u16CtrlProgram<< std::endl;
+    std::cout << "normal.unscrew.u16ManRpm        = " << mcb->telegram.ctrl.loosen.u16ManRpm<< std::endl;
+    std::cout << "normal.unscrew.u16ManSlope      = " << mcb->telegram.ctrl.loosen.u16ManSlope<< std::endl;
+    std::cout << "normal.unscrew.u16ManMaxTorque  = " << mcb->telegram.ctrl.loosen.u16ManMaxTorque<< std::endl;
+    std::cout << "normal.unscrew.u16ManMaxCurrent = " << mcb->telegram.ctrl.loosen.u16ManMaxCurrent<< std::endl;
+    std::cout << "normal.unscrew.u16ManRpmMode    = " << mcb->telegram.ctrl.loosen.u16ManRpmMode<< std::endl;
+    std::cout << "normal.unscrew.u8TMDControl     = " << mcb->telegram.ctrl.loosen.u8TMDControl<< std::endl;
+    std::cout << "--------------------------------- " << std::endl;
+    #endif
+
+    // Get screw handler sequence list form database.
+    if (GetDatabaseScrewSequenceListData(bulletin->ScrewHandler.GtcsJob.sequencelist, jobid) == false)
+    {
+        std::cout << "Error to get screw handler sequence list form database." << std::endl;
+        return false;    
+    }
+    else
+    {
+        #ifdef _DEBUG_MODE_
+        int seqlist_size = bulletin->ScrewHandler.GtcsJob.sequencelist.size();
+        for (int i = 0; i < seqlist_size; i++)
+        {
+            std::cout << "normal.screw.jobid = " << std::to_string(bulletin->ScrewHandler.GtcsJob.sequencelist[i].job_id);
+            std::cout << " sequence = " << std::to_string(bulletin->ScrewHandler.GtcsJob.sequencelist[i].seq_id) << std::endl;
+        }
+        #endif
+    }
+    return true;
+}
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
+ *  @date    2021/02/18
+ *
+ *  @fn      GtcsManager::ScrewDriverSwitchSequecneHandler(int jobid,int seqid)
+ *
+ *  @brief   ( Constructivist )
+ * 
+ *  @param   int jobid
+ * 
+ *  @param   int seqid
+ * 
+ *  @return  bool
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+bool GtcsManager::ScrewDriverSwitchSequecneHandler(int jobid,int seqid)
+{
+    // Get step data list from tcs.db step table by JobID & seqID.
+    int seqindex = bulletin->ScrewHandler.currentseqeuceindex;
+    if (GetDatabaseScrewStepListData(bulletin->ScrewHandler.GtcsJob.sequencelist[seqindex].steplist, jobid, seqid) == false)
+    {
+        std::cout << "Error to get Database Screw Step List Data! "<< std::endl;
+        return false;
+    }
+
+    int steplist_size = bulletin->ScrewHandler.GtcsJob.sequencelist[seqindex].steplist.size();
+    std::cout << "steplist_size = "<<std::to_string(steplist_size) << std::endl;
+    // Package step data list to MCB Process telegram & send to MCB.
+    GetMcbProcessTelegramFromDBData(bulletin->McbBulletin.ProcessPara,
+                                    bulletin->McbBulletin.BasicPara,
+                                    bulletin->ScrewHandler.GtcsJob.sequencelist[seqindex].steplist);
+    SetMcbProcessParameter(bulletin->McbBulletin.ProcessPara); // Send process telegram to MCB.
+    bool endstepflag = false;
+    // Package step data list to MCB Step telegram & write to MCB.        
+    for (int i = 0; i < steplist_size; i++)
+    {
+        if (i==(steplist_size-1))
+        {
+            endstepflag = true;
+        }
+
+        GetMcbStepTelegramFromDBData(bulletin->McbBulletin.StepPara,
+                                    bulletin->McbBulletin.BasicPara,
+                                    bulletin->ScrewHandler.GtcsJob.sequencelist[seqindex].steplist[i],
+                                    i,
+                                    endstepflag);
+        #ifdef _DEBUG_MODE_
+        std::cout << "=============================================================================== "  << std::endl;
+        std::cout << "u8StepID            = "<<std::to_string(bulletin->McbBulletin.StepPara.u8StepID)   << std::endl;
+        std::cout << "u8StepName          = "<<bulletin->McbBulletin.StepPara.u8StepName                 << std::endl;
+        std::cout << "u16StepRpm          = "<<std::to_string(bulletin->McbBulletin.StepPara.u16StepRpm) << std::endl;
+        std::cout << "u16StepSlope        = "<<std::to_string(bulletin->McbBulletin.StepPara.u16StepSlope) << std::endl;
+        std::cout << "u16StepMaxCurrent   = "<<std::to_string(bulletin->McbBulletin.StepPara.u16StepMaxCurrent) << std::endl;
+        std::cout << "u16StepMaxTorque    = "<<std::to_string(bulletin->McbBulletin.StepPara.u16StepMaxTorque) << std::endl;
+        std::cout << "u16StepMaxRevol     = "<<std::to_string(bulletin->McbBulletin.StepPara.u16StepMaxRevol) << std::endl;
+        std::cout << "u16StepTime         = "<<std::to_string(bulletin->McbBulletin.StepPara.u16StepTime) << std::endl;
+        std::cout << "s32StepAngle        = "<<std::to_string(bulletin->McbBulletin.StepPara.s32StepAngle) << std::endl;
+        std::cout << "u16StepAngleWindow  = "<<std::to_string(bulletin->McbBulletin.StepPara.u16StepAngleWindow) << std::endl;
+        std::cout << "u16StepTorqueWindow = "<<std::to_string(bulletin->McbBulletin.StepPara.u16StepTorqueWindow) << std::endl;
+        std::cout << "u16MinDutyCycle     = "<<std::to_string(bulletin->McbBulletin.StepPara.u16MinDutyCycle) << std::endl;
+        std::cout << "u16StepFlags        = "<<std::to_string(bulletin->McbBulletin.StepPara.u16StepFlags) << std::endl;
+        std::cout << "u16WindowMode       = "<<std::to_string(bulletin->McbBulletin.StepPara.u16WindowMode) << std::endl;
+        std::cout << "u16AngleWindow2     = "<<std::to_string(bulletin->McbBulletin.StepPara.u16AngleWindow2) << std::endl;
+        std::cout << "u16TorqueWindow2    = "<<std::to_string(bulletin->McbBulletin.StepPara.u16TorqueWindow2) << std::endl;
+        #endif
+        SetMcbStepParameter(bulletin->McbBulletin.StepPara); // Write to MCB.
+    }
+
+    // Set sequence index = 1.
+    // bulletin->ScrewHandler.currentseqeuceindex = 1;
     return true;
 }
 /******************************************************************************************
@@ -1922,8 +2064,6 @@ bool GtcsManager::CheckGtcsSystem()
     GtcsDatabaseBasicInfo basic_emmc;
     GtcsDatabaseBasicInfo basic_ramdisk;
     SetMainFSM(MAIN_FSM::SETTING); // Default MAIN_FSM = SETTING.
-    int seqindex = 0;
-    int steplist_size = 0;
 
     #pragma region check system sequence.
     // Step 1 : Read data from mcb basice parameter.
@@ -1978,89 +2118,14 @@ bool GtcsManager::CheckGtcsSystem()
 
     if (bulletin->checksysok == true)
     {
-        #pragma region switch job function.
-        // Get normal unscrew data form database.
-        if (GetDatabaseUnscrewData(mcb->telegram.ctrl.loosen, 0) == false)
-        {
-            return false;
-        }
-        #ifdef _DEBUG_MODE_
-        std::cout << "--------------------------------- " << std::endl;
-        std::cout << "normal.unscrew.u16Ctrlflags     = " << mcb->telegram.ctrl.loosen.u16Ctrlflags<< std::endl;
-        std::cout << "normal.unscrew.u16ControlMode   = " << mcb->telegram.ctrl.loosen.u16ControlMode<< std::endl;
-        std::cout << "normal.unscrew.u16WorkProc      = " << mcb->telegram.ctrl.loosen.u16WorkProc<< std::endl;
-        std::cout << "normal.unscrew.u16CtrlProgram   = " << mcb->telegram.ctrl.loosen.u16CtrlProgram<< std::endl;
-        std::cout << "normal.unscrew.u16ManRpm        = " << mcb->telegram.ctrl.loosen.u16ManRpm<< std::endl;
-        std::cout << "normal.unscrew.u16ManSlope      = " << mcb->telegram.ctrl.loosen.u16ManSlope<< std::endl;
-        std::cout << "normal.unscrew.u16ManMaxTorque  = " << mcb->telegram.ctrl.loosen.u16ManMaxTorque<< std::endl;
-        std::cout << "normal.unscrew.u16ManMaxCurrent = " << mcb->telegram.ctrl.loosen.u16ManMaxCurrent<< std::endl;
-        std::cout << "normal.unscrew.u16ManRpmMode    = " << mcb->telegram.ctrl.loosen.u16ManRpmMode<< std::endl;
-        std::cout << "normal.unscrew.u8TMDControl     = " << mcb->telegram.ctrl.loosen.u8TMDControl<< std::endl;
-        std::cout << "--------------------------------- " << std::endl;
-        #endif
-        // Get screw handler sequence list form database.
-        if (GetDatabaseScrewSequenceListData(bulletin->ScrewHandler.GtcsJob.sequencelist, 0) == true)
-        {
-            #ifdef _DEBUG_MODE_
-            int seqlist_size = bulletin->ScrewHandler.GtcsJob.sequencelist.size();
-            for (int i = 0; i < seqlist_size; i++)
-            {
-                std::cout << "normal.screw.jobid = " << std::to_string(bulletin->ScrewHandler.GtcsJob.sequencelist[i].job_id);
-                std::cout << " sequence = " << std::to_string(bulletin->ScrewHandler.GtcsJob.sequencelist[i].seq_id) << std::endl;
-            }
-            #endif
-        }
-        #pragma endregion
+        // Switch job to normal mode.
+        // ScrewDriverSwitchJobHandler(bulletin->ScrewHandler.GtcsJob.jobid);
+        ScrewDriverSwitchJobHandler(1);
 
-        #pragma region switch sequence list function.
-        seqindex = bulletin->ScrewHandler.currentseqeuceindex;
-        // Get step data list from tcs.db step table by JobID & seqID.
-        if (GetDatabaseScrewStepListData(bulletin->ScrewHandler.GtcsJob.sequencelist[seqindex].steplist, 0, 1) == false)
-        {
-            return false;
-        }
-        steplist_size = bulletin->ScrewHandler.GtcsJob.sequencelist[seqindex].steplist.size();
-        std::cout << "steplist_size = "<<std::to_string(steplist_size) << std::endl;
-        // Package step data list to MCB Process telegram & send to MCB.
-        GetMcbProcessTelegramFromDBData(bulletin->McbBulletin.ProcessPara,
-                                        bulletin->McbBulletin.BasicPara,
-                                        bulletin->ScrewHandler.GtcsJob.sequencelist[seqindex].steplist);
-        SetMcbProcessParameter(bulletin->McbBulletin.ProcessPara); // Send process telegram to MCB.
-        // Package step data list to MCB Step telegram & write to MCB.        
-        for (int i = 0; i < steplist_size; i++)
-        {
-            /* code */
-            GetMcbStepTelegramFromDBData(bulletin->McbBulletin.StepPara,
-                                        bulletin->McbBulletin.BasicPara,
-                                        bulletin->ScrewHandler.GtcsJob.sequencelist[seqindex].steplist[i],
-                                        i);
-            #ifdef _DEBUG_MODE_
-            std::cout << " =============================================================================== "  << std::endl;
-            std::cout << " u8StepID            = "<<std::to_string(bulletin->McbBulletin.StepPara.u8StepID)   << std::endl;
-            std::cout << " u8StepName          = "<<bulletin->McbBulletin.StepPara.u8StepName                 << std::endl;
-            std::cout << " u16StepRpm          = "<<std::to_string(bulletin->McbBulletin.StepPara.u16StepRpm) << std::endl;
-            std::cout << " u16StepSlope        = "<<std::to_string(bulletin->McbBulletin.StepPara.u16StepSlope) << std::endl;
-            std::cout << " u16StepMaxCurrent   = "<<std::to_string(bulletin->McbBulletin.StepPara.u16StepMaxCurrent) << std::endl;
-            std::cout << " u16StepMaxTorque    = "<<std::to_string(bulletin->McbBulletin.StepPara.u16StepMaxTorque) << std::endl;
-            std::cout << " u16StepMaxRevol     = "<<std::to_string(bulletin->McbBulletin.StepPara.u16StepMaxRevol) << std::endl;
-            std::cout << " u16StepTime         = "<<std::to_string(bulletin->McbBulletin.StepPara.u16StepTime) << std::endl;
-            std::cout << " s32StepAngle        = "<<std::to_string(bulletin->McbBulletin.StepPara.s32StepAngle) << std::endl;
-            std::cout << " u16StepAngleWindow  = "<<std::to_string(bulletin->McbBulletin.StepPara.u16StepAngleWindow) << std::endl;
-            std::cout << " u16StepTorqueWindow = "<<std::to_string(bulletin->McbBulletin.StepPara.u16StepTorqueWindow) << std::endl;
-            std::cout << " u16MinDutyCycle     = "<<std::to_string(bulletin->McbBulletin.StepPara.u16MinDutyCycle) << std::endl;
-            std::cout << " u16StepFlags        = "<<std::to_string(bulletin->McbBulletin.StepPara.u16StepFlags) << std::endl;
-            std::cout << " u16WindowMode       = "<<std::to_string(bulletin->McbBulletin.StepPara.u16WindowMode) << std::endl;
-            std::cout << " u16AngleWindow2     = "<<std::to_string(bulletin->McbBulletin.StepPara.u16AngleWindow2) << std::endl;
-            std::cout << " u16TorqueWindow2    = "<<std::to_string(bulletin->McbBulletin.StepPara.u16TorqueWindow2) << std::endl;
-            // std::cout << " =============================================================================== "<< std::endl;
-            #endif
-            SetMcbStepParameter(bulletin->McbBulletin.StepPara); // Write to MCB.
-        }
-
-        // Set sequence index = 1.
-        bulletin->ScrewHandler.currentseqeuceindex = 0;
-        #pragma endregion
-
+        // Switch sequence list to normal mode.
+        // ScrewDriverSwitchSequecneHandler(bulletin->ScrewHandler.GtcsJob.jobid,
+        //                             bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentseqeuceindex].seq_id);
+        ScrewDriverSwitchSequecneHandler(1,1);
         // Display some informaiton.
         #ifdef _DEBUG_MODE_
         std::cout << "Gear Ratio = " << std::to_string(bulletin->McbBulletin.BasicPara.u16GearBoxRatio) << std::endl;
@@ -2100,30 +2165,16 @@ bool GtcsManager::RunGtcsSystem()
     // Check uisetting status.
     if (bulletin->uisetting == false)
     {
-        // step 1 = Check Job ID.
-        if (bulletin->ScrewHandler.currentseqeuceindex != bulletin->ScrewHandler.lastseqeuceindex)
+        // step 1 =  Compare last sequence index and current sequence index.
+        if (bulletin->ScrewHandler.lastseqeuceindex!=bulletin->ScrewHandler.currentseqeuceindex)
         {
-            /* 讀DB拿program data */
-            
-            /* 讀DB拿program data */
-            
-            /* 設定list index */
+            // Get MCB program data from database. 
+            ScrewDriverSwitchSequecneHandler(bulletin->ScrewHandler.GtcsJob.jobid,bulletin->ScrewHandler.currentseqeuceindex);
+            // 設定list index 
+            bulletin->ScrewHandler.lastseqeuceindex = bulletin->ScrewHandler.currentseqeuceindex;
         }
 
-        // step 2 = Check sequence list counter.
-        if (bulletin->ScrewHandler.GtcsJob.sequencelist.empty() == true)
-        {
-            /* 讀DB拿program data */
-            
-            /* 毒DB拿sequence list data */
-            
-            /* 跳到設定流程 */
-            
-            // SetMainFSM(MAIN_FSM::SETTING); // MAIN_FSM Jump to setting mode.
-            // return false;
-        }
-
-        // step 3 = Config ctrl telegram.
+        // step 2 = Config ctrl telegram.
         if (mcb->telegram.status.loosen_status == false)
         {
             ctrltelegram = mcb->telegram.ctrl.fasten; // Configure fasten ctrl telegram.
@@ -2148,7 +2199,7 @@ bool GtcsManager::RunGtcsSystem()
         std::cout << "telegram.ctrl.IsEnable status = " << std::to_string(bulletin->ScrewHandler.IsEnable) << std::endl;
         #endif
 
-        // Step 4 = Polling to MCB & get MCB status.
+        // Step 3 = Polling to MCB & get MCB status.
         if (mcb->GetMcbPollingStatus(ctrltelegram))
         {
             // Calaulate TR.
@@ -2158,7 +2209,7 @@ bool GtcsManager::RunGtcsSystem()
                                         bulletin->McbBulletin.BasicPara,
                                         mcb->telegram.status.current_status); 
         }
-        // Step ? = Package system status to bulletin.
+        // Step 4 = Package system status to bulletin.
         mcb->telegram.status.last_status = mcb->telegram.status.current_status; //
     }
     else

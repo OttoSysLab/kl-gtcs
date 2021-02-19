@@ -1188,14 +1188,14 @@ class GtcsScrewSequenceHandler : public ScrewSequenceHandler
 private:
     /* data */
 public:
-    GtcsScrewSequenceHandler(/* args */);
-    ~GtcsScrewSequenceHandler();
+    GtcsJobStruct GtcsJob;
     std::string lockedmessage = "___________";
     bool screwok  = false;
     bool IsEnable = false;
     bool loosen   = false;
     int currentseqeuceindex = 0;
     int lastseqeuceindex = 0;
-    GtcsJobStruct GtcsJob;
+    GtcsScrewSequenceHandler(/* args */);
+    ~GtcsScrewSequenceHandler();
 };
 #pragma endregion

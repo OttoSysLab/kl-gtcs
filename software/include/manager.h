@@ -78,7 +78,7 @@ private:
 
     // MCB api.
     bool GetMcbProcessTelegramFromDBData(McbID4Struct &mcbprocess,McbID2Struct &mcbbasic,std::vector<GtcsStepDataStruct> &steplist);
-    bool GetMcbStepTelegramFromDBData(McbID3Struct &mcbstep,McbID2Struct &mcbbasic,GtcsStepDataStruct &dbstep,int stepindex);
+    bool GetMcbStepTelegramFromDBData(McbID3Struct &mcbstep,McbID2Struct &mcbbasic,GtcsStepDataStruct &dbstep,int stepindex,bool endstepflag);
     
     // Configure Mcb Process parameter.
     bool GetMcbProcessParameter(McbID4Struct &mcbprocess);
@@ -90,11 +90,15 @@ private:
 
     // Configure Mcb StepFlags.
     bool GetMcbScrewStepFlags(McbID3Struct &mcbstep);
-    bool SetMcbScrewStepFlags(McbID3Struct &mcbstep,GtcsStepDataStruct &dbstep);
+    bool SetMcbScrewStepFlags(McbID3Struct &mcbstep,GtcsStepDataStruct &dbstep,bool stopmotor);
     
     // Configure Mcb WindowModeFlags.
     bool GetMcbStepWindowModeFlags(McbID3Struct &mcbstep);
     bool SetMcbStepWindowModeFlags(McbID3Struct &mcbstep,GtcsStepDataStruct &dbstep);
+
+    // Switch sequence function.
+    bool ScrewDriverSwitchJobHandler(int jobid);
+    bool ScrewDriverSwitchSequecneHandler(int jobid,int seqid);
 
     // AMS Protocol.
     bool SetDatabaseBasicParaToAns(AmsANS340Struct &amsans,GtcsDatabaseBasicInfo &db_basic);   // DB_BASIC  ->AMS_ANS340

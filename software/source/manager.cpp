@@ -1234,6 +1234,9 @@ bool GtcsManager::GetDatabaseScrewStepListData(std::vector<GtcsStepDataStruct> &
         std::cout << "Fuck ReadDatabaseStepList!!" << std::endl;
         return false;
     }
+    // Check data aval
+
+    
     // Get data from database struct.
     steplist.clear();
     int row_size = db_steplist.size();
@@ -1713,7 +1716,11 @@ bool GtcsManager::ScrewDriverSwitchSequenceHandler(int jobid,int seqid)
     GetMcbProcessTelegramFromDBData(bulletin->McbBulletin.ProcessPara,
                                     bulletin->McbBulletin.BasicPara,
                                     bulletin->ScrewHandler.GtcsJob.sequencelist[seqindex].steplist);
-    SetMcbProcessParameter(bulletin->McbBulletin.ProcessPara); // Send process telegram to MCB.
+    
+    // Check process data 有笑性 for mcb telegram.
+
+    // Send process telegram to MCB.
+    SetMcbProcessParameter(bulletin->McbBulletin.ProcessPara); 
     bool endstepflag = false;
     // Package step data list to MCB Step telegram & write to MCB.        
     for (int i = 0; i < steplist_size; i++)
@@ -1747,13 +1754,45 @@ bool GtcsManager::ScrewDriverSwitchSequenceHandler(int jobid,int seqid)
         std::cout << "u16AngleWindow2     = "<<std::to_string(bulletin->McbBulletin.StepPara.u16AngleWindow2) << std::endl;
         std::cout << "u16TorqueWindow2    = "<<std::to_string(bulletin->McbBulletin.StepPara.u16TorqueWindow2) << std::endl;
         #endif
-        SetMcbStepParameter(bulletin->McbBulletin.StepPara); // Write to MCB.
+
+        // Check step data 有笑性
+
+        // Write to MCB.
+        SetMcbStepParameter(bulletin->McbBulletin.StepPara); 
     }
 
     // Set sequence index = 1.
     // bulletin->ScrewHandler.currentseqeuceindex = 1;
     return true;
 }
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
+ *  @date    2021/02/04
+ *
+ *  @fn      GtcsManager::GetScrewDriverTighteningCounter(GtcsScrewSequenceHandler &screwsequenceandler)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   AmsREQ301Struct &amsreq
+ * 
+ *  @param   GtcsDatabaseBasicInfo &db_basic
+ *
+ *  @return  bool
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+bool GtcsManager::GetScrewDriverTighteningCounter(GtcsScrewSequenceHandler &handler)
+{
+    #ifdef _DEBUG_MODE_
+    // std::cout << "currentseqeuceindex = " <<std::to_string(handler.currentseqeuceindex)<<std::endl;
+    // std::cout << std::to_string() << std::endl;
+    #endif
+    return true;
+}
+
 /******************************************************************************************
  *
  *  @author  Otto Chang
@@ -2226,7 +2265,7 @@ bool GtcsManager::RunGtcsSystem()
         if (mcb->GetMcbPollingStatus(ctrltelegram))
         {
             // Calaulate tigthtening repeat times.
-            
+            GetScrewDriverTighteningCounter(bulletin->ScrewHandler);
             
             // Calaulate RT actural value.
             ConvertReadlTimeActuralValue(bulletin->AmsBulletin.DATA300Struct,

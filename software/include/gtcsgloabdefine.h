@@ -1195,6 +1195,7 @@ public:
     bool loosen   = false;
     int currentseqeuceindex = 0;
     int lastseqeuceindex = 0;
+    int screwcounter = 0;
     GtcsScrewSequenceHandler(/* args */);
     ~GtcsScrewSequenceHandler();
 };

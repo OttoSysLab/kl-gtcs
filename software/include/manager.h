@@ -100,11 +100,15 @@ private:
     bool ScrewDriverSwitchJobHandler(int jobid);
     bool ScrewDriverSwitchSequenceHandler(int jobid,int seqid);
 
+    // Get tightening repeat counter
+    bool GetScrewDriverTighteningCounter(GtcsScrewSequenceHandler &screwsequenceandler);
+
     // AMS Protocol.
     bool SetDatabaseBasicParaToAns(AmsANS340Struct &amsans,GtcsDatabaseBasicInfo &db_basic);   // DB_BASIC  ->AMS_ANS340
     bool SetDatabaseBasicParaToReq(AmsREQ301Struct &amsreq,GtcsDatabaseBasicInfo &db_basic);   // DB_BASIC  ->AMS_REQ301
     void SetAmsCmdBaiscParaToAns(AmsANS340Struct &amsans,AmsCMD340Struct &amscmd);             // AMS_CMD340->AMS_ANS340
-    bool ConvertReadlTimeActuralValue(AmsDATA300Struct &data300,McbID2Struct &basic,GtcsStatusTelegramStrcut &mcbstatus);                                                       // GTCS AMS DATA300
+    // GTCS AMS DATA300
+    bool ConvertReadlTimeActuralValue(AmsDATA300Struct &data300,McbID2Struct &basic,GtcsStatusTelegramStrcut &mcbstatus);  
     bool ConvertAmsBasicToMcbStruct(AmsCMD340Struct &amscmd,McbID2Struct &basic_para);         // AMC_CMD340->DB_Struct
 public:
     // Constructor.

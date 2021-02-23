@@ -17,6 +17,7 @@
 #include "gtcsmcbcomm.h"
 #include "gtcsdatabase.h"
 #include "gtcstcpsocket.h"
+#include "gtcsfilehandler.h"
 
 #pragma region
 class Manager
@@ -51,17 +52,20 @@ private:
     GtcsBulletin *bulletin = GtcsBulletin::GetInstance();
     GtcsMcbComm *mcb       = GtcsMcbComm::GetInstance();
     GtcsAmsProtocol *ams = GtcsAmsProtocol::GetInstance();
+    GtcsFileHandler txthandler;
     
     // method.
     // std::string GetMcbRtStatusString(MCB_RT_STATUS status);
     std::string GetRtLockedStatusMessage(int lcstatusnum);                                        // Define Locksed status string. 
 
-    std::string GetToolRunTimeStatus(GtcsScrewSequenceHandler &screwstatus);
+    bool GetToolRunTimeStatus(GtcsScrewSequenceHandler &screwstatus);
     bool CheckUiSettingFSM(int uicmd);
 
     std::string comport_name = "";
     std::string db_emmc_Path = "";     // Initial database path.
     std::string db_ramdisk_Path = "";  // Initial database path.
+
+    std::string txt_ramdisk_Path = ""; // Initial txt path
     
     // Thread
     std::thread thread_tcpserver;
@@ -101,15 +105,21 @@ private:
     bool ScrewDriverSwitchSequenceHandler(int jobid,int seqid);
 
     // Get tightening repeat counter
-    bool GetScrewDriverTighteningCounter(GtcsScrewSequenceHandler &screwsequenceandler);
+    bool GetScrewDriverTighteningCounter(GtcsScrewSequenceHandler &screwhandler,int &tighteningcounter);
+    bool SetScrewDriverTighteningCounter(GtcsScrewSequenceHandler &screwhandler);
 
     // AMS Protocol.
     bool SetDatabaseBasicParaToAns(AmsANS340Struct &amsans,GtcsDatabaseBasicInfo &db_basic);   // DB_BASIC  ->AMS_ANS340
     bool SetDatabaseBasicParaToReq(AmsREQ301Struct &amsreq,GtcsDatabaseBasicInfo &db_basic);   // DB_BASIC  ->AMS_REQ301
     void SetAmsCmdBaiscParaToAns(AmsANS340Struct &amsans,AmsCMD340Struct &amscmd);             // AMS_CMD340->AMS_ANS340
+        
     // GTCS AMS DATA300
-    bool ConvertReadlTimeActuralValue(AmsDATA300Struct &data300,McbID2Struct &basic,GtcsStatusTelegramStrcut &mcbstatus);  
-    bool ConvertAmsBasicToMcbStruct(AmsCMD340Struct &amscmd,McbID2Struct &basic_para);         // AMC_CMD340->DB_Struct
+    bool GetRealTimeActuralValue(AmsDATA300Struct &data300,GtcsScrewSequenceHandler &screwhandler,GtcsStatusTelegramStrcut &mcbstatus);  
+    // Write data300 to txt.
+    bool ClearRamdiskTxtFile();
+    bool WriteRealTimeActuralValueToRamdisk(AmsDATA300Struct &data300);    
+    // SetAmsBasicToMcbStruct.
+    bool SetAmsBasicToMcbStruct(AmsCMD340Struct &amscmd,McbID2Struct &basic_para);         // AMC_CMD340->DB_Struct
 public:
     // Constructor.
     GtcsManager(/* args */);
@@ -120,6 +130,7 @@ public:
     void SetMcbPortName(std::string comname);
     void SetEmmcDatabasePath(std::string Path);
     void SetRamdiskDatabasePath(std::string Path);
+    void SetRamdiskTxtPath(std::string Path);     // Txt in ramdisk to swap run time screw data.
 
     // Tcp Socke server.
     std::string GetGtcsTcpSocketServerIP();

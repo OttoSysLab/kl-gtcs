@@ -19,6 +19,7 @@ OBJS += ./object/gtcsdatabase.o
 OBJS += ./object/gtcstcpsocket.o 
 OBJS += ./object/gtcsgloabdefine.o 
 OBJS += ./object/gtcsbulletin.o 
+OBJS += ./object/gtcsfilehandler.o 
 OBJS += ./object/common.o 
 OBJS += ./object/gtcsamsprotocol.o 
 OBJS += ./object/gtcsmcbcomm.o
@@ -31,6 +32,7 @@ CMD += gtcsdatabase.o
 CMD += gtcstcpsocket.o 
 CMD += gtcsgloabdefine.o 
 CMD += gtcsbulletin.o 
+CMD += gtcsfilehandler.o 
 CMD += common.o 
 CMD += gtcsamsprotocol.o 
 CMD += gtcsmcbcomm.o
@@ -51,6 +53,7 @@ gtcsdriver: gtcsmain.o \
 	  comport.o \
 	  gtcsgloabdefine.o \
 	  gtcsbulletin.o \
+	  gtcsfilehandler.o \
 	  common.o \
 	  gtcsamsprotocol.o  \
 	  gtcsmcbcomm.o \
@@ -82,11 +85,14 @@ gtcsgloabdefine.o : ./source/gtcsgloabdefine.cpp
 gtcsbulletin.o : ./source/gtcsbulletin.cpp
 	${CC} ${INCLUDE} -c $< -o ./object/gtcsbulletin.o
 
-gtcsamsprotocol.o : ./source/gtcsamsprotocol.cpp 
-	${CC} ${INCLUDE} -c $< -o ./object/gtcsamsprotocol.o
+gtcsfilehandler.o : ./source/gtcsfilehandler.cpp
+	${CC} ${INCLUDE} -c $< -o ./object/gtcsfilehandler.o
 
 gtcsmcbcomm.o : ./source/gtcsmcbcomm.cpp 
 	${CC} ${INCLUDE} -c $< -o ./object/gtcsmcbcomm.o
+
+gtcsamsprotocol.o : ./source/gtcsamsprotocol.cpp 
+	${CC} ${INCLUDE} -c $< -o ./object/gtcsamsprotocol.o
 
 manager.o : ./source/manager.cpp
 	${CC} ${INCLUDE} -c $< -o ./object/manager.o

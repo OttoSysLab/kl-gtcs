@@ -159,7 +159,7 @@ void GtcsTcpSocket::GtcsTcpSocketServerHandler()
         revbuff[n] = '\0';
 
         #ifdef _DEBUG_MODE_
-        std::cout << revbuff << std::endl;
+        // std::cout << revbuff << std::endl;
         #endif
 
         // Decoder CMD dn check request.

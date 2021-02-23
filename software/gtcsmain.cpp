@@ -27,6 +27,7 @@ int main()
     manager.SetMcbPortName("/dev/ttymxc3");
     manager.SetEmmcDatabasePath("/var/www/html/database/tcs.db");
     manager.SetRamdiskDatabasePath("/mnt/ramdisk/tcs.db");
+    manager.SetRamdiskTxtPath("/mnt/ramdisk/data300.txt");
     manager.InitialGtcsSystem();
 
     // Check GTCS System.

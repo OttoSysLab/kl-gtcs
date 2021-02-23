@@ -136,6 +136,7 @@ public:
     GtcsScrewSequenceHandler ScrewHandler;
     bool checksysok = true;
     bool uisetting = false;
+    
     std::string uisockrevcmd = "";
     TcpSocketInfo TcpServer;
     TcpSocketInfo TcpClient;

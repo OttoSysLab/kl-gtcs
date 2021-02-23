@@ -1181,6 +1181,13 @@ public:
     ScrewSequenceHandler(){};
     ~ScrewSequenceHandler(){};
     int statusnum = (int)LOCKED_STATUS::IDLE;
+    bool IsEnable = false;
+    int screwcounter = 0;    
+    int maxscrewcounter = 0;
+    bool screwok  = false;
+    bool screwcounterlocked = false;
+    bool screwrunning = false;
+    bool loosen   = false;
 };
 // Gtcs
 class GtcsScrewSequenceHandler : public ScrewSequenceHandler
@@ -1189,13 +1196,12 @@ private:
     /* data */
 public:
     GtcsJobStruct GtcsJob;
+    uint16_t u16GearBoxRatio;    // SID = 14,Gear box ratio. Unit [0,01] (1600 = 16:1)
+    uint16_t u32StartInp;        // SID = 15,0 = Start Switch,1 = From Displaycontroller Telegram"
     std::string lockedmessage = "___________";
-    bool screwok  = false;
-    bool IsEnable = false;
-    bool loosen   = false;
     int currentseqeuceindex = 0;
     int lastseqeuceindex = 0;
-    int screwcounter = 0;
+    
     GtcsScrewSequenceHandler(/* args */);
     ~GtcsScrewSequenceHandler();
 };

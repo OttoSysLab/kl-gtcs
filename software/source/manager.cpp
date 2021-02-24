@@ -750,10 +750,10 @@ void GtcsManager::SetAmsCmdBaiscParaToAns(AmsANS340Struct &amsans, AmsCMD340Stru
 bool GtcsManager::SetSystemBasicParameter(AmsCMD340Struct &amscmd, McbID2Struct &mcb_basic)
 {
     // Initial value.
-    GtcsDatabase db_emmc(db_emmc_Path);
-    GtcsDatabase db_ramdisk(db_ramdisk_Path);
-    GtcsDatabaseBasicInfo basic_emmc;
-    GtcsDatabaseBasicInfo basic_ramdisk;
+    GtcsTcsDatabase db_emmc(db_emmc_Path);
+    GtcsTcsDatabase db_ramdisk(db_ramdisk_Path);
+    GtcsTcsDatabaseBasicInfo basic_emmc;
+    GtcsTcsDatabaseBasicInfo basic_ramdisk;
 
     // step 1 : Convert AMS cmd340 to mcb struct and update MCB basic paramater.
     SetAmsBasicToMcbStruct(amscmd, mcb_basic);
@@ -989,13 +989,13 @@ bool GtcsManager::CopyDatabase(std::string destination, std::string source)
  *
  *  @date    2021/02/04
  *
- *  @fn      GtcsManager::UpdateMcbBasicParaToDB(GtcsDatabase &db,GtcsDatabaseBasicInfo &db_basic,McbID2Struct &mcb_basic)
+ *  @fn      GtcsManager::UpdateMcbBasicParaToDB(GtcsTcsDatabase &db,GtcsTcsDatabaseBasicInfo &db_basic,McbID2Struct &mcb_basic)
  *
  *  @brief   ( Constructivist )
  *
- *  @param   GtcsDatabase &db
+ *  @param   GtcsTcsDatabase &db
  * 
- *  @param   GtcsDatabaseBasicInfo &db_basic
+ *  @param   GtcsTcsDatabaseBasicInfo &db_basic
  * 
  *  @param   McbID2Struct &mcb_basic
  *
@@ -1004,7 +1004,7 @@ bool GtcsManager::CopyDatabase(std::string destination, std::string source)
  *  @note    none
  *
  *******************************************************************************************/
-bool GtcsManager::UpdateMcbBasicParaToDB(GtcsDatabase &db, GtcsDatabaseBasicInfo &db_basic, McbID2Struct &mcb_basic)
+bool GtcsManager::UpdateMcbBasicParaToDB(GtcsTcsDatabase &db, GtcsTcsDatabaseBasicInfo &db_basic, McbID2Struct &mcb_basic)
 {
     // Update data.
     db_basic.data["mintemp"] = DataSorter::GetFloatScaleSortString((float)mcb_basic.s16MinTemp / 10, 1);               // Min temperature       (REAL)
@@ -1056,7 +1056,7 @@ bool GtcsManager::UpdateMcbBasicParaToDB(GtcsDatabase &db, GtcsDatabaseBasicInfo
  *  @note    none
  *
  *******************************************************************************************/
-bool GtcsManager::CompareBasicStruct(GtcsDatabaseBasicInfo &emmc, GtcsDatabaseBasicInfo &ramdisk)
+bool GtcsManager::CompareBasicStruct(GtcsTcsDatabaseBasicInfo &emmc, GtcsTcsDatabaseBasicInfo &ramdisk)
 {
     bool result = true;
 
@@ -1091,7 +1091,7 @@ bool GtcsManager::CompareBasicStruct(GtcsDatabaseBasicInfo &emmc, GtcsDatabaseBa
  *  @note    none
  *
  *******************************************************************************************/
-bool GtcsManager::SetDatabaseBasicParaToAns(AmsANS340Struct &amsans, GtcsDatabaseBasicInfo &db_basic)
+bool GtcsManager::SetDatabaseBasicParaToAns(AmsANS340Struct &amsans, GtcsTcsDatabaseBasicInfo &db_basic)
 {
     // GtcsBulletin *bulletin = GtcsBulletin::GetInstance();
     // Setting REQ301 value.
@@ -1155,8 +1155,8 @@ bool GtcsManager::SetDatabaseBasicParaToAns(AmsANS340Struct &amsans, GtcsDatabas
 bool GtcsManager::GetDatabaseUnscrewData(GtcsCtrlTelegramStrcut &telegram, int jobid)
 {
     // Initial object.
-    GtcsDatabase db_ramdisk(db_ramdisk_Path);
-    GtcsDatabaseJobInfo jobinfo;
+    GtcsTcsDatabase db_ramdisk(db_ramdisk_Path);
+    GtcsTcsDatabaseJobInfo jobinfo;
     float unscrew_forcerate = 0;
 
     // Get data from database
@@ -1215,8 +1215,8 @@ bool GtcsManager::GetDatabaseUnscrewData(GtcsCtrlTelegramStrcut &telegram, int j
 bool GtcsManager::GetDatabaseScrewSequenceListData(std::vector<GtcsSequenceDataStruct> &seqlist, int jobid)
 {
     // Initial object.
-    GtcsDatabase db_ramdisk(db_ramdisk_Path);
-    std::vector<GtcsDatabaseSequenceInfo> db_seqlist; //
+    GtcsTcsDatabase db_ramdisk(db_ramdisk_Path);
+    std::vector<GtcsTcsDatabaseSequenceInfo> db_seqlist; //
     GtcsSequenceDataStruct seq;                       //
     std::string::size_type sz;                        // alias of size_t
 
@@ -1288,8 +1288,8 @@ bool GtcsManager::GetDatabaseScrewSequenceListData(std::vector<GtcsSequenceDataS
 bool GtcsManager::GetDatabaseScrewStepListData(std::vector<GtcsStepDataStruct> &steplist, int jobid, int seqid)
 {
     // Initial object.
-    GtcsDatabase db_ramdisk(db_ramdisk_Path);
-    std::vector<GtcsDatabaseStepInfo> db_steplist;
+    GtcsTcsDatabase db_ramdisk(db_ramdisk_Path);
+    std::vector<GtcsTcsDatabaseStepInfo> db_steplist;
     GtcsStepDataStruct step;
     std::string::size_type sz; // alias of size_t
 
@@ -1909,7 +1909,7 @@ bool GtcsManager::SetScrewDriverTighteningCounter(GtcsScrewSequenceHandler &scre
  *  @note    none
  *
  *******************************************************************************************/
-bool GtcsManager::SetDatabaseBasicParaToReq(AmsREQ301Struct &amsreq, GtcsDatabaseBasicInfo &db_basic)
+bool GtcsManager::SetDatabaseBasicParaToReq(AmsREQ301Struct &amsreq, GtcsTcsDatabaseBasicInfo &db_basic)
 {
     // GtcsBulletin *bulletin = GtcsBulletin::GetInstance();
     // Setting REQ301 value.
@@ -2241,10 +2241,10 @@ bool GtcsManager::CheckGtcsSystem()
 {
     // Initial value.
     GtcsBulletin *bulletin = GtcsBulletin::GetInstance();
-    GtcsDatabase db_emmc(db_emmc_Path);
-    GtcsDatabase db_ramdisk(db_ramdisk_Path);
-    GtcsDatabaseBasicInfo basic_emmc;
-    GtcsDatabaseBasicInfo basic_ramdisk;
+    GtcsTcsDatabase db_emmc(db_emmc_Path);
+    GtcsTcsDatabase db_ramdisk(db_ramdisk_Path);
+    GtcsTcsDatabaseBasicInfo basic_emmc;
+    GtcsTcsDatabaseBasicInfo basic_ramdisk;
     SetMainFSM(MAIN_FSM::SETTING); // Default MAIN_FSM = SETTING.
 
     #pragma region check system sequence.
@@ -2370,6 +2370,7 @@ bool GtcsManager::RunGtcsSystem()
         else
         {
             ctrltelegram = mcb->telegram.ctrl.loosen; // Config loosen ctrl telegram.
+            // ctrltelegram = mcb->telegram.ctrl.fasten; // Config loosen ctrl telegram.
             mcb->telegram.ctrl.InitialCtrlFlags(ctrltelegram);
             mcb->telegram.ctrl.SetCtrlFlags(ctrltelegram, CTRL_FLAGS_IDX::SC_REVERSE); // Reverse
         }

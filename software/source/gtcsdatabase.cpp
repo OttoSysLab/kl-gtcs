@@ -202,9 +202,9 @@ bool Sqlite3Manager::ReadDatabase(std::string db_Path, std::string table,std::st
  *
  *  @date    2021/02/04
  *
- *  @fn      GtcsDatabase::GtcsDatabase(std::string Path)
+ *  @fn      GtcsTcsDatabase::GtcsTcsDatabase(std::string Path)
  *
- *  @brief   GtcsDatabase Constructor
+ *  @brief   GtcsTcsDatabase Constructor
  *
  *  @param   string Path
  *
@@ -213,7 +213,7 @@ bool Sqlite3Manager::ReadDatabase(std::string db_Path, std::string table,std::st
  *  @note    none
  *
  *******************************************************************************************/
-GtcsDatabase::GtcsDatabase(std::string Path)
+GtcsTcsDatabase::GtcsTcsDatabase(std::string Path)
 {
     dbPath = Path;
 }
@@ -223,9 +223,9 @@ GtcsDatabase::GtcsDatabase(std::string Path)
  *
  *  @date    2021/02/04
  *
- *  @fn      GtcsDatabase::~GtcsDatabase()
+ *  @fn      GtcsTcsDatabase::~GtcsTcsDatabase()
  *
- *  @brief   GtcsDatabase Distructor.
+ *  @brief   GtcsTcsDatabase Distructor.
  *
  *  @param   none
  *
@@ -234,7 +234,7 @@ GtcsDatabase::GtcsDatabase(std::string Path)
  *  @note    none
  *
  *******************************************************************************************/
-GtcsDatabase::~GtcsDatabase()
+GtcsTcsDatabase::~GtcsTcsDatabase()
 {}
 /******************************************************************************************
  *
@@ -242,7 +242,7 @@ GtcsDatabase::~GtcsDatabase()
  *
  *  @date    2021/02/04
  *
- *  @fn      GtcsDatabase::GetDatabasePath()
+ *  @fn      GtcsTcsDatabase::GetDatabasePath()
  *
  *  @brief   ( Constructivist )
  *
@@ -253,7 +253,7 @@ GtcsDatabase::~GtcsDatabase()
  *  @note    none
  *
  *******************************************************************************************/
-std::string GtcsDatabase::GetDatabasePath()
+std::string GtcsTcsDatabase::GetDatabasePath()
 {
     return dbPath;
 }
@@ -263,7 +263,7 @@ std::string GtcsDatabase::GetDatabasePath()
  *
  *  @date    2021/02/04
  *
- *  @fn      GtcsDatabase::SetDatabasePath(std::string Path)
+ *  @fn      GtcsTcsDatabase::SetDatabasePath(std::string Path)
  *
  *  @brief   ( Constructivist )
  *
@@ -274,7 +274,7 @@ std::string GtcsDatabase::GetDatabasePath()
  *  @note    none
  *
  *******************************************************************************************/
-void GtcsDatabase::SetDatabasePath(std::string Path)
+void GtcsTcsDatabase::SetDatabasePath(std::string Path)
 {
     dbPath = Path;
 }
@@ -284,18 +284,18 @@ void GtcsDatabase::SetDatabasePath(std::string Path)
  *
  *  @date    2021/02/04
  *
- *  @fn      GtcsDatabase::ReadDatabaseBasicData(GtcsDatabaseBasicInfo &dbstruct)
+ *  @fn      GtcsTcsDatabase::ReadDatabaseBasicData(GtcsTcsDatabaseBasicInfo &dbstruct)
  *
  *  @brief   ( Constructivist )
  *
- *  @param   GtcsDatabaseBasicInfo &dbstruct
+ *  @param   GtcsTcsDatabaseBasicInfo &dbstruct
  *
  *  @return  bool
  *
  *  @note    none
  *
  *******************************************************************************************/
-bool GtcsDatabase::ReadDatabaseBasicData(GtcsDatabaseBasicInfo &dbstruct)
+bool GtcsTcsDatabase::ReadDatabaseBasicData(GtcsTcsDatabaseBasicInfo &dbstruct)
 {
     // Initial sqlcmd.
     std::string sqlcmd = "SELECT * from basic where rowid = 1;";
@@ -357,18 +357,18 @@ bool GtcsDatabase::ReadDatabaseBasicData(GtcsDatabaseBasicInfo &dbstruct)
  *
  *  @date    2021/02/04
  *
- *  @fn      GtcsDatabase::UpdateDatabaseBasicData(GtcsDatabaseBasicInfo &dbstruct)
+ *  @fn      GtcsTcsDatabase::UpdateDatabaseBasicData(GtcsTcsDatabaseBasicInfo &dbstruct)
  *
  *  @brief   ( Constructivist )
  *
- *  @param   GtcsDatabaseBasicInfo &dbstruct
+ *  @param   GtcsTcsDatabaseBasicInfo &dbstruct
  *
  *  @return  bool
  *
  *  @note    none
  *
  *******************************************************************************************/
-bool GtcsDatabase::UpdateDatabaseBasicData(GtcsDatabaseBasicInfo &dbstruct)
+bool GtcsTcsDatabase::UpdateDatabaseBasicData(GtcsTcsDatabaseBasicInfo &dbstruct)
 {
     // Initial sql command.
     std::string sqlcmd = "update " + dbstruct.dbtablename + " set ";
@@ -431,11 +431,11 @@ bool GtcsDatabase::UpdateDatabaseBasicData(GtcsDatabaseBasicInfo &dbstruct)
  *
  *  @date    2021/02/04
  *
- *  @fn      GtcsDatabase::ReadDatabaseJobData(GtcsDatabaseJobInfo &dbstruct,int jobid)
+ *  @fn      GtcsTcsDatabase::ReadDatabaseJobData(GtcsTcsDatabaseJobInfo &dbstruct,int jobid)
  *
  *  @brief   ( Constructivist )
  *
- *  @param   GtcsDatabaseJobInfo &dbstruct
+ *  @param   GtcsTcsDatabaseJobInfo &dbstruct
  * 
  *  @param   int jobid
  *
@@ -444,7 +444,7 @@ bool GtcsDatabase::UpdateDatabaseBasicData(GtcsDatabaseBasicInfo &dbstruct)
  *  @note    none
  *
  *******************************************************************************************/
-bool GtcsDatabase::ReadDatabaseJobData(GtcsDatabaseJobInfo &dbstruct,int jobid)
+bool GtcsTcsDatabase::ReadDatabaseJobData(GtcsTcsDatabaseJobInfo &dbstruct,int jobid)
 {
     // Initial sqlcmd.
     std::string sqlcmd = "SELECT * from ";
@@ -512,11 +512,11 @@ bool GtcsDatabase::ReadDatabaseJobData(GtcsDatabaseJobInfo &dbstruct,int jobid)
  *
  *  @date    2021/02/04
  *
- *  @fn      GtcsDatabase::ReadDataBaseSequenceList(std::vector<GtcsDatabaseSequenceInfo> &dblist,int jobid)
+ *  @fn      GtcsTcsDatabase::ReadDataBaseSequenceList(std::vector<GtcsTcsDatabaseSequenceInfo> &dblist,int jobid)
  *
  *  @brief   ( Constructivist )
  *
- *  @param   std::vector<GtcsDatabaseSequenceInfo> &dblist
+ *  @param   std::vector<GtcsTcsDatabaseSequenceInfo> &dblist
  * 
  *  @param   int jobid
  *
@@ -525,10 +525,10 @@ bool GtcsDatabase::ReadDatabaseJobData(GtcsDatabaseJobInfo &dbstruct,int jobid)
  *  @note    none
  *
  *******************************************************************************************/
-bool GtcsDatabase::ReadDataBaseSequenceList(std::vector<GtcsDatabaseSequenceInfo> &dblist,int jobid)
+bool GtcsTcsDatabase::ReadDataBaseSequenceList(std::vector<GtcsTcsDatabaseSequenceInfo> &dblist,int jobid)
 {
     // Initial object 
-    GtcsDatabaseSequenceInfo sequencedata;
+    GtcsTcsDatabaseSequenceInfo sequencedata;
     dblist.clear();
 
     // Initial sqlcmd.
@@ -602,11 +602,11 @@ bool GtcsDatabase::ReadDataBaseSequenceList(std::vector<GtcsDatabaseSequenceInfo
  *
  *  @date    2021/02/04
  *
- *  @fn      GtcsDatabase::ReadDatabaseStepList(std::vector<GtcsDatabaseStepInfo> &dblist,int jobid,int seqid)
+ *  @fn      GtcsTcsDatabase::ReadDatabaseStepList(std::vector<GtcsTcsDatabaseStepInfo> &dblist,int jobid,int seqid)
  *
  *  @brief   ( Constructivist )
  *
- *  @param   vector<GtcsDatabaseStepInfo> &dblist
+ *  @param   vector<GtcsTcsDatabaseStepInfo> &dblist
  * 
  *  @param   int jobid
  * 
@@ -617,10 +617,10 @@ bool GtcsDatabase::ReadDataBaseSequenceList(std::vector<GtcsDatabaseSequenceInfo
  *  @note    Get database step list.
  *
  *******************************************************************************************/
-bool GtcsDatabase::ReadDatabaseStepList(std::vector<GtcsDatabaseStepInfo> &dblist,int jobid,int seqid)
+bool GtcsTcsDatabase::ReadDatabaseStepList(std::vector<GtcsTcsDatabaseStepInfo> &dblist,int jobid,int seqid)
 {
     // Initial object 
-    GtcsDatabaseStepInfo stepdata;
+    GtcsTcsDatabaseStepInfo stepdata;
     dblist.clear();
 
     // Initial sqlcmd.

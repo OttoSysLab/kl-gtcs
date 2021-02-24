@@ -1058,52 +1058,52 @@ public:
 };
 
 // Gtcs database basic information.
-class GtcsDatabaseBasicInfo : public GtcsDatabaseBaseInfo
+class GtcsTcsDatabaseBasicInfo : public GtcsDatabaseBaseInfo
 {
 private:
     /* data */
 public:
-    GtcsDatabaseBasicInfo(/* args */);
-    ~GtcsDatabaseBasicInfo();
+    GtcsTcsDatabaseBasicInfo(/* args */);
+    ~GtcsTcsDatabaseBasicInfo();
     std::string dbtablename = "basic";
     void InitialColumnType();
     void InitialColumnName();
 };
 
 // Gtcs database program information.
-class GtcsDatabaseJobInfo : public GtcsDatabaseBaseInfo
+class GtcsTcsDatabaseJobInfo : public GtcsDatabaseBaseInfo
 {
 private:
     /* data */
 public:
-    GtcsDatabaseJobInfo(/* args */);
-    ~GtcsDatabaseJobInfo();
+    GtcsTcsDatabaseJobInfo(/* args */);
+    ~GtcsTcsDatabaseJobInfo();
     std::string dbtablename = "jobsequence";
     void InitialColumnType();
     void InitialColumnName();
 };
 
 // Gtcs database program information.
-class GtcsDatabaseSequenceInfo : public GtcsDatabaseBaseInfo
+class GtcsTcsDatabaseSequenceInfo : public GtcsDatabaseBaseInfo
 {
 private:
     /* data */
 public:
-    GtcsDatabaseSequenceInfo (/* args */);
-    ~GtcsDatabaseSequenceInfo();
+    GtcsTcsDatabaseSequenceInfo (/* args */);
+    ~GtcsTcsDatabaseSequenceInfo();
     std::string dbtablename = "program";
     void InitialColumnType();
     void InitialColumnName();
 };
 
 // Gtcs database step information.
-class GtcsDatabaseStepInfo : public GtcsDatabaseBaseInfo
+class GtcsTcsDatabaseStepInfo : public GtcsDatabaseBaseInfo
 {
 private:
     /* data */
 public:
-    GtcsDatabaseStepInfo (/* args */);
-    ~GtcsDatabaseStepInfo();
+    GtcsTcsDatabaseStepInfo (/* args */);
+    ~GtcsTcsDatabaseStepInfo();
     std::string dbtablename = "step";
     void InitialColumnType();
     void InitialColumnName();

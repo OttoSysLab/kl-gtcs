@@ -186,7 +186,7 @@ void GtcsTcpSocket::GtcsTcpSocketServerHandler()
             {
                 printf("send msg error: %s(errno: %d)\n", strerror(errno), errno);
             }    
-        }       
+        }
         close(connfd);
     }
     close(listenfd);

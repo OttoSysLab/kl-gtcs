@@ -34,30 +34,30 @@ public:
 };
 #pragma endregion
 
-#pragma region GtcsDatabase
-class GtcsDatabase : public Sqlite3Manager
+#pragma region GtcsTcsDatabase
+class GtcsTcsDatabase : public Sqlite3Manager
 {
 private:
     std::string dbPath = "";
 public:
     // Constructor.
-    GtcsDatabase(std::string Path);
-    ~GtcsDatabase();
+    GtcsTcsDatabase(std::string Path);
+    ~GtcsTcsDatabase();
     
     // Get database path.
     std::string GetDatabasePath();                                   //
     void SetDatabasePath(std::string Path);                          // 
        
     // Table = Basic parameter.  
-    bool ReadDatabaseBasicData(GtcsDatabaseBasicInfo &dbstruct);     
-    bool UpdateDatabaseBasicData(GtcsDatabaseBasicInfo &dbstruct);    
+    bool ReadDatabaseBasicData(GtcsTcsDatabaseBasicInfo &dbstruct);     
+    bool UpdateDatabaseBasicData(GtcsTcsDatabaseBasicInfo &dbstruct);    
     
     // Table = jobsequence.
-    bool ReadDatabaseJobData(GtcsDatabaseJobInfo &dbstruct,int jobid);
+    bool ReadDatabaseJobData(GtcsTcsDatabaseJobInfo &dbstruct,int jobid);
 
     // Table = program.     
-    bool ReadDataBaseSequenceList(std::vector<GtcsDatabaseSequenceInfo> &dblist,int jobid);
+    bool ReadDataBaseSequenceList(std::vector<GtcsTcsDatabaseSequenceInfo> &dblist,int jobid);
     
     // Table = step.
-    bool ReadDatabaseStepList(std::vector<GtcsDatabaseStepInfo> &dblist,int jobid,int seqid);
+    bool ReadDatabaseStepList(std::vector<GtcsTcsDatabaseStepInfo> &dblist,int jobid,int seqid);
 };

@@ -2125,7 +2125,7 @@ void GtcsManager::SetRamdiskTxtPath(std::string Path)
  *
  *  @date    2021/02/24
  *
- *  @fn      GtcsManager::SetScrewDataDatabase(std::string Path)
+ *  @fn      GtcsManager::SetScrewStatusDatabase(std::string Path)
  *
  *  @brief   ( Constructivist )
  *
@@ -2136,10 +2136,36 @@ void GtcsManager::SetRamdiskTxtPath(std::string Path)
  *  @note    none
  *
  *******************************************************************************************/
-bool GtcsManager::SetScrewDataDatabase(std::string Path)
+bool GtcsManager::SetScrewStatusDatabase(std::string Path)
 {
     db_screw_ramdisk_Path = Path;
     // 
+    return true;
+}
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
+ *  @date    2021/02/25
+ *
+ *  @fn      GtcsManager::CreatScrewStatusDatabase(std::string Path)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   std::string Path
+ *
+ *  @return  bool 
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+bool GtcsManager::CreatScrewStatusDatabase()
+{
+    GtcsScrewStatusDatabase screwstatusdatabase(db_screw_ramdisk_Path);
+    #if defined(_DEBUG_MODE_)
+    std::cout << "db_screw_ramdisk_Path = " << db_screw_ramdisk_Path <<std::endl;
+    #endif
+    screwstatusdatabase.CreatScrewStatusDatabaseTable(db_screw_ramdisk_Path);
     return true;
 }
 /******************************************************************************************
@@ -2212,7 +2238,7 @@ bool GtcsManager::SetGtcsTcpSocketServerInfo(std::string ip, int port)
 }
 /******************************************************************************************
  *
- *  @author  Otto
+ *  @author  Otto Chang
  *
  *  @date    2021/02/04
  *
@@ -2264,11 +2290,9 @@ bool GtcsManager::InitialGtcsSystem()
                                 bulletin->ScrewHandler,
                                 mcb->telegram.status.current_status);  
         mcb->telegram.status.last_status = mcb->telegram.status.current_status;  // Storage last telegram status.
-        // WriteRealTimeActuralValueToRamdisk(bulletin->AmsBulletin.DATA300Struct); // Wriet data300 to ramdisk txt file.
     }
     bulletin->ScrewHandler.IsEnable = false;
-    // ClearRamdiskTxtFile();
-    // WriteRealTimeActuralValueToRamdisk(bulletin->AmsBulletin.DATA300Struct); // Wriet data300 to ramdisk txt file.
+    
     // Min fsm jump to Check system status.
     SetMainFSM(MAIN_FSM::CHECK_SYS);
     return false;

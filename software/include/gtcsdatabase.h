@@ -24,12 +24,15 @@ private:
 public:
     Sqlite3Manager();
     ~Sqlite3Manager();
-    // Message function.
-    virtual bool CreatDatabase(){};
     
     // Basic function.
     bool UpdateDatabase(std::string db_path,std::string table,std::string sqlcmd);
-    bool ReadDatabase(std::string db_path,std::string table,std::string *ptr);       // int SetDatabaseFilePath(std::string path);
+    // int SetDatabaseFilePath(std::string path);
+    bool ReadDatabase(std::string db_path, std::string table,std::string *ptr);
+    // Get database table & assigne default value.
+    std::string GetDatabaseTableDefaultValue(std::string &tablename,
+                                            std::vector<std::string> &coulunmnames, 
+                                            std::map<std::string,std::string> &coulunmtypes);    
 };
 
 // GtcsTcsDatabase
@@ -41,9 +44,6 @@ public:
     // Constructor.
     GtcsTcsDatabase(std::string Path);
     ~GtcsTcsDatabase();
-    
-    // Creat database.
-    bool CreatDatabase();    // 
        
     // Table = Basic parameter.  
     bool ReadDatabaseBasicData(GtcsTcsDatabaseBasicInfo &dbstruct);     
@@ -70,7 +70,5 @@ public:
     ~GtcsScrewStatusDatabase();
 
     // Create database.
-    bool CreatDatabase();    
-    // Table = screwstatus
-    bool CreatScrewStatusTable(GtcsScrewStatusbaseInfo &db_screwstatus);
+    bool CreatScrewStatusDatabaseTable(std::string screwstatusdbPath);
 };

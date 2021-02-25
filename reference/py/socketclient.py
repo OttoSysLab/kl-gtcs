@@ -205,10 +205,10 @@ def test_socket_client():
     # _ams_dict = _CMD_311
     # _ams_dict = _CMD_312
     # _ams_dict = _CMD_313
-    _ams_dict = _CMD_340       # Initial ID2. 
+    # _ams_dict = _CMD_340       # Initial ID2. 
 
     # AMS REQ.
-    # _ams_dict = _REQ_300
+    _ams_dict = _REQ_300
     # _ams_dict = _REQ_302   
 
     # Convert dictionary to  ams string.

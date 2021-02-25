@@ -651,7 +651,11 @@ void GtcsTcsDatabaseStepInfo ::InitialColumnName()
  *
  *******************************************************************************************/
 GtcsScrewStatusbaseInfo::GtcsScrewStatusbaseInfo()
-{}
+{
+    InitialColumnType();
+    InitialColumnName();
+    InitialDataStruct();
+}
 /******************************************************************************************
  *
  *  @author  Otto

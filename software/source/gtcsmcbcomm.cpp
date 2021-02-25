@@ -951,7 +951,7 @@ int GtcsMcbComm::WriteBasicParameter(McbID2Struct &basic)
     uint8_t main_id = 2;
     uint8_t sub_id[6];
     uint16_t payload_start_index = 8;
-    int delaytime = 20;
+    int delaytime = 50;
     #pragma region First package. (SID1-6)
     telegram.w_request.InitialTelegramArray();
     // Initial sub id array.
@@ -1345,7 +1345,7 @@ int GtcsMcbComm::WriteToMcbFlash(int mainid,int subid,int addr_num)
     int main_id = mainid;
     uint8_t sub_id[6];
     uint16_t payload_start_index = 8;
-    int delaytime = 100;
+    int delaytime = 50;
     #pragma region final package. Wriete to flash.
     telegram.w_request.InitialTelegramArray();
     // Initial sub id array.

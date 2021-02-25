@@ -200,6 +200,80 @@ bool Sqlite3Manager::ReadDatabase(std::string db_Path, std::string table,std::st
  *
  *  @author  Otto
  *
+ *  @date    2021/02/25
+ *
+ *  @fn      Sqlite3Manager::GetDatabaseTableDefaultValue(std::string &tablename, 
+                                                        std::vector<std::string> &columnnames,
+                                                        std::map<std::string,std::string> &coulunmtypes)
+ *
+ *  @brief   Read data from sqlite database.
+ *
+ *  @param   std::string &tablename
+ * 
+ *  @param   std::vector<std::string> &columnnames
+ * 
+ *  @param   std::map<std::string,std::string> &coulunmtypes
+ *
+ *  @return  std::string
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+std::string Sqlite3Manager::GetDatabaseTableDefaultValue(std::string &tablename, 
+                                                        std::vector<std::string> &columnnames, 
+                                                        std::map<std::string,std::string> &coulunmtypes)
+{
+    std::string result = "create table if not exists " + tablename +"(";
+
+    int count = columnnames.size();
+    
+    #if defined(_DEBUG_MODE_)
+    std::cout << "count = "<< std::to_string(count)<< std::endl;
+    #endif
+      
+    for (int i = 0; i < count; i++)
+    {
+        
+        #if defined(_DEBUG_MODE_)
+        std::cout << "coulunmtypes[columnnames[i]] = "<< coulunmtypes[columnnames[i]]<< std::endl;
+        #endif
+
+        if(coulunmtypes[columnnames[i]]== "INTEGER")            // Colunm type = INTEGER.
+        {
+            result += columnnames[i] + " "+ coulunmtypes[columnnames[i]] + " default '0'";
+        }
+        else if (coulunmtypes[columnnames[i]]== "REAL")         // Colunm type = REAL.
+        {
+            result += columnnames[i] + " "+ coulunmtypes[columnnames[i]] + " default '0.0'";
+        }
+        else if (coulunmtypes[columnnames[i]]== "TEXT")         // Colunm type = TEXT.
+        {
+            result += columnnames[i] + " "+ coulunmtypes[columnnames[i]] +" default '-'" ;
+        }
+        else if ( coulunmtypes[columnnames[i]]== "DATETIME")    // Colunm type = TEXT.
+        {
+            result += columnnames[i] + " "+ coulunmtypes[columnnames[i]] +" default 'yyyy:mm:dd'" ;
+        }
+        else
+        {
+            #if defined(_DEBUG_MODE_)
+            std::cout << "Fuck you !!" << std::endl;
+            #endif
+            return "error";
+        }
+
+        if (i!=(count-1))
+        {
+            result += ",";
+        }
+    }    
+    result += ");";
+    return result;
+}
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
  *  @date    2021/02/04
  *
  *  @fn      GtcsTcsDatabase::GtcsTcsDatabase(std::string Path)
@@ -236,27 +310,6 @@ GtcsTcsDatabase::GtcsTcsDatabase(std::string Path)
  *******************************************************************************************/
 GtcsTcsDatabase::~GtcsTcsDatabase()
 {}
-/******************************************************************************************
- *
- *  @author  Otto
- *
- *  @date    2021/02/24
- *
- *  @fn      GtcsTcsDatabase::CreatDatabase()
- *
- *  @brief   ( Constructivist )
- *
- *  @param   none
- *
- *  @return  bool
- *
- *  @note    none
- *
- *******************************************************************************************/
-bool GtcsTcsDatabase::CreatDatabase()
-{
-    return true;
-}
 /******************************************************************************************
  *
  *  @author  Otto
@@ -719,34 +772,57 @@ GtcsScrewStatusDatabase::~GtcsScrewStatusDatabase()
  *
  *  @date    2021/02/24
  *
- *  @fn      GtcsScrewStatusDatabase::CreatDatabase()
+ *  @fn      GtcsScrewStatusDatabase::CreatScrewStatusDatabaseTable(GtcsScrewStatusbaseInfo &screwstatus)
  *
  *  @brief   ( Constructivist )
  *
- *  @param   none
+ *  @param   GtcsScrewStatusbaseInfo &screwstatus
  *
  *  @return  bool
  *
  *  @note    none
  *
  *******************************************************************************************/
-bool GtcsScrewStatusDatabase::CreatDatabase()
+bool GtcsScrewStatusDatabase::CreatScrewStatusDatabaseTable(std::string screwstatusdbPath)
 {
     // Initial sqlite object.
     sqlite3 *db;
     sqlite3_stmt *stmt;
     int rc;
-    std::string sqlcmd 
-        =  "SELECT * from step";
+    std::string sqlcmd = "";
+    GtcsScrewStatusbaseInfo screwstatus;
+    
     // create database.
-    rc = sqlite3_open(dbPath.c_str(),&db);
+    rc = sqlite3_open(screwstatusdbPath.c_str(),&db);
     if (rc)
     {
         std::cout<<"Can't open GtcsScrewStatusDatabase : "<< sqlite3_errmsg(db) <<std::endl;
         return false;
     }
+    // Creat database sql command.
+    sqlcmd = GetDatabaseTableDefaultValue(screwstatus.dbtablename, screwstatus.columnnames,screwstatus.type);
 
+    #if defined(_DEBUG_MODE_)
+    std::cout<< sqlcmd <<std::endl;
+    #endif
     
+    rc = sqlite3_prepare_v2(db, sqlcmd.c_str(),-1, &stmt, NULL);
+    if (rc != SQLITE_OK)
+    {
+        std::cout<<"Read SQL error:"<<sqlite3_errmsg(db)<<std::endl;
+        sqlite3_finalize(stmt);
+        return false;
+    }
+    rc = sqlite3_step(stmt);
+    if (rc != SQLITE_DONE) 
+    {
+        sqlite3_finalize(stmt);
+        std::cout<<"customer not found"<<std::endl;
+        return false;
+    }
+    // Close sqlite3.
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
     return true;
 }
 #pragma endregion

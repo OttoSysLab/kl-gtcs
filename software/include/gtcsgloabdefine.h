@@ -2,7 +2,7 @@
 #define _DEBUG_MODE_
 #define _DEBUG_MODE_207_
 // #define _DEBUG_MODE_202_
-// #define _DEBUG_JOB_SEQ_
+#define _DEBUG_JOB_SEQ_
 /*=======================================================================================
  Program Nane  	: gtcs_tlg_decoder.c
  Subject 		: SARM Serial Port Communication Driver Process
@@ -1118,7 +1118,7 @@ private:
 public:
     GtcsScrewStatusbaseInfo();
     ~GtcsScrewStatusbaseInfo();
-    std::string dbtablename = "screwdata";
+    std::string dbtablename = "screwstatus";
     void InitialColumnType();
     void InitialColumnName();
 };

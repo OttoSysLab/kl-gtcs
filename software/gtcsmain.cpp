@@ -28,6 +28,7 @@ int main()
     manager.SetEmmcDatabasePath("/var/www/html/database/tcs.db");
     manager.SetRamdiskDatabasePath("/mnt/ramdisk/tcs.db");
     manager.SetRamdiskTxtPath("/mnt/ramdisk/data300.txt");
+    manager.SetScrewStatusDatabase("/mnt/ramdisk/data300.db");
     manager.InitialGtcsSystem();
 
     // Check GTCS System.
@@ -54,6 +55,7 @@ int main()
     // loop.
     while (true)
     {    
+        manager.CreatScrewStatusDatabase();
         #ifdef _DEBUG_JOB_SEQ_
         manager.StopAllThread();
         break;

@@ -134,7 +134,8 @@ public:
     void SetRamdiskDatabasePath(std::string Path);
     void SetRamdiskTxtPath(std::string Path);     // Txt in ramdisk to swap run time screw data.
     // Creat screw data database in ramdisk.
-    bool SetScrewDataDatabase(std::string Path);
+    bool SetScrewStatusDatabase(std::string Path);
+    bool CreatScrewStatusDatabase();
 
     // Tcp Socke server.
     std::string GetGtcsTcpSocketServerIP();

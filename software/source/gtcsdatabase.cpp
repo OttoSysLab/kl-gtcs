@@ -240,43 +240,22 @@ GtcsTcsDatabase::~GtcsTcsDatabase()
  *
  *  @author  Otto
  *
- *  @date    2021/02/04
+ *  @date    2021/02/24
  *
- *  @fn      GtcsTcsDatabase::GetDatabasePath()
+ *  @fn      GtcsTcsDatabase::CreatDatabase()
  *
  *  @brief   ( Constructivist )
  *
- *  @param  none
+ *  @param   none
  *
- *  @return  string
+ *  @return  bool
  *
  *  @note    none
  *
  *******************************************************************************************/
-std::string GtcsTcsDatabase::GetDatabasePath()
+bool GtcsTcsDatabase::CreatDatabase()
 {
-    return dbPath;
-}
-/******************************************************************************************
- *
- *  @author  Otto
- *
- *  @date    2021/02/04
- *
- *  @fn      GtcsTcsDatabase::SetDatabasePath(std::string Path)
- *
- *  @brief   ( Constructivist )
- *
- *  @param   string Path
- *
- *  @return  none
- *
- *  @note    none
- *
- *******************************************************************************************/
-void GtcsTcsDatabase::SetDatabasePath(std::string Path)
-{
-    dbPath = Path;
+    return true;
 }
 /******************************************************************************************
  *
@@ -689,6 +668,85 @@ bool GtcsTcsDatabase::ReadDatabaseStepList(std::vector<GtcsTcsDatabaseStepInfo> 
     // Close sqlite3.
     sqlite3_finalize(stmt);
     sqlite3_close(db);
+    return true;
+}
+#pragma endregion
+
+#pragma region Gtcs screw status database.
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2021/02/24
+ *
+ *  @fn      GtcsScrewStatusDatabase::GtcsScrewStatusDatabase()
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   std::string Path
+ * 
+ *  @return  none
+ *
+ *  @note    none.
+ *
+ *******************************************************************************************/
+GtcsScrewStatusDatabase::GtcsScrewStatusDatabase(std::string Path)
+{
+    dbPath = Path;
+}
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2021/02/24
+ *
+ *  @fn      GtcsScrewStatusDatabase::GtcsScrewStatusDatabase()
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   none
+ * 
+ *  @return  none
+ *
+ *  @note    none.
+ *
+ *******************************************************************************************/
+GtcsScrewStatusDatabase::~GtcsScrewStatusDatabase()
+{}
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2021/02/24
+ *
+ *  @fn      GtcsScrewStatusDatabase::CreatDatabase()
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   none
+ *
+ *  @return  bool
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+bool GtcsScrewStatusDatabase::CreatDatabase()
+{
+    // Initial sqlite object.
+    sqlite3 *db;
+    sqlite3_stmt *stmt;
+    int rc;
+    std::string sqlcmd 
+        =  "SELECT * from step";
+    // create database.
+    rc = sqlite3_open(dbPath.c_str(),&db);
+    if (rc)
+    {
+        std::cout<<"Can't open GtcsScrewStatusDatabase : "<< sqlite3_errmsg(db) <<std::endl;
+        return false;
+    }
+
+    
     return true;
 }
 #pragma endregion

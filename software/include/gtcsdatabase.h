@@ -16,25 +16,23 @@
 #include <iostream>
 #include "gtcsgloabdefine.h"
 
-#pragma region Sqlite3Manager 
 // Gtcs database struct.
 class Sqlite3Manager
 {
 private:
+    std::string dbPath = "";
 public:
     Sqlite3Manager();
     ~Sqlite3Manager();
-    // 
-    virtual std::string GetDatabasePath(){};
-    virtual void SetDatabasePath(std::string Path){};
+    // Message function.
+    virtual bool CreatDatabase(){};
     
     // Basic function.
     bool UpdateDatabase(std::string db_path,std::string table,std::string sqlcmd);
     bool ReadDatabase(std::string db_path,std::string table,std::string *ptr);       // int SetDatabaseFilePath(std::string path);
 };
-#pragma endregion
 
-#pragma region GtcsTcsDatabase
+// GtcsTcsDatabase
 class GtcsTcsDatabase : public Sqlite3Manager
 {
 private:
@@ -44,9 +42,8 @@ public:
     GtcsTcsDatabase(std::string Path);
     ~GtcsTcsDatabase();
     
-    // Get database path.
-    std::string GetDatabasePath();                                   //
-    void SetDatabasePath(std::string Path);                          // 
+    // Creat database.
+    bool CreatDatabase();    // 
        
     // Table = Basic parameter.  
     bool ReadDatabaseBasicData(GtcsTcsDatabaseBasicInfo &dbstruct);     
@@ -60,4 +57,20 @@ public:
     
     // Table = step.
     bool ReadDatabaseStepList(std::vector<GtcsTcsDatabaseStepInfo> &dblist,int jobid,int seqid);
+};
+
+// GctsScrewStatusData
+class GtcsScrewStatusDatabase : public Sqlite3Manager
+{
+private:
+    std::string dbPath = "";
+public:
+    // Constructor.
+    GtcsScrewStatusDatabase(std::string Path);
+    ~GtcsScrewStatusDatabase();
+
+    // Create database.
+    bool CreatDatabase();    
+    // Table = screwstatus
+    bool CreatScrewStatusTable(GtcsScrewStatusbaseInfo &db_screwstatus);
 };

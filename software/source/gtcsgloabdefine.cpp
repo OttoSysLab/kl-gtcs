@@ -633,4 +633,132 @@ void GtcsTcsDatabaseStepInfo ::InitialColumnName()
     columnnames.push_back("downshift_torque");      // colunm_index = 24
     columnnames.push_back("downshift_speed");       // colunm_index = 25
 }
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2021/02/24
+ *
+ *  @fn      GtcsScrewStatusbaseInfo::GtcsScrewStatusbaseInfo()
+ *
+ *  @brief   GtcsScrewStatusbaseInfo constructor.
+ *
+ *  @param   none
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+GtcsScrewStatusbaseInfo::GtcsScrewStatusbaseInfo()
+{}
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2021/02/24
+ *
+ *  @fn      GtcsScrewStatusbaseInfo::~GtcsScrewStatusbaseInfo()
+ *
+ *  @brief   GtcsScrewStatusbaseInfo distructor.
+ *
+ *  @param   none
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+GtcsScrewStatusbaseInfo::~GtcsScrewStatusbaseInfo()
+{}
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2021/02/24
+ *
+ *  @fn      GtcsScrewStatusbaseInfo ::InitialColumnType()
+ *
+ *  @brief   Initial Gtcs database screw data table columntype list.
+ *
+ *  @param   none
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+void GtcsScrewStatusbaseInfo ::InitialColumnType()
+{
+    type.insert(std::pair<std::string,std::string>("data_time","DATETIME"));            // colunm_index = 0
+    type.insert(std::pair<std::string,std::string>("device_type","INTEGER"));           // colunm_index = 1
+    type.insert(std::pair<std::string,std::string>("device_sn","TEXT"));                // colunm_index = 2
+    type.insert(std::pair<std::string,std::string>("tool_sn","TEXT"));                  // colunm_index = 3
+    type.insert(std::pair<std::string,std::string>("selected_job","INTEGER"));          // colunm_index = 4
+    type.insert(std::pair<std::string,std::string>("selected_sequence","INTEGER"));     // colunm_index = 5
+    type.insert(std::pair<std::string,std::string>("program_name","TEXT"));             // colunm_index = 6
+    type.insert(std::pair<std::string,std::string>("selected_step","INTEGER"));         // colunm_index = 7 
+    type.insert(std::pair<std::string,std::string>("direction","INTEGER"));             // colunm_index = 8 
+    type.insert(std::pair<std::string,std::string>("fasten_unit","INTEGER"));           // colunm_index = 9
+    type.insert(std::pair<std::string,std::string>("count_direction","INTEGER"));       // colunm_index = 10
+    type.insert(std::pair<std::string,std::string>("last_screw_count","INTEGER"));      // colunm_index = 11
+    type.insert(std::pair<std::string,std::string>("max_screw_count","INTEGER"));       // colunm_index = 12
+    type.insert(std::pair<std::string,std::string>("fasten_time","REAL"));              // colunm_index = 13
+    type.insert(std::pair<std::string,std::string>("fasten_torque","REAL"));            // colunm_index = 14
+    type.insert(std::pair<std::string,std::string>("fasten_angle","REAL"));             // colunm_index = 15
+    type.insert(std::pair<std::string,std::string>("max_torque","REAL"));               // colunm_index = 16
+    type.insert(std::pair<std::string,std::string>("revolutions","REAL"));              // colunm_index = 17
+    type.insert(std::pair<std::string,std::string>("fasten_status","TEXT"));            // colunm_index = 18
+    type.insert(std::pair<std::string,std::string>("input_io","TEXT"));                 // colunm_index = 19
+    type.insert(std::pair<std::string,std::string>("output_io","TEXT"));                // colunm_index = 20
+    type.insert(std::pair<std::string,std::string>("error_masseage","TEXT"));           // colunm_index = 21
+    type.insert(std::pair<std::string,std::string>("tool_count","INTEGER"));            // colunm_index = 22
+    type.insert(std::pair<std::string,std::string>("rpm","INTEGER"));                   // colunm_index = 23
+    type.insert(std::pair<std::string,std::string>("tool_status","INTEGER"));           // colunm_index = 24
+}
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2021/02/04
+ *
+ *  @fn      GtcsScrewStatusbaseInfo ::InitialColumnName()
+ *
+ *  @brief   Initial Gtcs database step table columnname list.
+ *
+ *  @param   none
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+void GtcsScrewStatusbaseInfo ::InitialColumnName()
+{
+    columnnames.push_back("data_time");                  // colunm_index = 0
+    columnnames.push_back("device_type");                // colunm_index = 1
+    columnnames.push_back("device_sn");                  // colunm_index = 2
+    columnnames.push_back("tool_sn");                    // colunm_index = 3
+    columnnames.push_back("selected_job");               // colunm_index = 4
+    columnnames.push_back("selected_sequence");          // colunm_index = 5
+    columnnames.push_back("program_name");               // colunm_index = 6
+    columnnames.push_back("selected_step");              // colunm_index = 7 
+    columnnames.push_back("direction");                  // colunm_index = 8 
+    columnnames.push_back("fasten_unit");                // colunm_index = 9
+    columnnames.push_back("count_direction");            // colunm_index = 10
+    columnnames.push_back("last_screw_count");           // colunm_index = 11
+    columnnames.push_back("max_screw_count");            // colunm_index = 12
+    columnnames.push_back("fasten_time");                // colunm_index = 13
+    columnnames.push_back("fasten_torque");              // colunm_index = 14
+    columnnames.push_back("fasten_angle");               // colunm_index = 15
+    columnnames.push_back("max_torque");                 // colunm_index = 16
+    columnnames.push_back("revolutions");                // colunm_index = 17
+    columnnames.push_back("fasten_status");              // colunm_index = 18
+    columnnames.push_back("input_io");                   // colunm_index = 19
+    columnnames.push_back("output_io");                  // colunm_index = 20
+    columnnames.push_back("error_masseage");             // colunm_index = 21
+    columnnames.push_back("tool_count");                 // colunm_index = 22
+    columnnames.push_back("rpm");                        // colunm_index = 23
+    columnnames.push_back("tool_status");                // colunm_index = 24
+}
 #pragma endregion

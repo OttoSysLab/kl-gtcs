@@ -132,8 +132,7 @@ NtcsManager::NtcsManager()
  *
  *******************************************************************************************/
 NtcsManager::~NtcsManager()
-{
-}
+{}
 /******************************************************************************************
  *
  *  @author  Otto Chang
@@ -152,8 +151,7 @@ NtcsManager::~NtcsManager()
  *
  *******************************************************************************************/
 GtcsManager::GtcsManager()
-{
-}
+{}
 /******************************************************************************************
  *
  *  @author  Otto Chang
@@ -172,8 +170,7 @@ GtcsManager::GtcsManager()
  *
  *******************************************************************************************/
 GtcsManager::~GtcsManager()
-{
-}
+{}
 /******************************************************************************************
  *
  *  @author  Otto Chang
@@ -676,6 +673,30 @@ bool GtcsManager::SetAmsBasicToMcbStruct(AmsCMD340Struct &amscmd, McbID2Struct &
  *
  *  @date    2021/02/04
  *
+ *  @fn      GtcsManager::SetAmsBasicToMcbStruct(AmsCMD340Struct &amscmd,McbID2Struct &mcb_basic)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   AmsCMD340Struct &amscmd
+ * 
+ *  @param   McbID2Struct &mcb_basic
+ *
+ *  @return  bool
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+bool GtcsManager::SetRealTimeActuralValueToDatabase(AmsDATA300Struct &data300)
+{
+
+    return true;
+}
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
+ *  @date    2021/02/04
+ *
  *  @fn      GtcsManager::SetAmsCmdBaiscParaToAns(AmsANS340Struct &amsans,AmsCMD340Struct &amscmd)
  *
  *  @brief   CMD340->ANS340
@@ -759,20 +780,27 @@ bool GtcsManager::SetSystemBasicParameter(AmsCMD340Struct &amscmd, McbID2Struct 
     SetAmsBasicToMcbStruct(amscmd, mcb_basic);
     if (mcb->WriteBasicParameter(mcb_basic) == false)
     {
+        #ifdef _DEBUG_MODE_ 
+        std::cout << "Step 1 : Error to Write basic data to MCB." << std::endl;
+        #endif
         return false;
     }
 
     // Step 2 : Read basic data from emmc database to dbstruct.
     if (db_emmc.ReadDatabaseBasicData(basic_emmc) == false)
     {
+        #ifdef _DEBUG_MODE_ 
         std::cout << "Step 2 : Read basic data from emmc database to dbstruct." << std::endl;
+        #endif
         return false;
     }
 
     // step 3 : Update Mcb struct to emmc basic datatbase.
     if (UpdateMcbBasicParaToDB(db_emmc, basic_emmc, bulletin->McbBulletin.BasicPara) == false)
     {
+        #ifdef _DEBUG_MODE_ 
         std::cout << "Step 3 : Update MCB basic parameter to database." << std::endl;
+        #endif
         return false;
     }
 
@@ -863,7 +891,9 @@ bool GtcsManager::CheckUiSettingFSM(int uicmd)
     case AMSCMD::CMD340:
         if (SetSystemBasicParameter(bulletin->AmsBulletin.CMD340Struct, bulletin->McbBulletin.BasicPara) == false)
         {
+            #ifdef _DEBUG_MODE_
             std::cout << "Error to use CMD340 set SetSystemBasicParameter." <<std::endl;
+            #endif
             return false;
         }
         break;
@@ -1065,7 +1095,7 @@ bool GtcsManager::CompareBasicStruct(GtcsTcsDatabaseBasicInfo &emmc, GtcsTcsData
         if (emmc.data[emmc.columnnames[i]] != ramdisk.data[ramdisk.columnnames[i]])
         {
             result = false;
-            std::cout << " key = " << emmc.columnnames[i] << "is not the same.";
+            std::cout << " key = " << emmc.columnnames[i] << " is not the same.";
             std::cout << " emmc_value = " << emmc.data[emmc.columnnames[i]];
             std::cout << " ramdisk_value = " << ramdisk.data[ramdisk.columnnames[i]] << std::endl;
         }
@@ -2088,6 +2118,29 @@ void GtcsManager::SetRamdiskDatabasePath(std::string Path)
 void GtcsManager::SetRamdiskTxtPath(std::string Path)
 {
     txt_ramdisk_Path = Path;
+}
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
+ *  @date    2021/02/24
+ *
+ *  @fn      GtcsManager::SetScrewDataDatabase(std::string Path)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   std::string Path
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+bool GtcsManager::SetScrewDataDatabase(std::string Path)
+{
+    db_screw_ramdisk_Path = Path;
+    // 
+    return true;
 }
 /******************************************************************************************
  *

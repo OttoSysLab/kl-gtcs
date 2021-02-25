@@ -62,10 +62,11 @@ private:
     bool CheckUiSettingFSM(int uicmd);
 
     std::string comport_name = "";
-    std::string db_emmc_Path = "";     // Initial database path.
-    std::string db_ramdisk_Path = "";  // Initial database path.
+    std::string db_emmc_Path = "";          // Initial database path.
+    std::string db_ramdisk_Path = "";       // Initial database path.
 
-    std::string txt_ramdisk_Path = ""; // Initial txt path
+    std::string txt_ramdisk_Path = "";      // Initial txt path
+    std::string db_screw_ramdisk_Path = ""; //Initial database path.
     
     // Thread
     std::thread thread_tcpserver;
@@ -119,7 +120,8 @@ private:
     bool ClearRamdiskTxtFile();
     bool WriteRealTimeActuralValueToRamdisk(AmsDATA300Struct &data300);    
     // SetAmsBasicToMcbStruct.
-    bool SetAmsBasicToMcbStruct(AmsCMD340Struct &amscmd,McbID2Struct &basic_para);         // AMC_CMD340->DB_Struct
+    bool SetAmsBasicToMcbStruct(AmsCMD340Struct &amscmd,McbID2Struct &basic_para);       // AMC_CMD340->DB_Struct
+    bool SetRealTimeActuralValueToDatabase(AmsDATA300Struct &data300);                   // AMC_CMD300->DB_Struct
 public:
     // Constructor.
     GtcsManager(/* args */);
@@ -131,6 +133,8 @@ public:
     void SetEmmcDatabasePath(std::string Path);
     void SetRamdiskDatabasePath(std::string Path);
     void SetRamdiskTxtPath(std::string Path);     // Txt in ramdisk to swap run time screw data.
+    // Creat screw data database in ramdisk.
+    bool SetScrewDataDatabase(std::string Path);
 
     // Tcp Socke server.
     std::string GetGtcsTcpSocketServerIP();

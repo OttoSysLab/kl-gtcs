@@ -1,6 +1,7 @@
 #pragma once
 #define _DEBUG_MODE_
 #define _DEBUG_MODE_207_
+// #define _DEBUG_MODE_202_
 // #define _DEBUG_JOB_SEQ_
 /*=======================================================================================
  Program Nane  	: gtcs_tlg_decoder.c
@@ -1109,6 +1110,19 @@ public:
     void InitialColumnName();
 };
 #pragma endregion
+#pragma region 
+// Gtcs database screw data information.
+class GtcsScrewStatusbaseInfo :public GtcsDatabaseBaseInfo
+{
+private:
+public:
+    GtcsScrewStatusbaseInfo();
+    ~GtcsScrewStatusbaseInfo();
+    std::string dbtablename = "screwdata";
+    void InitialColumnType();
+    void InitialColumnName();
+};
+#pragma endregion
 #pragma region GTCS JobSequence
 // Gtcs step data struct.
 typedef struct
@@ -1174,6 +1188,7 @@ typedef struct
     std::vector<GtcsSequenceDataStruct> sequencelist; 
 }GtcsJobStruct;
 #pragma endregion
+
 #pragma region GTCS Screw sequence handler
 class ScrewSequenceHandler
 {

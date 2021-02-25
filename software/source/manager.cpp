@@ -515,9 +515,9 @@ bool GtcsManager::GetRealTimeActuralValue(AmsDATA300Struct &data300,GtcsScrewSeq
     data300.stepid = std::to_string(mcbstatus.u16ActStepNr);  // str11:Step ID
     data300.dircetion = std::to_string(0);                    // str12:Direction
     data300.torqueuint = std::to_string(0);                   // str13:Torque unit
-    data300.inc_dec = std::to_string(0);                      // str14:INC/DEC
-    data300.last_screwcnt = std::to_string(screwhandler.screwcounter);                // str15:Last_screw_count
-    data300.max_screwcnd = std::to_string(screwhandler.maxscrewcounter);                 // str16:Max_screw_count
+    data300.inc_dec = std::to_string(0);                                    // str14:INC/DEC
+    data300.last_screwcnt = std::to_string(screwhandler.screwcounter);      // str15:Last_screw_count
+    data300.max_screwcnd = std::to_string(screwhandler.maxscrewcounter);    // str16:Max_screw_count
     data300.fasteningtime = std::to_string(0);                // str17:Fastening time
     data300.acttorque = acttorque;                            // str18:Torque
     data300.actangle = angle;                                 // str19:Angle
@@ -2534,13 +2534,14 @@ bool GtcsManager::RunGtcsSystem()
             #endif
 
             // Calaulate RT actural value.
-            GetRealTimeActuralValue(bulletin->AmsBulletin.DATA300Struct,
-                                    bulletin->ScrewHandler,
-                                    mcb->telegram.status.current_status);
+            GetRealTimeActuralValue(bulletin->AmsBulletin.DATA300Struct,bulletin->ScrewHandler,mcb->telegram.status.current_status);
             // Write RealTime Actural Value to ramdisk. 
             if (bulletin->ScrewHandler.screwrunning ==true)
             {
                 WriteRealTimeActuralValueToRamdisk(bulletin->AmsBulletin.DATA300Struct);
+            }
+            else{
+                ;
             }
         }
         // Step 4 = Package system status to bulletin.

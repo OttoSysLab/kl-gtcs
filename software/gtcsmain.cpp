@@ -29,6 +29,7 @@ int main()
     manager.SetRamdiskDatabasePath("/mnt/ramdisk/tcs.db");
     manager.SetRamdiskTxtPath("/mnt/ramdisk/data300.txt");
     manager.SetScrewStatusDatabase("/mnt/ramdisk/data300.db");
+    manager.CreatScrewStatusDatabase();                       // Create database.
     manager.InitialGtcsSystem();
 
     // Check GTCS System.
@@ -55,11 +56,6 @@ int main()
     // loop.
     while (true)
     {    
-        manager.CreatScrewStatusDatabase();
-        #ifdef _DEBUG_JOB_SEQ_
-        manager.StopAllThread();
-        break;
-        #endif    
         switch (manager.GetMainFSM())
         {
         case MAIN_FSM::READY:
@@ -81,6 +77,11 @@ int main()
             manager.SettingGtcsSystem();
             break;
         }
+        
+        #if defined(_DEBUG_JOB_SEQ_)
+        manager.StopAllThread();
+        break;
+        #endif
     }
     #pragma endregion
     // Join thread.

@@ -99,8 +99,8 @@ _CMD_340 = {
     "str9"  : "1",                                        # torque sensor type,TCS300=0,TCS500=1,TCS700=2,TCC_3NM=3,TCC_LT=4
     "str10" : "100.0",                                    # Max duty cycle
     "str11" : "5.0",                                      # Max torque 
-    "str12" : "100",                                      # PWM frequency 
-    "str13" : "1199",                                     # Max rpm
+    "str12" : "2",                                        # PWM frequency 
+    "str13" : "1200",                                     # Max rpm
     "str14" : "2000",                                     # Max slope
     "str15" : "10.0",                                     # Min bus voltage
     "str16" : "80.0",                                     # Max bus voltage
@@ -205,10 +205,10 @@ def test_socket_client():
     # _ams_dict = _CMD_311
     # _ams_dict = _CMD_312
     # _ams_dict = _CMD_313
-    # _ams_dict = _CMD_340       # Initial ID2. 
+    _ams_dict = _CMD_340       # Initial ID2. 
 
     # AMS REQ.
-    _ams_dict = _REQ_300
+    # _ams_dict = _REQ_300
     # _ams_dict = _REQ_302   
 
     # Convert dictionary to  ams string.

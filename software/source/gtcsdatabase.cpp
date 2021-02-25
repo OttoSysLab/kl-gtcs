@@ -276,6 +276,76 @@ std::string Sqlite3Manager::GetDatabaseTableDefaultValue(std::string &tablename,
  *
  *  @date    2021/02/04
  *
+ *  @fn      Sqlite3Manager::GetDatabaseInsertSqlCommand(std::string &tablename,
+                                                        std::vector<std::string> &colunmnames,
+                                                        std::map<std::string,std::string> &colunmdatas)
+ *
+ *  @brief   GtcsTcsDatabase Constructor
+ *
+ *  @param   std::string &tablename
+ * 
+ *  @param   std::vector<std::string> &colunmnames
+ * 
+ *  @param   std::map<std::string,std::string> &colunmtypes
+ * 
+ *  @param   std::map<std::string,std::string> &colunmdatas
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+std::string Sqlite3Manager::GetDatabaseInsertSqlCommand(std::string &tablename,
+                                                        std::vector<std::string> &colunmnames,
+                                                        std::map<std::string,std::string> &colunmtypes,
+                                                        std::map<std::string,std::string> &colunmdatas)
+{
+    // Counter loop size
+    int count = colunmnames.size();
+    // Initial value.
+    std::string result = "insert into " + tablename + "(";
+    // 
+    for (int i = 0; i < count; i++)
+    {
+        result += colunmnames[i];
+        // Assign "," aftern data.
+        if (i!=(count-1))
+        {
+            result += ",";
+        }
+    }
+    result+=") values (";
+
+    // Combine sql command.
+    for (int i = 0; i < count; i++)
+    {
+        if (colunmtypes[colunmnames[i]]=="TEXT")
+        {
+            result += "'"+colunmdatas[colunmnames[i]]+"'";
+        }
+        else if (colunmtypes[colunmnames[i]]=="DATETIME")
+        {
+            result += "'"+colunmdatas[colunmnames[i]]+"'";
+        }
+        else
+        {
+            result += colunmdatas[colunmnames[i]];
+        }        
+        // Assign "," aftern data.
+        if (i!=(count-1))
+        {
+            result += ",";
+        }
+    }
+    result+=")";
+    return result; 
+}
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2021/02/04
+ *
  *  @fn      GtcsTcsDatabase::GtcsTcsDatabase(std::string Path)
  *
  *  @brief   GtcsTcsDatabase Constructor
@@ -772,7 +842,66 @@ GtcsScrewStatusDatabase::~GtcsScrewStatusDatabase()
  *
  *  @date    2021/02/24
  *
- *  @fn      GtcsScrewStatusDatabase::CreatScrewStatusDatabaseTable(GtcsScrewStatusbaseInfo &screwstatus)
+ *  @fn      GtcsScrewStatusDatabase::CreatScrewStatusDatabaseTable()
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   none
+ *
+ *  @return  bool
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+bool GtcsScrewStatusDatabase::CreatScrewStatusDatabaseTable()
+{
+    // Initial sqlite object.
+    sqlite3 *db;
+    sqlite3_stmt *stmt;
+    int rc;
+    std::string sqlcmd = "";
+    GtcsScrewStatusbaseInfo screwstatus;
+    
+    // create database.
+    rc = sqlite3_open(dbPath.c_str(),&db);
+    if (rc)
+    {
+        std::cout<<"Can't open GtcsScrewStatusDatabase : "<< sqlite3_errmsg(db) <<std::endl;
+        return false;
+    }
+    // Creat database sql command.
+    sqlcmd = GetDatabaseTableDefaultValue(screwstatus.dbtablename, screwstatus.columnnames,screwstatus.type);
+
+    #if defined(_DEBUG_MODE_)
+    // std::cout<< sqlcmd <<std::endl;
+    #endif
+    
+    rc = sqlite3_prepare_v2(db, sqlcmd.c_str(),-1, &stmt, NULL);
+    if (rc != SQLITE_OK)
+    {
+        std::cout<<"Read SQL error:"<<sqlite3_errmsg(db)<<std::endl;
+        sqlite3_finalize(stmt);
+        return false;
+    }
+    rc = sqlite3_step(stmt);
+    if (rc != SQLITE_DONE) 
+    {
+        sqlite3_finalize(stmt);
+        std::cout<<"customer not found"<<std::endl;
+        return false;
+    }
+    // Close sqlite3.
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+    return true;
+}
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2021/02/25
+ *
+ *  @fn      GtcsScrewStatusDatabase::InsertScrewStatusToDatabaseTable(GtcsScrewStatusbaseInfo &screwstatus)
  *
  *  @brief   ( Constructivist )
  *
@@ -783,24 +912,24 @@ GtcsScrewStatusDatabase::~GtcsScrewStatusDatabase()
  *  @note    none
  *
  *******************************************************************************************/
-bool GtcsScrewStatusDatabase::CreatScrewStatusDatabaseTable(std::string screwstatusdbPath)
+bool GtcsScrewStatusDatabase::InsertScrewStatusToDatabaseTable(GtcsScrewStatusbaseInfo &screwstatus)
 {
-    // Initial sqlite object.
+// Initial sqlite object.
     sqlite3 *db;
     sqlite3_stmt *stmt;
     int rc;
-    std::string sqlcmd = "";
-    GtcsScrewStatusbaseInfo screwstatus;
-    
+    std::string sqlcmd = GetDatabaseInsertSqlCommand(screwstatus.dbtablename,
+                                                    screwstatus.columnnames,
+                                                    screwstatus.type,
+                                                    screwstatus.data);
+
     // create database.
-    rc = sqlite3_open(screwstatusdbPath.c_str(),&db);
+    rc = sqlite3_open(dbPath.c_str(),&db);
     if (rc)
     {
         std::cout<<"Can't open GtcsScrewStatusDatabase : "<< sqlite3_errmsg(db) <<std::endl;
         return false;
-    }
-    // Creat database sql command.
-    sqlcmd = GetDatabaseTableDefaultValue(screwstatus.dbtablename, screwstatus.columnnames,screwstatus.type);
+    }    
 
     #if defined(_DEBUG_MODE_)
     std::cout<< sqlcmd <<std::endl;

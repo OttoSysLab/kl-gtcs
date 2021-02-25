@@ -33,6 +33,11 @@ public:
     std::string GetDatabaseTableDefaultValue(std::string &tablename,
                                             std::vector<std::string> &coulunmnames, 
                                             std::map<std::string,std::string> &coulunmtypes);    
+    // Get Database Insert Sql Command. 
+    std::string GetDatabaseInsertSqlCommand(std::string &tablename,
+                                            std::vector<std::string> &coulunmnames,
+                                            std::map<std::string,std::string> &coulunmtypes,
+                                            std::map<std::string,std::string> &coulunmtdatas); 
 };
 
 // GtcsTcsDatabase
@@ -70,5 +75,6 @@ public:
     ~GtcsScrewStatusDatabase();
 
     // Create database.
-    bool CreatScrewStatusDatabaseTable(std::string screwstatusdbPath);
+    bool CreatScrewStatusDatabaseTable();
+    bool InsertScrewStatusToDatabaseTable(GtcsScrewStatusbaseInfo &screwstatus);
 };

@@ -686,9 +686,48 @@ bool GtcsManager::SetAmsBasicToMcbStruct(AmsCMD340Struct &amscmd, McbID2Struct &
  *  @note    none
  *
  *******************************************************************************************/
-bool GtcsManager::SetRealTimeActuralValueToDatabase(AmsDATA300Struct &data300)
+bool GtcsManager::InsertRealTimeActuralValueToDatabase(AmsDATA300Struct &data300)
 {
+    // Initial object.
+    GtcsScrewStatusbaseInfo screwstatus;
+    GtcsScrewStatusDatabase dbscrewstatus(db_screw_ramdisk_Path);
+    
+    // Assign data to screw status information struct.
+    screwstatus.data["data_time"]         = data300.datetime;            // colunm_index = 0
+    //screwstatus.data["data_time"]         = "yyyy:mm:dd";            // colunm_index = 0
 
+    screwstatus.data["device_type"]       = data300.dervicetype;         // colunm_index = 1
+    screwstatus.data["device_sn"]         = data300.dervicesn;           // colunm_index = 2
+    screwstatus.data["tool_sn"]           = data300.toolsn;              // colunm_index = 3
+    screwstatus.data["selected_job"]      = data300.jobid;               // colunm_index = 4
+    screwstatus.data["selected_sequence"] = data300.seqid;               // colunm_index = 5
+    screwstatus.data["program_name"]      = data300.seqid;               // colunm_index = 6
+    screwstatus.data["selected_step"]     = data300.stepid;              // colunm_index = 7 
+    screwstatus.data["direction"]         = data300.dircetion;           // colunm_index = 8 
+    screwstatus.data["fasten_unit"]       = data300.torqueuint;          // colunm_index = 9
+    screwstatus.data["count_direction"]   = data300.inc_dec;             // colunm_index = 10
+    screwstatus.data["last_screw_count"]  = data300.last_screwcnt;       // colunm_index = 11
+    screwstatus.data["max_screw_count"]   = data300.max_screwcnd;        // colunm_index = 12
+    screwstatus.data["fasten_time"]       = data300.fasteningtime;       // colunm_index = 13
+    screwstatus.data["fasten_torque"]     = data300.acttorque;           // colunm_index = 14
+    screwstatus.data["fasten_angle"]      = data300.actangle;            // colunm_index = 15
+    screwstatus.data["max_torque"]        = data300.maxtorque;           // colunm_index = 16
+    screwstatus.data["revolutions"]       = data300.revolutions;         // colunm_index = 17
+    screwstatus.data["fasten_status"]     = data300.status;              // colunm_index = 18
+    screwstatus.data["input_io"]          = data300.inputio;             // colunm_index = 19
+    screwstatus.data["output_io"]         = data300.outputio;            // colunm_index = 20
+    screwstatus.data["error_masseage"]    = data300.errmsg;              // colunm_index = 21
+    screwstatus.data["tool_count"]        = data300.toolcnt;             // colunm_index = 22
+    screwstatus.data["rpm"]               = data300.actrpm;              // colunm_index = 23
+    screwstatus.data["tool_status"]       = data300.toolstatus;          // colunm_index = 24
+
+    if (dbscrewstatus.InsertScrewStatusToDatabaseTable(screwstatus) == false)
+    {
+        #if defined(_DEBUG_MODE_)
+        std::cout << "Error to insert ScrewStatusToDatabaseTable" <<std::endl;
+        #endif
+        return false;
+    }
     return true;
 }
 /******************************************************************************************
@@ -2165,7 +2204,8 @@ bool GtcsManager::CreatScrewStatusDatabase()
     #if defined(_DEBUG_MODE_)
     std::cout << "db_screw_ramdisk_Path = " << db_screw_ramdisk_Path <<std::endl;
     #endif
-    screwstatusdatabase.CreatScrewStatusDatabaseTable(db_screw_ramdisk_Path);
+    screwstatusdatabase.CreatScrewStatusDatabaseTable();
+    // InsertRealTimeActuralValueToDatabase(bulletin->AmsBulletin.DATA300Struct);
     return true;
 }
 /******************************************************************************************
@@ -2281,7 +2321,7 @@ bool GtcsManager::InitialGtcsSystem()
     mcb->InitialMcbComPort(comport_name);
     //
     std::this_thread::sleep_for(std::chrono::milliseconds(1));                  // Thread sleep 1s.
-    for (int index = 0; index < 5; index++)
+    for (int index = 0; index < 10; index++)
     {
         // Get MCB polling stataus after polling to MCB .
         mcb->GetMcbPollingStatus(mcb->telegram.ctrl.fasten);
@@ -2473,8 +2513,12 @@ bool GtcsManager::RunGtcsSystem()
             if ((bulletin->ScrewHandler.statusnum == (int)LOCKED_STATUS::OK)||(bulletin->ScrewHandler.statusnum == (int)LOCKED_STATUS::REVERSE))
             {
                 SetScrewDriverTighteningCounter(bulletin->ScrewHandler);
-                 std::cout << "bulletin->ScrewHandler.screwcounter = "<<std::to_string(bulletin->ScrewHandler.screwcounter) <<std::endl;
-                 bulletin->ScrewHandler.screwrunning = false;
+                std::cout << "bulletin->ScrewHandler.screwcounter = "<<std::to_string(bulletin->ScrewHandler.screwcounter) <<std::endl;
+                if (bulletin->ScrewHandler.screwrunning ==true)
+                {
+                    InsertRealTimeActuralValueToDatabase(bulletin->AmsBulletin.DATA300Struct);
+                }
+                bulletin->ScrewHandler.screwrunning = false;
             }
             else if (bulletin->ScrewHandler.statusnum == (int)LOCKED_STATUS::RUNNING)
             {

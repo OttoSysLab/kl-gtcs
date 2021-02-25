@@ -119,9 +119,11 @@ private:
     // Write data300 to txt.
     bool ClearRamdiskTxtFile();
     bool WriteRealTimeActuralValueToRamdisk(AmsDATA300Struct &data300);    
+
     // SetAmsBasicToMcbStruct.
     bool SetAmsBasicToMcbStruct(AmsCMD340Struct &amscmd,McbID2Struct &basic_para);       // AMC_CMD340->DB_Struct
-    bool SetRealTimeActuralValueToDatabase(AmsDATA300Struct &data300);                   // AMC_CMD300->DB_Struct
+    bool InsertRealTimeActuralValueToDatabase(AmsDATA300Struct &data300);                   // AMC_CMD300->DB_Struct
+
 public:
     // Constructor.
     GtcsManager(/* args */);

@@ -141,14 +141,18 @@ bool Sqlite3Manager::ReadDatabase(std::string db_Path, std::string table,std::st
     rc = sqlite3_open(db_Path.c_str(),&db);
     if (rc)
     {
+        #if defined(_DEBUG_MODE_)  
         std::cout<<"Can't open database : "<< sqlite3_errmsg(db) <<std::endl;
+        #endif
         return false;
     }
     // Send SQL statement to db.
     rc = sqlite3_prepare_v2(db,sqlcmd.c_str(),-1,&stmt,NULL);
     if (rc != SQLITE_OK)
     {
+        #if defined(_DEBUG_MODE_)        
         std::cout<<"Read SQL error:"<<sqlite3_errmsg(db)<<std::endl;
+        #endif
         sqlite3_finalize(stmt);
         return false;
     }
@@ -156,13 +160,17 @@ bool Sqlite3Manager::ReadDatabase(std::string db_Path, std::string table,std::st
     rc = sqlite3_step(stmt);
     if (rc != SQLITE_ROW && rc != SQLITE_DONE)
     {
-        // string errmsg(sqlite3_errmsg(db));
+        #if defined(_DEBUG_MODE_)        
         std::cout<<" Read SQL error:"<<sqlite3_errmsg(db)<<std::endl;
+        #endif
         sqlite3_finalize(stmt);
         return false;
     }
-    if (rc == SQLITE_DONE) {
+    if (rc == SQLITE_DONE) 
+    {
+        #if defined(_DEBUG_MODE_)        
         sqlite3_finalize(stmt);
+        #endif
         std::cout<<"customer not found"<<std::endl;
         return false;
     }
@@ -409,14 +417,18 @@ bool GtcsTcsDatabase::ReadDatabaseBasicData(GtcsTcsDatabaseBasicInfo &dbstruct)
     rc = sqlite3_open(dbPath.c_str(),&db);
     if (rc)
     {
+        #if defined(_DEBUG_MODE_)        
         std::cout<<"Can't open database : "<< sqlite3_errmsg(db) <<std::endl;
+        #endif
         return false;
     }
     // Send SQL statement to db.
     rc = sqlite3_prepare_v2(db,sqlcmd.c_str(),-1,&stmt,NULL);
     if (rc != SQLITE_OK)
     {
+        #if defined(_DEBUG_MODE_)        
         std::cout<<"Read SQL error:"<<sqlite3_errmsg(db)<<std::endl;
+        #endif
         sqlite3_finalize(stmt);
         return false;
     }
@@ -424,14 +436,18 @@ bool GtcsTcsDatabase::ReadDatabaseBasicData(GtcsTcsDatabaseBasicInfo &dbstruct)
     rc = sqlite3_step(stmt);
     if (rc != SQLITE_ROW && rc != SQLITE_DONE)
     {
-        // string errmsg(sqlite3_errmsg(db));
+        #if defined(_DEBUG_MODE_)        
         std::cout<<" Read SQL error:"<<sqlite3_errmsg(db)<<std::endl;
+        #endif
         sqlite3_finalize(stmt);
         return false;
     }
-    if (rc == SQLITE_DONE) {
-        sqlite3_finalize(stmt);
+    if (rc == SQLITE_DONE) 
+    {
+        #if defined(_DEBUG_MODE_)        
         std::cout<<"customer not found"<<std::endl;
+        #endif
+        sqlite3_finalize(stmt);
         return false;
     }
 
@@ -485,8 +501,10 @@ bool GtcsTcsDatabase::UpdateDatabaseBasicData(GtcsTcsDatabaseBasicInfo &dbstruct
         {
             sqlcmd += dbstruct.columnnames[i] + " = " + "'" + dbstruct.data[dbstruct.columnnames[i]] + "'" +",";   
         }
-        // Test 
+        #if defined(_DEBUG_MODE_) 
+        // Test
         // std::cout << "sqlcmd " << dbstruct.columnnames[i] << " = " << dbstruct.data[dbstruct.columnnames[i]] <<std::endl;
+        #endif
     }
     sqlcmd = sqlcmd.replace(sqlcmd.end()-1,sqlcmd.end()," ");
     sqlcmd += "where rowid = 1;";
@@ -499,7 +517,9 @@ bool GtcsTcsDatabase::UpdateDatabaseBasicData(GtcsTcsDatabaseBasicInfo &dbstruct
     rc = sqlite3_open(dbPath.c_str(),&db);
     if (rc)
     {
+        #if defined(_DEBUG_MODE_)
         std::cout<<"Can't open database : "<< sqlite3_errmsg(db) <<std::endl;
+        #endif
         return false;
     }
     
@@ -509,7 +529,9 @@ bool GtcsTcsDatabase::UpdateDatabaseBasicData(GtcsTcsDatabaseBasicInfo &dbstruct
     rc = sqlite3_prepare_v2(db,sqlcmd.c_str(),-1,&stmt,NULL);
     if (rc != SQLITE_OK)
     {
+        #if defined(_DEBUG_MODE_)
         std::cout<<"Write SQL error:"<<sqlite3_errmsg(db)<<std::endl;
+        #endif
         sqlite3_finalize(stmt);
         return false;
     }
@@ -517,7 +539,9 @@ bool GtcsTcsDatabase::UpdateDatabaseBasicData(GtcsTcsDatabaseBasicInfo &dbstruct
     rc = sqlite3_step(stmt);
     if (rc != SQLITE_ROW && rc != SQLITE_DONE)
     {
+        #if defined(_DEBUG_MODE_)
         std::cout<<"Write SQL error:"<<sqlite3_errmsg(db)<<std::endl;
+        #endif
         sqlite3_finalize(stmt);
         return false;
     }
@@ -564,14 +588,18 @@ bool GtcsTcsDatabase::ReadDatabaseJobData(GtcsTcsDatabaseJobInfo &dbstruct,int j
     rc = sqlite3_open(dbPath.c_str(),&db);
     if (rc)
     {
+        #if defined(_DEBUG_MODE_)
         std::cout<<"Can't open database : "<< sqlite3_errmsg(db) <<std::endl;
+        #endif
         return false;
     }
     // Send SQL statement to db.
     rc = sqlite3_prepare_v2(db,sqlcmd.c_str(),-1,&stmt,NULL);
     if (rc != SQLITE_OK)
     {
+        #if defined(_DEBUG_MODE_)
         std::cout<<"Read SQL error:"<<sqlite3_errmsg(db)<<std::endl;
+        #endif
         sqlite3_finalize(stmt);
         return false;
     }
@@ -579,14 +607,18 @@ bool GtcsTcsDatabase::ReadDatabaseJobData(GtcsTcsDatabaseJobInfo &dbstruct,int j
     rc = sqlite3_step(stmt);
     if (rc != SQLITE_ROW && rc != SQLITE_DONE)
     {
-        // string errmsg(sqlite3_errmsg(db));
+        #if defined(_DEBUG_MODE_)
         std::cout<<" Read SQL error:"<<sqlite3_errmsg(db)<<std::endl;
+        #endif
         sqlite3_finalize(stmt);
         return false;
     }
-    if (rc == SQLITE_DONE) {
-        sqlite3_finalize(stmt);
+    if (rc == SQLITE_DONE) 
+    {
+        #if defined(_DEBUG_MODE_)
         std::cout<<"customer not found"<<std::endl;
+        #endif
+        sqlite3_finalize(stmt);
         return false;
     }
 
@@ -647,14 +679,18 @@ bool GtcsTcsDatabase::ReadDataBaseSequenceList(std::vector<GtcsTcsDatabaseSequen
     rc = sqlite3_open(dbPath.c_str(),&db);
     if (rc)
     {
+        #if defined(_DEBUG_MODE_)        
         std::cout<<"Can't open database : "<< sqlite3_errmsg(db) <<std::endl;
+        #endif
         return false;
     }
     // Send SQL statement to db.
     rc = sqlite3_prepare_v2(db,sqlcmd.c_str(),-1,&stmt,NULL);
     if (rc != SQLITE_OK)
     {
+        #if defined(_DEBUG_MODE_)        
         std::cout<<"Read SQL error:"<<sqlite3_errmsg(db)<<std::endl;
+        #endif
         sqlite3_finalize(stmt);
         return false;
     }
@@ -688,8 +724,10 @@ bool GtcsTcsDatabase::ReadDataBaseSequenceList(std::vector<GtcsTcsDatabaseSequen
     }
     if (rc != SQLITE_DONE) 
     {
-        sqlite3_finalize(stmt);
+        #if defined(_DEBUG_MODE_)        
         std::cout<<"customer not found"<<std::endl;
+        #endif
+        sqlite3_finalize(stmt);
         return false;
     }
 
@@ -742,14 +780,18 @@ bool GtcsTcsDatabase::ReadDatabaseStepList(std::vector<GtcsTcsDatabaseStepInfo> 
     rc = sqlite3_open(dbPath.c_str(),&db);
     if (rc)
     {
+        #if defined(_DEBUG_MODE_)        
         std::cout<<"Can't open database : "<< sqlite3_errmsg(db) <<std::endl;
+        #endif
         return false;
     }
     // Send SQL statement to db.
     rc = sqlite3_prepare_v2(db,sqlcmd.c_str(),-1,&stmt,NULL);
     if (rc != SQLITE_OK)
     {
+        #if defined(_DEBUG_MODE_)        
         std::cout<<"Read SQL error:"<<sqlite3_errmsg(db)<<std::endl;
+        #endif
         sqlite3_finalize(stmt);
         return false;
     }
@@ -783,8 +825,10 @@ bool GtcsTcsDatabase::ReadDatabaseStepList(std::vector<GtcsTcsDatabaseStepInfo> 
     }
     if (rc != SQLITE_DONE) 
     {
-        sqlite3_finalize(stmt);
+        #if defined(_DEBUG_MODE_)        
         std::cout<<"customer not found"<<std::endl;
+        #endif
+        sqlite3_finalize(stmt);
         return false;
     }
 
@@ -866,28 +910,35 @@ bool GtcsScrewStatusDatabase::CreatScrewStatusDatabaseTable()
     rc = sqlite3_open(dbPath.c_str(),&db);
     if (rc)
     {
+        #if defined(_DEBUG_MODE_)
         std::cout<<"Can't open GtcsScrewStatusDatabase : "<< sqlite3_errmsg(db) <<std::endl;
+        #endif
         return false;
     }
     // Creat database sql command.
     sqlcmd = GetDatabaseTableDefaultValue(screwstatus.dbtablename, screwstatus.columnnames,screwstatus.type);
 
     #if defined(_DEBUG_MODE_)
-    // std::cout<< sqlcmd <<std::endl;
+    std::cout<< sqlcmd <<std::endl;
     #endif
     
     rc = sqlite3_prepare_v2(db, sqlcmd.c_str(),-1, &stmt, NULL);
     if (rc != SQLITE_OK)
     {
+        #if defined(_DEBUG_MODE_)
         std::cout<<"Read SQL error:"<<sqlite3_errmsg(db)<<std::endl;
+        #endif
         sqlite3_finalize(stmt);
         return false;
     }
     rc = sqlite3_step(stmt);
     if (rc != SQLITE_DONE) 
     {
-        sqlite3_finalize(stmt);
+        #if defined(_DEBUG_MODE_)
         std::cout<<"customer not found"<<std::endl;
+        #endif
+        sqlite3_finalize(stmt);    
+        sqlite3_close(db);
         return false;
     }
     // Close sqlite3.
@@ -927,7 +978,9 @@ bool GtcsScrewStatusDatabase::InsertScrewStatusToDatabaseTable(GtcsScrewStatusba
     rc = sqlite3_open(dbPath.c_str(),&db);
     if (rc)
     {
+        #if defined(_DEBUG_MODE_)
         std::cout<<"Can't open GtcsScrewStatusDatabase : "<< sqlite3_errmsg(db) <<std::endl;
+        #endif
         return false;
     }    
 
@@ -938,15 +991,19 @@ bool GtcsScrewStatusDatabase::InsertScrewStatusToDatabaseTable(GtcsScrewStatusba
     rc = sqlite3_prepare_v2(db, sqlcmd.c_str(),-1, &stmt, NULL);
     if (rc != SQLITE_OK)
     {
+        #if defined(_DEBUG_MODE_)
         std::cout<<"Read SQL error:"<<sqlite3_errmsg(db)<<std::endl;
+        #endif
         sqlite3_finalize(stmt);
         return false;
     }
     rc = sqlite3_step(stmt);
     if (rc != SQLITE_DONE) 
     {
-        sqlite3_finalize(stmt);
+        #if defined(_DEBUG_MODE_)        
         std::cout<<"customer not found"<<std::endl;
+        #endif
+        sqlite3_finalize(stmt);
         return false;
     }
     // Close sqlite3.

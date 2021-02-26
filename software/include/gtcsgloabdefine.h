@@ -44,8 +44,8 @@ enum MCB_TELEGRAM_TYPE : uint8_t{
 // MAIN_FSM
 enum MAIN_FSM : int{
     READY = 0,
-    SETTING,
     ALARM,
+    SETTING,
     CHECK_SYS,
     INITIAL,
 };

@@ -493,17 +493,18 @@ bool GtcsManager::GetRealTimeActuralValue(AmsDATA300Struct &data300,GtcsScrewSeq
     std::string current_rt_status = screwhandler.lockedmessage;
     std::string current_mcb_err = GetCurrentMCBErrorMessage(mcbstatus.u32ActError);
     // time.
-    time_t now = time(0);
-    tm *ltm = localtime(&now);
-    data300.datetime = std::to_string(ltm->tm_year) +
-                        std::to_string(ltm->tm_mon) +
-                        std::to_string(ltm->tm_mday) +
-                        '_' +
-                        std::to_string(ltm->tm_hour) +
-                        ':' +
-                        std::to_string(ltm->tm_min) +
-                        ':' +
-                        std::to_string(ltm->tm_sec);          // str2:yyyyMMdd HH:mm:ss
+    GetCurrentSystemDateTime(data300.datetime);              // str2:yyyyMMdd HH:mm:ss
+    // time_t now = time(0);
+    // tm *ltm = localtime(&now);
+    // data300.datetime = std::to_string(ltm->tm_year+1900) +
+    //                     std::to_string(ltm->tm_mon) +
+    //                     std::to_string(ltm->tm_mday) +
+    //                     '_' +
+    //                     std::to_string(ltm->tm_hour) +
+    //                     ':' +
+    //                     std::to_string(ltm->tm_min) +
+    //                     ':' +
+    //                     std::to_string(ltm->tm_sec);          
     data300.checksum = std::to_string(0);                     // str3:check sum ,4 chars
     data300.cmdsn = std::to_string(0);                        // str4:Command_sn
     data300.dervicetype = std::to_string(0);                  // str5:Device type
@@ -1002,7 +1003,7 @@ std::string GtcsManager::GetUiResponseCmd(std::string uicmd_string)
  *******************************************************************************************/
 bool GtcsManager::GetUiSettingStatus()
 {
-    return bulletin->uisetting;
+    return bulletin->settingstatus;
 }
 /******************************************************************************************
  *
@@ -1023,7 +1024,75 @@ bool GtcsManager::GetUiSettingStatus()
  *******************************************************************************************/
 void GtcsManager::SetUiSettingStatus(bool status)
 {
-    bulletin->uisetting = status;
+    bulletin->settingstatus = status;
+}
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
+ *  @date    2021/02/26
+ *
+ *  @fn      GtcsManager::GetCurrentSystemDateTime(std::string &datetime)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   std::string &datetime
+ *
+ *  @return  bool
+ *
+ *  @note    none.
+ *
+ *******************************************************************************************/
+bool GtcsManager::GetCurrentSystemDateTime(std::string &datetime)
+{
+    time_t tt;
+    time( &tt );
+    tt = tt + 8*3600;  // transform the time zone
+    tm* t= gmtime( &tt );
+
+    #if defined(_DEBUG_MODE_)
+    // std::cout << tt << std::endl;
+    // printf("%d-%02d-%02d %02d:%02d:%02d\n",
+    //        t->tm_year + 1900,
+    //        t->tm_mon + 1,
+    //        t->tm_mday,
+    //        t->tm_hour,
+    //        t->tm_min,
+    //        t->tm_sec);
+    datetime = std::to_string(t->tm_year + 1900)+
+            std::to_string(t->tm_mon + 1)+
+            std::to_string(t->tm_mday)+
+            " "+
+            std::to_string(t->tm_hour)+
+            ":"+
+            std::to_string(t->tm_min)+
+            ":"+
+            std::to_string(t->tm_sec);
+    std::cout << datetime <<std::endl;
+    #endif
+
+    return true;
+}
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
+ *  @date    2021/02/26
+ *
+ *  @fn      GtcsManager::SetCurrentSystemDateTime(std::string &datetime)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   std::string &datetime
+ *
+ *  @return  bool
+ *
+ *  @note    none.
+ *
+ *******************************************************************************************/
+bool GtcsManager::SetCurrentSystemDateTime(std::string &datetime)
+{
+    return true;
 }
 /******************************************************************************************
  *
@@ -2465,8 +2534,16 @@ bool GtcsManager::RunGtcsSystem()
     // Initial object.
     GtcsCtrlTelegramStrcut ctrltelegram;
 
-    // Check uisetting status.
-    if (bulletin->uisetting == false)
+    // Check settingstatus status.
+    if(bulletin->settingstatus == true)
+    {
+        SetMainFSM(MAIN_FSM::SETTING); // MAIN_FSM Jump to setting mode.
+    }
+    else if(bulletin->alarmstatus == true)
+    {
+        SetMainFSM(MAIN_FSM::ALARM); // MAIN_FSM Jump to setting mode.
+    }
+    else
     {
         // step 1 =  Compare last sequence index and current sequence index.
         if (bulletin->ScrewHandler.lastseqeuceindex!=bulletin->ScrewHandler.currentseqeuceindex)
@@ -2507,6 +2584,7 @@ bool GtcsManager::RunGtcsSystem()
         // Step 3 = Polling to MCB & get MCB status.
         if (mcb->GetMcbPollingStatus(ctrltelegram))
         {
+            // 
             // Get MCB Process excute run time status.
             GetToolRunTimeStatus(bulletin->ScrewHandler);
             // Calaulate tigthtening repeat times.
@@ -2547,9 +2625,44 @@ bool GtcsManager::RunGtcsSystem()
         // Step 4 = Package system status to bulletin.
         mcb->telegram.status.last_status = mcb->telegram.status.current_status; //
     }
+    return true;
+}
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
+ *  @date    2021/02/04
+ *
+ *  @fn      GtcsManager::SettingGtcsSystem()
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   none
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+bool GtcsManager::SettingGtcsSystem()
+{
+    if (bulletin->settingstatus == true)
+    {
+        if (CheckUiSettingFSM(ams->GetAmsCmdNum(bulletin->uisockrevcmd)) == true)
+        {
+            bulletin->settingstatus = false;
+            // SetMainFSM(MAIN_FSM::READY);
+
+            if (bulletin->checksysok == true)
+            {
+                SetMainFSM(MAIN_FSM::READY);
+            }
+        }
+        std::this_thread::sleep_for(std::chrono::milliseconds(10)); // Thread sleep 1s.
+    }
     else
     {
-        SetMainFSM(MAIN_FSM::SETTING); // MAIN_FSM Jump to setting mode.
+        std::this_thread::sleep_for(std::chrono::milliseconds(10)); // Thread sleep 1s.
     }
     return true;
 }
@@ -2573,44 +2686,8 @@ bool GtcsManager::RunGtcsSystem()
 bool GtcsManager::ClearGtcsSystemAlarm()
 {
     std::this_thread::sleep_for(std::chrono::milliseconds(10)); // Thread sleep 1s.
-    return true;
-}
-/******************************************************************************************
- *
- *  @author  Otto Chang
- *
- *  @date    2021/02/04
- *
- *  @fn      GtcsManager::SettingGtcsSystem()
- *
- *  @brief   ( Constructivist )
- *
- *  @param   none
- *
- *  @return  none
- *
- *  @note    none
- *
- *******************************************************************************************/
-bool GtcsManager::SettingGtcsSystem()
-{
-    if (bulletin->uisetting == true)
-    {
-        if (CheckUiSettingFSM(ams->GetAmsCmdNum(bulletin->uisockrevcmd)) == true)
-        {
-            bulletin->uisetting = false;
-            // SetMainFSM(MAIN_FSM::READY);
-
-            if (bulletin->checksysok == true)
-            {
-                SetMainFSM(MAIN_FSM::READY);
-            }
-        }
-        std::this_thread::sleep_for(std::chrono::milliseconds(10)); // Thread sleep 1s.
-    }
-    else
-    {
-        std::this_thread::sleep_for(std::chrono::milliseconds(10)); // Thread sleep 1s.
-    }
+    #if defined(_DEBUG_MODE_)
+    std::cout << "Erro to clear Gtcs system alarm statua!" <<std::endl;
+    #endif
     return true;
 }

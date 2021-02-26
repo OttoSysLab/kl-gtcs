@@ -149,6 +149,10 @@ public:
     bool GetUiSettingStatus();
     void SetUiSettingStatus(bool status);
 
+    // Get & Set Current time.
+    bool GetCurrentSystemDateTime(std::string &datetime);
+    bool SetCurrentSystemDateTime(std::string &datetime);
+
     // Jion thread.
     bool StopAllThread();
     std::string GetMCBErrMessageString(uint32_t errorflagindex);

@@ -28,7 +28,12 @@ int main()
     manager.SetEmmcDatabasePath("/var/www/html/database/tcs.db");
     manager.SetRamdiskDatabasePath("/mnt/ramdisk/tcs.db");
     manager.SetRamdiskTxtPath("/mnt/ramdisk/data300.txt");
-    manager.SetScrewStatusDatabase("/mnt/ramdisk/data300.db");
+    
+    std::string datetime = "";
+    manager.GetCurrentSystemDateTime(datetime);
+    
+    std::string screwstatuspath =  "/mnt/ramdisk/screwdata.db";
+    manager.SetScrewStatusDatabase(screwstatuspath);
     manager.CreatScrewStatusDatabase();                       // Create database.
     manager.InitialGtcsSystem();
 
@@ -60,26 +65,27 @@ int main()
         {
         case MAIN_FSM::READY:
             #ifdef _DEBUG_MODE_
-            std::cout << "CheckMainFSM = READY" << std::endl;
+            std::cout << "Current MainFSM = READY" << std::endl;
             #endif
             manager.RunGtcsSystem();
             break;
-        case MAIN_FSM::ALARM:
-            #ifdef _DEBUG_MODE_
-            std::cout << "CheckMainFSM = ALARM" << std::endl;
-            #endif
-            manager.ClearGtcsSystemAlarm();
-            break;
         case MAIN_FSM::SETTING:
             #ifdef _DEBUG_MODE_
-            std::cout << "CheckMainFSM = SETTING" << std::endl;
+            std::cout << "Current MainFSM = SETTING" << std::endl;
             #endif
             manager.SettingGtcsSystem();
+            break;
+        case MAIN_FSM::ALARM:
+            #ifdef _DEBUG_MODE_
+            std::cout << "Current MainFSM = ALARM" << std::endl;
+            #endif
+            manager.ClearGtcsSystemAlarm();
             break;
         }
         
         #if defined(_DEBUG_JOB_SEQ_)
-        manager.StopAllThread();
+        std::string datatime = "";
+        manager.GetCurrentSystemDateTime(datatime);
         break;
         #endif
     }

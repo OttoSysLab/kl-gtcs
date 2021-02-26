@@ -83,7 +83,7 @@ _CMD_313 = {                                               # Nornal Unscrew
     "str4"   : "001",                                      # Command_sn
     "str5"   : "0",                                        # PRM 
     "str6"   : "0",                                        # Force 
-    "str7"   : "0",                                         # Dircetion
+    "str7"   : "0",                                        # Dircetion
 }
 # CMD340, 設定Initial, {CMDstr1,str2,str3,str4,str5,str6,str7,str8,str9,str10,str11,str12,str13,str14,str15,str16,str17}			
 _CMD_340 = {
@@ -105,13 +105,13 @@ _CMD_340 = {
     "str15" : "10.0",                                     # Min bus voltage
     "str16" : "80.0",                                     # Max bus voltage
     "str17" : "3.0",                                      # Start duty cycle
-    "str18" : "16.0",                                     # Gear box ratio 13Nm=11.11,5Nm=16.00 ,7Mn = 27.04
+    "str18" : "11.11",                                    # Gear box ratio 13Nm=11.11,5Nm=16.00 ,7Mn = 27.04
     "str19" : "2",                                        # Start input source
     "str20" : "1",                                        # Reverse ipnut source
     "str21" : "1000",                                     # Reverse rpm
     "str22" : "2000",                                     # Reverse slope
     "str23" : "15000",                                    # Reverse max current
-    "str24" : "10.0",                                     # Reverse max torque
+    "str24" : "5.0",                                     # Reverse max torque
     "str25" : "200",                                      # Error idle time
     "str26" : "0",                                        # Bachlash 
     "str27" : "200",                                      # Proportional gain

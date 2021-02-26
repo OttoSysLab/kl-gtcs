@@ -135,7 +135,8 @@ public:
     MCBBulletin McbBulletin;
     GtcsScrewSequenceHandler ScrewHandler;
     bool checksysok = true;
-    bool uisetting = false;
+    bool settingstatus = false;
+    bool alarmstatus = false;
     
     std::string uisockrevcmd = "";
     TcpSocketInfo TcpServer;

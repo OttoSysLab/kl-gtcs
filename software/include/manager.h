@@ -59,6 +59,8 @@ private:
     std::string GetRtLockedStatusMessage(int lcstatusnum);                                        // Define Locksed status string. 
 
     bool GetToolRunTimeStatus(GtcsScrewSequenceHandler &screwstatus);
+    bool GetStartSignalStatus(uint16_t &tmdflags);
+    bool GetSystemErrorStatus(uint16_t &statusflags);
     bool CheckUiSettingFSM(int uicmd);
 
     std::string comport_name = "";
@@ -148,10 +150,10 @@ public:
     std::string GetUiResponseCmd(std::string uicmd_string);
     bool GetUiSettingStatus();
     void SetUiSettingStatus(bool status);
-
-    // Get & Set Current time.
-    bool GetCurrentSystemDateTime(std::string &datetime);
-    bool SetCurrentSystemDateTime(std::string &datetime);
+    
+    // Get Gtcs system datetimt & year.
+    std::string GetCurrentDateYear();
+    std::string GetCurrentDateime();
 
     // Jion thread.
     bool StopAllThread();

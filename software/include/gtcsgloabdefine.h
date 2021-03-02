@@ -21,7 +21,6 @@
 #include <map>
 #include <iostream>
 #include <cmath>
-#include <ctime>
 
 #pragma region GTCS MCB Protcol
 #pragma region Parameter
@@ -131,6 +130,7 @@ enum LOCKED_STATUS : int {
     // Confirm 不能解決
     NG_MCB,
     // Confirm 能解決
+    NG_OK,
     NG_F,
     NS_F,
     NGQ,

@@ -246,3 +246,114 @@ std::string DataSorter::GetFloatScaleSortString(float src,int scalenum)
     snprintf(strbuff,sizeof(strbuff),cmd.c_str(),src);    
     return strbuff;
 }
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
+ *  @date    2021/03/01
+ *
+ *  @fn      GtcsManager::GetCurrentSystemDateYear()
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   none.
+ *
+ *  @return  std::string
+ *
+ *  @note    none.
+ *
+ *******************************************************************************************/
+std::string DateTime::GetCurrentSystemDateYear()
+{
+    time_t tt;
+    time( &tt );
+    tt = tt + 8*3600;  // transform the time zone
+    tm* t= gmtime( &tt );
+    std::string year = std::to_string(t->tm_year + 1900);
+    #if defined(_DEBUG_MODE_)
+    std::cout << year <<std::endl;
+    #endif
+    return year;
+}
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
+ *  @date    2021/03/01
+ *
+ *  @fn      GtcsManager::SetCurrentSystemDateYear(std::string &year)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   std::string &year
+ *
+ *  @return  bool
+ *
+ *  @note    none.
+ *
+ *******************************************************************************************/
+bool DateTime::SetCurrentSystemDateYear(std::string &year)
+{
+    return true;
+}
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
+ *  @date    2021/02/26
+ *
+ *  @fn      DateTime::GetCurrentSystemDateTime()
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   none.
+ *
+ *  @return  std::string
+ *
+ *  @note    none.
+ *
+ *******************************************************************************************/
+std::string DateTime::GetCurrentSystemDateTime()
+{
+    time_t tt;
+    time( &tt );
+    tt = tt + 8*3600;  // transform the time zone
+    tm* t= gmtime( &tt );
+
+    std::string datetime = std::to_string(t->tm_year + 1900)+
+            std::to_string(t->tm_mon + 1)+
+            std::to_string(t->tm_mday)+
+            " "+
+            std::to_string(t->tm_hour)+
+            ":"+
+            std::to_string(t->tm_min)+
+            ":"+
+            std::to_string(t->tm_sec);
+            
+    #if defined(_DEBUG_MODE_)
+    std::cout << datetime <<std::endl;
+    #endif
+
+    return datetime;
+}
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
+ *  @date    2021/02/26
+ *
+ *  @fn      GtcsManager::SetCurrentSystemDateTime(std::string &datetime)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   std::string &datetime
+ *
+ *  @return  bool
+ *
+ *  @note    none.
+ *
+ *******************************************************************************************/
+bool DateTime::SetCurrentSystemDateTime(std::string &datetime)
+{
+    return true;
+}

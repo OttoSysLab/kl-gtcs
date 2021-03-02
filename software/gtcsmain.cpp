@@ -29,10 +29,8 @@ int main()
     manager.SetRamdiskDatabasePath("/mnt/ramdisk/tcs.db");
     manager.SetRamdiskTxtPath("/mnt/ramdisk/data300.txt");
     
-    std::string datetime = "";
-    manager.GetCurrentSystemDateTime(datetime);
-    
-    std::string screwstatuspath =  "/mnt/ramdisk/screwdata.db";
+    // Initial System screw status database.
+    std::string screwstatuspath =  "/mnt/ramdisk/screwdata_" + manager.GetCurrentDateYear()+ ".db";
     manager.SetScrewStatusDatabase(screwstatuspath);
     manager.CreatScrewStatusDatabase();                       // Create database.
     manager.InitialGtcsSystem();

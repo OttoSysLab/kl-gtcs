@@ -224,7 +224,9 @@ std::string GtcsManager::GetRtLockedStatusMessage(int lcstatusnum)
         result = "NGA________";
         break;
     case LOCKED_STATUS::NG_MCB:
-        // result = "NG_MCB_____";
+        result = "NG_________";
+        break;
+    case LOCKED_STATUS::NG_OK:
         result = "NG_________";
         break;
     case LOCKED_STATUS::NGR:
@@ -274,7 +276,7 @@ bool GtcsManager::GetToolRunTimeStatus(GtcsScrewSequenceHandler &ScrewHandler)
 
     int lc_statusnum = ScrewHandler.statusnum;
 
-#pragma region Check current RT Status.
+    #pragma region Check current RT Status.
     if (tool_NG == true)
     {
         lc_statusnum = (int)LOCKED_STATUS::NG_MCB;
@@ -304,17 +306,67 @@ bool GtcsManager::GetToolRunTimeStatus(GtcsScrewSequenceHandler &ScrewHandler)
             {
                 if (ScrewHandler.screwok == false)
                 {
-                    lc_statusnum = (int)LOCKED_STATUS::NG_MCB;
+                    lc_statusnum = (int)LOCKED_STATUS::NG_OK;
                 }
             }
         }
     }
-#pragma endregion
+    #pragma endregion
 
     // Assign data to last locked status num.
     ScrewHandler.statusnum = lc_statusnum;
     ScrewHandler.lockedmessage = GetRtLockedStatusMessage(lc_statusnum);
     return true;
+}
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
+ *  @date    2021/03/02
+ *
+ *  @fn      GtcsManager::GetStartSignalStatus(uint16_t &tmdflags)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   uint16_t &tmdflags
+ *
+ *  @return  bool
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+bool GtcsManager::GetStartSignalStatus(uint16_t &tmdflags)
+{
+    // Convert flags to 16-bits arrays.
+    std::array<bool, 16> tmd_flags = BitArray::To16BiteArray(tmdflags);
+    // Check sensor.
+    bool startsignal = tmd_flags[TMD_INPUT::LEVER_SW];
+    return startsignal;
+}
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
+ *  @date    2021/03/02
+ *
+ *  @fn      GtcsManager::GetSystemErrorStatus(uint16_t &statusflags)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   uint16_t &statusflags
+ *
+ *  @return  bool
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+bool GtcsManager::GetSystemErrorStatus(uint16_t &statusflags)
+{
+    // Convert flags to 16-bits arrays.
+    std::array<bool, 16> status_flags = BitArray::To16BiteArray(statusflags);
+    // Check sensor.
+    bool erroroccured = status_flags[STATUS_FlAGS_IDX::ERROR_OCCURED];
+    return erroroccured;
 }
 /******************************************************************************************
  *
@@ -425,7 +477,7 @@ std::string GtcsManager::GetMCBErrMessageString(uint32_t errorflagindex)
  *
  *  @date    2021/02/04
  *
- *  @fn      GtcsManager::GetCurrentMCBErrorMessage(uint32_t errorflags) 
+ *  @fn      GtcsManager::GetCurrentMCBErrorMessage(uint32_t errorflags)
  *
  *  @brief   ( Constructivist )
  *
@@ -461,13 +513,13 @@ std::string GtcsManager::GetCurrentMCBErrorMessage(uint32_t errorflags)
  *  @date    2021/02/04
  *
  *  @fn      GtcsManager::GetRealTimeActuralValue(AmsDATA300Struct &data300,GtcsScrewSequenceHandler &screwhandler,GtcsStatusTelegramStrcut &mcbstatus)
- * 
+ *
  *  @brief   Get MCB realy time status string.
  *
  *  @param   AmsDATA300Struct &data300
- * 
+ *
  *  @param   GtcsScrewSequenceHandler &screwhandler
- * 
+ *
  *  @param   GtcsStatusTelegramStrcut &mcbstatus
  *
  *  @return  bool
@@ -493,18 +545,7 @@ bool GtcsManager::GetRealTimeActuralValue(AmsDATA300Struct &data300,GtcsScrewSeq
     std::string current_rt_status = screwhandler.lockedmessage;
     std::string current_mcb_err = GetCurrentMCBErrorMessage(mcbstatus.u32ActError);
     // time.
-    GetCurrentSystemDateTime(data300.datetime);              // str2:yyyyMMdd HH:mm:ss
-    // time_t now = time(0);
-    // tm *ltm = localtime(&now);
-    // data300.datetime = std::to_string(ltm->tm_year+1900) +
-    //                     std::to_string(ltm->tm_mon) +
-    //                     std::to_string(ltm->tm_mday) +
-    //                     '_' +
-    //                     std::to_string(ltm->tm_hour) +
-    //                     ':' +
-    //                     std::to_string(ltm->tm_min) +
-    //                     ':' +
-    //                     std::to_string(ltm->tm_sec);          
+    data300.datetime =  DateTime::GetCurrentSystemDateTime(); // str2:yyyyMMdd HH:mm:ss
     data300.checksum = std::to_string(0);                     // str3:check sum ,4 chars
     data300.cmdsn = std::to_string(0);                        // str4:Command_sn
     data300.dervicetype = std::to_string(0);                  // str5:Device type
@@ -540,11 +581,11 @@ bool GtcsManager::GetRealTimeActuralValue(AmsDATA300Struct &data300,GtcsScrewSeq
  *  @date    2021/02/23
  *
  *  @fn      GtcsManager::ClearRamdiskTxtFile()
- * 
+ *
  *  @brief   CMD340->ANS340
  *
  *  @param   none
- *  
+ *
  *  @return  bool
  *
  *  @note    none
@@ -556,8 +597,8 @@ bool GtcsManager::ClearRamdiskTxtFile()
     if (txthandler.ClearTxtFile(txt_ramdisk_Path) == false)
     {
         #ifdef _DEBUG_MODE_
-        std::cout << "txthandler.ClearTxtFile path = "<< txt_ramdisk_Path << std::endl;  
-        std::cout << "txthandler.ClearTxtFile fail." << std::endl;  
+        std::cout << "txthandler.ClearTxtFile path = "<< txt_ramdisk_Path << std::endl;
+        std::cout << "txthandler.ClearTxtFile fail." << std::endl;
         #endif
         return false;
     }
@@ -570,11 +611,11 @@ bool GtcsManager::ClearRamdiskTxtFile()
  *  @date    2021/02/23
  *
  *  @fn      GtcsManager::WriteRealTimeActuralValueToRamdisk(AmsDATA300Struct &data300)
- * 
+ *
  *  @brief   CMD340->ANS340
  *
  *  @param   AmsDATA300Struct &data300
- *  
+ *
  *  @return  bool
  *
  *  @note    none
@@ -588,7 +629,7 @@ bool GtcsManager::WriteRealTimeActuralValueToRamdisk(AmsDATA300Struct &data300)
     if (txthandler.WriteToTxtFile(txt_ramdisk_Path,data300_string) == false)
     {
         #ifdef _DEBUG_MODE_
-        std::cout << "txthandler.WriteToTxtFile fail." << std::endl;  
+        std::cout << "txthandler.WriteToTxtFile fail." << std::endl;
         #endif
         return false;
     }
@@ -605,7 +646,7 @@ bool GtcsManager::WriteRealTimeActuralValueToRamdisk(AmsDATA300Struct &data300)
  *  @brief   ( Constructivist )
  *
  *  @param   AmsCMD340Struct &amscmd
- * 
+ *
  *  @param   McbID2Struct &mcb_basic
  *
  *  @return  bool
@@ -615,7 +656,7 @@ bool GtcsManager::WriteRealTimeActuralValueToRamdisk(AmsDATA300Struct &data300)
  *******************************************************************************************/
 bool GtcsManager::SetAmsBasicToMcbStruct(AmsCMD340Struct &amscmd, McbID2Struct &mcb_basic)
 {
-    // 
+    //
     mcb_basic.s16MinTemp = (uint16_t)(std::stof(amscmd.str5) * 10);       // SID = 1,Minimal Temperature of the motor and the motorcontroller.
                                                                           // Underneath this temperature the tool doesn’t work. Unit is [0,1 °C]."
     mcb_basic.s16MaxTemp = (uint16_t)(std::stof(amscmd.str6) * 10);       // SID = 2,Maximal Temperature of the motor and the motorcontroller.
@@ -679,7 +720,7 @@ bool GtcsManager::SetAmsBasicToMcbStruct(AmsCMD340Struct &amscmd, McbID2Struct &
  *  @brief   ( Constructivist )
  *
  *  @param   AmsCMD340Struct &amscmd
- * 
+ *
  *  @param   McbID2Struct &mcb_basic
  *
  *  @return  bool
@@ -692,7 +733,7 @@ bool GtcsManager::InsertRealTimeActuralValueToDatabase(AmsDATA300Struct &data300
     // Initial object.
     GtcsScrewStatusbaseInfo screwstatus;
     GtcsScrewStatusDatabase dbscrewstatus(db_screw_ramdisk_Path);
-    
+
     // Assign data to screw status information struct.
     screwstatus.data["data_time"]         = data300.datetime;            // colunm_index = 0
     //screwstatus.data["data_time"]         = "yyyy:mm:dd";            // colunm_index = 0
@@ -703,8 +744,8 @@ bool GtcsManager::InsertRealTimeActuralValueToDatabase(AmsDATA300Struct &data300
     screwstatus.data["selected_job"]      = data300.jobid;               // colunm_index = 4
     screwstatus.data["selected_sequence"] = data300.seqid;               // colunm_index = 5
     screwstatus.data["program_name"]      = data300.seqid;               // colunm_index = 6
-    screwstatus.data["selected_step"]     = data300.stepid;              // colunm_index = 7 
-    screwstatus.data["direction"]         = data300.dircetion;           // colunm_index = 8 
+    screwstatus.data["selected_step"]     = data300.stepid;              // colunm_index = 7
+    screwstatus.data["direction"]         = data300.dircetion;           // colunm_index = 8
     screwstatus.data["fasten_unit"]       = data300.torqueuint;          // colunm_index = 9
     screwstatus.data["count_direction"]   = data300.inc_dec;             // colunm_index = 10
     screwstatus.data["last_screw_count"]  = data300.last_screwcnt;       // colunm_index = 11
@@ -742,7 +783,7 @@ bool GtcsManager::InsertRealTimeActuralValueToDatabase(AmsDATA300Struct &data300
  *  @brief   CMD340->ANS340
  *
  *  @param   AmsANS340Struct &amsans
- * 
+ *
  *  @param   AmsCMD340Struct &amscmd
  *
  *  @return  none
@@ -800,7 +841,7 @@ void GtcsManager::SetAmsCmdBaiscParaToAns(AmsANS340Struct &amsans, AmsCMD340Stru
  *  @brief   ( Constructivist )
  *
  *  @param   AmsCMD340Struct &amscmd
- * 
+ *
  *  @param   McbID2Struct &mcb_basic
  *
  *  @return  bool
@@ -820,7 +861,7 @@ bool GtcsManager::SetSystemBasicParameter(AmsCMD340Struct &amscmd, McbID2Struct 
     SetAmsBasicToMcbStruct(amscmd, mcb_basic);
     if (mcb->WriteBasicParameter(mcb_basic) == false)
     {
-        #ifdef _DEBUG_MODE_ 
+        #ifdef _DEBUG_MODE_
         std::cout << "Step 1 : Error to Write basic data to MCB." << std::endl;
         #endif
         return false;
@@ -829,7 +870,7 @@ bool GtcsManager::SetSystemBasicParameter(AmsCMD340Struct &amscmd, McbID2Struct 
     // Step 2 : Read basic data from emmc database to dbstruct.
     if (db_emmc.ReadDatabaseBasicData(basic_emmc) == false)
     {
-        #ifdef _DEBUG_MODE_ 
+        #ifdef _DEBUG_MODE_
         std::cout << "Step 2 : Read basic data from emmc database to dbstruct." << std::endl;
         #endif
         return false;
@@ -838,7 +879,7 @@ bool GtcsManager::SetSystemBasicParameter(AmsCMD340Struct &amscmd, McbID2Struct 
     // step 3 : Update Mcb struct to emmc basic datatbase.
     if (UpdateMcbBasicParaToDB(db_emmc, basic_emmc, bulletin->McbBulletin.BasicPara) == false)
     {
-        #ifdef _DEBUG_MODE_ 
+        #ifdef _DEBUG_MODE_
         std::cout << "Step 3 : Update MCB basic parameter to database." << std::endl;
         #endif
         return false;
@@ -893,10 +934,10 @@ bool GtcsManager::CheckUiSettingFSM(int uicmd)
                 std::cout << "Error to use CMD301 set ScrewDriverSwitchSequecneHandler." <<std::endl;
                 return false;
             }
-            bulletin->ScrewHandler.screwcounter 
+            bulletin->ScrewHandler.screwcounter
                 = bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentseqeuceindex].tr;
             bulletin->ScrewHandler.maxscrewcounter = bulletin->ScrewHandler.screwcounter ;
-            bulletin->ScrewHandler.lastseqeuceindex = bulletin->ScrewHandler.currentseqeuceindex; 
+            bulletin->ScrewHandler.lastseqeuceindex = bulletin->ScrewHandler.currentseqeuceindex;
         }
         #pragma endregion
         break;
@@ -1030,69 +1071,43 @@ void GtcsManager::SetUiSettingStatus(bool status)
  *
  *  @author  Otto Chang
  *
- *  @date    2021/02/26
+ *  @date    2021/02/04
  *
- *  @fn      GtcsManager::GetCurrentSystemDateTime(std::string &datetime)
+ *  @fn      GtcsManager::SetUiSettingStatus(bool status)
  *
  *  @brief   ( Constructivist )
  *
- *  @param   std::string &datetime
+ *  @param   bool status
  *
- *  @return  bool
+ *  @return  none
  *
  *  @note    none.
  *
  *******************************************************************************************/
-bool GtcsManager::GetCurrentSystemDateTime(std::string &datetime)
+std::string GtcsManager::GetCurrentDateYear()
 {
-    time_t tt;
-    time( &tt );
-    tt = tt + 8*3600;  // transform the time zone
-    tm* t= gmtime( &tt );
-
-    #if defined(_DEBUG_MODE_)
-    // std::cout << tt << std::endl;
-    // printf("%d-%02d-%02d %02d:%02d:%02d\n",
-    //        t->tm_year + 1900,
-    //        t->tm_mon + 1,
-    //        t->tm_mday,
-    //        t->tm_hour,
-    //        t->tm_min,
-    //        t->tm_sec);
-    datetime = std::to_string(t->tm_year + 1900)+
-            std::to_string(t->tm_mon + 1)+
-            std::to_string(t->tm_mday)+
-            " "+
-            std::to_string(t->tm_hour)+
-            ":"+
-            std::to_string(t->tm_min)+
-            ":"+
-            std::to_string(t->tm_sec);
-    std::cout << datetime <<std::endl;
-    #endif
-
-    return true;
+    return DateTime::GetCurrentSystemDateYear();
 }
 /******************************************************************************************
  *
  *  @author  Otto Chang
  *
- *  @date    2021/02/26
+ *  @date    2021/02/04
  *
- *  @fn      GtcsManager::SetCurrentSystemDateTime(std::string &datetime)
+ *  @fn      GtcsManager::SetUiSettingStatus(bool status)
  *
  *  @brief   ( Constructivist )
  *
- *  @param   std::string &datetime
+ *  @param   bool status
  *
- *  @return  bool
+ *  @return  none
  *
  *  @note    none.
  *
  *******************************************************************************************/
-bool GtcsManager::SetCurrentSystemDateTime(std::string &datetime)
+std::string  GtcsManager::GetCurrentDateime()
 {
-    return true;
+    return DateTime::GetCurrentSystemDateTime();
 }
 /******************************************************************************************
  *
@@ -1105,7 +1120,7 @@ bool GtcsManager::SetCurrentSystemDateTime(std::string &datetime)
  *  @brief   ( Constructivist )
  *
  *  @param   std::string destination
- *  
+ *
  *  @param   std::string source
  *
  *  @return  bool
@@ -1132,9 +1147,9 @@ bool GtcsManager::CopyDatabase(std::string destination, std::string source)
  *  @brief   ( Constructivist )
  *
  *  @param   GtcsTcsDatabase &db
- * 
+ *
  *  @param   GtcsTcsDatabaseBasicInfo &db_basic
- * 
+ *
  *  @param   McbID2Struct &mcb_basic
  *
  *  @return  bool
@@ -1186,7 +1201,7 @@ bool GtcsManager::UpdateMcbBasicParaToDB(GtcsTcsDatabase &db, GtcsTcsDatabaseBas
  *  @brief   Compare Basic Struct.
  *
  *  @param   GtcsDatabaseBasicInfo &emmc
- * 
+ *
  *  @param   GtcsDatabaseBasicInfo &ramdisk
  *
  *  @return  bool
@@ -1221,7 +1236,7 @@ bool GtcsManager::CompareBasicStruct(GtcsTcsDatabaseBasicInfo &emmc, GtcsTcsData
  *  @brief   Set AMS Bulletin Basic Parameter.
  *
  *  @param   AmsANS340Struct &amsans
- * 
+ *
  *  @param   GtcsDatabaseBasicInfo &db_basic
  *
  *  @return  none
@@ -1282,7 +1297,7 @@ bool GtcsManager::SetDatabaseBasicParaToAns(AmsANS340Struct &amsans, GtcsTcsData
  *  @brief   Set AMS Bulletin Basic Parameter.
  *
  *  @param   GtcsCtrlTelegramStrcut &telegram
- * 
+ *
  *  @param   int jobid
  *
  *  @return  none
@@ -1342,7 +1357,7 @@ bool GtcsManager::GetDatabaseUnscrewData(GtcsCtrlTelegramStrcut &telegram, int j
  *  @brief   Set AMS Bulletin Basic Parameter.
  *
  *  @param   std::vector<GtcsSequenceDataStruct> &seqlist
- * 
+ *
  *  @param   int jobid
  *
  *  @return  bool
@@ -1413,9 +1428,9 @@ bool GtcsManager::GetDatabaseScrewSequenceListData(std::vector<GtcsSequenceDataS
  *  @brief   Set AMS Bulletin Basic Parameter.
  *
  *  @param   std::vector<GtcsStepDataStruct> &steplist
- * 
+ *
  *  @param   int jobid
- * 
+ *
  *  @param   int seqid
  *
  *  @return  bool
@@ -1439,7 +1454,7 @@ bool GtcsManager::GetDatabaseScrewStepListData(std::vector<GtcsStepDataStruct> &
     }
     // Check data aval
 
-    
+
     // Get data from database struct.
     steplist.clear();
     int row_size = db_steplist.size();
@@ -1518,9 +1533,9 @@ bool GtcsManager::GetDatabaseScrewStepListData(std::vector<GtcsStepDataStruct> &
  *  @brief   Set AMS Bulletin Basic Parameter.
  *
  *  @param   McbID4Struct &mcbprocess
- * 
+ *
  *  @param   McbID2Struct &basic
- * 
+ *
  *  @param   std::vector<GtcsStepDataStruct> &steplist
  *
  *  @return  bool
@@ -1555,7 +1570,7 @@ bool GtcsManager::GetMcbProcessTelegramFromDBData(McbID4Struct &mcbprocess, McbI
 #ifdef _DEBUG_MODE_
         std::cout << "i = " << std::to_string(i) << " = "<<std::to_string(mcbprocess.stepid_list[i])<<std::endl;
 #endif
-    }    
+    }
     return true;
 }
 /******************************************************************************************
@@ -1569,11 +1584,11 @@ bool GtcsManager::GetMcbProcessTelegramFromDBData(McbID4Struct &mcbprocess, McbI
  *  @brief   Set AMS Bulletin Basic Parameter.
  *
  *  @param   std::vector<McbID3Struct> &mcbsteplist
- * 
+ *
  *  @param   McbID2Struct &mcbbasic
- * 
+ *
  *  @param   std::vector<GtcsStepDataStruct> &steplist
- * 
+ *
  *  @param   bool stopmotorflag
  *
  *  @return  bool
@@ -1590,7 +1605,7 @@ bool GtcsManager::GetMcbStepTelegramFromDBData(McbID3Struct &mcbstep, McbID2Stru
     mcbstep.u16StepRpm          = dbstep.u16StepRpm;         // SID = 2,Rpm of this screwing step. Unit is [rpm] (after the Gearbox)
     mcbstep.u16StepSlope        = mcbbasic.u16MaxSlope;      // SID = 3,Start slope of this screwing step. Unit is [rpm/s] (after the Gearbox).
     mcbstep.u16StepMaxCurrent   = mcbbasic.u16MaxCurrent;    // SID = 4,Maximum current of this step. Unit is [mA].
-    
+
     mcbstep.u16StepMaxTorque    = (uint16_t)((dbstep.u16StepMaxTorque/5)*1862);   // SID = 5,Maximum Torque Value is 0- 1862 (max Raw TMD Value)
     // std::cout << "mcbstep.u16StepMaxTorque = "<<std::to_string(mcbstep.u16StepMaxTorque) << std::endl;
 
@@ -1602,15 +1617,15 @@ bool GtcsManager::GetMcbStepTelegramFromDBData(McbID3Struct &mcbstep, McbID2Stru
     mcbstep.u16StepTorqueWindow = dbstep.u16StepTorqueWindow;// SID = 10,Window of the torque monitoring.
                                                              // Unit is digits related to maximum Torque Value 1862 (max Raw TMD Value).
     mcbstep.u16MinDutyCycle     = mcbbasic.u16StartDutyCycle;// SID = 11,Minimum Duty Cycle Unit is [0,1%]. (10 = 1%)
-    
+
     // New
     mcbstep.u16AngleWindow2     = dbstep.ScrewLoAngle;       // SID = 14
     mcbstep.u16TorqueWindow2    = dbstep.ScrewLoTorque;      // SID = 15
-    
+
     // Get Mcb step flags.
     // mcbstep.u16StepFlags        = 0;                         // SID = 12,See description of step flags.
     SetMcbScrewStepFlags(mcbstep,dbstep,endstepflag);           // SID = 12,See description of step flags.
-    
+
     // Get Mcb windows mode flags.
     // mcbstep.u16WindowMode       = 0;                         // SID = 13,
     SetMcbStepWindowModeFlags(mcbstep,dbstep);                  // SID = 13
@@ -1628,7 +1643,7 @@ bool GtcsManager::GetMcbStepTelegramFromDBData(McbID3Struct &mcbstep, McbID2Stru
  *  @brief   ( Constructivist )
  *
  *  @param   AmsREQ301Struct &amsreq
- * 
+ *
  *  @return  bool
  *
  *  @note    none
@@ -1697,7 +1712,7 @@ bool GtcsManager::GetMcbStepParameter(McbID3Struct &mcbstep)
  *  @brief   ( Constructivist )
  *
  *  @param   McbID3Struct &mcbstep
- * 
+ *
  *  @return  bool
  *
  *  @note    none
@@ -1726,7 +1741,7 @@ bool GtcsManager::SetMcbStepParameter(McbID3Struct &mcbstep)
  *
  *******************************************************************************************/
 bool GtcsManager::GetMcbScrewStepFlags(McbID3Struct &mcbstep)
-{    
+{
     return true;
 }
 /******************************************************************************************
@@ -1736,13 +1751,13 @@ bool GtcsManager::GetMcbScrewStepFlags(McbID3Struct &mcbstep)
  *  @date    2021/02/18
  *
  *  @fn      GtcsManager::SetMcbScrewStepFlags(McbID3Struct &mcbstep,GtcsStepDataStruct &dbstep)
- * 
+ *
  *  @brief   ( Constructivist )
  *
  *  @param   McbID3Struct &mcbstep
- * 
+ *
  *  @param   GtcsStepDataStruct &dbstep
- * 
+ *
  *  @param   bool stopmotor
  *
  *  @return  bool
@@ -1752,9 +1767,9 @@ bool GtcsManager::GetMcbScrewStepFlags(McbID3Struct &mcbstep)
  *******************************************************************************************/
 bool GtcsManager::SetMcbScrewStepFlags(McbID3Struct &mcbstep,GtcsStepDataStruct &dbstep,bool stopmotor)
 {
-    // Initial step flags. 
+    // Initial step flags.
     mcbstep.u16StepFlags = 0;
-    // Check 
+    // Check
     switch ((uint16_t)dbstep.target_type)
     {
         case (uint16_t)TARGET_TYPE::TORQUE:
@@ -1769,15 +1784,15 @@ bool GtcsManager::SetMcbScrewStepFlags(McbID3Struct &mcbstep,GtcsStepDataStruct 
         case (uint16_t)TARGET_TYPE::TIME:
             mcbstep.u16StepFlags |= 1<<(uint16_t)SCREW_STEP_FLAG::NEXT_TIME;
             break;
-    }        
-    
-    mcbstep.u16StepFlags |= 1<<(uint16_t)SCREW_STEP_FLAG::RESET_ANGLE_STA;     // 
+    }
+
+    mcbstep.u16StepFlags |= 1<<(uint16_t)SCREW_STEP_FLAG::RESET_ANGLE_STA;     //
     mcbstep.u16StepFlags |= 1<<(uint16_t)SCREW_STEP_FLAG::RESET_REV_STA;       //
     if (stopmotor==true)
     {
         mcbstep.u16StepFlags |= 1<<(uint16_t)SCREW_STEP_FLAG::STOP_MOTOR_END_STEP; //
         mcbstep.u16StepFlags |= 1<<(uint16_t)SCREW_STEP_FLAG::TIGHTENING_STEP;     //
-    }   
+    }
     return true;
 }
 /******************************************************************************************
@@ -1791,7 +1806,7 @@ bool GtcsManager::SetMcbScrewStepFlags(McbID3Struct &mcbstep,GtcsStepDataStruct 
  *  @brief   ( Constructivist )
  *
  *  @param   McbID3Struct &mcbstep
- * 
+ *
  *  @return  bool
  *
  *  @note    none
@@ -1812,9 +1827,9 @@ bool GtcsManager::GetMcbStepWindowModeFlags(McbID3Struct &mcbstep)
  *  @brief   ( Constructivist )
  *
  *  @param   McbID3Struct &mcbstep
- * 
+ *
  *  @param   GtcsStepDataStruct &dbstep
- * 
+ *
  *  @return  bool
  *
  *  @note    none
@@ -1833,9 +1848,9 @@ bool GtcsManager::SetMcbStepWindowModeFlags(McbID3Struct &mcbstep,GtcsStepDataSt
  *  @fn      GtcsManager::ScrewDriverSwitchJobHandler(int jobid)
  *
  *  @brief   ( Constructivist )
- * 
+ *
  *  @param   int jobid
- *  
+ *
  *  @return  bool
  *
  *  @note    none
@@ -1869,7 +1884,7 @@ bool GtcsManager::ScrewDriverSwitchJobHandler(int jobid)
     if (GetDatabaseScrewSequenceListData(bulletin->ScrewHandler.GtcsJob.sequencelist, jobid) == false)
     {
         std::cout << "Error to get screw handler sequence list form database." << std::endl;
-        return false;    
+        return false;
     }
     else
     {
@@ -1893,11 +1908,11 @@ bool GtcsManager::ScrewDriverSwitchJobHandler(int jobid)
  *  @fn      GtcsManager::ScrewDriverSwitchSequecneHandler(int jobid,int seqid)
  *
  *  @brief   ( Constructivist )
- * 
+ *
  *  @param   int jobid
- * 
+ *
  *  @param   int seqid
- * 
+ *
  *  @return  bool
  *
  *  @note    none
@@ -1912,9 +1927,12 @@ bool GtcsManager::ScrewDriverSwitchSequenceHandler(int jobid,int seqid)
         std::cout << "Error to get Database Screw Step List Data! "<< std::endl;
         return false;
     }
-
+    // Get step list size.
     int steplist_size = bulletin->ScrewHandler.GtcsJob.sequencelist[seqindex].steplist.size();
+    #if defined(_DEBUG_MODE_)
     std::cout << "steplist_size = "<<std::to_string(steplist_size) << std::endl;
+    #endif
+
     // Package step data list to MCB Process telegram & send to MCB.
     GetMcbProcessTelegramFromDBData(bulletin->McbBulletin.ProcessPara,
                                     bulletin->McbBulletin.BasicPara,
@@ -1922,9 +1940,9 @@ bool GtcsManager::ScrewDriverSwitchSequenceHandler(int jobid,int seqid)
     // Check process data 有笑性 for mcb telegram.
 
     // Send process telegram to MCB.
-    SetMcbProcessParameter(bulletin->McbBulletin.ProcessPara); 
+    SetMcbProcessParameter(bulletin->McbBulletin.ProcessPara);
     bool endstepflag = false;
-    // Package step data list to MCB Step telegram & write to MCB.        
+    // Package step data list to MCB Step telegram & write to MCB.
     for (int i = 0; i < steplist_size; i++)
     {
         if (i==(steplist_size-1))
@@ -1937,7 +1955,7 @@ bool GtcsManager::ScrewDriverSwitchSequenceHandler(int jobid,int seqid)
                                     bulletin->ScrewHandler.GtcsJob.sequencelist[seqindex].steplist[i],
                                     i,
                                     endstepflag);
-        #ifdef _DEBUG_MODE_
+        #if defined(_DEBUG_MODE_)
         std::cout << "=============================================================================== "  << std::endl;
         std::cout << "u8StepID            = "<<std::to_string(bulletin->McbBulletin.StepPara.u8StepID)   << std::endl;
         std::cout << "u8StepName          = "<<bulletin->McbBulletin.StepPara.u8StepName                 << std::endl;
@@ -1960,7 +1978,7 @@ bool GtcsManager::ScrewDriverSwitchSequenceHandler(int jobid,int seqid)
         // Check step data 有笑性
 
         // Write to MCB.
-        SetMcbStepParameter(bulletin->McbBulletin.StepPara); 
+        SetMcbStepParameter(bulletin->McbBulletin.StepPara);
     }
     // Set sequence index = 1.
     // bulletin->ScrewHandler.currentseqeuceindex = 1;
@@ -1977,9 +1995,9 @@ bool GtcsManager::ScrewDriverSwitchSequenceHandler(int jobid,int seqid)
  *  @brief   ( Constructivist )
  *
  *  @param   GtcsScrewSequenceHandler &screwhandler
- *  
+ *
  *  @param   int &tighteningcounte
- * 
+ *
  *  @return  bool
  *
  *  @note    none
@@ -2001,11 +2019,11 @@ bool GtcsManager::GetScrewDriverTighteningCounter(GtcsScrewSequenceHandler &scre
  *  @date    2021/02/04
  *
  *  @fn      GtcsManager::SetScrewDriverTighteningCounter(GtcsScrewSequenceHandler &handler)
- * 
+ *
  *  @brief   ( Constructivist )
  *
  *  @param   GtcsScrewSequenceHandler &screwhandler
- * 
+ *
  *  @return  bool
  *
  *  @note    none
@@ -2039,7 +2057,7 @@ bool GtcsManager::SetScrewDriverTighteningCounter(GtcsScrewSequenceHandler &scre
  *  @brief   ( Constructivist )
  *
  *  @param   AmsREQ301Struct &amsreq
- * 
+ *
  *  @param   GtcsDatabaseBasicInfo &db_basic
  *
  *  @return  bool
@@ -2247,7 +2265,7 @@ void GtcsManager::SetRamdiskTxtPath(std::string Path)
 bool GtcsManager::SetScrewStatusDatabase(std::string Path)
 {
     db_screw_ramdisk_Path = Path;
-    // 
+    //
     return true;
 }
 /******************************************************************************************
@@ -2262,7 +2280,7 @@ bool GtcsManager::SetScrewStatusDatabase(std::string Path)
  *
  *  @param   std::string Path
  *
- *  @return  bool 
+ *  @return  bool
  *
  *  @note    none
  *
@@ -2330,7 +2348,7 @@ int GtcsManager::GetGtcsTcpSocketServerPort()
  *  @brief   ( Constructivist )
  *
  *  @param   std::string ip
- * 
+ *
  *  @param   int port
  *
  *  @return  bool
@@ -2352,7 +2370,7 @@ bool GtcsManager::SetGtcsTcpSocketServerInfo(std::string ip, int port)
  *  @date    2021/02/04
  *
  *  @fn      GtcsManager::StopAllThread()
- *  
+ *
  *  @brief   ( Constructivist )
  *
  *  @param   none
@@ -2397,11 +2415,11 @@ bool GtcsManager::InitialGtcsSystem()
         // Calaulate RT actural value.
         GetRealTimeActuralValue(bulletin->AmsBulletin.DATA300Struct,
                                 bulletin->ScrewHandler,
-                                mcb->telegram.status.current_status);  
+                                mcb->telegram.status.current_status);
         mcb->telegram.status.last_status = mcb->telegram.status.current_status;  // Storage last telegram status.
     }
     bulletin->ScrewHandler.IsEnable = false;
-    
+
     // Min fsm jump to Check system status.
     SetMainFSM(MAIN_FSM::CHECK_SYS);
     return false;
@@ -2486,7 +2504,7 @@ bool GtcsManager::CheckGtcsSystem()
 
     if (bulletin->checksysok == true)
     {
-        // Set Gear rate data. 
+        // Set Gear rate data.
         bulletin->ScrewHandler.u16GearBoxRatio = bulletin->McbBulletin.BasicPara.u16GearBoxRatio;
         bulletin->ScrewHandler.u32StartInp     = bulletin->McbBulletin.BasicPara.u32StartInp;
         // Switch job to normal mode.
@@ -2539,7 +2557,8 @@ bool GtcsManager::RunGtcsSystem()
     {
         SetMainFSM(MAIN_FSM::SETTING); // MAIN_FSM Jump to setting mode.
     }
-    else if(bulletin->alarmstatus == true)
+    else if(bulletin->ScrewHandler.statusnum == (int)LOCKED_STATUS::NG_MCB)
+    // else if (bulletin->alarmstatus == true)
     {
         SetMainFSM(MAIN_FSM::ALARM); // MAIN_FSM Jump to setting mode.
     }
@@ -2548,10 +2567,10 @@ bool GtcsManager::RunGtcsSystem()
         // step 1 =  Compare last sequence index and current sequence index.
         if (bulletin->ScrewHandler.lastseqeuceindex!=bulletin->ScrewHandler.currentseqeuceindex)
         {
-            // Get MCB program data from database. 
+            // Get MCB program data from database.
             ScrewDriverSwitchSequenceHandler(bulletin->ScrewHandler.GtcsJob.jobid,
                                 bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentseqeuceindex].seq_id);
-            // 設定list index 
+            // 設定list index
             bulletin->ScrewHandler.lastseqeuceindex = bulletin->ScrewHandler.currentseqeuceindex;
         }
 
@@ -2584,7 +2603,6 @@ bool GtcsManager::RunGtcsSystem()
         // Step 3 = Polling to MCB & get MCB status.
         if (mcb->GetMcbPollingStatus(ctrltelegram))
         {
-            // 
             // Get MCB Process excute run time status.
             GetToolRunTimeStatus(bulletin->ScrewHandler);
             // Calaulate tigthtening repeat times.
@@ -2603,7 +2621,7 @@ bool GtcsManager::RunGtcsSystem()
                 bulletin->ScrewHandler.screwcounterlocked = false;
                 if (bulletin->ScrewHandler.screwrunning ==false)
                 {
-                   ClearRamdiskTxtFile(); 
+                   ClearRamdiskTxtFile();
                 }
                 bulletin->ScrewHandler.screwrunning = true;
             }
@@ -2613,7 +2631,7 @@ bool GtcsManager::RunGtcsSystem()
 
             // Calaulate RT actural value.
             GetRealTimeActuralValue(bulletin->AmsBulletin.DATA300Struct,bulletin->ScrewHandler,mcb->telegram.status.current_status);
-            // Write RealTime Actural Value to ramdisk. 
+            // Write RealTime Actural Value to ramdisk.
             if (bulletin->ScrewHandler.screwrunning ==true)
             {
                 WriteRealTimeActuralValueToRamdisk(bulletin->AmsBulletin.DATA300Struct);
@@ -2685,9 +2703,39 @@ bool GtcsManager::SettingGtcsSystem()
  *******************************************************************************************/
 bool GtcsManager::ClearGtcsSystemAlarm()
 {
-    std::this_thread::sleep_for(std::chrono::milliseconds(10)); // Thread sleep 1s.
+    // Initial object.
+    GtcsCtrlTelegramStrcut ctrltelegram;
+    mcb->telegram.ctrl.InitialCtrlFlags(ctrltelegram);
+
+    // Check alarm message.
+    if (mcb->telegram.status.loosen_status == false)
+    {
+        ctrltelegram = mcb->telegram.ctrl.fasten;       // Configure fasten ctrl telegram.
+    }
+    else
+    {
+        ctrltelegram = mcb->telegram.ctrl.loosen;       // Config loosen ctrl telegram.
+    }
+    // Check start signal.
+    if (GetSystemErrorStatus(mcb->telegram.status.current_status.u16Statusflags)==true)
+    {
+        if (GetStartSignalStatus(mcb->telegram.status.current_status.u16TMDFlags)==true)
+        {
+            mcb->telegram.ctrl.SetCtrlFlags(ctrltelegram, CTRL_FLAGS_IDX::ERR_ACK); // 
+        }
+        if (mcb->GetMcbPollingStatus(ctrltelegram))
+        {
+        }
+    }
+    else
+    {
+        bulletin->ScrewHandler.statusnum = (int)LOCKED_STATUS::NG_OK;
+        SetMainFSM(MAIN_FSM::READY); // MAIN_FSM Jump to ready mode.    
+    }
+
     #if defined(_DEBUG_MODE_)
     std::cout << "Erro to clear Gtcs system alarm statua!" <<std::endl;
     #endif
+    std::this_thread::sleep_for(std::chrono::milliseconds(10)); // Thread sleep 1s.
     return true;
 }

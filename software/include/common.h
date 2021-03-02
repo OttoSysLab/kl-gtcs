@@ -12,6 +12,7 @@
  Date	       	: 2019/08/06                                                         
 =======================================================================================*/
 #include "gtcsgloabdefine.h"
+#include <ctime>
 #include <array>
 
 // #endif
@@ -54,4 +55,19 @@ public:
     DataSorter(){};
     ~DataSorter(){};
     static std::string GetFloatScaleSortString(float src,int scalenum);
+};
+
+// Datatime 
+class DateTime
+{
+public:
+    DateTime(){};
+    ~DateTime(){};
+    // Get & set current data year.
+    static std::string GetCurrentSystemDateYear();
+    static bool SetCurrentSystemDateYear(std::string &year);
+
+    // Get & set current time.
+    static std::string GetCurrentSystemDateTime();
+    static bool SetCurrentSystemDateTime(std::string &datetime);
 };

@@ -457,7 +457,7 @@ int GtcsMcbComm::ReadBasicParameter(McbID2Struct &basic_para)
     uint8_t main_id = 2;
     uint8_t sub_id[6];
     uint16_t payload_start_index = 8;
-    int delaytime = 50;
+    int delaytime = 100;
 
     // std::this_thread::sleep_for(std::chrono::milliseconds(20));
 
@@ -951,7 +951,7 @@ int GtcsMcbComm::WriteBasicParameter(McbID2Struct &basic)
     uint8_t main_id = 2;
     uint8_t sub_id[6];
     uint16_t payload_start_index = 8;
-    int delaytime = 50;
+    int delaytime = 100;
     #pragma region First package. (SID1-6)
     telegram.w_request.InitialTelegramArray();
     // Initial sub id array.
@@ -1345,7 +1345,7 @@ int GtcsMcbComm::WriteToMcbFlash(int mainid,int subid,int addr_num)
     int main_id = mainid;
     uint8_t sub_id[6];
     uint16_t payload_start_index = 8;
-    int delaytime = 50;
+    int delaytime = 100;
     #pragma region final package. Wriete to flash.
     telegram.w_request.InitialTelegramArray();
     // Initial sub id array.
@@ -1448,7 +1448,7 @@ int GtcsMcbComm::ReadStepParametrer(McbID3Struct &step_para,int mainid)
     int main_id = mainid;
     uint8_t sub_id[6];
     uint16_t payload_start_index = 8;
-    int delaytime = 20;
+    int delaytime = 100;
     #pragma region First package. (SID2-7)
     telegram.r_request.InitialTelegramArray();
     // Initial sub id array.
@@ -1750,7 +1750,7 @@ int GtcsMcbComm::WriteStepParameter(McbID3Struct &step, int mainid)
     int main_id = mainid;
     uint8_t sub_id[6];
     uint16_t payload_start_index = 8;
-    int delaytime = 20;
+    int delaytime = 100;
     #pragma region First package. (SID2-7)
     telegram.w_request.InitialTelegramArray();
     // Initial sub id array.
@@ -2003,7 +2003,7 @@ int GtcsMcbComm::ReadProcessParameter(McbID4Struct &process,int processnum)
     int main_id = processnum;
     uint16_t sub_id[6];
     uint16_t payload_start_index = 8;
-    int delaytime = 20;
+    int delaytime = 100;
 
     #pragma region First package. (SID1-6)
     telegram.r_request.InitialTelegramArray();
@@ -2315,7 +2315,7 @@ int GtcsMcbComm::WriteProcessParameter(McbID4Struct &process, int processid)
     int main_id = processid;
     uint16_t sub_id[6];
     uint16_t payload_start_index = 8;
-    int delaytime = 50;
+    int delaytime = 100;
 
     #pragma region First package. (SID1-6)
     telegram.w_request.InitialTelegramArray();

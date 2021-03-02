@@ -2041,7 +2041,14 @@ bool GtcsManager::SetScrewDriverTighteningCounter(GtcsScrewSequenceHandler &scre
     }
     else
     {
-        screwhandler.screwcounter = screwhandler.maxscrewcounter;
+        if (screwhandler.GtcsJob.jobid == 0)
+        {
+            screwhandler.screwcounter = screwhandler.maxscrewcounter;
+        }
+        else
+        {
+            screwhandler.currentseqeuceindex +=1;
+        }
     }
     return true;
 }
@@ -2596,7 +2603,7 @@ bool GtcsManager::RunGtcsSystem()
             mcb->telegram.ctrl.SetCtrlFlags(ctrltelegram, CTRL_FLAGS_IDX::SC_ENABLE);
         }
 
-        #ifdef _DEBUG_MODE_
+        #if defined(_DEBUG_MODE_)
         std::cout << "telegram.ctrl.IsEnable status = " << std::to_string(bulletin->ScrewHandler.IsEnable) << std::endl;
         #endif
 
@@ -2609,7 +2616,9 @@ bool GtcsManager::RunGtcsSystem()
             if ((bulletin->ScrewHandler.statusnum == (int)LOCKED_STATUS::OK)||(bulletin->ScrewHandler.statusnum == (int)LOCKED_STATUS::REVERSE))
             {
                 SetScrewDriverTighteningCounter(bulletin->ScrewHandler);
+                #if defined(_DEBUG_MODE_)
                 std::cout << "bulletin->ScrewHandler.screwcounter = "<<std::to_string(bulletin->ScrewHandler.screwcounter) <<std::endl;
+                #endif
                 if (bulletin->ScrewHandler.screwrunning ==true)
                 {
                     InsertRealTimeActuralValueToDatabase(bulletin->AmsBulletin.DATA300Struct);
@@ -2636,7 +2645,8 @@ bool GtcsManager::RunGtcsSystem()
             {
                 WriteRealTimeActuralValueToRamdisk(bulletin->AmsBulletin.DATA300Struct);
             }
-            else{
+            else
+            {
                 ;
             }
         }
@@ -2707,35 +2717,42 @@ bool GtcsManager::ClearGtcsSystemAlarm()
     GtcsCtrlTelegramStrcut ctrltelegram;
     mcb->telegram.ctrl.InitialCtrlFlags(ctrltelegram);
 
-    // Check alarm message.
-    if (mcb->telegram.status.loosen_status == false)
+    // Check settingstatus status.
+    if(bulletin->settingstatus == true)
     {
-        ctrltelegram = mcb->telegram.ctrl.fasten;       // Configure fasten ctrl telegram.
+        SetMainFSM(MAIN_FSM::SETTING); // MAIN_FSM Jump to setting mode.
     }
     else
     {
-        ctrltelegram = mcb->telegram.ctrl.loosen;       // Config loosen ctrl telegram.
-    }
-    // Check start signal.
-    if (GetSystemErrorStatus(mcb->telegram.status.current_status.u16Statusflags)==true)
-    {
-        if (GetStartSignalStatus(mcb->telegram.status.current_status.u16TMDFlags)==true)
+        // Check alarm message.
+        if (mcb->telegram.status.loosen_status == false)
         {
-            mcb->telegram.ctrl.SetCtrlFlags(ctrltelegram, CTRL_FLAGS_IDX::ERR_ACK); // 
+            ctrltelegram = mcb->telegram.ctrl.fasten;       // Configure fasten ctrl telegram.
         }
-        if (mcb->GetMcbPollingStatus(ctrltelegram))
+        else
         {
+            ctrltelegram = mcb->telegram.ctrl.loosen;       // Config loosen ctrl telegram.
         }
-    }
-    else
-    {
-        bulletin->ScrewHandler.statusnum = (int)LOCKED_STATUS::NG_OK;
-        SetMainFSM(MAIN_FSM::READY); // MAIN_FSM Jump to ready mode.    
-    }
+        // Check start signal.
+        if (GetSystemErrorStatus(mcb->telegram.status.current_status.u16Statusflags)==true)
+        {
+            if (GetStartSignalStatus(mcb->telegram.status.current_status.u16TMDFlags)==true)
+            {
+                mcb->telegram.ctrl.SetCtrlFlags(ctrltelegram, CTRL_FLAGS_IDX::ERR_ACK); // 
+            }
+            if(mcb->GetMcbPollingStatus(ctrltelegram))
+            {
+            }
+        }
+        else
+        {
+            bulletin->ScrewHandler.statusnum = (int)LOCKED_STATUS::NG_OK;
+            SetMainFSM(MAIN_FSM::READY); // MAIN_FSM Jump to ready mode.    
+        }
 
-    #if defined(_DEBUG_MODE_)
-    std::cout << "Erro to clear Gtcs system alarm statua!" <<std::endl;
-    #endif
-    std::this_thread::sleep_for(std::chrono::milliseconds(10)); // Thread sleep 1s.
+        #if defined(_DEBUG_MODE_)
+        std::cout << "Erro to clear Gtcs system alarm statua!" <<std::endl;
+        #endif
+    }
     return true;
 }

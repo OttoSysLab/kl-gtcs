@@ -19,7 +19,7 @@ _CMD_301 = {
     "str2"   :datetime.now().strftime("%Y%m%d %H:%M:%S"), # yyyyMMdd HH:mm:ss
     "str3"   :"0119",                                     # check sum ,4 chars
     "str4"   :"001",                                      # Command_sn
-    "str5"   :"0",                                        # Job ID, nnornal - 0;
+    "str5"   :"1",                                        # Job ID, nnornal - 0;
 }
 # CMD302, 工具控制命令
 _CMD_302 = {          # {CMDstr1,str2,str3,str4}                                             
@@ -111,7 +111,7 @@ _CMD_340 = {
     "str21" : "1000",                                     # Reverse rpm
     "str22" : "2000",                                     # Reverse slope
     "str23" : "15000",                                    # Reverse max current
-    "str24" : "5.0",                                     # Reverse max torque
+    "str24" : "5.0",                                      # Reverse max torque
     "str25" : "200",                                      # Error idle time
     "str26" : "0",                                        # Bachlash 
     "str27" : "200",                                      # Proportional gain
@@ -205,10 +205,10 @@ def test_socket_client():
     # _ams_dict = _CMD_311
     # _ams_dict = _CMD_312
     # _ams_dict = _CMD_313
-    _ams_dict = _CMD_340       # Initial ID2. 
+    # _ams_dict = _CMD_340       # Initial ID2. 
 
     # AMS REQ.
-    # _ams_dict = _REQ_300
+    _ams_dict = _REQ_300
     # _ams_dict = _REQ_302   
 
     # Convert dictionary to  ams string.

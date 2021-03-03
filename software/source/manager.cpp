@@ -939,23 +939,15 @@ bool GtcsManager::CheckUiSettingFSM(int uicmd)
                 #endif
                 return false;
             }
-            
-            int count = bulletin->ScrewHandler.GtcsJob.sequencelist.size();
             #if defined(_DEBUG_MODE_)    
+            int count = bulletin->ScrewHandler.GtcsJob.sequencelist.size();
             std::cout <<"bulletin->ScrewHandler.GtcsJob.sequencelist = " <<std::to_string(count) <<std::endl;
-            #endif
             for (int i = 0; i < count; i++)
             {
-                #if defined(_DEBUG_MODE_)    
                 std::cout << std::to_string(bulletin->ScrewHandler.GtcsJob.sequencelist[i].seq_id) <<std::endl;
-                #endif
             }
-            #if defined(_DEBUG_MODE_)
             std::cout << "bulletin->ScrewHandler.GtcsJob.job_id = ";
             std::cout << std::to_string(bulletin->ScrewHandler.GtcsJob.jobid)<<std::endl;
-            #endif
-            
-            #if defined(_DEBUG_MODE_)
             std::cout << "bulletin->ScrewHandler.GtcsJob.sequencelist seq_id value = ";
             std::cout << std::to_string(bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentseqeuceindex].seq_id)<<std::endl;
             std::cout << "bulletin->ScrewHandler.currentseqeuceindex = " << std::to_string(bulletin->ScrewHandler.currentseqeuceindex)<<std::endl;
@@ -2081,7 +2073,7 @@ bool GtcsManager::SetScrewDriverTighteningCounter(GtcsScrewSequenceHandler &scre
             screwhandler.screwcounter = screwhandler.maxscrewcounter;
         }
         else
-        {
+        {            
             screwhandler.currentseqeuceindex +=1;
         }
     }
@@ -2614,16 +2606,24 @@ bool GtcsManager::RunGtcsSystem()
     else
     {
         // step 1 =  Compare last sequence index and current sequence index.
-        if (bulletin->ScrewHandler.lastseqeuceindex!=bulletin->ScrewHandler.currentseqeuceindex)
+        if (bulletin->ScrewHandler.currentseqeuceindex < bulletin->ScrewHandler.GtcsJob.sequencelist.size())
         {
-            // Get MCB program data from database.
-            ScrewDriverSwitchSequenceHandler(bulletin->ScrewHandler.GtcsJob.jobid,
-                                bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentseqeuceindex].seq_id);
-            // Get TighteningCounter form database.
-            GetScrewDriverTighteningCounter(bulletin->ScrewHandler,
-                                bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentseqeuceindex].tr);
-            // 設定list index.
-            bulletin->ScrewHandler.lastseqeuceindex = bulletin->ScrewHandler.currentseqeuceindex;
+            // 
+            if (bulletin->ScrewHandler.lastseqeuceindex!=bulletin->ScrewHandler.currentseqeuceindex)
+            {
+                // Get MCB program data from database.
+                ScrewDriverSwitchSequenceHandler(bulletin->ScrewHandler.GtcsJob.jobid,
+                                    bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentseqeuceindex].seq_id);
+                // Get TighteningCounter form database.
+                GetScrewDriverTighteningCounter(bulletin->ScrewHandler,
+                                    bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentseqeuceindex].tr);
+                // 設定list index.
+                bulletin->ScrewHandler.lastseqeuceindex = bulletin->ScrewHandler.currentseqeuceindex;
+            }
+        }
+        else
+        {
+            bulletin->ScrewHandler.currentseqeuceindex = 0;
         }
 
         // step 2 = Config ctrl telegram.
@@ -2662,7 +2662,7 @@ bool GtcsManager::RunGtcsSystem()
             {
                 SetScrewDriverTighteningCounter(bulletin->ScrewHandler);
                 #if defined(_DEBUG_MODE_)
-                std::cout << "bulletin->ScrewHandler.screwcounter = "<<std::to_string(bulletin->ScrewHandler.screwcounter) <<std::endl;
+                // std::cout << "bulletin->ScrewHandler.screwcounter = "<<std::to_string(bulletin->ScrewHandler.screwcounter) <<std::endl;
                 #endif
                 if (bulletin->ScrewHandler.screwrunning ==true)
                 {
@@ -2680,7 +2680,7 @@ bool GtcsManager::RunGtcsSystem()
                 bulletin->ScrewHandler.screwrunning = true;
             }
             #ifdef _DEBUG_MODE_
-            std::cout << "bulletin->ScrewHandler.screwcounter = "<<std::to_string(bulletin->ScrewHandler.screwcounter) <<std::endl;
+            // std::cout << "bulletin->ScrewHandler.screwcounter = "<<std::to_string(bulletin->ScrewHandler.screwcounter) <<std::endl;
             #endif
 
             // Calaulate RT actural value.

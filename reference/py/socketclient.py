@@ -193,7 +193,7 @@ def test_socket_client():
     _ams_dict = dict()  
     
     # AMS command.
-    _ams_dict = _CMD_301       # Seitch Job
+    # _ams_dict = _CMD_301       # Seitch Job
     # _ams_dict = _CMD_302
 
     # _ams_dict = _CMD_310
@@ -203,7 +203,7 @@ def test_socket_client():
     # _ams_dict = _CMD_340       # Initial ID2. 
 
     # AMS REQ.
-    # _ams_dict = _REQ_300
+    _ams_dict = _REQ_300
     # _ams_dict = _REQ_302   
 
     # Convert dictionary to  ams string.

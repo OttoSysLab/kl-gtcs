@@ -461,12 +461,12 @@ void GtcsTcsDatabaseSequenceInfo ::InitialColumnType()
     type.insert(std::pair<std::string,std::string>("program_name","TEXT"));       // column_index  = 2
     type.insert(std::pair<std::string,std::string>("ok_time","INTEGER"));         // column_index  = 3
     type.insert(std::pair<std::string,std::string>("ng_stop","INTEGER"));         // column_index  = 4
-    type.insert(std::pair<std::string,std::string>("joint_offset","REAL"));       // column_index  = 5
-    type.insert(std::pair<std::string,std::string>("offset","INTEGER"));          // column_index  = 6
-    type.insert(std::pair<std::string,std::string>("tr","INTEGER"));              // column_index  = 7
-    type.insert(std::pair<std::string,std::string>("ok_seq","INTEGER"));          // column_index  = 8
-    type.insert(std::pair<std::string,std::string>("ok_seq_time","INTEGER"));     // column_index  = 9
-    type.insert(std::pair<std::string,std::string>("seq_stop","INTEGER"));        // column_index  = 10
+    type.insert(std::pair<std::string,std::string>("tr","INTEGER"));              // column_index  = 5
+    type.insert(std::pair<std::string,std::string>("ok_seq","INTEGER"));          // column_index  = 6
+    type.insert(std::pair<std::string,std::string>("ok_seq_time","REAL"));        // column_index  = 7
+    type.insert(std::pair<std::string,std::string>("seq_stop","INTEGER"));        // column_index  = 8
+    type.insert(std::pair<std::string,std::string>("program_mintime","REAL"));    // column_index  = 8
+    type.insert(std::pair<std::string,std::string>("program_maxtime","REAL"));    // column_index  = 8
 }
 /******************************************************************************************
  *
@@ -492,12 +492,12 @@ void GtcsTcsDatabaseSequenceInfo ::InitialColumnName()
     columnnames.push_back("program_name");    // column_index  = 2
     columnnames.push_back("ok_time");         // column_index  = 3
     columnnames.push_back("ng_stop");         // column_index  = 4
-    columnnames.push_back("joint_offset");    // column_index  = 5
-    columnnames.push_back("offset");          // column_index  = 6
-    columnnames.push_back("tr");              // column_index  = 7
-    columnnames.push_back("ok_seq");          // column_index  = 8
-    columnnames.push_back("ok_seq_time");     // column_index  = 9
-    columnnames.push_back("seq_stop");        // column_index  = 10
+    columnnames.push_back("tr");              // column_index  = 5
+    columnnames.push_back("ok_seq");          // column_index  = 6
+    columnnames.push_back("ok_seq_time");     // column_index  = 7
+    columnnames.push_back("seq_stop");        // column_index  = 8
+    columnnames.push_back("program_mintime"); // column_index  = 9
+    columnnames.push_back("program_maxtime"); // column_index  = 10
 }
 /******************************************************************************************
  *

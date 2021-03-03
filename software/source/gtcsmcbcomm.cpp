@@ -2610,7 +2610,7 @@ int GtcsMcbComm::GetMcbPollingStatus(GtcsCtrlTelegramStrcut &ctrltelegram)
     telegram.status.DecodeTelegramArray();
     telegram.status.CheckLoosenStatus(telegram.status.last_status.u16TMDFlags,telegram.status.current_status.u16TMDFlags);
     
-    #ifdef _DEBUG_MODE_
+    #if defined (_DEBUG_MODE_)
     std::cout <<"u16Statusflags = "<<std::to_string(telegram.status.current_status.u16Statusflags)<< std::endl;
     std::cout <<"u32ActError    = "<<std::to_string(telegram.status.current_status.u32ActError)<< std::endl;
     std::cout <<"u16ActProcNr   = "<<std::to_string(telegram.status.current_status.u16ActProcNr)<< std::endl;

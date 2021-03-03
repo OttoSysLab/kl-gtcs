@@ -1164,12 +1164,12 @@ typedef struct
     std::string program_name; // colunm index = 2
     int ok_time;              // colunm index = 3
     int ng_stop;              // colunm index = 4
-    float joint_offset;       // colunm index = 5
-    int offset;               // colunm index = 6
-    int tr;                   // colunm index = 7
-    int ok_seq;               // colunm index = 8
-    float ok_seq_time;        // colunm index = 9
-    int seq_stop;             // colunm index = 10
+    int tr;                   // colunm index = 5
+    int ok_seq;               // colunm index = 6
+    float ok_seq_time;        // colunm index = 7
+    int seq_stop;             // colunm index = 8
+    float program_mintime;    // colunm index = 9
+    float program_maxtime;    // colunm index = 10
     // Step list. 
     std::vector<GtcsStepDataStruct> steplist;
 }GtcsSequenceDataStruct;

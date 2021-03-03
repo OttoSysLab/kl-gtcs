@@ -551,8 +551,9 @@ bool GtcsManager::GetRealTimeActuralValue(AmsDATA300Struct &data300,GtcsScrewSeq
     data300.dervicetype = std::to_string(0);                  // str5:Device type
     data300.toolsn = std::to_string(0);                       // str6:Tool SN
     data300.dervicesn = std::to_string(0);                    // str7:Device SN
-    data300.jobid = std::to_string(0);                        // str8:Job ID
-    data300.seqid = std::to_string(0);                        // str9:Sequence ID
+    data300.jobid = std::to_string(bulletin->ScrewHandler.GtcsJob.jobid);       // str8:Job ID
+    // str9:Sequence ID.
+    data300.seqid = std::to_string(bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentseqeuceindex].seq_id); 
     data300.progid = std::to_string(mcbstatus.u16ActProcNr);  // str10:Program ID
     data300.stepid = std::to_string(mcbstatus.u16ActStepNr);  // str11:Step ID
     data300.dircetion = std::to_string(0);                    // str12:Direction
@@ -922,20 +923,51 @@ bool GtcsManager::CheckUiSettingFSM(int uicmd)
         bulletin->ScrewHandler.GtcsJob.jobid = std::stoi(bulletin->AmsBulletin.CMD301Struct.str5);
         if (ScrewDriverSwitchJobHandler(bulletin->ScrewHandler.GtcsJob.jobid)==false)
         {
+            #if defined(_DEBUG_MODE_)    
             std::cout << "Error to use CMD301 set ScrewDriverSwitchJobHandler." <<std::endl;
+            #endif
             return false;
         }
         else
-        {
+        {           
             bulletin->ScrewHandler.currentseqeuceindex  = 0;
             if(ScrewDriverSwitchSequenceHandler(bulletin->ScrewHandler.GtcsJob.jobid,
-                                    bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentseqeuceindex].seq_id)==false)
+                            bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentseqeuceindex].seq_id)==false)
             {
+                #if defined(_DEBUG_MODE_)    
                 std::cout << "Error to use CMD301 set ScrewDriverSwitchSequecneHandler." <<std::endl;
+                #endif
                 return false;
             }
+            
+            int count = bulletin->ScrewHandler.GtcsJob.sequencelist.size();
+            #if defined(_DEBUG_MODE_)    
+            std::cout <<"bulletin->ScrewHandler.GtcsJob.sequencelist = " <<std::to_string(count) <<std::endl;
+            #endif
+            for (int i = 0; i < count; i++)
+            {
+                #if defined(_DEBUG_MODE_)    
+                std::cout << std::to_string(bulletin->ScrewHandler.GtcsJob.sequencelist[i].seq_id) <<std::endl;
+                #endif
+            }
+            #if defined(_DEBUG_MODE_)
+            std::cout << "bulletin->ScrewHandler.GtcsJob.job_id = ";
+            std::cout << std::to_string(bulletin->ScrewHandler.GtcsJob.jobid)<<std::endl;
+            #endif
+            
+            #if defined(_DEBUG_MODE_)
+            std::cout << "bulletin->ScrewHandler.GtcsJob.sequencelist seq_id value = ";
+            std::cout << std::to_string(bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentseqeuceindex].seq_id)<<std::endl;
+            std::cout << "bulletin->ScrewHandler.currentseqeuceindex = " << std::to_string(bulletin->ScrewHandler.currentseqeuceindex)<<std::endl;
+            #endif
+
             bulletin->ScrewHandler.screwcounter
                 = bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentseqeuceindex].tr;
+            
+            #if defined(_DEBUG_MODE_)
+            std::cout << "bulletin->ScrewHandler.screwcounter = "<< std::to_string(bulletin->ScrewHandler.screwcounter)<<std::endl;
+            #endif
+            
             bulletin->ScrewHandler.maxscrewcounter = bulletin->ScrewHandler.screwcounter ;
             bulletin->ScrewHandler.lastseqeuceindex = bulletin->ScrewHandler.currentseqeuceindex;
         }
@@ -1373,7 +1405,7 @@ bool GtcsManager::GetDatabaseScrewSequenceListData(std::vector<GtcsSequenceDataS
     GtcsSequenceDataStruct seq;                       //
     std::string::size_type sz;                        // alias of size_t
 
-    // Read.
+    // Read sequence List from database. 
     if (db_ramdisk.ReadDataBaseSequenceList(db_seqlist, jobid) == false)
     {
         #ifdef _DEBUG_MODE_
@@ -1387,17 +1419,18 @@ bool GtcsManager::GetDatabaseScrewSequenceListData(std::vector<GtcsSequenceDataS
     for (int i = 0; i < row_size; i++)
     {
         // Package to  ScrewHandler seqlist.
-        seq.job_id = std::stoi(db_seqlist[i].data["job_id"]);
-        seq.seq_id = std::stoi(db_seqlist[i].data["seq_id"]);
-        seq.program_name = db_seqlist[i].data["program_name"];
-        seq.ok_time = std::stoi(db_seqlist[i].data["ok_time"]);
-        seq.ng_stop = std::stoi(db_seqlist[i].data["ng_stop"]);
-        seq.joint_offset = std::stof(db_seqlist[i].data["joint_offset"], &sz);
-        seq.offset = std::stoi(db_seqlist[i].data["offset"]);
-        seq.tr = std::stoi(db_seqlist[i].data["tr"]);
-        seq.ok_seq = std::stoi(db_seqlist[i].data["ok_seq"]);
-        seq.ok_seq_time = std::stof(db_seqlist[i].data["ok_seq_time"], &sz);
-        seq.seq_stop = std::stoi(db_seqlist[i].data["seq_stop"]);
+        seq.job_id          = std::stoi(db_seqlist[i].data["job_id"]);               // colunm index = 0
+        seq.seq_id          = std::stoi(db_seqlist[i].data["seq_id"]);               // colunm index = 1
+        seq.program_name    = db_seqlist[i].data["program_name"];                    // colunm index = 2
+        seq.ok_time         = std::stoi(db_seqlist[i].data["ok_time"]);              // colunm index = 3
+        seq.ng_stop         = std::stoi(db_seqlist[i].data["ng_stop"]);              // colunm index = 4
+        seq.tr              = std::stoi(db_seqlist[i].data["tr"]);                   // colunm index = 5
+        seq.ok_seq          = std::stoi(db_seqlist[i].data["ok_seq"]);               // colunm index = 6
+        seq.ok_seq_time     = std::stof(db_seqlist[i].data["ok_seq_time"], &sz);     // colunm index = 7
+        seq.seq_stop        = std::stoi(db_seqlist[i].data["seq_stop"]);             // colunm index = 8
+        seq.program_mintime = std::stof(db_seqlist[i].data["program_mintime"], &sz); // colunm index = 9
+        seq.program_maxtime = std::stof(db_seqlist[i].data["program_maxtime"], &sz); // colunm index = 10
+
         seqlist.push_back(seq);
         #ifdef _DEBUG_MODE_
         std::cout << "--------------------------------- " << std::endl;
@@ -1406,12 +1439,12 @@ bool GtcsManager::GetDatabaseScrewSequenceListData(std::vector<GtcsSequenceDataS
         std::cout << "db_seqlist[" << std::to_string(i) << "] = " << seq.program_name << std::endl;
         std::cout << "db_seqlist[" << std::to_string(i) << "] = " << std::to_string(seq.ok_time) << std::endl;
         std::cout << "db_seqlist[" << std::to_string(i) << "] = " << std::to_string(seq.ng_stop) << std::endl;
-        std::cout << "db_seqlist[" << std::to_string(i) << "] = " << std::to_string(seq.joint_offset) << std::endl;
-        std::cout << "db_seqlist[" << std::to_string(i) << "] = " << std::to_string(seq.offset) << std::endl;
         std::cout << "db_seqlist[" << std::to_string(i) << "] = " << std::to_string(seq.tr) << std::endl;
         std::cout << "db_seqlist[" << std::to_string(i) << "] = " << std::to_string(seq.ok_seq) << std::endl;
         std::cout << "db_seqlist[" << std::to_string(i) << "] = " << std::to_string(seq.ok_seq_time) << std::endl;
         std::cout << "db_seqlist[" << std::to_string(i) << "] = " << std::to_string(seq.seq_stop) << std::endl;
+        std::cout << "db_seqlist[" << std::to_string(i) << "] = " << std::to_string(seq.program_mintime) << std::endl;
+        std::cout << "db_seqlist[" << std::to_string(i) << "] = " << std::to_string(seq.program_maxtime) << std::endl;
         std::cout << "--------------------------------- " << std::endl;
         #endif
     }
@@ -1461,35 +1494,35 @@ bool GtcsManager::GetDatabaseScrewStepListData(std::vector<GtcsStepDataStruct> &
     for (size_t i = 0; i < row_size; i++)
     {
         // Package to  ScrewHandler seqlist.
-        step.job_id = std::stoi(db_steplist[i].data["job_id"]);                                // column index = 0,  type = INTEGER
-        step.seq_id = std::stoi(db_steplist[i].data["seq_id"]);                                // column index = 1,  type = INTEGER
-        step.target_type = std::stoi(db_steplist[i].data["target_type"]);                      // column index = 2,  type = INTEGER
-        step.program_name = db_steplist[i].data["program_name"];                               // column index = 3,  type = TEXT
-        step.ScrewStepID = std::stoi(db_steplist[i].data["ScrewStepID"]);                      // column index = 4,  type = INTEGER
-        step.u8StepName = db_steplist[i].data["u8StepName"];                                   // column index = 5,  type = TEXT
-        step.u16StepRpm = std::stoi(db_steplist[i].data["u16StepRpm"]);                        // column index = 6,  type = INTEGER
-        step.u16StepMaxTorque = std::stof(db_steplist[i].data["u16StepMaxTorque"], &sz);       // column index = 7,  type = REAL
-        step.u16StepMaxRevol = std::stof(db_steplist[i].data["u16StepMaxRevol"], &sz);         // column index = 8,  type = REAL
-        step.u16StepTime = std::stof(db_steplist[i].data["u16StepTime"], &sz);                 // column index = 9,  type = REAL
-        step.u16StepAngle = std::stof(db_steplist[i].data["u16StepAngle"], &sz);               // column index = 10, type = REAL
-        step.u16StepAngleWindow = std::stof(db_steplist[i].data["u16StepAngleWindow"], &sz);   // column index = 11, type = REAL
+        step.job_id              = std::stoi(db_steplist[i].data["job_id"]);                   // column index = 0,  type = INTEGER
+        step.seq_id              = std::stoi(db_steplist[i].data["seq_id"]);                   // column index = 1,  type = INTEGER
+        step.target_type         = std::stoi(db_steplist[i].data["target_type"]);              // column index = 2,  type = INTEGER
+        step.program_name        = db_steplist[i].data["program_name"];                        // column index = 3,  type = TEXT
+        step.ScrewStepID         = std::stoi(db_steplist[i].data["ScrewStepID"]);              // column index = 4,  type = INTEGER
+        step.u8StepName          = db_steplist[i].data["u8StepName"];                          // column index = 5,  type = TEXT
+        step.u16StepRpm          = std::stoi(db_steplist[i].data["u16StepRpm"]);               // column index = 6,  type = INTEGER
+        step.u16StepMaxTorque    = std::stof(db_steplist[i].data["u16StepMaxTorque"], &sz);    // column index = 7,  type = REAL
+        step.u16StepMaxRevol     = std::stof(db_steplist[i].data["u16StepMaxRevol"], &sz);     // column index = 8,  type = REAL
+        step.u16StepTime         = std::stof(db_steplist[i].data["u16StepTime"], &sz);         // column index = 9,  type = REAL
+        step.u16StepAngle        = std::stof(db_steplist[i].data["u16StepAngle"], &sz);        // column index = 10, type = REAL
+        step.u16StepAngleWindow  = std::stof(db_steplist[i].data["u16StepAngleWindow"], &sz);  // column index = 11, type = REAL
         step.u16StepTorqueWindow = std::stof(db_steplist[i].data["u16StepTorqueWindow"], &sz); // column index = 12, type = REAL
-        step.ScrewHiTorque = std::stof(db_steplist[i].data["ScrewHiTorque"], &sz);             // column index = 13, type = REAL
-        step.ScrewLoTorque = std::stof(db_steplist[i].data["ScrewLoTorque"], &sz);             // column index = 14, type = REAL
-        step.ScrewHiAngle = std::stof(db_steplist[i].data["ScrewHiAngle"], &sz);               // column index = 15, type = REAL
-        step.ScrewLoAngle = std::stof(db_steplist[i].data["ScrewLoAngle"], &sz);               // column index = 16, type = REAL
-        step.TorqueThreshold = std::stof(db_steplist[i].data["TorqueThreshold"], &sz);         // column index = 17, type = REAL
-        step.TorqueJointOffset = std::stof(db_steplist[i].data["TorqueJointOffset"], &sz);     // column index = 18, type = REAL
-        step.StepDelaytime = std::stof(db_steplist[i].data["StepDelaytime"], &sz);             // column index = 19, type = REAL
-        step.ScrewStepDirection = std::stoi(db_steplist[i].data["ScrewStepDirection"]);        // column index = 20, type = INTEGER
-        step.StepMonitoringMode = std::stoi(db_steplist[i].data["StepMonitoringMode"]);        // column index = 21, type = INTEGER
-        step.off_set = std::stoi(db_steplist[i].data["off_set"]);                              // column index = 22, type = INTEGER
-        step.enable_downshift = std::stoi(db_steplist[i].data["enable_downshift"]);            // column index = 23, type = INTEGER
-        step.downshift_torque = std::stof(db_steplist[i].data["downshift_torque"], &sz);       // column index = 24, type = REAL
-        step.downshift_speed = std::stoi(db_steplist[i].data["downshift_speed"]);              // column index = 25, type = INTEGER
+        step.ScrewHiTorque       = std::stof(db_steplist[i].data["ScrewHiTorque"], &sz);       // column index = 13, type = REAL
+        step.ScrewLoTorque       = std::stof(db_steplist[i].data["ScrewLoTorque"], &sz);       // column index = 14, type = REAL
+        step.ScrewHiAngle        = std::stof(db_steplist[i].data["ScrewHiAngle"], &sz);        // column index = 15, type = REAL
+        step.ScrewLoAngle        = std::stof(db_steplist[i].data["ScrewLoAngle"], &sz);        // column index = 16, type = REAL
+        step.TorqueThreshold     = std::stof(db_steplist[i].data["TorqueThreshold"], &sz);     // column index = 17, type = REAL
+        step.TorqueJointOffset   = std::stof(db_steplist[i].data["TorqueJointOffset"], &sz);   // column index = 18, type = REAL
+        step.StepDelaytime       = std::stof(db_steplist[i].data["StepDelaytime"], &sz);       // column index = 19, type = REAL
+        step.ScrewStepDirection  = std::stoi(db_steplist[i].data["ScrewStepDirection"]);       // column index = 20, type = INTEGER
+        step.StepMonitoringMode  = std::stoi(db_steplist[i].data["StepMonitoringMode"]);       // column index = 21, type = INTEGER
+        step.off_set             = std::stoi(db_steplist[i].data["off_set"]);                  // column index = 22, type = INTEGER
+        step.enable_downshift    = std::stoi(db_steplist[i].data["enable_downshift"]);         // column index = 23, type = INTEGER
+        step.downshift_torque    = std::stof(db_steplist[i].data["downshift_torque"], &sz);    // column index = 24, type = REAL
+        step.downshift_speed     = std::stoi(db_steplist[i].data["downshift_speed"]);          // column index = 25, type = INTEGER
         steplist.push_back(step);
 
-#ifdef _DEBUG_MODE_
+        #if defined(_DEBUG_MODE_)
         std::cout << "--------------------------------- " << std::endl;
         std::cout << "db_steplist[" << std::to_string(i) << "] = " << std::to_string(step.job_id) << std::endl;
         std::cout << "db_steplist[" << std::to_string(i) << "] = " << std::to_string(step.seq_id) << std::endl;
@@ -1518,7 +1551,7 @@ bool GtcsManager::GetDatabaseScrewStepListData(std::vector<GtcsStepDataStruct> &
         std::cout << "db_steplist[" << std::to_string(i) << "] = " << std::to_string(step.downshift_torque) << std::endl;
         std::cout << "db_steplist[" << std::to_string(i) << "] = " << std::to_string(step.downshift_speed) << std::endl;
         std::cout << "--------------------------------- " << std::endl;
-#endif
+        #endif
     }
     return true;
 }
@@ -1546,10 +1579,10 @@ bool GtcsManager::GetDatabaseScrewStepListData(std::vector<GtcsStepDataStruct> &
 bool GtcsManager::GetMcbProcessTelegramFromDBData(McbID4Struct &mcbprocess, McbID2Struct &mcbbasic, std::vector<GtcsStepDataStruct> &steplist)
 {
     // Package data to mcb telegram.
-    mcbprocess.u8ProcID = 4000;
-    mcbprocess.u8ProcName = "****";
-    mcbprocess.u16ProcPGain = mcbbasic.u16PGain;
-    mcbprocess.u16ProcIGain = mcbbasic.u16IGain;
+    mcbprocess.u8ProcID       = 4000;
+    mcbprocess.u8ProcName     = "****";
+    mcbprocess.u16ProcPGain   = mcbbasic.u16PGain;
+    mcbprocess.u16ProcIGain   = mcbbasic.u16IGain;
     mcbprocess.u16ProcMaxTime = 0;
     mcbprocess.u16ProcMinTime = 0;
     mcbprocess.u16ProcRevFunc = 0;
@@ -1567,9 +1600,10 @@ bool GtcsManager::GetMcbProcessTelegramFromDBData(McbID4Struct &mcbprocess, McbI
         {
             mcbprocess.stepid_list[i] = 0;
         }
-#ifdef _DEBUG_MODE_
+        
+        #ifdef _DEBUG_MODE_
         std::cout << "i = " << std::to_string(i) << " = "<<std::to_string(mcbprocess.stepid_list[i])<<std::endl;
-#endif
+        #endif
     }
     return true;
 }
@@ -1893,7 +1927,7 @@ bool GtcsManager::ScrewDriverSwitchJobHandler(int jobid)
         for (int i = 0; i < seqlist_size; i++)
         {
             std::cout << "normal.screw.jobid = " << std::to_string(bulletin->ScrewHandler.GtcsJob.sequencelist[i].job_id);
-            std::cout << " sequence = " << std::to_string(bulletin->ScrewHandler.GtcsJob.sequencelist[i].seq_id) << std::endl;
+            std::cout << "normal.screw.sequence = "<< std::to_string(bulletin->ScrewHandler.GtcsJob.sequencelist[i].seq_id) << std::endl;
         }
         #endif
     }
@@ -2005,9 +2039,10 @@ bool GtcsManager::ScrewDriverSwitchSequenceHandler(int jobid,int seqid)
  *******************************************************************************************/
 bool GtcsManager::GetScrewDriverTighteningCounter(GtcsScrewSequenceHandler &screwhandler,int &tighteningcounte)
 {
-    #ifdef _DEBUG_MODE_
-    // std::cout << "currentseqeuceindex = " <<std::to_string(handler.currentseqeuceindex)<<std::endl;
-    // std::cout << std::to_string() << std::endl;
+    // Set max cpunter.
+    screwhandler.screwcounter = tighteningcounte;
+    #if defined(_DEBUG_MODE_)
+    std::cout << "screwhandler.screwcounter = " <<std::to_string(screwhandler.screwcounter)<<std::endl;
     #endif
     return true;
 }
@@ -2413,9 +2448,15 @@ bool GtcsManager::InitialGtcsSystem()
 {
     // Initial MCB Com.
     mcb->InitialMcbComPort(comport_name);
-    //
-    std::this_thread::sleep_for(std::chrono::milliseconds(1));                  // Thread sleep 1s.
-    for (int index = 0; index < 10; index++)
+    // Copy database from emmc to ramdisk.
+    CopyDatabase(db_ramdisk_Path, db_emmc_Path);
+    // Switch job to normal mode.
+    ScrewDriverSwitchJobHandler(bulletin->ScrewHandler.GtcsJob.jobid);
+    // Switch sequence list to normal mode.
+    ScrewDriverSwitchSequenceHandler(bulletin->ScrewHandler.GtcsJob.jobid,
+                        bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentseqeuceindex].seq_id);
+    // Polling 5 time to trace ttymxc3.
+    for (int index = 0; index < 5; index++)
     {
         // Get MCB polling stataus after polling to MCB .
         mcb->GetMcbPollingStatus(mcb->telegram.ctrl.fasten);
@@ -2520,6 +2561,7 @@ bool GtcsManager::CheckGtcsSystem()
         // Switch sequence list to normal mode.
         ScrewDriverSwitchSequenceHandler(bulletin->ScrewHandler.GtcsJob.jobid,
                             bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentseqeuceindex].seq_id);
+                            
         // Get TighteningCounter form database.
         GetScrewDriverTighteningCounter(bulletin->ScrewHandler,
                             bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentseqeuceindex].tr);
@@ -2577,7 +2619,10 @@ bool GtcsManager::RunGtcsSystem()
             // Get MCB program data from database.
             ScrewDriverSwitchSequenceHandler(bulletin->ScrewHandler.GtcsJob.jobid,
                                 bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentseqeuceindex].seq_id);
-            // 設定list index
+            // Get TighteningCounter form database.
+            GetScrewDriverTighteningCounter(bulletin->ScrewHandler,
+                                bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentseqeuceindex].tr);
+            // 設定list index.
             bulletin->ScrewHandler.lastseqeuceindex = bulletin->ScrewHandler.currentseqeuceindex;
         }
 
@@ -2742,6 +2787,7 @@ bool GtcsManager::ClearGtcsSystemAlarm()
             }
             if(mcb->GetMcbPollingStatus(ctrltelegram))
             {
+                ;
             }
         }
         else

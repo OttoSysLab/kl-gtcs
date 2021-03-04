@@ -920,6 +920,7 @@ bool GtcsManager::CheckUiSettingFSM(int uicmd)
     {
     case AMSCMD::CMD301:
         #pragma region CMD301 Setting sequence.
+        DisableMcbScrewStatus();
         bulletin->ScrewHandler.GtcsJob.jobid = std::stoi(bulletin->AmsBulletin.CMD301Struct.str5);
         if (ScrewDriverSwitchJobHandler(bulletin->ScrewHandler.GtcsJob.jobid)==false)
         {
@@ -963,6 +964,7 @@ bool GtcsManager::CheckUiSettingFSM(int uicmd)
             bulletin->ScrewHandler.maxscrewcounter = bulletin->ScrewHandler.screwcounter ;
             bulletin->ScrewHandler.lastseqeuceindex = bulletin->ScrewHandler.currentseqeuceindex;
         }
+        EnableMcbScrewStatus();
         #pragma endregion
         break;
     case AMSCMD::CMD302:
@@ -1656,6 +1658,75 @@ bool GtcsManager::GetMcbStepTelegramFromDBData(McbID3Struct &mcbstep, McbID2Stru
     // mcbstep.u16WindowMode       = 0;                         // SID = 13,
     SetMcbStepWindowModeFlags(mcbstep,dbstep);                  // SID = 13
 
+    return true;
+}
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
+ *  @date    2021/03/04
+ *
+ *  @fn      GtcsManager::EnableMcbScrewStatus()
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   none
+ *
+ *  @return  bool
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+bool GtcsManager::EnableMcbScrewStatus()
+{
+    // Initial object.
+    GtcsCtrlTelegramStrcut ctrltelegram;
+    // Configure fasten ctrl telegram.
+    ctrltelegram = mcb->telegram.ctrl.config; 
+    mcb->telegram.ctrl.InitialCtrlFlags(ctrltelegram);
+    mcb->telegram.ctrl.SetCtrlFlags(ctrltelegram, CTRL_FLAGS_IDX::SC_ENABLE);
+    mcb->telegram.ctrl.SetCtrlFlags(ctrltelegram, CTRL_FLAGS_IDX::SHORT_UVW);
+    mcb->telegram.ctrl.SetCtrlFlags(ctrltelegram, CTRL_FLAGS_IDX::EN_TIMEOUT_200MS);
+
+    // Polling to MCB.
+    if (mcb->GetMcbPollingStatus(ctrltelegram)==false)
+    {
+        return false;
+    }    
+    return true;
+}
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
+ *  @date    2021/03/04
+ *
+ *  @fn      GtcsManager::DisableMcbScrewStatus()
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   none
+ *
+ *  @return  bool
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+bool GtcsManager::DisableMcbScrewStatus()
+{
+    // Initial object.
+    GtcsCtrlTelegramStrcut ctrltelegram;
+    // Configure fasten ctrl telegram.
+    ctrltelegram = mcb->telegram.ctrl.config; 
+    mcb->telegram.ctrl.InitialCtrlFlags(ctrltelegram);
+    mcb->telegram.ctrl.SetCtrlFlags(ctrltelegram, CTRL_FLAGS_IDX::SHORT_UVW);
+    mcb->telegram.ctrl.SetCtrlFlags(ctrltelegram, CTRL_FLAGS_IDX::EN_TIMEOUT_200MS);
+
+    // Polling to MCB.
+    if (mcb->GetMcbPollingStatus(ctrltelegram)==false)
+    {
+        return false;
+    }    
     return true;
 }
 /******************************************************************************************
@@ -2611,6 +2682,8 @@ bool GtcsManager::RunGtcsSystem()
             // 
             if (bulletin->ScrewHandler.lastseqeuceindex!=bulletin->ScrewHandler.currentseqeuceindex)
             {
+                // Disable Screwdriver.
+                DisableMcbScrewStatus();
                 // Get MCB program data from database.
                 ScrewDriverSwitchSequenceHandler(bulletin->ScrewHandler.GtcsJob.jobid,
                                     bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentseqeuceindex].seq_id);
@@ -2620,11 +2693,13 @@ bool GtcsManager::RunGtcsSystem()
                 // Setting list index.
                 bulletin->ScrewHandler.maxscrewcounter = bulletin->ScrewHandler.screwcounter;
                 bulletin->ScrewHandler.lastseqeuceindex = bulletin->ScrewHandler.currentseqeuceindex;
+                // Enable Screwdriver.
+                EnableMcbScrewStatus();
             }
         }
         else
         {
-            bulletin->ScrewHandler.currentseqeuceindex = 0;
+            bulletin->ScrewHandler.currentseqeuceindex = 0;   // Repeat sequence list operation.
         }
 
         // step 2 = Config ctrl telegram.
@@ -2692,9 +2767,7 @@ bool GtcsManager::RunGtcsSystem()
                 WriteRealTimeActuralValueToRamdisk(bulletin->AmsBulletin.DATA300Struct);
             }
             else
-            {
-                ;
-            }
+            {;}
         }
         // Step 4 = Package system status to bulletin.
         mcb->telegram.status.last_status = mcb->telegram.status.current_status; //
@@ -2725,8 +2798,6 @@ bool GtcsManager::SettingGtcsSystem()
         if (CheckUiSettingFSM(ams->GetAmsCmdNum(bulletin->uisockrevcmd)) == true)
         {
             bulletin->settingstatus = false;
-            // SetMainFSM(MAIN_FSM::READY);
-
             if (bulletin->checksysok == true)
             {
                 SetMainFSM(MAIN_FSM::READY);
@@ -2761,7 +2832,7 @@ bool GtcsManager::ClearGtcsSystemAlarm()
 {
     // Initial object.
     GtcsCtrlTelegramStrcut ctrltelegram;
-    mcb->telegram.ctrl.InitialCtrlFlags(ctrltelegram);
+    // mcb->telegram.ctrl.InitialCtrlFlags(ctrltelegram);
 
     // Check settingstatus status.
     if(bulletin->settingstatus == true)
@@ -2779,16 +2850,20 @@ bool GtcsManager::ClearGtcsSystemAlarm()
         {
             ctrltelegram = mcb->telegram.ctrl.loosen;       // Config loosen ctrl telegram.
         }
+        
         // Check start signal.
         if (GetSystemErrorStatus(mcb->telegram.status.current_status.u16Statusflags)==true)
         {
-            if (GetStartSignalStatus(mcb->telegram.status.current_status.u16TMDFlags)==true)
+            if (bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentseqeuceindex].ng_stop==0)
             {
-                mcb->telegram.ctrl.SetCtrlFlags(ctrltelegram, CTRL_FLAGS_IDX::ERR_ACK); // 
-            }
-            if(mcb->GetMcbPollingStatus(ctrltelegram))
-            {
-                ;
+                if (GetStartSignalStatus(mcb->telegram.status.current_status.u16TMDFlags)==true)
+                {
+                    mcb->telegram.ctrl.InitialCtrlFlags(ctrltelegram);
+                    mcb->telegram.ctrl.SetCtrlFlags(ctrltelegram, CTRL_FLAGS_IDX::ERR_ACK);  // Ack mcb error. 
+                }
+                // Polling Ack signal to mcb.
+                if(mcb->GetMcbPollingStatus(ctrltelegram))
+                {;}           
             }
         }
         else

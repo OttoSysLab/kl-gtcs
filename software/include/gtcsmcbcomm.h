@@ -89,6 +89,18 @@ public:
         .u16ManRpmMode    = 0,
         .u8TMDControl     = 4,
     };
+    GtcsCtrlTelegramStrcut config = {
+        .u16Ctrlflags     = 0,          // 
+        .u16ControlMode   = 0,          // Manuala mode = 0,Process mode = 1,
+        .u16WorkProc      = 4000,       
+        .u16CtrlProgram   = 1,
+        .u16ManRpm        = 1000,
+        .u16ManSlope      = 1000,
+        .u16ManMaxTorque  = 1862,
+        .u16ManMaxCurrent = 30000,
+        .u16ManRpmMode    = 0,
+        .u8TMDControl     = 12,
+    };
     GtcsCtrlTelegramStrcut self_leaning = {
         .u16Ctrlflags     = 0,       // 
         .u16ControlMode   = 1,          // Manuala mode

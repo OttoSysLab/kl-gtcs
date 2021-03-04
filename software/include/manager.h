@@ -87,6 +87,10 @@ private:
     bool GetMcbProcessTelegramFromDBData(McbID4Struct &mcbprocess,McbID2Struct &mcbbasic,std::vector<GtcsStepDataStruct> &steplist);
     bool GetMcbStepTelegramFromDBData(McbID3Struct &mcbstep,McbID2Struct &mcbbasic,GtcsStepDataStruct &dbstep,int stepindex,bool endstepflag);
     
+    // Configure Mcb enable & disable.
+    bool EnableMcbScrewStatus();
+    bool DisableMcbScrewStatus();
+
     // Configure Mcb Process parameter.
     bool GetMcbProcessParameter(McbID4Struct &mcbprocess);
     bool SetMcbProcessParameter(McbID4Struct &mcbprocess);

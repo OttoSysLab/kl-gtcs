@@ -2617,7 +2617,8 @@ bool GtcsManager::RunGtcsSystem()
                 // Get TighteningCounter form database.
                 GetScrewDriverTighteningCounter(bulletin->ScrewHandler,
                                     bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentseqeuceindex].tr);
-                // 設定list index.
+                // Setting list index.
+                bulletin->ScrewHandler.maxscrewcounter = bulletin->ScrewHandler.screwcounter;
                 bulletin->ScrewHandler.lastseqeuceindex = bulletin->ScrewHandler.currentseqeuceindex;
             }
         }

@@ -2077,8 +2077,6 @@ bool GtcsManager::ScrewDriverSwitchSequenceHandler(int jobid,int seqid)
         // Write to MCB.
         SetMcbStepParameter(bulletin->McbBulletin.StepPara);
     }
-    // Set sequence index = 1.
-    // bulletin->ScrewHandler.currentseqeuceindex = 1;
     return true;
 }
 /******************************************************************************************
@@ -2100,10 +2098,10 @@ bool GtcsManager::ScrewDriverSwitchSequenceHandler(int jobid,int seqid)
  *  @note    none
  *
  *******************************************************************************************/
-bool GtcsManager::GetScrewDriverTighteningCounter(GtcsScrewSequenceHandler &screwhandler,int &tighteningcounte)
+bool GtcsManager::GetScrewDriverTighteningCounter(GtcsScrewSequenceHandler &screwhandler,int &tighteningcounter)
 {
     // Set max cpunter.
-    screwhandler.screwcounter = tighteningcounte;
+    screwhandler.screwcounter = tighteningcounter;
     #if defined(_DEBUG_MODE_)
     std::cout << "screwhandler.screwcounter = " <<std::to_string(screwhandler.screwcounter)<<std::endl;
     #endif
@@ -2679,7 +2677,7 @@ bool GtcsManager::RunGtcsSystem()
         // step 1 =  Compare last sequence index and current sequence index.
         if (bulletin->ScrewHandler.currentseqeuceindex < bulletin->ScrewHandler.GtcsJob.sequencelist.size())
         {
-            // 
+            // Send data to mcb.
             if (bulletin->ScrewHandler.lastseqeuceindex!=bulletin->ScrewHandler.currentseqeuceindex)
             {
                 // Disable Screwdriver.
@@ -2694,24 +2692,25 @@ bool GtcsManager::RunGtcsSystem()
                 bulletin->ScrewHandler.maxscrewcounter = bulletin->ScrewHandler.screwcounter;
                 bulletin->ScrewHandler.lastseqeuceindex = bulletin->ScrewHandler.currentseqeuceindex;
                 // Enable Screwdriver.
-                EnableMcbScrewStatus();
+                // EnableMcbScrewStatus();
+                // return false;
             }
         }
         else
         {
-            bulletin->ScrewHandler.currentseqeuceindex = 0;   // Repeat sequence list operation.
+            bulletin->ScrewHandler.currentseqeuceindex = 0;    // Repeat sequence list operation.
+            return false;
         }
 
         // step 2 = Config ctrl telegram.
         if (mcb->telegram.status.loosen_status == false)
         {
-            ctrltelegram = mcb->telegram.ctrl.fasten; // Configure fasten ctrl telegram.
+            ctrltelegram = mcb->telegram.ctrl.fasten;          // Configure fasten ctrl telegram.
             mcb->telegram.ctrl.InitialCtrlFlags(ctrltelegram);
         }
         else
         {
-            ctrltelegram = mcb->telegram.ctrl.loosen; // Config loosen ctrl telegram.
-            // ctrltelegram = mcb->telegram.ctrl.fasten; // Config loosen ctrl telegram.
+            ctrltelegram = mcb->telegram.ctrl.loosen;           // Config loosen ctrl telegram.
             mcb->telegram.ctrl.InitialCtrlFlags(ctrltelegram);
             mcb->telegram.ctrl.SetCtrlFlags(ctrltelegram, CTRL_FLAGS_IDX::SC_REVERSE); // Reverse
         }
@@ -2742,6 +2741,7 @@ bool GtcsManager::RunGtcsSystem()
                 #endif
                 if (bulletin->ScrewHandler.screwrunning ==true)
                 {
+                    // SetScrewDriverTighteningCounter(bulletin->ScrewHandler);
                     InsertRealTimeActuralValueToDatabase(bulletin->AmsBulletin.DATA300Struct);
                 }
                 bulletin->ScrewHandler.screwrunning = false;

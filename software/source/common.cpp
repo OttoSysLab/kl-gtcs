@@ -14,7 +14,7 @@
 
 /******************************************************************************************
  *
- *  @author  Otto
+ *  @author  Otto Chang
  *
  *  @date    2021/02/04
  *
@@ -48,7 +48,7 @@ std::array<bool,8> BitArray::To8BiteArray(int num)
 }
 /******************************************************************************************
  *
- *  @author  Otto
+ *  @author  Otto Chang
  *
  *  @date    2021/02/04
  *
@@ -82,7 +82,7 @@ std::array<bool,16> BitArray::To16BiteArray(int num)
 }
 /******************************************************************************************
  *
- *  @author  Otto
+ *  @author  Otto Chang
  *
  *  @date    2021/02/04
  *
@@ -116,7 +116,7 @@ std::array<bool,32> BitArray::To32BiteArray(int num)
 }
 /******************************************************************************************
  *
- *  @author  Otto
+ *  @author  Otto Chang
  *
  *  @date    2021/02/04
  *
@@ -151,7 +151,7 @@ uint8_t BitConverter::ToUInt8(std::array<bool,8> array)
 }
 /******************************************************************************************
  *
- *  @author  Otto
+ *  @author  Otto Chang
  *
  *  @date    2021/02/04
  *
@@ -186,7 +186,7 @@ uint16_t BitConverter::ToUInt16(std::array<bool,16> array)
 }
 /******************************************************************************************
  *
- *  @author  Otto
+ *  @author  Otto Chang
  *
  *  @date    2021/02/04
  *
@@ -221,7 +221,7 @@ uint32_t BitConverter::ToUInt32(std::array<bool,32> array)
 }
 /******************************************************************************************
  *
- *  @author  Otto
+ *  @author  Otto Chang
  *
  *  @date    2021/02/04
  *

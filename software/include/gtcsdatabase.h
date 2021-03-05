@@ -58,10 +58,17 @@ public:
     bool ReadDatabaseJobData(GtcsTcsDatabaseJobInfo &dbstruct,int jobid);
 
     // Table = program.     
-    bool ReadDataBaseSequenceList(std::vector<GtcsTcsDatabaseSequenceInfo> &dblist,int jobid);
+    bool ReadDataBaseSequenceList(std::vector<GtcsTcsDatabaseSequenceInfo> &dblist,int jobid);  
     
     // Table = step.
     bool ReadDatabaseStepList(std::vector<GtcsTcsDatabaseStepInfo> &dblist,int jobid,int seqid);
+
+    // Table = inputstep_job.
+    bool ReadDatabaseGPIOInputList(std::vector<GtcsTcsDatabaseStepInfo> &dblist,int jobid,int seqid);
+
+    // Table = outputstep_job.
+    bool ReadDatabaseGPIOOutputList(std::vector<GtcsTcsDatabaseStepInfo> &dblist,int jobid,int seqid);
+
 };
 
 // GctsScrewStatusData

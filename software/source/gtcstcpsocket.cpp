@@ -146,8 +146,10 @@ void GtcsTcpSocket::GtcsTcpSocketServerHandler()
         printf("listen socket error: %s(errno: %d)\n",strerror(errno),errno);
     }
     printf("====== waiting for client‘s request ======\n");
+    
     // Loop.
-    while(true){
+    while(true)
+    {
         // Accept connected.
         if( (connfd = accept(listenfd, (struct sockaddr*)NULL, NULL)) == -1)
         {

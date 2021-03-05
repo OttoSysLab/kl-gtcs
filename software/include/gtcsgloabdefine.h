@@ -1,5 +1,5 @@
 #pragma once
-#define _DEBUG_MODE_
+// #define _DEBUG_MODE_
 #define _DEBUG_MODE_207_
 // #define _DEBUG_MODE_202_
 // #define _DEBUG_JOB_SEQ_
@@ -24,6 +24,13 @@
 
 #pragma region GTCS MCB Protcol
 #pragma region Parameter
+// GPIO Pin define.
+enum GTCS_GPIO_REGEIST:int{
+    GPIO2_DR = 0x020A0000,
+    GPIO3_DR = 0x020A4000,
+    GPIO5_DR = 0x020AC000,
+    GPIO6_DR = 0x020B0000,
+};
 // MCB_TELEGRAM_TYPE
 enum MCB_TELEGRAM_TYPE : uint8_t{
     CTRL             = 1,
@@ -872,35 +879,35 @@ typedef struct
 typedef struct
 {
     /* data */
-    std::string str1;  // Header+DATA
-    std::string str2;  // yyyyMMdd HH:mm:ss
-    std::string str3;  // check sum ,4 chars
-    std::string str4;  // Command_sn
-    std::string str5;  // Min temperature
-    std::string str6;  // Max temperature
-    std::string str7;  // Max current
-    std::string str8;  // Max peak current
-    std::string str9;  // torque sensor type
-    std::string str10; // Max duty cycle
-    std::string str11; // Max torque
-    std::string str12; // PWM frequency
-    std::string str13; // Max rpm
-    std::string str14; // Max slope
-    std::string str15; // Min bus voltage
-    std::string str16; // Max bus voltage
-    std::string str17; // Start duty cycle
-    std::string str18; // Gear box ratio
-    std::string str19; // Start input source
-    std::string str20; // Reverse ipnut source
-    std::string str21; // Reverse rpm
-    std::string str22; // Reverse slope
-    std::string str23; // Reverse max current
-    std::string str24; // Reverse max torque
-    std::string str25; // Error idle time
-    std::string str26; // Bachlash
-    std::string str27; // Proportional gain
-    std::string str28; // Integral gain
-    std::string str29; // Encoder
+    std::string str1;   // Header+DATA
+    std::string str2;   // yyyyMMdd HH:mm:ss
+    std::string str3;   // check sum ,4 chars
+    std::string str4;   // Command_sn
+    std::string str5;   // Min temperature
+    std::string str6;   // Max temperature
+    std::string str7;   // Max current
+    std::string str8;   // Max peak current
+    std::string str9;   // torque sensor type
+    std::string str10;  // Max duty cycle
+    std::string str11;  // Max torque
+    std::string str12;  // PWM frequency
+    std::string str13;  // Max rpm
+    std::string str14;  // Max slope
+    std::string str15;  // Min bus voltage
+    std::string str16;  // Max bus voltage
+    std::string str17;  // Start duty cycle
+    std::string str18;  // Gear box ratio
+    std::string str19;  // Start input source
+    std::string str20;  // Reverse ipnut source
+    std::string str21;  // Reverse rpm
+    std::string str22;  // Reverse slope
+    std::string str23;  // Reverse max current
+    std::string str24;  // Reverse max torque
+    std::string str25;  // Error idle time
+    std::string str26;  // Bachlash
+    std::string str27;  // Proportional gain
+    std::string str28;  // Integral gain
+    std::string str29;  // Encoder
     // New
     std::string str30;  // Min Torque
     std::string str31;  // Min RPM
@@ -994,46 +1001,46 @@ typedef struct
 typedef struct
 {
     /* data */
-    std::string header;      // str1:Header+DATA
-    std::string datetime;    // str2:yyyyMMdd HH:mm:ss
-    std::string checksum;    // str3:check sum ,4 chars
-    std::string cmdsn;       // str4:Command_sn
-    std::string dervicetype; // str5:Device type
-    std::string toolsn;      // str6:Tool SN
-    std::string dervicesn;   // str7:Device SN
-    std::string jobid;       // str8:Job ID
-    std::string seqid;       // str9:Sequence ID
-    std::string progid;      // str10:Program ID
-    std::string stepid;      // str11:Step ID
-    std::string dircetion;   // str12:Direction
-    std::string torqueuint;    // str13:Torque unit
-    std::string inc_dec;       // str14:INC/DEC
-    std::string last_screwcnt; // str15:Last_screw_count
-    std::string max_screwcnd;  // str16:Max_screw_count
-    std::string fasteningtime; // str17:Fastening time
-    std::string acttorque;     // str18:Torque
-    std::string actangle;      // str19:Angle
-    std::string maxtorque;     // str20:Max Torque
-    std::string revolutions;   // str21:Revolutions
-    std::string status;        // str22:Status
-    std::string inputio;       // str23:Inputio
-    std::string outputio;      // str24:Outputio
-    std::string errmsg;        // str25:Error Masseage
-    std::string toolcnt;       // str26:Tool Count
-    std::string actrpm;        // str27:RPM
-    std::string toolstatus;    // str28:Tool status
-    std::string clrf;          // CL,RF
+    std::string header;         // str1:Header+DATA
+    std::string datetime;       // str2:yyyyMMdd HH:mm:ss
+    std::string checksum;       // str3:check sum ,4 chars
+    std::string cmdsn;          // str4:Command_sn
+    std::string dervicetype;    // str5:Device type
+    std::string toolsn;         // str6:Tool SN
+    std::string dervicesn;      // str7:Device SN
+    std::string jobid;          // str8:Job ID
+    std::string seqid;          // str9:Sequence ID
+    std::string progid;         // str10:Program ID
+    std::string stepid;         // str11:Step ID
+    std::string dircetion;      // str12:Direction
+    std::string torqueuint;     // str13:Torque unit
+    std::string inc_dec;        // str14:INC/DEC
+    std::string last_screwcnt;  // str15:Last_screw_count
+    std::string max_screwcnd;   // str16:Max_screw_count
+    std::string fasteningtime;  // str17:Fastening time
+    std::string acttorque;      // str18:Torque
+    std::string actangle;       // str19:Angle
+    std::string maxtorque;      // str20:Max Torque
+    std::string revolutions;    // str21:Revolutions
+    std::string status;         // str22:Status
+    std::string inputio;        // str23:Inputio
+    std::string outputio;       // str24:Outputio
+    std::string errmsg;         // str25:Error Masseage
+    std::string toolcnt;        // str26:Tool Count
+    std::string actrpm;         // str27:RPM
+    std::string toolstatus;     // str28:Tool status
+    std::string clrf;           // CL,RF
 }AmsDATA300Struct;
 // DATA301
 typedef struct
 {
     /* data */
-    std::string str1; // Header+DATA
-    std::string str2; // yyyyMMdd HH:mm:ss
-    std::string str3; // check sum ,4 chars
-    std::string str4; // Command_sn
-    std::string str5; // status
-    std::string str6;  // CL,RF
+    std::string str1;   // Header+DATA
+    std::string str2;   // yyyyMMdd HH:mm:ss
+    std::string str3;   // check sum ,4 chars
+    std::string str4;   // Command_sn
+    std::string str5;   // status
+    std::string str6;   // CL,RF
 }AmsDATA302Struct;
 #pragma endregion
 #pragma endregion
@@ -1220,4 +1227,14 @@ public:
     GtcsScrewSequenceHandler(/* args */);
     ~GtcsScrewSequenceHandler();
 };
+#pragma endregion
+
+#pragma region Gtcs GPIO
+typedef struct
+{
+public:
+    int jobid;      // 
+    int pinnum;     // 
+    int plustype;   // 
+}GtcsGPIOInputStruct;
 #pragma endregion

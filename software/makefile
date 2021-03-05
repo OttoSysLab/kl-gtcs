@@ -21,6 +21,7 @@ OBJS += ./object/gtcsgloabdefine.o
 OBJS += ./object/gtcsbulletin.o 
 OBJS += ./object/gtcsfilehandler.o 
 OBJS += ./object/common.o 
+OBJS += ./object/gtcsgpio.o 
 OBJS += ./object/gtcsamsprotocol.o 
 OBJS += ./object/gtcsmcbcomm.o
 OBJS += ./object/manager.o 
@@ -34,6 +35,7 @@ CMD += gtcsgloabdefine.o
 CMD += gtcsbulletin.o 
 CMD += gtcsfilehandler.o 
 CMD += common.o 
+CMD += gtcsgpio.o 
 CMD += gtcsamsprotocol.o 
 CMD += gtcsmcbcomm.o
 CMD += manager.o
@@ -55,6 +57,7 @@ gtcsdriver: gtcsmain.o \
 	  gtcsbulletin.o \
 	  gtcsfilehandler.o \
 	  common.o \
+	  gtcsgpio.o \
 	  gtcsamsprotocol.o  \
 	  gtcsmcbcomm.o \
 	  manager.o \
@@ -75,6 +78,9 @@ gtcsdatabase.o : ./source/gtcsdatabase.cpp
 
 common.o : ./source/common.cpp
 	${CC} ${INCLUDE} -c $< -o ./object/common.o
+
+gtcsgpio.o : ./source/gtcsgpio.cpp
+	${CC} ${INCLUDE} -c $< -o ./object/gtcsgpio.o
 
 comport.o : ./source/comport.cpp 
 	${CC} ${INCLUDE} -c $< -o ./object/comport.o

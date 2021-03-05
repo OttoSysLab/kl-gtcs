@@ -12,6 +12,7 @@
 =======================================================================================*/
 #include "../include/manager.h"
 #include "../include/gtcstcpsocket.h"
+#include "../include/gtcsgpio.h"
 
 #include <iostream>
 #include <pthread.h>
@@ -47,11 +48,12 @@ int main()
     // Ste 3 = Set tcpsocket thread and start.
     #pragma region step 2
     #if defined(_DEBUG_MODE_207_)
-    manager.SetGtcsTcpSocketServerInfo("192.168.0.207", 9000); // OTTO : 207,ERIC : 202
+    manager.StartGtcsTcpSocketServerThread("192.168.0.207", 9000); // OTTO : 207,
+    manager.StartGtcsGPIOThread();
     #elif defined(_DEBUG_MODE_202_)
-    manager.SetGtcsTcpSocketServerInfo("192.168.0.202", 9000); // OTTO : 207,ERIC : 202
+    manager.StartGtcsTcpSocketServerThread("192.168.0.202", 9000); // ERIC : 202
     #else
-    manager.SetGtcsTcpSocketServerInfo("127.0.0.1", 9000); // Linux OTTO
+    manager.StartGtcsTcpSocketServerThread("127.0.0.1", 9000); // Linux OTTO
     #endif
     #pragma endregion
 

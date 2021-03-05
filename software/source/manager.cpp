@@ -737,8 +737,6 @@ bool GtcsManager::InsertRealTimeActuralValueToDatabase(AmsDATA300Struct &data300
 
     // Assign data to screw status information struct.
     screwstatus.data["data_time"]         = data300.datetime;            // colunm_index = 0
-    //screwstatus.data["data_time"]         = "yyyy:mm:dd";            // colunm_index = 0
-
     screwstatus.data["device_type"]       = data300.dervicetype;         // colunm_index = 1
     screwstatus.data["device_sn"]         = data300.dervicesn;           // colunm_index = 2
     screwstatus.data["tool_sn"]           = data300.toolsn;              // colunm_index = 3
@@ -1092,6 +1090,92 @@ bool GtcsManager::GetUiSettingStatus()
 void GtcsManager::SetUiSettingStatus(bool status)
 {
     bulletin->settingstatus = status;
+}
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
+ *  @date    2021/03/05
+ *
+ *  @fn      GtcsManager::GetGtcsGPIOTConfigure()
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   none
+ *
+ *  @return  bool
+ *
+ *  @note    none.
+ *
+ *******************************************************************************************/
+bool GtcsManager::GetGtcsGPIOTConfigure()
+{
+    return true;
+}
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
+ *  @date    2021/03/05
+ *
+ *  @fn      GtcsManager::SetGtcsGPIOTConfigure()
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   none
+ *
+ *  @return  bool
+ *
+ *  @note    none.
+ *
+ *******************************************************************************************/
+bool GtcsManager::SetGtcsGPIOTConfigure()
+{
+    return true;
+}
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
+ *  @date    2021/03/05
+ *
+ *  @fn      GtcsManager::StartGtcsGPIOThread()
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   none
+ *
+ *  @return  bool
+ *
+ *  @note    none.
+ *
+ *******************************************************************************************/
+bool GtcsManager::StartGtcsGPIOThread()
+{
+    // Initial thread.
+    thread_gpio = std::thread(GtcsGPIO::GtcsGPIOPorcessHandler);
+    return true;
+}
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
+ *  @date    2021/03/05
+ *
+ *  @fn      GtcsManager::StopGtcsGPIOThread()
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   none
+ *
+ *  @return  bool
+ *
+ *  @note    none.
+ *
+ *******************************************************************************************/
+bool GtcsManager::StopGtcsGPIOThread()
+{
+    return true;
 }
 /******************************************************************************************
  *
@@ -2446,7 +2530,7 @@ int GtcsManager::GetGtcsTcpSocketServerPort()
  *
  *  @date    2021/02/04
  *
- *  @fn      GtcsManager::SetGtcsTcpSocketServerInfo(std::string ip ,int port)
+ *  @fn      GtcsManager::StartGtcsTcpSocketServerThread(std::string ip ,int port)
  *
  *  @brief   ( Constructivist )
  *
@@ -2459,7 +2543,7 @@ int GtcsManager::GetGtcsTcpSocketServerPort()
  *  @note    none
  *
  *******************************************************************************************/
-bool GtcsManager::SetGtcsTcpSocketServerInfo(std::string ip, int port)
+bool GtcsManager::StartGtcsTcpSocketServerThread(std::string ip, int port)
 {
     bulletin->TcpServer.SetIpAddress(ip);
     bulletin->TcpServer.SetPortNum(port);
@@ -2486,6 +2570,7 @@ bool GtcsManager::SetGtcsTcpSocketServerInfo(std::string ip, int port)
 bool GtcsManager::StopAllThread()
 {
     thread_tcpserver.join();
+    thread_gpio.join();
     return true;
 }
 /******************************************************************************************

@@ -18,6 +18,7 @@
 #include "gtcsdatabase.h"
 #include "gtcstcpsocket.h"
 #include "gtcsfilehandler.h"
+#include "gtcsgpio.h"
 
 #pragma region
 class Manager
@@ -70,8 +71,9 @@ private:
     std::string txt_ramdisk_Path = "";      // Initial txt path
     std::string db_screw_ramdisk_Path = ""; //Initial database path.
     
-    // Thread
+    // Thread.
     std::thread thread_tcpserver;
+    std::thread thread_gpio;
 
     bool CopyDatabase(std::string destination ,std::string source);
     bool UpdateMcbBasicParaToDB(GtcsTcsDatabase &db,GtcsTcsDatabaseBasicInfo &db_basic,McbID2Struct &mcb_basic);
@@ -147,7 +149,7 @@ public:
 
     // Tcp Socke server.
     std::string GetGtcsTcpSocketServerIP();
-    bool SetGtcsTcpSocketServerInfo(std::string ip,int port);
+    bool StartGtcsTcpSocketServerThread(std::string ip,int port);    
     int GetGtcsTcpSocketServerPort();
     bool CheckUiRequestCmd(std::string reqest_string);
     std::string GetUiRequestCmd();
@@ -155,6 +157,12 @@ public:
     bool GetUiSettingStatus();
     void SetUiSettingStatus(bool status);
     
+    // GPIO.
+    bool GetGtcsGPIOTConfigure();
+    bool SetGtcsGPIOTConfigure();
+    bool StartGtcsGPIOThread();
+    bool StopGtcsGPIOThread();
+
     // Get Gtcs system datetimt & year.
     std::string GetCurrentDateYear();
     std::string GetCurrentDateime();

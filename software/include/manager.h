@@ -167,6 +167,10 @@ public:
     std::string GetCurrentDateYear();
     std::string GetCurrentDateime();
 
+    // Get screw dreiver status.
+    bool GetGtcsScrewSequenceHandlerStatus(GtcsScrewSequenceHandler &screwhandler);
+    bool SetGtcsScrewSequenceHandlerStatus(GtcsScrewSequenceHandler &screwhandler);
+
     // Jion thread.
     bool StopAllThread();
     std::string GetMCBErrMessageString(uint32_t errorflagindex);

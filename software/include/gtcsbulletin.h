@@ -12,7 +12,6 @@
  Date	       	: 2019/08/06
 =======================================================================================*/
 #include "gtcsgloabdefine.h"
-// #include <list>
 
 #pragma region bulletin
 #pragma region Gtcs AMS bulletin
@@ -137,7 +136,7 @@ public:
     bool checksysok = true;
     bool settingstatus = false;
     bool alarmstatus = false;
-    
+    // GTCS Tcp socket information.
     std::string uisockrevcmd = "";
     TcpSocketInfo TcpServer;
     TcpSocketInfo TcpClient;

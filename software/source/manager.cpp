@@ -1153,7 +1153,7 @@ bool GtcsManager::SetGtcsGPIOTConfigure()
 bool GtcsManager::StartGtcsGPIOThread()
 {
     // Initial thread.
-    thread_gpio = std::thread(GtcsGPIO::GtcsGPIOPorcessHandler);
+    thread_gpio = std::thread(GtcsGPIOHandler::GtcsGPIOHandlerProcess);
     return true;
 }
 /******************************************************************************************
@@ -1218,6 +1218,54 @@ std::string GtcsManager::GetCurrentDateYear()
 std::string  GtcsManager::GetCurrentDateime()
 {
     return DateTime::GetCurrentSystemDateTime();
+}
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
+ *  @date    2021/02/04
+ *
+ *  @fn      GtcsManager::CopyDatabase(std::string destination ,std::string source)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   std::string destination
+ *
+ *  @param   std::string source
+ *
+ *  @return  bool
+ *
+ *  @note    none.
+ *
+ *******************************************************************************************/
+bool GtcsManager::GetGtcsScrewSequenceHandlerStatus(GtcsScrewSequenceHandler &screwhandler)
+{
+    screwhandler = bulletin->ScrewHandler;
+    return true;
+}
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
+ *  @date    2021/02/04
+ *
+ *  @fn      GtcsManager::CopyDatabase(std::string destination ,std::string source)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   std::string destination
+ *
+ *  @param   std::string source
+ *
+ *  @return  bool
+ *
+ *  @note    none.
+ *
+ *******************************************************************************************/
+bool GtcsManager::SetGtcsScrewSequenceHandlerStatus(GtcsScrewSequenceHandler &screwhandler)
+{
+    bulletin->ScrewHandler = screwhandler;
+    return true;
 }
 /******************************************************************************************
  *

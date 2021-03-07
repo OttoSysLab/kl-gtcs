@@ -31,6 +31,38 @@ enum GTCS_GPIO_REGEIST:int{
     GPIO5_DR = 0x020AC000,
     GPIO6_DR = 0x020B0000,
 };
+// GTCS_GPIO_IN
+enum GTCS_GPIO_IN :int{
+    IN_01 = 6,
+    IN_02 = 4,
+    IN_03 = 0,
+    IN_04 = 27,
+    IN_05 = 28,
+    IN_06 = 29,
+    IN_07 = 26,
+    IN_08 = 30,
+    IN_09 = 31,
+    IN_10 = 4,
+    IN_11 = 7,
+    IN_12 = 16,
+};
+// GTCS_GPIO_IN
+enum GTCS_GPIO_OUT :int{
+    OUT_01 = 0,
+    OUT_02 = 1,
+    OUT_03 = 2,
+    OUT_04 = 3,
+    OUT_05 = 8,
+    OUT_06 = 9,
+    OUT_07 = 10,
+    OUT_08 = 15,
+    OUT_09 = 22,
+    OUT_10 = 21,
+    OUT_11 = 20,
+    OUT_12 = 19,
+    OUT_13 = 18,
+    OUT_14 = 17,
+};
 // MCB_TELEGRAM_TYPE
 enum MCB_TELEGRAM_TYPE : uint8_t{
     CTRL             = 1,

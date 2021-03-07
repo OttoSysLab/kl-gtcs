@@ -13,8 +13,6 @@
 =======================================================================================*/
 #include "gtcsgloabdefine.h"
 #include "manager.h"
-// #include <ctime>
-// #include <array>
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -23,32 +21,25 @@
 #include <sys/mman.h>
 #include <stdint.h>
 
+#pragma region 
 //GPIO Define.
-class GPIO
+class GPIOHandler
 {
 private:
     /* data */
 public:
-    GPIO(/* args */);             // 
-    ~GPIO();                      // 
+    GPIOHandler(/* args */);             // 
+    ~GPIOHandler();                      // 
 };
-
 
 // Gtcs GPIO object. 
-class GtcsGPIO : public GPIO
+class GtcsGPIOHandler : public GPIOHandler
 {
 private:
-    int fd;
-    int i;
-    volatile uint32_t *gpio2;
-    volatile uint32_t *gpio3;
-    volatile uint32_t *gpio5;
-    volatile uint32_t *gpio6;
-    // Initial GtcsGPIO.
-    bool InitialGtcsGPIO();
 public:
-    GtcsGPIO(/* args */);
-    ~GtcsGPIO();
+    GtcsGPIOHandler(/* args */);
+    ~GtcsGPIOHandler();
     // Thread.
-    static void GtcsGPIOPorcessHandler();
+    static void GtcsGPIOHandlerProcess();
 };
+#pragma endregion

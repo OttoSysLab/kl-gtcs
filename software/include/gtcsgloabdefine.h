@@ -1255,6 +1255,8 @@ public:
     std::string lockedmessage = "___________";
     int currentseqeuceindex = 0;
     int lastseqeuceindex = 0;
+    uint16_t inputstatus = 0;
+    uint16_t outputstatus = 0;
     
     GtcsScrewSequenceHandler(/* args */);
     ~GtcsScrewSequenceHandler();

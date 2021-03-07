@@ -94,6 +94,100 @@ GtcsGPIOHandler::~GtcsGPIOHandler()
  *
  *  @date    2021/03/07
  *
+ *  @fn      GtcsGPIOHandler::GetGPIOInputStatus(uint16_t inputvalue,uint32_t &gpio2,uint32_t &gpio3,uint32_t &gpio5,uint32_t &gpio6)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   uint16_t inputvalue
+ * 
+ *  @param   uint32_t &gpio2
+ * 
+ *  @param   uint32_t &gpio3
+ * 
+ *  @param   uint32_t &gpio5
+ * 
+ *  @param   uint32_t &gpio6
+ *
+ *  @return  bool
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+uint16_t GtcsGPIOHandler::GetGPIOInputStatus(volatile uint32_t *gpio2,volatile uint32_t *gpio3,volatile uint32_t *gpio5,volatile uint32_t *gpio6)
+// bool GtcsGPIOHandler::GetGPIOInputStatus(uint16_t inputvalue)
+{
+    uint16_t inputvalue = 0;
+    // gpio IN_OUT_1
+    if (!(*gpio6 & (1 << (int)GTCS_GPIO_IN::IN_01)))
+    {
+        inputvalue |= 1 << 0;
+        // std::cout << "Fuck!!!"<<std::endl;
+    }
+    // gpio IN_OUT_2
+    if (!(*gpio5 & (1 << (int)GTCS_GPIO_IN::IN_02)))
+    {
+        inputvalue |= 1 << 1;
+    }
+    // gpio IN_OUT_3
+    if (!(*gpio5 & (1 << (int)GTCS_GPIO_IN::IN_03)))
+    {
+        inputvalue |= 1 << 2;
+    }
+    // gpio IN_OUT_4
+    if (!(*gpio2 & (1 << (int)GTCS_GPIO_IN::IN_04)))
+    {
+        inputvalue |= 1 << 3;
+    }    
+    // gpio IN_OUT_5
+    if (!(*gpio2 & (1 << (int)GTCS_GPIO_IN::IN_05)))
+    {
+        inputvalue |= 1 << 4;
+    }
+    // gpio IN_OUT_6
+    if (!(*gpio2 & (1 << (int)GTCS_GPIO_IN::IN_06)))
+    {
+        inputvalue |= 1 << 5;
+    }
+    // gpio IN_OUT_7
+    if (!(*gpio2 & (1 << (int)GTCS_GPIO_IN::IN_07)))
+    {
+        inputvalue |= 1 << 6;
+    }
+    // gpio IN_OUT_8
+    if (!(*gpio2 & (1 << (int)GTCS_GPIO_IN::IN_08)))
+    {
+        inputvalue |= 1 << 7;
+    }
+    // gpio IN_OUT_9
+    if (!(*gpio2 & (1 << (int)GTCS_GPIO_IN::IN_09)))
+    {
+        inputvalue |= 1 << 8;
+    }
+    // gpio IN_OUT_10
+    if (!(*gpio3 & (1 << (int)GTCS_GPIO_IN::IN_10)))
+    {
+        inputvalue |= 1 << 9;
+    }
+    // gpio IN_OUT_11
+    if (!(*gpio3 & (1 << (int)GTCS_GPIO_IN::IN_11)))
+    {
+        inputvalue |= 1 << 10;
+    }
+    // gpio IN_OUT_12
+    if (!(*gpio2 & (1 << (int)GTCS_GPIO_IN::IN_12)))
+    {
+        inputvalue |= 1 << 11;
+    }
+    
+    // std::cout << "Fuck value = " << std::to_string(inputvalue) <<std::endl; 
+    return inputvalue;
+}
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
+ *  @date    2021/03/07
+ *
  *  @fn      GtcsGPIOHandler::GtcsGPIOHandlerProcess()
  *
  *  @brief   ( Constructivist )
@@ -168,24 +262,30 @@ void GtcsGPIOHandler::GtcsGPIOHandlerProcess()
 	while (true)
 	{
         // gpio IN_OUT_1
-        // if (!(*gpio6 & (1 << (int)GTCS_GPIO_IN::IN_01))){
-        //     *gpio3 = *gpio3 | (1 << (int)GTCS_GPIO_OUT::OUT_01);
-        // }
-        // else{
-        //     *gpio3 = *gpio3 & ~(1 << (int)GTCS_GPIO_OUT::OUT_01);
-        // }
-        manager.GetGtcsScrewSequenceHandlerStatus(screwhandler);
-        if (screwhandler.statusnum==(int)LOCKED_STATUS::RUNNING)
-        {
+        if (!(*gpio6 & (1 << (int)GTCS_GPIO_IN::IN_01))){
             *gpio3 = *gpio3 | (1 << (int)GTCS_GPIO_OUT::OUT_01);
         }
-        else
-        {
+        else{
             *gpio3 = *gpio3 & ~(1 << (int)GTCS_GPIO_OUT::OUT_01);
         }
+        // manager.GetGtcsScrewSequenceHandlerStatus(screwhandler);
+        // if (screwhandler.statusnum==(int)LOCKED_STATUS::RUNNING)
+        // {
+        //     *gpio3 = *gpio3 | (1 << (int)GTCS_GPIO_OUT::OUT_01);
+        // }
+        // else
+        // {
+        //     *gpio3 = *gpio3 & ~(1 << (int)GTCS_GPIO_OUT::OUT_01);
+        // }
 
+        // Check GPIO input data.
+        screwhandler.inputstatus = GetGPIOInputStatus(gpio2,gpio3,gpio5,gpio6);
+        std::cout << "GPIO Input value = " << std::to_string(screwhandler.inputstatus) << std::endl;
+        
+        #if defined(_DEBUG_MODE_)  
 		std::cout << "Date time now = " << DateTime::GetCurrentSystemDateTime()<< std::endl;
-		std::this_thread::sleep_for(std::chrono::milliseconds(100)); 							// Thread sleep 1s.
+		#endif
+        std::this_thread::sleep_for(std::chrono::milliseconds(100)); 							// Thread sleep 1s.
 	}
     close(fd);
 }

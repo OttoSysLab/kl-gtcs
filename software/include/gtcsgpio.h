@@ -39,17 +39,16 @@ private:
     // status value.
     uint16_t inputstatusvalue = 0;
     uint16_t outputstatusvalue = 0;
-    // static volatile uint32_t *gpio2;
-    // static volatile uint32_t *gpio3;
-    // static volatile uint32_t *gpio5;
-    // static volatile uint32_t *gpio6;
-    // Iuput status.
+    // Iuput & output status.
     static uint16_t GetGPIOInputStatus( volatile uint32_t *gpio2,
-                                    volatile uint32_t *gpio3,
-                                    volatile uint32_t *gpio5,
-                                    volatile uint32_t *gpio6);
-    // bool SetGPIOInputStatus(uint16_t outputvalue,uint32_t &gpio2,uint32_t &gpio3,uint32_t &gpio5,uint32_t &gpio6);
-    // static bool GetGPIOInputStatus(uint16_t inputvalue);
+                                        volatile uint32_t *gpio3,
+                                        volatile uint32_t *gpio5,
+                                        volatile uint32_t *gpio6);
+    static bool SetGPIOOutputStatus(uint16_t outputvalue,
+                                volatile uint32_t *gpio2,
+                                volatile uint32_t *gpio3,
+                                volatile uint32_t *gpio5,
+                                volatile uint32_t *gpio6);
 public:
     GtcsGPIOHandler(/* args */);
     ~GtcsGPIOHandler();

@@ -1,5 +1,5 @@
 #pragma once
-#define _DEBUG_MODE_
+// #define _DEBUG_MODE_
 #define _DEBUG_MODE_207_
 // #define _DEBUG_MODE_202_
 // #define _DEBUG_JOB_SEQ_
@@ -24,6 +24,11 @@
 
 #pragma region GTCS MCB Protcol
 #pragma region Parameter
+// GTCS batch mode
+enum GTCS_BATCH_MODE:int{
+    INC = 0,                     
+    DEC = 1,
+};
 // GPIO Pin define.
 enum GTCS_GPIO_REGEIST:int{
     GPIO2_DR = 0x020A0000,
@@ -1257,7 +1262,8 @@ public:
     int lastseqeuceindex = 0;
     uint16_t currentstepid = 0; 
     std::string currentprogramname = "_";   
-    
+    uint16_t batchmode = (uint16_t)GTCS_BATCH_MODE::INC;  
+    // uint16_t batchmode = (uint16_t)GTCS_BATCH_MODE::DEC;
     uint16_t inputstatus = 0;
     uint16_t outputstatus = 0;
     

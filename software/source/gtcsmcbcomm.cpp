@@ -2566,7 +2566,7 @@ int GtcsMcbComm::InitialMcbComPort(std::string com_name_string)
     strcpy(com_name,com_name_string.c_str());
     com_num = comm.InitialComm(com_name);
     
-    #ifdef _DEBUG_MODE_
+    #if defined(_DEBUG_MODE_)
     std::cout << "open com_num= " <<std::to_string(com_num) <<std::endl;
     #endif
 

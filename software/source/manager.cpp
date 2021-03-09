@@ -558,7 +558,8 @@ bool GtcsManager::GetRealTimeActuralValue(AmsDATA300Struct &data300,GtcsScrewSeq
     // str9:Sequence ID.
     data300.seqid = std::to_string(bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentseqeuceindex].seq_id);
     // str10:Program name
-    data300.progid = bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentseqeuceindex].program_name;
+    // data300.progid = bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentseqeuceindex].program_name;
+    data300.progid = std::to_string(mcbstatus.u16ActProcNr);  // str10:Program ID
     data300.stepid = std::to_string(bulletin->ScrewHandler.currentstepid);  // str11:Step ID
     data300.dircetion = std::to_string(0);                    // str12:Direction
     data300.torqueuint = std::to_string(0);                   // str13:Torque unit
@@ -955,14 +956,20 @@ bool GtcsManager::CheckUiSettingFSM(int uicmd)
             std::cout << "bulletin->ScrewHandler.currentseqeuceindex = " << std::to_string(bulletin->ScrewHandler.currentseqeuceindex)<<std::endl;
             #endif
 
-            bulletin->ScrewHandler.screwcounter
-                = bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentseqeuceindex].tr;
+            // bulletin->ScrewHandler.screwcounter
+            //     = bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentseqeuceindex].tr;
+
+            // Get TighteningCounter form database.
+            GetScrewDriverTighteningCounter(bulletin->ScrewHandler,
+                                    bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentseqeuceindex].tr);
+            // Setting list index.
+            SetCurrentScrewDriverTighteningCounter(bulletin->ScrewHandler);
             
             #if defined(_DEBUG_MODE_)
+            std::cout << "bulletin->ScrewHandler.maxscrewcounter = "<< std::to_string(bulletin->ScrewHandler.maxscrewcounter)<<std::endl;
             std::cout << "bulletin->ScrewHandler.screwcounter = "<< std::to_string(bulletin->ScrewHandler.screwcounter)<<std::endl;
             #endif
-            
-            bulletin->ScrewHandler.maxscrewcounter = bulletin->ScrewHandler.screwcounter ;
+            // bulletin->ScrewHandler.maxscrewcounter = bulletin->ScrewHandler.screwcounter ;
             bulletin->ScrewHandler.lastseqeuceindex = bulletin->ScrewHandler.currentseqeuceindex;
         }
         EnableMcbScrewStatus();
@@ -2218,6 +2225,95 @@ bool GtcsManager::ScrewDriverSwitchSequenceHandler(int jobid,int seqid)
  *
  *  @author  Otto Chang
  *
+ *  @date    2021/03/09
+ *
+ *  @fn      GtcsManager::CheckScrewDriverCountingFinished (GtcsScrewSequenceHandler &screwhandler)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   GtcsScrewSequenceHandler &screwhandler
+ *
+ *  @return  bool
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+bool GtcsManager::CheckScrewDriverCountingFinished (GtcsScrewSequenceHandler &screwhandler)
+{
+    if (screwhandler.batchmode == (uint16_t)GTCS_BATCH_MODE::INC)
+    {
+        if (screwhandler.screwcounter != screwhandler.maxscrewcounter)
+        {
+            return false;
+        }
+    }
+    else
+    {
+        if (screwhandler.screwcounter != 0)
+        {
+            return false;
+        }
+    }
+    return true;
+}
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
+ *  @date    2021/03/09
+ *
+ *  @fn      GtcsManager::GetCurrentScrewDriverTighteningCounter(GtcsScrewSequenceHandler &screwhandler,int &tighteningcounter)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   GtcsScrewSequenceHandler &screwhandler
+ *
+ *  @param   int &tighteningcounte
+ *
+ *  @return  bool
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+bool GtcsManager::GetCurrentScrewDriverTighteningCounter(GtcsScrewSequenceHandler &screwhandler,int &tighteningcounter)
+{
+    return true;
+} 
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
+ *  @date    2021/03/09
+ *
+ *  @fn      GtcsManager::SetCurrentScrewDriverTighteningCounter(GtcsScrewSequenceHandler &screwhandler)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   GtcsScrewSequenceHandler &screwhandler
+ *
+ *  @param   int &tighteningcounte
+ *
+ *  @return  bool
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+bool GtcsManager::SetCurrentScrewDriverTighteningCounter(GtcsScrewSequenceHandler &screwhandler)
+{
+    if (screwhandler.batchmode==(int)GTCS_BATCH_MODE::INC)
+    {
+        screwhandler.screwcounter = 0;                          // 
+    }
+    else
+    {
+        screwhandler.screwcounter = screwhandler.maxscrewcounter;
+    }    
+    return true;
+} 
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
  *  @date    2021/02/04
  *
  *  @fn      GtcsManager::GetScrewDriverTighteningCounter(GtcsScrewSequenceHandler &screwsequenceandler)
@@ -2236,13 +2332,12 @@ bool GtcsManager::ScrewDriverSwitchSequenceHandler(int jobid,int seqid)
 bool GtcsManager::GetScrewDriverTighteningCounter(GtcsScrewSequenceHandler &screwhandler,int &tighteningcounter)
 {
     // Set max cpunter.
-    screwhandler.screwcounter = tighteningcounter;
+    screwhandler.maxscrewcounter = tighteningcounter;
     #if defined(_DEBUG_MODE_)
     std::cout << "screwhandler.screwcounter = " <<std::to_string(screwhandler.screwcounter)<<std::endl;
     #endif
     return true;
 }
-
 /******************************************************************************************
  *
  *  @author  Otto Chang
@@ -2262,23 +2357,31 @@ bool GtcsManager::GetScrewDriverTighteningCounter(GtcsScrewSequenceHandler &scre
  *******************************************************************************************/
 bool GtcsManager::SetScrewDriverTighteningCounter(GtcsScrewSequenceHandler &screwhandler)
 {
-    if (screwhandler.screwcounter != 0)
-    {
-        if (screwhandler.screwcounterlocked==false)
-        {
-            screwhandler.screwcounterlocked = true;
-            screwhandler.screwcounter--;
-        }
-    }
-    else
+    // Check screw driver counting is finished. // if (screwhandler.screwcounter != 0)
+    if (CheckScrewDriverCountingFinished(screwhandler) == true)
     {
         if (screwhandler.GtcsJob.jobid == 0)
         {
-            screwhandler.screwcounter = screwhandler.maxscrewcounter;
+            screwhandler.screwcounter = screwhandler.maxscrewcounter; // 
         }
         else
         {            
-            screwhandler.currentseqeuceindex +=1;
+            screwhandler.currentseqeuceindex +=1;   // Move to next sequence id.
+        }   
+    }
+    else
+    {
+        if (screwhandler.screwcounterlocked==false)
+        {
+            if (screwhandler.batchmode == (uint16_t)GTCS_BATCH_MODE::INC)
+            {
+                screwhandler.screwcounter++;
+            }
+            else
+            {
+                screwhandler.screwcounter--;
+            }
+            screwhandler.screwcounterlocked = true;
         }
     }
     return true;
@@ -2765,6 +2868,7 @@ bool GtcsManager::CheckGtcsSystem()
         #if defined(_DEBUG_MODE_)
         std::cout << "Gear Ratio = " << std::to_string(bulletin->McbBulletin.BasicPara.u16GearBoxRatio) << std::endl;
         #endif
+        SetCurrentScrewDriverTighteningCounter(bulletin->ScrewHandler);
         bulletin->ScrewHandler.IsEnable = true;
         SetMainFSM(MAIN_FSM::READY);
     }
@@ -2824,7 +2928,8 @@ bool GtcsManager::RunGtcsSystem()
                 GetScrewDriverTighteningCounter(bulletin->ScrewHandler,
                                     bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentseqeuceindex].tr);
                 // Setting list index.
-                bulletin->ScrewHandler.maxscrewcounter = bulletin->ScrewHandler.screwcounter;
+                SetCurrentScrewDriverTighteningCounter(bulletin->ScrewHandler);
+                // bulletin->ScrewHandler.screwcounter = bulletin->ScrewHandler.maxscrewcounter; 
                 bulletin->ScrewHandler.lastseqeuceindex = bulletin->ScrewHandler.currentseqeuceindex;
             }
         }

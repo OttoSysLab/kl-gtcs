@@ -115,6 +115,12 @@ private:
     bool ScrewDriverSwitchSequenceHandler(int jobid,int seqid);
 
     // Get tightening repeat counter
+    bool CheckScrewDriverCountingFinished(GtcsScrewSequenceHandler &screwhandler);
+    
+    bool GetCurrentScrewDriverTighteningCounter(GtcsScrewSequenceHandler &screwhandler,int &tighteningcounter);
+    bool SetCurrentScrewDriverTighteningCounter(GtcsScrewSequenceHandler &screwhandler);
+
+
     bool GetScrewDriverTighteningCounter(GtcsScrewSequenceHandler &screwhandler,int &tighteningcounter);
     bool SetScrewDriverTighteningCounter(GtcsScrewSequenceHandler &screwhandler);
 

@@ -113,8 +113,10 @@ GtcsGPIOHandler::~GtcsGPIOHandler()
  *  @note    none
  *
  *******************************************************************************************/
-uint16_t GtcsGPIOHandler::GetGPIOInputStatus(volatile uint32_t *gpio2,volatile uint32_t *gpio3,volatile uint32_t *gpio5,volatile uint32_t *gpio6)
-// bool GtcsGPIOHandler::GetGPIOInputStatus(uint16_t inputvalue)
+uint16_t GtcsGPIOHandler::GetGPIOInputStatus(volatile uint32_t *gpio2,
+                                            volatile uint32_t *gpio3,
+                                            volatile uint32_t *gpio5,
+                                            volatile uint32_t *gpio6)
 {
     uint16_t inputvalue = 0;
     // gpio IN_OUT_1
@@ -179,6 +181,147 @@ uint16_t GtcsGPIOHandler::GetGPIOInputStatus(volatile uint32_t *gpio2,volatile u
         inputvalue |= 1 << 11;
     }
     return inputvalue;
+}
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
+ *  @date    2021/03/07
+ *
+ *  @fn      GtcsGPIOHandler::GetGPIOInputStatus(uint16_t inputvalue,uint32_t &gpio2,uint32_t &gpio3,uint32_t &gpio5,uint32_t &gpio6)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   uint16_t inputvalue
+ * 
+ *  @param   uint32_t &gpio2
+ * 
+ *  @param   uint32_t &gpio3
+ * 
+ *  @param   uint32_t &gpio5
+ * 
+ *  @param   uint32_t &gpio6
+ *
+ *  @return  bool
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+bool GtcsGPIOHandler::SetGPIOOutputStatus(uint16_t outputvalue, 
+                                        volatile uint32_t *gpio2,
+                                        volatile uint32_t *gpio3,
+                                        volatile uint32_t *gpio5,
+                                        volatile uint32_t *gpio6)
+{
+    // gpio OUT_1
+    if (outputvalue & (1 << 0))
+    {
+        *gpio3 = *gpio3 | (1 << GTCS_GPIO_OUT::OUT_01);
+    }
+    else
+    {
+        *gpio3 = *gpio3 & ~(1 << GTCS_GPIO_OUT::OUT_01);
+    }
+    // gpio OUT_2
+    if (outputvalue & (1 << 1))
+    {
+        *gpio3 = *gpio3 | (1 << GTCS_GPIO_OUT::OUT_02);
+    }
+    else
+    {
+        *gpio3 = *gpio3 & ~(1 << GTCS_GPIO_OUT::OUT_02);
+    }
+    // gpio IN_OUT_3
+    if (outputvalue & (1 << 2))
+    {
+        *gpio3 = *gpio3 | (1 << GTCS_GPIO_OUT::OUT_03);
+    }
+    else
+    {
+        *gpio3 = *gpio3 & ~(1 << GTCS_GPIO_OUT::OUT_03);
+    }
+    // gpio IN_OUT_4
+    if (outputvalue & (1 << 3))
+    {
+        *gpio3 = *gpio3 | (1 << GTCS_GPIO_OUT::OUT_04);
+    }
+    else
+    {
+        *gpio3 = *gpio3 & ~(1 << GTCS_GPIO_OUT::OUT_04);
+    }
+    // gpio IN_OUT_5
+    if (outputvalue & (1 << 4))
+    {
+        *gpio3 = *gpio3 | (1 << GTCS_GPIO_OUT::OUT_05);
+    }
+    else
+    {
+        *gpio3 = *gpio3 & ~(1 << GTCS_GPIO_OUT::OUT_05);
+    }
+    // gpio IN_OUT_6
+    if (outputvalue & (1 << 5))
+    {
+        *gpio3 = *gpio3 | (1 << GTCS_GPIO_OUT::OUT_06);
+    }
+    else
+    {
+        *gpio3 = *gpio3 & ~(1 << GTCS_GPIO_OUT::OUT_06);
+    }
+    // gpio IN_OUT_7
+    if (outputvalue & (1 << 6))
+    {
+        *gpio3 = *gpio3 | (1 << GTCS_GPIO_OUT::OUT_07);
+    }
+    else
+    {
+        *gpio3 = *gpio3 & ~(1 << GTCS_GPIO_OUT::OUT_07);
+    }
+    // gpio IN_OUT_8
+    if (outputvalue & (1 << 7))
+    {
+        *gpio3 = *gpio3 | (1 << GTCS_GPIO_OUT::OUT_08);
+    }
+    else
+    {
+        *gpio3 = *gpio3 & ~(1 << GTCS_GPIO_OUT::OUT_08);
+    }
+    // gpio IN_OUT_9
+    if (outputvalue & (1 << 8))
+    {
+        *gpio2 = *gpio2 | (1 << GTCS_GPIO_OUT::OUT_09);
+    }
+    else
+    {
+        *gpio2 = *gpio2 & ~(1 << GTCS_GPIO_OUT::OUT_09);
+    }
+    // gpio IN_OUT_10
+    if (outputvalue & (1 << 9))
+    {
+        *gpio2 = *gpio2 | (1 << GTCS_GPIO_OUT::OUT_10);
+    }
+    else
+    {
+        *gpio2 = *gpio2 & ~(1 << GTCS_GPIO_OUT::OUT_10);
+    }
+    // gpio IN_OUT_11
+    if (outputvalue & (1 << 10))
+    {
+        *gpio2 = *gpio2 | (1 << GTCS_GPIO_OUT::OUT_11);
+    }
+    else
+    {
+        *gpio2 = *gpio2 & ~(1 << GTCS_GPIO_OUT::OUT_11);
+    }
+    // gpio IN_OUT_12
+    if (outputvalue & (1 << 11))
+    {
+        *gpio2 = *gpio2 | (1 << GTCS_GPIO_OUT::OUT_12);
+    }
+    else
+    {
+        *gpio2 = *gpio2 & ~(1 << GTCS_GPIO_OUT::OUT_12);
+    }
+    return true;
 }
 /******************************************************************************************
  *
@@ -259,25 +402,27 @@ void GtcsGPIOHandler::GtcsGPIOHandlerProcess()
     // THread loop
 	while (true)
 	{
-        // gpio IN_OUT_1
-        if (!(*gpio6 & (1 << (int)GTCS_GPIO_IN::IN_01))){
-            *gpio3 = *gpio3 | (1 << (int)GTCS_GPIO_OUT::OUT_01);
-        }
-        else{
-            *gpio3 = *gpio3 & ~(1 << (int)GTCS_GPIO_OUT::OUT_01);
-        }
-        // manager.GetGtcsScrewSequenceHandlerStatus(screwhandler);
-        if (screwhandler.statusnum==(int)LOCKED_STATUS::RUNNING)
-        {
-            *gpio3 = *gpio3 | (1 << (int)GTCS_GPIO_OUT::OUT_01);
-        }
-        else
-        {
-            *gpio3 = *gpio3 & ~(1 << (int)GTCS_GPIO_OUT::OUT_01);
-        }
+        // // gpio IN_OUT_1
+        // if (!(*gpio6 & (1 << (int)GTCS_GPIO_IN::IN_01))){
+        //     *gpio3 = *gpio3 | (1 << (int)GTCS_GPIO_OUT::OUT_01);
+        // }
+        // else{
+        //     *gpio3 = *gpio3 & ~(1 << (int)GTCS_GPIO_OUT::OUT_01);
+        // }
 
+        // manager.GetGtcsScrewSequenceHandlerStatus(screwhandler);
+        // if (screwhandler.statusnum==(int)LOCKED_STATUS::RUNNING)
+        // {
+        //     *gpio3 = *gpio3 | (1 << (int)GTCS_GPIO_OUT::OUT_01);
+        // }
+        // else
+        // {
+        //     *gpio3 = *gpio3 & ~(1 << (int)GTCS_GPIO_OUT::OUT_01);
+        // }
         // Check GPIO input data.
         screwhandler.inputstatus = GetGPIOInputStatus(gpio2,gpio3,gpio5,gpio6);
+        screwhandler.outputstatus = screwhandler.inputstatus;
+        SetGPIOOutputStatus(screwhandler.outputstatus,gpio2,gpio3,gpio5,gpio6);
         std::cout << "GPIO Input value = " << std::to_string(screwhandler.inputstatus) << std::endl;
         
         #if defined(_DEBUG_MODE_)  

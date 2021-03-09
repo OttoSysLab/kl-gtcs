@@ -39,7 +39,7 @@ int main()
     // Check GTCS System.
     if (manager.CheckGtcsSystem() == true)
     {
-        #ifdef _DEBUG_MODE_
+        #if defined(_DEBUG_MODE_)
         std::cout << "Check Gtcs System = OK!! " << std::endl;
         #endif
     }
@@ -49,7 +49,7 @@ int main()
     #pragma region step 2
     #if defined(_DEBUG_MODE_207_)
     manager.StartGtcsTcpSocketServerThread("192.168.0.207", 9000); // OTTO : 207,
-    manager.StartGtcsGPIOThread();
+    // manager.StartGtcsGPIOThread();
     #elif defined(_DEBUG_MODE_202_)
     manager.StartGtcsTcpSocketServerThread("192.168.0.202", 9000); // ERIC : 202
     #else
@@ -64,19 +64,19 @@ int main()
         switch (manager.GetMainFSM())
         {
         case MAIN_FSM::READY:
-            #ifdef _DEBUG_MODE_
+            #if defined(_DEBUG_MODE_)
             std::cout << "Current MainFSM = READY" << std::endl;
             #endif
             manager.RunGtcsSystem();
             break;
         case MAIN_FSM::SETTING:
-            #ifdef _DEBUG_MODE_
+            #if defined(_DEBUG_MODE_)
             std::cout << "Current MainFSM = SETTING" << std::endl;
             #endif
             manager.SettingGtcsSystem();
             break;
         case MAIN_FSM::ALARM:
-            #ifdef _DEBUG_MODE_
+            #if defined(_DEBUG_MODE_)
             std::cout << "Current MainFSM = ALARM" << std::endl;
             #endif
             manager.ClearGtcsSystemAlarm();

@@ -8,6 +8,7 @@ DEBUG_MODE = True
 
 if DEBUG_MODE == True:
     IP =  "192.168.0.207"  # OTTO :207 , Eric = 202.
+    # IP =  "192.168.0.202"  # OTTO :207 , Eric = 202.
 else:
     IP =  "127.0.0.1"
 PORT = 9000
@@ -189,13 +190,15 @@ def encode_ams_cmd(pdict:dict)->str:
 
 # Test socket client.
 def test_socket_client():
+    '''
+    FUCK!!!
+    '''
     # 載入傳送的字串
     _ams_dict = dict()  
     
     # AMS command.
-    # _ams_dict = _CMD_301       # Seitch Job
+    # _ams_dict = _CMD_301       # Seitch Jobs
     # _ams_dict = _CMD_302
-
     # _ams_dict = _CMD_310
     # _ams_dict = _CMD_311
     # _ams_dict = _CMD_312

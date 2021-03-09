@@ -178,8 +178,6 @@ uint16_t GtcsGPIOHandler::GetGPIOInputStatus(volatile uint32_t *gpio2,volatile u
     {
         inputvalue |= 1 << 11;
     }
-    
-    // std::cout << "Fuck value = " << std::to_string(inputvalue) <<std::endl; 
     return inputvalue;
 }
 /******************************************************************************************
@@ -269,14 +267,14 @@ void GtcsGPIOHandler::GtcsGPIOHandlerProcess()
             *gpio3 = *gpio3 & ~(1 << (int)GTCS_GPIO_OUT::OUT_01);
         }
         // manager.GetGtcsScrewSequenceHandlerStatus(screwhandler);
-        // if (screwhandler.statusnum==(int)LOCKED_STATUS::RUNNING)
-        // {
-        //     *gpio3 = *gpio3 | (1 << (int)GTCS_GPIO_OUT::OUT_01);
-        // }
-        // else
-        // {
-        //     *gpio3 = *gpio3 & ~(1 << (int)GTCS_GPIO_OUT::OUT_01);
-        // }
+        if (screwhandler.statusnum==(int)LOCKED_STATUS::RUNNING)
+        {
+            *gpio3 = *gpio3 | (1 << (int)GTCS_GPIO_OUT::OUT_01);
+        }
+        else
+        {
+            *gpio3 = *gpio3 & ~(1 << (int)GTCS_GPIO_OUT::OUT_01);
+        }
 
         // Check GPIO input data.
         screwhandler.inputstatus = GetGPIOInputStatus(gpio2,gpio3,gpio5,gpio6);

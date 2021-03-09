@@ -1,5 +1,5 @@
 #pragma once
-// #define _DEBUG_MODE_
+#define _DEBUG_MODE_
 #define _DEBUG_MODE_207_
 // #define _DEBUG_MODE_202_
 // #define _DEBUG_JOB_SEQ_
@@ -419,7 +419,7 @@ typedef struct
 // GTCS ctrl telegram strut.
 typedef struct
 {
-    uint16_t u16Ctrlflags;             //42496,8192,9728(鎖馬達),Flag10=Cyc
+    uint16_t u16Ctrlflags;             // 42496,8192,9728(鎖馬達),Flag10=Cyc
     uint16_t u16ControlMode;           //
     uint16_t u16WorkProc ;             //
     uint16_t u16CtrlProgram;           //
@@ -1255,6 +1255,9 @@ public:
     std::string lockedmessage = "___________";
     int currentseqeuceindex = 0;
     int lastseqeuceindex = 0;
+    uint16_t currentstepid = 0; 
+    std::string currentprogramname = "_";   
+    
     uint16_t inputstatus = 0;
     uint16_t outputstatus = 0;
     

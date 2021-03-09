@@ -59,7 +59,8 @@ private:
     // std::string GetMcbRtStatusString(MCB_RT_STATUS status);
     std::string GetRtLockedStatusMessage(int lcstatusnum);                                        // Define Locksed status string. 
 
-    bool GetToolRunTimeStatus(GtcsScrewSequenceHandler &screwstatus);
+    bool GetToolRunTimeStatus(GtcsScrewSequenceHandler &screwstatus,StatusTelegram &mcbstatus);
+    
     bool GetStartSignalStatus(uint16_t &tmdflags);
     bool GetSystemErrorStatus(uint16_t &statusflags);
     bool CheckUiSettingFSM(int uicmd);

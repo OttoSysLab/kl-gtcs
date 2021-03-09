@@ -558,12 +558,12 @@ bool GtcsManager::GetRealTimeActuralValue(AmsDATA300Struct &data300,GtcsScrewSeq
     // str9:Sequence ID.
     data300.seqid = std::to_string(bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentseqeuceindex].seq_id);
     // str10:Program name
-    // data300.progid = bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentseqeuceindex].program_name;
-    data300.progid = std::to_string(mcbstatus.u16ActProcNr);  // str10:Program ID
+    data300.progid = bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentseqeuceindex].program_name;
+    // data300.progid = std::to_string(mcbstatus.u16ActProcNr);  // str10:Program ID
     data300.stepid = std::to_string(bulletin->ScrewHandler.currentstepid);  // str11:Step ID
     data300.dircetion = std::to_string(0);                    // str12:Direction
     data300.torqueuint = std::to_string(0);                   // str13:Torque unit
-    data300.inc_dec = std::to_string(0);                                    // str14:INC/DEC
+    data300.inc_dec = std::to_string(screwhandler.batchmode); // str14:INC/DEC
     data300.last_screwcnt = std::to_string(screwhandler.screwcounter);      // str15:Last_screw_count
     data300.max_screwcnd = std::to_string(screwhandler.maxscrewcounter);    // str16:Max_screw_count
     data300.fasteningtime = std::to_string(0);                // str17:Fastening time
@@ -955,10 +955,6 @@ bool GtcsManager::CheckUiSettingFSM(int uicmd)
             std::cout << std::to_string(bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentseqeuceindex].seq_id)<<std::endl;
             std::cout << "bulletin->ScrewHandler.currentseqeuceindex = " << std::to_string(bulletin->ScrewHandler.currentseqeuceindex)<<std::endl;
             #endif
-
-            // bulletin->ScrewHandler.screwcounter
-            //     = bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentseqeuceindex].tr;
-
             // Get TighteningCounter form database.
             GetScrewDriverTighteningCounter(bulletin->ScrewHandler,
                                     bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentseqeuceindex].tr);
@@ -971,8 +967,11 @@ bool GtcsManager::CheckUiSettingFSM(int uicmd)
             #endif
             // bulletin->ScrewHandler.maxscrewcounter = bulletin->ScrewHandler.screwcounter ;
             bulletin->ScrewHandler.lastseqeuceindex = bulletin->ScrewHandler.currentseqeuceindex;
+
+            // Setting MCB to fasten status.
+            mcb->telegram.status.loosen_status = false;
         }
-        EnableMcbScrewStatus();
+        // EnableMcbScrewStatus();
         #pragma endregion
         break;
     case AMSCMD::CMD302:
@@ -2929,8 +2928,9 @@ bool GtcsManager::RunGtcsSystem()
                                     bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentseqeuceindex].tr);
                 // Setting list index.
                 SetCurrentScrewDriverTighteningCounter(bulletin->ScrewHandler);
-                // bulletin->ScrewHandler.screwcounter = bulletin->ScrewHandler.maxscrewcounter; 
                 bulletin->ScrewHandler.lastseqeuceindex = bulletin->ScrewHandler.currentseqeuceindex;
+                // Setting MCB to fasten status.
+                mcb->telegram.status.loosen_status = false;
             }
         }
         else
@@ -2971,16 +2971,15 @@ bool GtcsManager::RunGtcsSystem()
             GetToolRunTimeStatus(bulletin->ScrewHandler,mcb->telegram.status);
             
             // Calaulate tigthtening repeat times.
-            if ((bulletin->ScrewHandler.statusnum == (int)LOCKED_STATUS::OK)||(bulletin->ScrewHandler.statusnum == (int)LOCKED_STATUS::REVERSE))
+            if ((bulletin->ScrewHandler.statusnum == (int)LOCKED_STATUS::OK)||(bulletin->ScrewHandler.statusnum == (int)LOCKED_STATUS::NG_MCB))
             {
                 // Onlay to process OK!
                 if (bulletin->ScrewHandler.statusnum == (int)LOCKED_STATUS::OK)
                 {
+                    // screwhander 的 currentseqindex會指錯
                     SetScrewDriverTighteningCounter(bulletin->ScrewHandler);
                 }
-                #if defined(_DEBUG_MODE_)
-                // std::cout << "bulletin->ScrewHandler.screwcounter = "<<std::to_string(bulletin->ScrewHandler.screwcounter) <<std::endl;
-                #endif
+                // Insert real time data to database. 
                 if (bulletin->ScrewHandler.screwrunning ==true)
                 {
                     InsertRealTimeActuralValueToDatabase(bulletin->AmsBulletin.DATA300Struct);
@@ -2998,7 +2997,10 @@ bool GtcsManager::RunGtcsSystem()
             }
             
             // Calaulate RT actural value.
-            GetRealTimeActuralValue(bulletin->AmsBulletin.DATA300Struct,bulletin->ScrewHandler,mcb->telegram.status.current_status);
+            if(CheckScrewDriverCountingFinished(bulletin->ScrewHandler) != true)
+            {
+                GetRealTimeActuralValue(bulletin->AmsBulletin.DATA300Struct,bulletin->ScrewHandler,mcb->telegram.status.current_status);
+            }
             // Write RealTime Actural Value to ramdisk.
             if (bulletin->ScrewHandler.screwrunning ==true)
             {

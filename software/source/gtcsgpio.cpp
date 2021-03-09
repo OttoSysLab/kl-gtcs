@@ -402,23 +402,6 @@ void GtcsGPIOHandler::GtcsGPIOHandlerProcess()
     // THread loop
 	while (true)
 	{
-        // // gpio IN_OUT_1
-        // if (!(*gpio6 & (1 << (int)GTCS_GPIO_IN::IN_01))){
-        //     *gpio3 = *gpio3 | (1 << (int)GTCS_GPIO_OUT::OUT_01);
-        // }
-        // else{
-        //     *gpio3 = *gpio3 & ~(1 << (int)GTCS_GPIO_OUT::OUT_01);
-        // }
-
-        // manager.GetGtcsScrewSequenceHandlerStatus(screwhandler);
-        // if (screwhandler.statusnum==(int)LOCKED_STATUS::RUNNING)
-        // {
-        //     *gpio3 = *gpio3 | (1 << (int)GTCS_GPIO_OUT::OUT_01);
-        // }
-        // else
-        // {
-        //     *gpio3 = *gpio3 & ~(1 << (int)GTCS_GPIO_OUT::OUT_01);
-        // }
         // Check GPIO input data.
         screwhandler.inputstatus = GetGPIOInputStatus(gpio2,gpio3,gpio5,gpio6);
         screwhandler.outputstatus = screwhandler.inputstatus;

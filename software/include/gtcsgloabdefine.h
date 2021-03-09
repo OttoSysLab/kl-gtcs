@@ -1,5 +1,5 @@
 #pragma once
-// #define _DEBUG_MODE_
+#define _DEBUG_MODE_
 #define _DEBUG_MODE_207_
 // #define _DEBUG_MODE_202_
 // #define _DEBUG_JOB_SEQ_

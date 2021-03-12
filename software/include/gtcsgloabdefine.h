@@ -1258,12 +1258,11 @@ public:
     uint16_t u16GearBoxRatio;    // SID = 14,Gear box ratio. Unit [0,01] (1600 = 16:1)
     uint16_t u32StartInp;        // SID = 15,0 = Start Switch,1 = From Displaycontroller Telegram"
     std::string lockedmessage = "___________";
-    int currentseqeuceindex = 0;
-    int lastseqeuceindex = 0;
+    int currentsequenceindex = 0;
+    int lastsequenceindex = 0;
     uint16_t currentstepid = 0; 
     std::string currentprogramname = "_";   
-    uint16_t batchmode = (uint16_t)GTCS_BATCH_MODE::INC;  
-    // uint16_t batchmode = (uint16_t)GTCS_BATCH_MODE::DEC;
+    uint16_t batchmode = (uint16_t)GTCS_BATCH_MODE::INC;  // uint16_t batchmode = (uint16_t)GTCS_BATCH_MODE::DEC;
     uint16_t inputstatus = 0;
     uint16_t outputstatus = 0;
     

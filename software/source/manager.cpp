@@ -556,9 +556,9 @@ bool GtcsManager::GetRealTimeActuralValue(AmsDATA300Struct &data300,GtcsScrewSeq
     data300.dervicesn = std::to_string(0);                    // str7:Device SN
     data300.jobid = std::to_string(bulletin->ScrewHandler.GtcsJob.jobid);       // str8:Job ID
     // str9:Sequence ID.
-    data300.seqid = std::to_string(bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentseqeuceindex].seq_id);
+    data300.seqid = std::to_string(bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentsequenceindex].seq_id);
     // str10:Program name
-    data300.progid = bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentseqeuceindex].program_name;
+    data300.progid = bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentsequenceindex].program_name;
     // data300.progid = std::to_string(mcbstatus.u16ActProcNr);  // str10:Program ID
     data300.stepid = std::to_string(bulletin->ScrewHandler.currentstepid);  // str11:Step ID
     data300.dircetion = std::to_string(0);                    // str12:Direction
@@ -933,9 +933,9 @@ bool GtcsManager::CheckUiSettingFSM(int uicmd)
         }
         else
         {           
-            bulletin->ScrewHandler.currentseqeuceindex  = 0;
+            bulletin->ScrewHandler.currentsequenceindex  = 0;
             if(ScrewDriverSwitchSequenceHandler(bulletin->ScrewHandler.GtcsJob.jobid,
-                            bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentseqeuceindex].seq_id)==false)
+                            bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentsequenceindex].seq_id)==false)
             {
                 #if defined(_DEBUG_MODE_)    
                 std::cout << "Error to use CMD301 set ScrewDriverSwitchSequecneHandler." <<std::endl;
@@ -952,12 +952,12 @@ bool GtcsManager::CheckUiSettingFSM(int uicmd)
             std::cout << "bulletin->ScrewHandler.GtcsJob.job_id = ";
             std::cout << std::to_string(bulletin->ScrewHandler.GtcsJob.jobid)<<std::endl;
             std::cout << "bulletin->ScrewHandler.GtcsJob.sequencelist seq_id value = ";
-            std::cout << std::to_string(bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentseqeuceindex].seq_id)<<std::endl;
-            std::cout << "bulletin->ScrewHandler.currentseqeuceindex = " << std::to_string(bulletin->ScrewHandler.currentseqeuceindex)<<std::endl;
+            std::cout << std::to_string(bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentsequenceindex].seq_id)<<std::endl;
+            std::cout << "bulletin->ScrewHandler.currentsequenceindex = " << std::to_string(bulletin->ScrewHandler.currentsequenceindex)<<std::endl;
             #endif
             // Get TighteningCounter form database.
             GetScrewDriverTighteningCounter(bulletin->ScrewHandler,
-                                    bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentseqeuceindex].tr);
+                                    bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentsequenceindex].tr);
             // Setting list index.
             SetCurrentScrewDriverTighteningCounter(bulletin->ScrewHandler);
             
@@ -965,9 +965,8 @@ bool GtcsManager::CheckUiSettingFSM(int uicmd)
             std::cout << "bulletin->ScrewHandler.maxscrewcounter = "<< std::to_string(bulletin->ScrewHandler.maxscrewcounter)<<std::endl;
             std::cout << "bulletin->ScrewHandler.screwcounter = "<< std::to_string(bulletin->ScrewHandler.screwcounter)<<std::endl;
             #endif
-            // bulletin->ScrewHandler.maxscrewcounter = bulletin->ScrewHandler.screwcounter ;
-            bulletin->ScrewHandler.lastseqeuceindex = bulletin->ScrewHandler.currentseqeuceindex;
-
+            // Setting last sequence index = current seqeuce index.
+            bulletin->ScrewHandler.lastsequenceindex = bulletin->ScrewHandler.currentsequenceindex;
             // Setting MCB to fasten status.
             mcb->telegram.status.loosen_status = false;
         }
@@ -1537,8 +1536,8 @@ bool GtcsManager::GetDatabaseScrewSequenceListData(std::vector<GtcsSequenceDataS
     // Initial object.
     GtcsTcsDatabase db_ramdisk(db_ramdisk_Path);
     std::vector<GtcsTcsDatabaseSequenceInfo> db_seqlist; //
-    GtcsSequenceDataStruct seq;                       //
-    std::string::size_type sz;                        // alias of size_t
+    GtcsSequenceDataStruct seq;                          //
+    std::string::size_type sz;                           // alias of size_t
 
     // Read sequence List from database. 
     if (db_ramdisk.ReadDataBaseSequenceList(db_seqlist, jobid) == false)
@@ -2159,7 +2158,7 @@ bool GtcsManager::ScrewDriverSwitchJobHandler(int jobid)
 bool GtcsManager::ScrewDriverSwitchSequenceHandler(int jobid,int seqid)
 {
     // Get step data list from tcs.db step table by JobID & seqID.
-    int seqindex = bulletin->ScrewHandler.currentseqeuceindex;
+    int seqindex = bulletin->ScrewHandler.currentsequenceindex;
     if (GetDatabaseScrewStepListData(bulletin->ScrewHandler.GtcsJob.sequencelist[seqindex].steplist, jobid, seqid) == false)
     {
         std::cout << "Error to get Database Screw Step List Data! "<< std::endl;
@@ -2359,14 +2358,15 @@ bool GtcsManager::SetScrewDriverTighteningCounter(GtcsScrewSequenceHandler &scre
     // Check screw driver counting is finished. // if (screwhandler.screwcounter != 0)
     if (CheckScrewDriverCountingFinished(screwhandler) == true)
     {
-        if (screwhandler.GtcsJob.jobid == 0)
-        {
-            screwhandler.screwcounter = screwhandler.maxscrewcounter; // 
-        }
-        else
-        {            
-            screwhandler.currentseqeuceindex +=1;   // Move to next sequence id.
-        }   
+        // if (screwhandler.GtcsJob.jobid == 0) //normal
+        // {
+        //     screwhandler.screwcounter = screwhandler.maxscrewcounter; // 
+        // }
+        // else
+        // {            
+        //     screwhandler.currentsequenceindex +=1;   // Move to next sequence id.
+        // }
+        return false;
     }
     else
     {
@@ -2383,6 +2383,54 @@ bool GtcsManager::SetScrewDriverTighteningCounter(GtcsScrewSequenceHandler &scre
             screwhandler.screwcounterlocked = true;
         }
     }
+    return true;
+}
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
+ *  @date    2021/03/12
+ *
+ *  @fn      GtcsManager::GetScrewDriverNextSeqindex(GtcsScrewSequenceHandler  &screwhandler)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @return  bool
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+bool GtcsManager::GetScrewDriverNextSeqindex(GtcsScrewSequenceHandler  &screwhandler)
+{
+    return true;
+}
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
+ *  @date    2021/03/12
+ *
+ *  @fn      GtcsManager::SetScrewDriverNextSeqindex(GtcsScrewSequenceHandler  &screwhandler)
+ * 
+ *  @brief   ( Constructivist )
+ *
+ *  @param   GtcsScrewSequenceHandler &screwhandler
+ *
+ *  @return  bool
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+bool GtcsManager::SetScrewDriverNextSeqindex(GtcsScrewSequenceHandler  &screwhandler)
+{
+    if (screwhandler.GtcsJob.jobid == 0) //normal
+    {
+        screwhandler.currentsequenceindex = screwhandler.maxscrewcounter; // 
+    }
+    else
+    {            
+        screwhandler.currentsequenceindex +=1;   // Move to next sequence id.
+    }    
     return true;
 }
 /******************************************************************************************
@@ -2752,7 +2800,7 @@ bool GtcsManager::InitialGtcsSystem()
     ScrewDriverSwitchJobHandler(bulletin->ScrewHandler.GtcsJob.jobid);
     // Switch sequence list to normal mode.
     ScrewDriverSwitchSequenceHandler(bulletin->ScrewHandler.GtcsJob.jobid,
-                        bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentseqeuceindex].seq_id);
+                        bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentsequenceindex].seq_id);
     // Polling 5 time to trace ttymxc3.
     for (int index = 0; index < 5; index++)
     {
@@ -2858,11 +2906,11 @@ bool GtcsManager::CheckGtcsSystem()
 
         // Switch sequence list to normal mode.
         ScrewDriverSwitchSequenceHandler(bulletin->ScrewHandler.GtcsJob.jobid,
-                            bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentseqeuceindex].seq_id);
+                            bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentsequenceindex].seq_id);
                             
         // Get TighteningCounter form database.
         GetScrewDriverTighteningCounter(bulletin->ScrewHandler,
-                            bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentseqeuceindex].tr);
+                            bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentsequenceindex].tr);
         // Display some informaiton.
         #if defined(_DEBUG_MODE_)
         std::cout << "Gear Ratio = " << std::to_string(bulletin->McbBulletin.BasicPara.u16GearBoxRatio) << std::endl;
@@ -2913,29 +2961,29 @@ bool GtcsManager::RunGtcsSystem()
     else
     {
         // step 1 =  Compare last sequence index and current sequence index.
-        if (bulletin->ScrewHandler.currentseqeuceindex < bulletin->ScrewHandler.GtcsJob.sequencelist.size())
+        if (bulletin->ScrewHandler.currentsequenceindex < bulletin->ScrewHandler.GtcsJob.sequencelist.size())
         {
             // Send data to mcb.
-            if (bulletin->ScrewHandler.lastseqeuceindex!=bulletin->ScrewHandler.currentseqeuceindex)
+            if (bulletin->ScrewHandler.lastsequenceindex!=bulletin->ScrewHandler.currentsequenceindex)
             {
                 // Disable Screwdriver.
                 DisableMcbScrewStatus();
                 // Get MCB program data from database.
                 ScrewDriverSwitchSequenceHandler(bulletin->ScrewHandler.GtcsJob.jobid,
-                                    bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentseqeuceindex].seq_id);
+                                    bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentsequenceindex].seq_id);
                 // Get TighteningCounter form database.
                 GetScrewDriverTighteningCounter(bulletin->ScrewHandler,
-                                    bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentseqeuceindex].tr);
+                                    bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentsequenceindex].tr);
                 // Setting list index.
                 SetCurrentScrewDriverTighteningCounter(bulletin->ScrewHandler);
-                bulletin->ScrewHandler.lastseqeuceindex = bulletin->ScrewHandler.currentseqeuceindex;
+                bulletin->ScrewHandler.lastsequenceindex = bulletin->ScrewHandler.currentsequenceindex;
                 // Setting MCB to fasten status.
                 mcb->telegram.status.loosen_status = false;
             }
         }
         else
         {
-            bulletin->ScrewHandler.currentseqeuceindex = 0;    // Repeat sequence list operation.
+            bulletin->ScrewHandler.currentsequenceindex = 0;    // Repeat sequence list operation.
             return false;
         }
 
@@ -2974,7 +3022,7 @@ bool GtcsManager::RunGtcsSystem()
             if ((bulletin->ScrewHandler.statusnum == (int)LOCKED_STATUS::OK)||(bulletin->ScrewHandler.statusnum == (int)LOCKED_STATUS::NG_MCB))
             {
                 // Onlay to process OK!
-                if (bulletin->ScrewHandler.statusnum == (int)LOCKED_STATUS::OK)
+                if ((bulletin->ScrewHandler.statusnum == (int)LOCKED_STATUS::OK)&&(bulletin->ScrewHandler.GtcsJob.jobid!=0))
                 {
                     // screwhander 的 currentseqindex會指錯
                     SetScrewDriverTighteningCounter(bulletin->ScrewHandler);
@@ -2997,10 +3045,8 @@ bool GtcsManager::RunGtcsSystem()
             }
             
             // Calaulate RT actural value.
-            if(CheckScrewDriverCountingFinished(bulletin->ScrewHandler) != true)
-            {
-                GetRealTimeActuralValue(bulletin->AmsBulletin.DATA300Struct,bulletin->ScrewHandler,mcb->telegram.status.current_status);
-            }
+            GetRealTimeActuralValue(bulletin->AmsBulletin.DATA300Struct,bulletin->ScrewHandler,mcb->telegram.status.current_status);
+            
             // Write RealTime Actural Value to ramdisk.
             if (bulletin->ScrewHandler.screwrunning ==true)
             {
@@ -3008,6 +3054,12 @@ bool GtcsManager::RunGtcsSystem()
             }
             else
             {;}
+            
+            // Switch to next sequence index.
+            if(CheckScrewDriverCountingFinished(bulletin->ScrewHandler) == true)
+            {
+                SetScrewDriverNextSeqindex(bulletin->ScrewHandler);             //  
+            }
         }
         // Step 4 = Package system status to bulletin.
         mcb->telegram.status.last_status = mcb->telegram.status.current_status; //
@@ -3092,7 +3144,7 @@ bool GtcsManager::ClearGtcsSystemAlarm()
         // Check start signal.
         if (GetSystemErrorStatus(mcb->telegram.status.current_status.u16Statusflags)==true)
         {
-            if (bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentseqeuceindex].ng_stop==0)
+            if (bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentsequenceindex].ng_stop==0)
             {
                 if (GetStartSignalStatus(mcb->telegram.status.current_status.u16TMDFlags)==true)
                 {

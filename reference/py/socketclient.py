@@ -22,6 +22,13 @@ _CMD_301 = {
     "str4"   :"001",                                      # Command_sn
     "str5"   :"1",                                        # Job ID, nnornal - 0;
 }
+_CMD_301 = {
+    "str1"   :"CMD301",                                   # Header+DATA
+    "str2"   :datetime.now().strftime("%Y%m%d %H:%M:%S"), # yyyyMMdd HH:mm:ss
+    "str3"   :"0119",                                     # check sum ,4 chars
+    "str4"   :"001",                                      # Command_sn
+    "str5"   :"1",                                        # Job ID, nnornal - 0;
+}
 # CMD302, 工具控制命令
 _CMD_302 = {          # {CMDstr1,str2,str3,str4}                                             
     "str1"   :"CMD302",                                   # Header+DATA
@@ -206,7 +213,7 @@ def test_socket_client():
     # _ams_dict = _CMD_340       # Initial ID2. 
 
     # AMS REQ.
-    # _ams_dict = _REQ_300
+    _ams_dict = _REQ_300
     # _ams_dict = _REQ_302   
 
     # Convert dictionary to  ams string.

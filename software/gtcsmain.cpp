@@ -48,8 +48,8 @@ int main()
     // Ste 3 = Set tcpsocket thread and start.
     #pragma region step 2
     #if defined(_DEBUG_MODE_207_)
-    manager.StartGtcsTcpSocketServerThread("192.168.0.207", 9000); // OTTO : 207,
-    // manager.StartGtcsGPIOThread();
+    manager.StartGtcsTcpSocketServerThread("192.168.0.207", 9000);  // OTTO : 207,
+    // manager.StartGtcsGPIOThread();                                  // GPIO thread
     #elif defined(_DEBUG_MODE_202_)
     manager.StartGtcsTcpSocketServerThread("192.168.0.202", 9000); // ERIC : 202
     #else

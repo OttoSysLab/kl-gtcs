@@ -120,63 +120,62 @@ uint16_t GtcsGPIOHandler::GetGPIOInputStatus(volatile uint32_t *gpio2,
 {
     uint16_t inputvalue = 0;
     // gpio IN_OUT_1
-    if (!(*gpio6 & (1 << (int)GTCS_GPIO_IN::IN_01)))
+    if (*gpio6 & (1 << (int)GTCS_GPIO_IN::IN_01))
     {
         inputvalue |= 1 << 0;
-        // std::cout << "Fuck!!!"<<std::endl;
     }
     // gpio IN_OUT_2
-    if (!(*gpio5 & (1 << (int)GTCS_GPIO_IN::IN_02)))
+    if (*gpio5 & (1 << (int)GTCS_GPIO_IN::IN_02))
     {
         inputvalue |= 1 << 1;
     }
     // gpio IN_OUT_3
-    if (!(*gpio5 & (1 << (int)GTCS_GPIO_IN::IN_03)))
+    if (*gpio5 & (1 << (int)GTCS_GPIO_IN::IN_03))
     {
         inputvalue |= 1 << 2;
     }
     // gpio IN_OUT_4
-    if (!(*gpio2 & (1 << (int)GTCS_GPIO_IN::IN_04)))
+    if (*gpio2 & (1 << (int)GTCS_GPIO_IN::IN_04))
     {
         inputvalue |= 1 << 3;
     }    
     // gpio IN_OUT_5
-    if (!(*gpio2 & (1 << (int)GTCS_GPIO_IN::IN_05)))
+    if (*gpio2 & (1 << (int)GTCS_GPIO_IN::IN_05))
     {
         inputvalue |= 1 << 4;
     }
     // gpio IN_OUT_6
-    if (!(*gpio2 & (1 << (int)GTCS_GPIO_IN::IN_06)))
+    if (*gpio2 & (1 << (int)GTCS_GPIO_IN::IN_06))
     {
         inputvalue |= 1 << 5;
     }
     // gpio IN_OUT_7
-    if (!(*gpio2 & (1 << (int)GTCS_GPIO_IN::IN_07)))
+    if (*gpio2 & (1 << (int)GTCS_GPIO_IN::IN_07))
     {
         inputvalue |= 1 << 6;
     }
     // gpio IN_OUT_8
-    if (!(*gpio2 & (1 << (int)GTCS_GPIO_IN::IN_08)))
+    if (*gpio2 & (1 << (int)GTCS_GPIO_IN::IN_08))
     {
         inputvalue |= 1 << 7;
     }
     // gpio IN_OUT_9
-    if (!(*gpio2 & (1 << (int)GTCS_GPIO_IN::IN_09)))
+    if (*gpio2 & (1 << (int)GTCS_GPIO_IN::IN_09))
     {
         inputvalue |= 1 << 8;
     }
     // gpio IN_OUT_10
-    if (!(*gpio3 & (1 << (int)GTCS_GPIO_IN::IN_10)))
+    if (*gpio3 & (1 << (int)GTCS_GPIO_IN::IN_10))
     {
         inputvalue |= 1 << 9;
     }
     // gpio IN_OUT_11
-    if (!(*gpio3 & (1 << (int)GTCS_GPIO_IN::IN_11)))
+    if (*gpio3 & (1 << (int)GTCS_GPIO_IN::IN_11))
     {
         inputvalue |= 1 << 10;
     }
     // gpio IN_OUT_12
-    if (!(*gpio2 & (1 << (int)GTCS_GPIO_IN::IN_12)))
+    if (*gpio2 & (1 << (int)GTCS_GPIO_IN::IN_12))
     {
         inputvalue |= 1 << 11;
     }

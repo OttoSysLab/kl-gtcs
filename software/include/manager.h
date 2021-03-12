@@ -120,9 +120,12 @@ private:
     bool GetCurrentScrewDriverTighteningCounter(GtcsScrewSequenceHandler &screwhandler,int &tighteningcounter);
     bool SetCurrentScrewDriverTighteningCounter(GtcsScrewSequenceHandler &screwhandler);
 
-
     bool GetScrewDriverTighteningCounter(GtcsScrewSequenceHandler &screwhandler,int &tighteningcounter);
     bool SetScrewDriverTighteningCounter(GtcsScrewSequenceHandler &screwhandler);
+
+    // Get and set screw driver next seqindex. 
+    bool GetScrewDriverNextSeqindex(GtcsScrewSequenceHandler &screwhandler);
+    bool SetScrewDriverNextSeqindex(GtcsScrewSequenceHandler &screwhandler);
 
     // AMS Protocol.
     bool SetDatabaseBasicParaToAns(AmsANS340Struct &amsans,GtcsTcsDatabaseBasicInfo &db_basic);   // DB_BASIC  ->AMS_ANS340

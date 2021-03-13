@@ -1,6 +1,6 @@
 #pragma once
 #define _DEBUG_MODE_
-#define _DEBUG_MODE_207_
+// #define _DEBUG_MODE_207_
 // #define _DEBUG_MODE_202_
 // #define _DEBUG_JOB_SEQ_
 /*=======================================================================================
@@ -163,8 +163,8 @@ enum LOCKED_STATUS : int {
     IDLE = 0,
 
     // Running
-    RUNNING,     // Fasten running
-    REVERSE,     // loosen running.
+    RUNNING,        // Fasten running
+    REVERSE,        // loosen running.
 
     // STOP
     OK,
@@ -1257,14 +1257,17 @@ public:
     GtcsJobStruct GtcsJob;
     uint16_t u16GearBoxRatio;    // SID = 14,Gear box ratio. Unit [0,01] (1600 = 16:1)
     uint16_t u32StartInp;        // SID = 15,0 = Start Switch,1 = From Displaycontroller Telegram"
+    uint32_t currentstatus = 0; 
     std::string lockedmessage = "___________";
     int currentsequenceindex = 0;
     int lastsequenceindex = 0;
+    uint16_t currenjobid = 0;
+    int currentsequenceid = 0;
     uint16_t currentstepid = 0; 
     std::string currentprogramname = "_";   
     uint16_t batchmode = (uint16_t)GTCS_BATCH_MODE::INC;  // uint16_t batchmode = (uint16_t)GTCS_BATCH_MODE::DEC;
     uint16_t inputstatus = 0;
-    uint16_t outputstatus = 0;
+    uint16_t outputstatus = 0; 
     
     GtcsScrewSequenceHandler(/* args */);
     ~GtcsScrewSequenceHandler();

@@ -104,7 +104,7 @@ private:
 
     // Configure Mcb StepFlags.
     bool GetMcbScrewStepFlags(McbID3Struct &mcbstep);
-    bool SetMcbScrewStepFlags(McbID3Struct &mcbstep,GtcsStepDataStruct &dbstep,bool stopmotor);
+    bool SetMcbScrewStepFlags(McbID3Struct &mcbstep,GtcsStepDataStruct &dbstep,int stepindex,bool stopmotor);
     
     // Configure Mcb WindowModeFlags.
     bool GetMcbStepWindowModeFlags(McbID3Struct &mcbstep);
@@ -184,7 +184,7 @@ public:
     // Jion thread.
     bool StopAllThread();
     std::string GetMCBErrMessageString(uint32_t errorflagindex);
-    std::string GetCurrentMCBErrorMessage(uint32_t errorflags);
+    std::string GetCurrentSystemStatusMessage(uint32_t &currentstatus,uint32_t errorflags);
 
     // Gtcs System Main state.(MAIN)FSM)
     bool InitialGtcsSystem();

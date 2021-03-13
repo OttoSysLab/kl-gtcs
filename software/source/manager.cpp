@@ -481,9 +481,11 @@ std::string GtcsManager::GetMCBErrMessageString(uint32_t errorflagindex)
  *
  *  @date    2021/02/04
  *
- *  @fn      GtcsManager::GetCurrentMCBErrorMessage(uint32_t errorflags)
+ *  @fn      GtcsManager::GetCurrentSystemStatusMessage(int &currentstatus,uint32_t errorflags)
  *
  *  @brief   ( Constructivist )
+ * 
+ *  @param   uint32_t &currentstatus
  *
  *  @param   uint32_t errorflags
  *
@@ -492,21 +494,32 @@ std::string GtcsManager::GetMCBErrMessageString(uint32_t errorflagindex)
  *  @note    none
  *
  *******************************************************************************************/
-std::string GtcsManager::GetCurrentMCBErrorMessage(uint32_t errorflags)
+std::string GtcsManager::GetCurrentSystemStatusMessage(uint32_t &currentstatus,uint32_t errorflags)
 {
-    std::string result = "NO-ERR______________";
+    std::string result = "";
     std::array<bool, 32> errorflagarray = BitArray::To32BiteArray(errorflags);
     int count = 24;
 
-    for (uint32_t i = 0; i < count; i++)
+    switch(currentstatus)
     {
-        if (errorflagarray[i] == 1)
-        {
-            if (i != 22)
+        case 1:
+            for (uint32_t i = 0; i < count; i++)
             {
-                result = GetMCBErrMessageString(i);
+                if (errorflagarray[i] == 1)
+                {
+                    if (i != 22)
+                    {
+                        result = GetMCBErrMessageString(i);
+                    }
+                }
             }
-        }
+            break;
+        case 2:
+            result = "SETTING_____________";
+            break;
+        default:
+            result = "NO-ERR______________";
+            break;
     }
     return result;
 }
@@ -546,7 +559,7 @@ bool GtcsManager::GetRealTimeActuralValue(AmsDATA300Struct &data300,GtcsScrewSeq
     std::string maxtorque = DataSorter::GetFloatScaleSortString(((float)mcbstatus.u16MaxTorque / 1862) * toolmaxtorque, 4); // Calculate max torque.
     std::string revolution = DataSorter::GetFloatScaleSortString((float)mcbstatus.u32Revolutions / (gear * 200) * 360, 4);  // Calculate revalution.
     std::string current_rt_status = screwhandler.lockedmessage;
-    std::string current_mcb_err = GetCurrentMCBErrorMessage(mcbstatus.u32ActError);
+    std::string current_status_msg = GetCurrentSystemStatusMessage(screwhandler.currentstatus,mcbstatus.u32ActError);
     // time.
     data300.datetime =  DateTime::GetCurrentSystemDateTime(); // str2:yyyyMMdd HH:mm:ss
     data300.checksum = std::to_string(0);                     // str3:check sum ,4 chars
@@ -556,7 +569,7 @@ bool GtcsManager::GetRealTimeActuralValue(AmsDATA300Struct &data300,GtcsScrewSeq
     data300.dervicesn = std::to_string(0);                    // str7:Device SN
     data300.jobid = std::to_string(bulletin->ScrewHandler.GtcsJob.jobid);       // str8:Job ID
     // str9:Sequence ID.
-    data300.seqid = std::to_string(bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentsequenceindex].seq_id);
+    data300.seqid = std::to_string(bulletin->ScrewHandler.currentsequenceid);
     // str10:Program name
     data300.progid = bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentsequenceindex].program_name;
     // data300.progid = std::to_string(mcbstatus.u16ActProcNr);  // str10:Program ID
@@ -574,7 +587,7 @@ bool GtcsManager::GetRealTimeActuralValue(AmsDATA300Struct &data300,GtcsScrewSeq
     data300.status = current_rt_status;                       // str22:Status // data300.status        = std::to_string(0); // str22:Status
     data300.inputio = std::to_string(0);                      // str23:Inputio
     data300.outputio = std::to_string(0);                     // str24:Outputio
-    data300.errmsg = current_mcb_err;                         // str25:Error Masseage
+    data300.errmsg = current_status_msg;                         // str25:Error Masseage
     data300.toolcnt = std::to_string(0);                      // str26:Tool Count
     data300.actrpm = std::to_string(mcbstatus.u16ActRPM);     // str27:RPM
 
@@ -967,6 +980,8 @@ bool GtcsManager::CheckUiSettingFSM(int uicmd)
             #endif
             // Setting last sequence index = current seqeuce index.
             bulletin->ScrewHandler.lastsequenceindex = bulletin->ScrewHandler.currentsequenceindex;
+            bulletin->ScrewHandler.currentsequenceid 
+                = bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentsequenceindex].seq_id;
             // Setting MCB to fasten status.
             mcb->telegram.status.loosen_status = false;
         }
@@ -1786,16 +1801,14 @@ bool GtcsManager::GetMcbStepTelegramFromDBData(McbID3Struct &mcbstep, McbID2Stru
                                                              // Unit is digits related to maximum Torque Value 1862 (max Raw TMD Value).
     mcbstep.u16MinDutyCycle     = mcbbasic.u16StartDutyCycle;// SID = 11,Minimum Duty Cycle Unit is [0,1%]. (10 = 1%)
 
-    // New
+    // New.
     mcbstep.u16AngleWindow2     = dbstep.ScrewLoAngle;       // SID = 14
     mcbstep.u16TorqueWindow2    = dbstep.ScrewLoTorque;      // SID = 15
 
     // Get Mcb step flags.
-    // mcbstep.u16StepFlags        = 0;                         // SID = 12,See description of step flags.
-    SetMcbScrewStepFlags(mcbstep,dbstep,endstepflag);           // SID = 12,See description of step flags.
+    SetMcbScrewStepFlags(mcbstep,dbstep,stepindex,endstepflag);           // SID = 12,See description of step flags.
 
     // Get Mcb windows mode flags.
-    // mcbstep.u16WindowMode       = 0;                         // SID = 13,
     SetMcbStepWindowModeFlags(mcbstep,dbstep);                  // SID = 13
 
     return true;
@@ -2002,7 +2015,7 @@ bool GtcsManager::GetMcbScrewStepFlags(McbID3Struct &mcbstep)
  *  @note    none
  *
  *******************************************************************************************/
-bool GtcsManager::SetMcbScrewStepFlags(McbID3Struct &mcbstep,GtcsStepDataStruct &dbstep,bool stopmotor)
+bool GtcsManager::SetMcbScrewStepFlags(McbID3Struct &mcbstep,GtcsStepDataStruct &dbstep,int stepindex,bool stopmotor)
 {
     // Initial step flags.
     mcbstep.u16StepFlags = 0;
@@ -2022,9 +2035,13 @@ bool GtcsManager::SetMcbScrewStepFlags(McbID3Struct &mcbstep,GtcsStepDataStruct 
             mcbstep.u16StepFlags |= 1<<(uint16_t)SCREW_STEP_FLAG::NEXT_TIME;
             break;
     }
-
-    mcbstep.u16StepFlags |= 1<<(uint16_t)SCREW_STEP_FLAG::RESET_ANGLE_STA;     //
-    mcbstep.u16StepFlags |= 1<<(uint16_t)SCREW_STEP_FLAG::RESET_REV_STA;       //
+    // First step tp reset angle & revolution..
+    if (stepindex==0)
+    {
+        mcbstep.u16StepFlags |= 1<<(uint16_t)SCREW_STEP_FLAG::RESET_ANGLE_STA;     //
+        mcbstep.u16StepFlags |= 1<<(uint16_t)SCREW_STEP_FLAG::RESET_REV_STA;       //
+    }
+    // If stopmotor is true,send stop flag.
     if (stopmotor==true)
     {
         mcbstep.u16StepFlags |= 1<<(uint16_t)SCREW_STEP_FLAG::STOP_MOTOR_END_STEP; //
@@ -2358,14 +2375,6 @@ bool GtcsManager::SetScrewDriverTighteningCounter(GtcsScrewSequenceHandler &scre
     // Check screw driver counting is finished. // if (screwhandler.screwcounter != 0)
     if (CheckScrewDriverCountingFinished(screwhandler) == true)
     {
-        // if (screwhandler.GtcsJob.jobid == 0) //normal
-        // {
-        //     screwhandler.screwcounter = screwhandler.maxscrewcounter; // 
-        // }
-        // else
-        // {            
-        //     screwhandler.currentsequenceindex +=1;   // Move to next sequence id.
-        // }
         return false;
     }
     else
@@ -2966,6 +2975,11 @@ bool GtcsManager::RunGtcsSystem()
             // Send data to mcb.
             if (bulletin->ScrewHandler.lastsequenceindex!=bulletin->ScrewHandler.currentsequenceindex)
             {
+                bulletin->ScrewHandler.currentstatus = 2;
+                // Get current system status.
+                GetCurrentSystemStatusMessage(bulletin->ScrewHandler.currentstatus,mcb->telegram.status.current_status.u32ActError);
+                // Calaulate RT actural value.
+                GetRealTimeActuralValue(bulletin->AmsBulletin.DATA300Struct,bulletin->ScrewHandler,mcb->telegram.status.current_status);
                 // Disable Screwdriver.
                 DisableMcbScrewStatus();
                 // Get MCB program data from database.
@@ -2977,8 +2991,11 @@ bool GtcsManager::RunGtcsSystem()
                 // Setting list index.
                 SetCurrentScrewDriverTighteningCounter(bulletin->ScrewHandler);
                 bulletin->ScrewHandler.lastsequenceindex = bulletin->ScrewHandler.currentsequenceindex;
+                bulletin->ScrewHandler.currentsequenceid 
+                    = bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentsequenceindex].seq_id;
                 // Setting MCB to fasten status.
                 mcb->telegram.status.loosen_status = false;
+                bulletin->ScrewHandler.currentstatus = 0;
             }
         }
         else
@@ -2999,6 +3016,7 @@ bool GtcsManager::RunGtcsSystem()
             mcb->telegram.ctrl.InitialCtrlFlags(ctrltelegram);
             mcb->telegram.ctrl.SetCtrlFlags(ctrltelegram, CTRL_FLAGS_IDX::SC_REVERSE); // Reverse
         }
+        // Set ctrltelegram = SHORT_UW.
         mcb->telegram.ctrl.SetCtrlFlags(ctrltelegram, CTRL_FLAGS_IDX::SHORT_UVW);
         mcb->telegram.ctrl.SetCtrlFlags(ctrltelegram, CTRL_FLAGS_IDX::EN_TIMEOUT_200MS);
 
@@ -3024,7 +3042,6 @@ bool GtcsManager::RunGtcsSystem()
                 // Onlay to process OK!
                 if ((bulletin->ScrewHandler.statusnum == (int)LOCKED_STATUS::OK)&&(bulletin->ScrewHandler.GtcsJob.jobid!=0))
                 {
-                    // screwhander 的 currentseqindex會指錯
                     SetScrewDriverTighteningCounter(bulletin->ScrewHandler);
                 }
                 // Insert real time data to database. 

@@ -77,8 +77,8 @@ private:
     std::thread thread_gpio;
 
     bool CopyDatabase(std::string destination ,std::string source);
-    bool UpdateMcbBasicParaToDB(GtcsTcsDatabase &db,GtcsTcsDatabaseBasicInfo &db_basic,McbID2Struct &mcb_basic);
-    bool CompareBasicStruct(GtcsTcsDatabaseBasicInfo &emmc,GtcsTcsDatabaseBasicInfo &ramdisk);
+    bool UpdateMcbBasicParaToDB(GtcsDatabase &db,GtcsDatabaseBasicInfo &db_basic,McbID2Struct &mcb_basic);
+    bool CompareBasicStruct(GtcsDatabaseBasicInfo &emmc,GtcsDatabaseBasicInfo &ramdisk);
     bool SetSystemBasicParameter(AmsCMD340Struct &amscmd,McbID2Struct &mcb_basic);
 
     // Switch Job sequence.
@@ -115,6 +115,7 @@ private:
     bool ScrewDriverSwitchSequenceHandler(int jobid,int seqid);
 
     // Get tightening repeat counter
+    bool GetScrewDeviceInfoFormDB(GtcsScrewSequenceHandler &screwhandler,std::string &dbPath);
     bool CheckScrewDriverCountingFinished(GtcsScrewSequenceHandler &screwhandler);
     
     bool GetCurrentScrewDriverTighteningCounter(GtcsScrewSequenceHandler &screwhandler,int &tighteningcounter);
@@ -128,8 +129,8 @@ private:
     bool SetScrewDriverNextSeqindex(GtcsScrewSequenceHandler &screwhandler);
 
     // AMS Protocol.
-    bool SetDatabaseBasicParaToAns(AmsANS340Struct &amsans,GtcsTcsDatabaseBasicInfo &db_basic);   // DB_BASIC  ->AMS_ANS340
-    bool SetDatabaseBasicParaToReq(AmsREQ301Struct &amsreq,GtcsTcsDatabaseBasicInfo &db_basic);   // DB_BASIC  ->AMS_REQ301
+    bool SetDatabaseBasicParaToAns(AmsANS340Struct &amsans,GtcsDatabaseBasicInfo &db_basic);   // DB_BASIC  ->AMS_ANS340
+    bool SetDatabaseBasicParaToReq(AmsREQ301Struct &amsreq,GtcsDatabaseBasicInfo &db_basic);   // DB_BASIC  ->AMS_REQ301
     void SetAmsCmdBaiscParaToAns(AmsANS340Struct &amsans,AmsCMD340Struct &amscmd);             // AMS_CMD340->AMS_ANS340
         
     // GTCS AMS DATA300

@@ -150,9 +150,9 @@ void GtcsDatabaseBaseInfo::SetDataValue(std::map<std::string,std::string> &pData
  *
  *  @date    2021/02/04
  *
- *  @fn      GtcsTcsDatabaseBasicInfo::GtcsTcsDatabaseBasicInfo()
+ *  @fn      GtcsDatabaseBasicInfo::GtcsDatabaseBasicInfo()
  *
- *  @brief   GtcsTcsDatabaseBasicInfo constructor.
+ *  @brief   GtcsDatabaseBasicInfo constructor.
  *
  *  @param   none
  *
@@ -161,7 +161,7 @@ void GtcsDatabaseBaseInfo::SetDataValue(std::map<std::string,std::string> &pData
  *  @note    none
  *
  *******************************************************************************************/
-GtcsTcsDatabaseBasicInfo::GtcsTcsDatabaseBasicInfo()
+GtcsDatabaseBasicInfo::GtcsDatabaseBasicInfo()
 {
     InitialColumnType();
     InitialColumnName();
@@ -171,11 +171,11 @@ GtcsTcsDatabaseBasicInfo::GtcsTcsDatabaseBasicInfo()
  *
  *  @author  Otto
  *
- *  @date    2021/02/04
+ *  @date    2021/03/15
  *
- *  @fn      GtcsTcsDatabaseBasicInfo::~GtcsTcsDatabaseBasicInfo()
+ *  @fn      GtcsDatabaseDeviceInfo::GtcsDatabaseDeviceInfo()
  *
- *  @brief   GtcsTcsDatabaseBasicInfo distructor.
+ *  @brief   GtcsDatabaseDeviceInfo contructor.
  *
  *  @param   none
  *
@@ -184,7 +184,153 @@ GtcsTcsDatabaseBasicInfo::GtcsTcsDatabaseBasicInfo()
  *  @note    none
  *
  *******************************************************************************************/
-GtcsTcsDatabaseBasicInfo::~GtcsTcsDatabaseBasicInfo()
+GtcsDatabaseDeviceInfo::GtcsDatabaseDeviceInfo()
+{
+    InitialColumnType();
+    InitialColumnName();
+    InitialDataStruct();
+}
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
+ *  @date    2021/03/15
+ *
+ *  @fn      GtcsDatabaseDeviceInfo::~GtcsDatabaseDeviceInfo()
+ *
+ *  @brief   GtcsDatabaseDeviceInfo distructor.
+ *
+ *  @param   none
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+GtcsDatabaseDeviceInfo::~GtcsDatabaseDeviceInfo()
+{}
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
+ *  @date    2021/03/15
+ *
+ *  @fn      GtcsDatabaseDeviceInfo::InitialColumnType()
+ *
+ *  @brief   GtcsDatabaseDeviceInfo distructor.
+ *
+ *  @param   none
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+void GtcsDatabaseDeviceInfo::InitialColumnType()
+{
+    type.insert(std::pair<std::string,std::string>("device_sn","TEXT"));            // column_index  = 0
+    type.insert(std::pair<std::string,std::string>("device_version","TEXT"));       // column_index  = 1
+    type.insert(std::pair<std::string,std::string>("device_id","INTEGER"));         // column_index  = 2
+    type.insert(std::pair<std::string,std::string>("device_type","INTEGER"));       // column_index  = 3
+    type.insert(std::pair<std::string,std::string>("batch_mode","INTEGER"));        // column_index  = 4
+    type.insert(std::pair<std::string,std::string>("operation_mode","INTEGER"));    // column_index  = 5
+    type.insert(std::pair<std::string,std::string>("mode","INTEGER"));              // column_index  = 6
+    type.insert(std::pair<std::string,std::string>("net_work","INTEGER"));          // column_index  = 7
+    type.insert(std::pair<std::string,std::string>("torque_unit","INTEGER"));       // column_index  = 8
+    type.insert(std::pair<std::string,std::string>("iom_torque","REAL"));           // column_index  = 9
+    type.insert(std::pair<std::string,std::string>("language","INTEGER"));          // column_index  = 10
+    type.insert(std::pair<std::string,std::string>("target_torque","REAL"));        // column_index  = 11
+    type.insert(std::pair<std::string,std::string>("ip","TEXT"));                   // column_index  = 12
+    type.insert(std::pair<std::string,std::string>("hq","REAL"));                   // column_index  = 13
+    type.insert(std::pair<std::string,std::string>("lq","REAL"));                   // column_index  = 14
+    type.insert(std::pair<std::string,std::string>("tolerance","INTEGER"));         // column_index  = 15
+    type.insert(std::pair<std::string,std::string>("time_out","REAL"));             // column_index  = 16
+    type.insert(std::pair<std::string,std::string>("screw_direction","INTEGER"));   // column_index  = 17
+    type.insert(std::pair<std::string,std::string>("screw_rpm","INTEGER"));         // column_index  = 18
+    type.insert(std::pair<std::string,std::string>("screw_count","REAL"));          // column_index  = 19
+    type.insert(std::pair<std::string,std::string>("reverse_direction","INTEGER")); // column_index  = 20
+    type.insert(std::pair<std::string,std::string>("reverse_rpm","INTEGER"));       // column_index  = 21
+    type.insert(std::pair<std::string,std::string>("force","INTEGER"));             // column_index  = 22
+    type.insert(std::pair<std::string,std::string>("screw_trigger","INTEGER"));     // column_index  = 23
+    type.insert(std::pair<std::string,std::string>("reverse_trigger","INTEGER"));   // column_index  = 24
+    // New add
+    type.insert(std::pair<std::string,std::string>("torque_threshold","REAL"));     // column_index  = 25
+    type.insert(std::pair<std::string,std::string>("angle_threshold","REAL"));      // column_index  = 26
+    type.insert(std::pair<std::string,std::string>("iom_torquethreshold","REAL"));  // column_index  = 27
+    type.insert(std::pair<std::string,std::string>("torque_offset","REAL"));        // column_index  = 28
+    type.insert(std::pair<std::string,std::string>("iom_torqueoffset","REAL"));     // column_index  = 29
+    type.insert(std::pair<std::string,std::string>("off_set","INTEGER"));           // column_index  = 30
+}
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
+ *  @date    2021/03/15
+ *
+ *  @fn      GtcsDatabaseDeviceInfo::InitialColumnName()
+ *
+ *  @brief   GtcsDatabaseDeviceInfo distructor.
+ *
+ *  @param   none
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+void GtcsDatabaseDeviceInfo::InitialColumnName()
+{
+    columnnames.push_back("device_sn");                 // column_index  = 0
+    columnnames.push_back("device_version");            // column_index  = 1
+    columnnames.push_back("device_id");                 // column_index  = 2
+    columnnames.push_back("device_type");               // column_index  = 3
+    columnnames.push_back("batch_mode");                // column_index  = 4
+    columnnames.push_back("operation_mode");            // column_index  = 5
+    columnnames.push_back("mode");                      // column_index  = 6
+    columnnames.push_back("net_work");                  // column_index  = 7
+    columnnames.push_back("torque_unit");               // column_index  = 8
+    columnnames.push_back("iom_torque");                // column_index  = 9
+    columnnames.push_back("language");                  // column_index  = 10
+    columnnames.push_back("target_torque");             // column_index  = 11
+    columnnames.push_back("ip");                        // column_index  = 12
+    columnnames.push_back("hq");                        // column_index  = 13
+    columnnames.push_back("lq");                        // column_index  = 14
+    columnnames.push_back("tolerance");                 // column_index  = 15
+    columnnames.push_back("time_out");                  // column_index  = 16
+    columnnames.push_back("screw_direction");           // column_index  = 17
+    columnnames.push_back("screw_rpm");                 // column_index  = 18
+    columnnames.push_back("screw_count");               // column_index  = 19
+    columnnames.push_back("reverse_direction");         // column_index  = 20
+    columnnames.push_back("reverse_rpm");               // column_index  = 21
+    columnnames.push_back("force");                     // column_index  = 22
+    columnnames.push_back("screw_trigger");             // column_index  = 23
+    columnnames.push_back("reverse_trigger");           // column_index  = 24
+    // New add
+    columnnames.push_back("torque_threshold");          // column_index  = 25
+    columnnames.push_back("angle_threshold");           // column_index  = 26
+    columnnames.push_back("iom_torquethreshold");       // column_index  = 27
+    columnnames.push_back("torque_offset");             // column_index  = 28
+    columnnames.push_back("iom_torqueoffset");          // column_index  = 29
+    columnnames.push_back("off_set");                   // column_index  = 30
+}
+/******************************************************************************************
+ *
+ *  @author  Otto
+ *
+ *  @date    2021/02/04
+ *
+ *  @fn      GtcsDatabaseBasicInfo::~GtcsDatabaseBasicInfo()
+ *
+ *  @brief   GtcsDatabaseBasicInfo distructor.
+ *
+ *  @param   none
+ *
+ *  @return  none
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+GtcsDatabaseBasicInfo::~GtcsDatabaseBasicInfo()
 {}
 /******************************************************************************************
  *
@@ -192,7 +338,7 @@ GtcsTcsDatabaseBasicInfo::~GtcsTcsDatabaseBasicInfo()
  *
  *  @date    2021/02/04
  *
- *  @fn      GtcsTcsDatabaseBasicInfo::InitialColumnType()
+ *  @fn      GtcsDatabaseBasicInfo::InitialColumnType()
  *
  *  @brief   Initial Gtcs database basice table columntype list.
  *
@@ -203,7 +349,7 @@ GtcsTcsDatabaseBasicInfo::~GtcsTcsDatabaseBasicInfo()
  *  @note    none
  *
  *******************************************************************************************/
-void GtcsTcsDatabaseBasicInfo::InitialColumnType()
+void GtcsDatabaseBasicInfo::InitialColumnType()
 {    
     type.insert(std::pair<std::string,std::string>("mintemp","REAL"));            // Min temperature       (REAL)
     type.insert(std::pair<std::string,std::string>("maxtemp","REAL"));            // Max temperature       (REAL)
@@ -248,7 +394,7 @@ void GtcsTcsDatabaseBasicInfo::InitialColumnType()
  *
  *  @date    2021/02/04
  *
- *  @fn      GtcsTcsDatabaseBasicInfo::InitialColumnName()
+ *  @fn      GtcsDatabaseBasicInfo::InitialColumnName()
  *
  *  @brief   Initial Gtcs database basice table columnname list.
  *
@@ -259,7 +405,7 @@ void GtcsTcsDatabaseBasicInfo::InitialColumnType()
  *  @note    none
  *
  *******************************************************************************************/
-void GtcsTcsDatabaseBasicInfo::InitialColumnName()
+void GtcsDatabaseBasicInfo::InitialColumnName()
 {
     columnnames.push_back("mintemp");         // Min temperature       (REAL)
     columnnames.push_back("maxtemp");         // Max temperature       (REAL)
@@ -305,9 +451,9 @@ void GtcsTcsDatabaseBasicInfo::InitialColumnName()
  *
  *  @date    2021/02/04
  *
- *  @fn      GtcsTcsDatabaseJobInfo::GtcsTcsDatabaseJobInfo()
+ *  @fn      GtcsDatabaseJobInfo::GtcsDatabaseJobInfo()
  *
- *  @brief   GtcsTcsDatabaseJobInfo constructor
+ *  @brief   GtcsDatabaseJobInfo constructor
  *
  *  @param   none
  *
@@ -316,7 +462,7 @@ void GtcsTcsDatabaseBasicInfo::InitialColumnName()
  *  @note    none
  *
  *******************************************************************************************/
-GtcsTcsDatabaseJobInfo::GtcsTcsDatabaseJobInfo()
+GtcsDatabaseJobInfo::GtcsDatabaseJobInfo()
 {
     InitialColumnType();
     InitialColumnName();
@@ -328,9 +474,9 @@ GtcsTcsDatabaseJobInfo::GtcsTcsDatabaseJobInfo()
  *
  *  @date    2021/02/04
  *
- *  @fn      GtcsTcsDatabaseJobInfo::~GtcsTcsDatabaseJobInfo()
+ *  @fn      GtcsDatabaseJobInfo::~GtcsDatabaseJobInfo()
  *
- *  @brief   GtcsTcsDatabaseJobInfo distructor
+ *  @brief   GtcsDatabaseJobInfo distructor
  *
  *  @param   none
  *
@@ -339,7 +485,7 @@ GtcsTcsDatabaseJobInfo::GtcsTcsDatabaseJobInfo()
  *  @note    none
  *
  *******************************************************************************************/
-GtcsTcsDatabaseJobInfo::~GtcsTcsDatabaseJobInfo()
+GtcsDatabaseJobInfo::~GtcsDatabaseJobInfo()
 {}
 /******************************************************************************************
  *
@@ -347,7 +493,7 @@ GtcsTcsDatabaseJobInfo::~GtcsTcsDatabaseJobInfo()
  *
  *  @date    2021/02/04
  *
- *  @fn      GtcsTcsDatabaseJobInfo::InitialColumnType()
+ *  @fn      GtcsDatabaseJobInfo::InitialColumnType()
  *
  *  @brief   Initial Gtcs database Jobsequence table columntype list.
  *
@@ -358,7 +504,7 @@ GtcsTcsDatabaseJobInfo::~GtcsTcsDatabaseJobInfo()
  *  @note    none
  *
  *******************************************************************************************/
-void GtcsTcsDatabaseJobInfo::InitialColumnType()
+void GtcsDatabaseJobInfo::InitialColumnType()
 {
     type.insert(std::pair<std::string,std::string>("id","INTEGER"));                  // column_index  = 0
     type.insert(std::pair<std::string,std::string>("job_id","INTEGER"));              // column_index  = 1
@@ -374,7 +520,7 @@ void GtcsTcsDatabaseJobInfo::InitialColumnType()
  *
  *  @date    2021/02/04
  *
- *  @fn      GtcsTcsDatabaseJobInfo::InitialColumnName()
+ *  @fn      GtcsDatabaseJobInfo::InitialColumnName()
  *
  *  @brief   Initial Gtcs database Jobsequence table columnname list.
  *
@@ -385,7 +531,7 @@ void GtcsTcsDatabaseJobInfo::InitialColumnType()
  *  @note    none
  *
  *******************************************************************************************/
-void GtcsTcsDatabaseJobInfo::InitialColumnName()
+void GtcsDatabaseJobInfo::InitialColumnName()
 {
     columnnames.push_back("id");                   // column_index  = 0
     columnnames.push_back("job_id");               // column_index  = 1
@@ -401,9 +547,9 @@ void GtcsTcsDatabaseJobInfo::InitialColumnName()
  *
  *  @date    2021/02/04
  *
- *  @fn      GtcsTcsDatabaseSequenceInfo ::GtcsTcsDatabaseSequenceInfo()
+ *  @fn      GtcsDatabaseSequenceInfo ::GtcsDatabaseSequenceInfo()
  *
- *  @brief   GtcsTcsDatabaseSequenceInfo constructor
+ *  @brief   GtcsDatabaseSequenceInfo constructor
  *
  *  @param   none
  *
@@ -412,7 +558,7 @@ void GtcsTcsDatabaseJobInfo::InitialColumnName()
  *  @note    none
  *
  *******************************************************************************************/
-GtcsTcsDatabaseSequenceInfo ::GtcsTcsDatabaseSequenceInfo (/* args */)
+GtcsDatabaseSequenceInfo ::GtcsDatabaseSequenceInfo (/* args */)
 {
     InitialColumnType();
     InitialColumnName();
@@ -424,9 +570,9 @@ GtcsTcsDatabaseSequenceInfo ::GtcsTcsDatabaseSequenceInfo (/* args */)
  *
  *  @date    2021/02/04
  *
- *  @fn      GtcsTcsDatabaseSequenceInfo ::~GtcsTcsDatabaseSequenceInfo()
+ *  @fn      GtcsDatabaseSequenceInfo ::~GtcsDatabaseSequenceInfo()
  *
- *  @brief   GtcsTcsDatabaseSequenceInfo distructor
+ *  @brief   GtcsDatabaseSequenceInfo distructor
  *
  *  @param   none
  *
@@ -435,7 +581,7 @@ GtcsTcsDatabaseSequenceInfo ::GtcsTcsDatabaseSequenceInfo (/* args */)
  *  @note    none
  *
  *******************************************************************************************/
-GtcsTcsDatabaseSequenceInfo ::~GtcsTcsDatabaseSequenceInfo ()
+GtcsDatabaseSequenceInfo ::~GtcsDatabaseSequenceInfo ()
 {}
 /******************************************************************************************
  *
@@ -443,7 +589,7 @@ GtcsTcsDatabaseSequenceInfo ::~GtcsTcsDatabaseSequenceInfo ()
  *
  *  @date    2021/02/04
  *
- *  @fn      GtcsTcsDatabaseSequenceInfo ::InitialColumnType()
+ *  @fn      GtcsDatabaseSequenceInfo ::InitialColumnType()
  *
  *  @brief   Initial Gtcs database program table columntype list.
  *
@@ -454,7 +600,7 @@ GtcsTcsDatabaseSequenceInfo ::~GtcsTcsDatabaseSequenceInfo ()
  *  @note    none
  *
  *******************************************************************************************/
-void GtcsTcsDatabaseSequenceInfo ::InitialColumnType()
+void GtcsDatabaseSequenceInfo ::InitialColumnType()
 {
     type.insert(std::pair<std::string,std::string>("job_id","INTEGER"));          // column_index  = 0
     type.insert(std::pair<std::string,std::string>("seq_id","INTEGER"));          // column_index  = 1
@@ -474,7 +620,7 @@ void GtcsTcsDatabaseSequenceInfo ::InitialColumnType()
  *
  *  @date    2021/02/04
  *
- *  @fn      GtcsTcsDatabaseSequenceInfo ::InitialColumnName()
+ *  @fn      GtcsDatabaseSequenceInfo ::InitialColumnName()
  *
  *  @brief   Initial Gtcs database program table columnname list.
  *
@@ -485,7 +631,7 @@ void GtcsTcsDatabaseSequenceInfo ::InitialColumnType()
  *  @note    none
  *
  *******************************************************************************************/
-void GtcsTcsDatabaseSequenceInfo ::InitialColumnName()
+void GtcsDatabaseSequenceInfo ::InitialColumnName()
 { 
     columnnames.push_back("job_id");          // column_index  = 0
     columnnames.push_back("seq_id");          // column_index  = 1
@@ -505,9 +651,9 @@ void GtcsTcsDatabaseSequenceInfo ::InitialColumnName()
  *
  *  @date    2021/02/04
  *
- *  @fn      GtcsTcsDatabaseStepInfo::GtcsTcsDatabaseStepInfo ()
+ *  @fn      GtcsDatabaseStepInfo::GtcsDatabaseStepInfo ()
  *
- *  @brief   GtcsTcsDatabaseStepInfo constructor.
+ *  @brief   GtcsDatabaseStepInfo constructor.
  *
  *  @param   none
  *
@@ -516,7 +662,7 @@ void GtcsTcsDatabaseSequenceInfo ::InitialColumnName()
  *  @note    none
  *
  *******************************************************************************************/
-GtcsTcsDatabaseStepInfo::GtcsTcsDatabaseStepInfo (/* args */)
+GtcsDatabaseStepInfo::GtcsDatabaseStepInfo (/* args */)
 {
     InitialColumnType();
     InitialColumnName();
@@ -528,9 +674,9 @@ GtcsTcsDatabaseStepInfo::GtcsTcsDatabaseStepInfo (/* args */)
  *
  *  @date    2021/02/04
  *
- *  @fn      GtcsTcsDatabaseStepInfo::GtcsTcsDatabaseStepInfo ()
+ *  @fn      GtcsDatabaseStepInfo::GtcsDatabaseStepInfo ()
  *
- *  @brief   GtcsTcsDatabaseStepInfo constructor.
+ *  @brief   GtcsDatabaseStepInfo constructor.
  *
  *  @param   none
  *
@@ -539,7 +685,7 @@ GtcsTcsDatabaseStepInfo::GtcsTcsDatabaseStepInfo (/* args */)
  *  @note    none
  *
  *******************************************************************************************/
-GtcsTcsDatabaseStepInfo::~GtcsTcsDatabaseStepInfo ()
+GtcsDatabaseStepInfo::~GtcsDatabaseStepInfo ()
 {}
 /******************************************************************************************
  *
@@ -547,7 +693,7 @@ GtcsTcsDatabaseStepInfo::~GtcsTcsDatabaseStepInfo ()
  *
  *  @date    2021/02/04
  *
- *  @fn      GtcsTcsDatabaseStepInfo ::InitialColumnType()
+ *  @fn      GtcsDatabaseStepInfo ::InitialColumnType()
  *
  *  @brief   Initial Gtcs database step table columntype list.
  *
@@ -558,7 +704,7 @@ GtcsTcsDatabaseStepInfo::~GtcsTcsDatabaseStepInfo ()
  *  @note    none
  *
  *******************************************************************************************/
-void GtcsTcsDatabaseStepInfo ::InitialColumnType()
+void GtcsDatabaseStepInfo ::InitialColumnType()
 {
     type.insert(std::pair<std::string,std::string>("job_id","INTEGER"));                // colunm_index = 0
     type.insert(std::pair<std::string,std::string>("seq_id","INTEGER"));                // colunm_index = 1
@@ -593,7 +739,7 @@ void GtcsTcsDatabaseStepInfo ::InitialColumnType()
  *
  *  @date    2021/02/04
  *
- *  @fn      GtcsTcsDatabaseStepInfo ::InitialColumnName()
+ *  @fn      GtcsDatabaseStepInfo ::InitialColumnName()
  *
  *  @brief   Initial Gtcs database step table columnname list.
  *
@@ -604,7 +750,7 @@ void GtcsTcsDatabaseStepInfo ::InitialColumnType()
  *  @note    none
  *
  *******************************************************************************************/
-void GtcsTcsDatabaseStepInfo ::InitialColumnName()
+void GtcsDatabaseStepInfo ::InitialColumnName()
 {
     columnnames.push_back("job_id");                // colunm_index = 0
     columnnames.push_back("seq_id");                // colunm_index = 1

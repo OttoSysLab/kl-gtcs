@@ -19,6 +19,7 @@ PIN_OUT_FILE_ARRAY=[
     "/dev/OUT13/value",
     "/dev/OUT14/value"
 ]
+
 # get file
 def set_io(Pin_Num,Pin_status):
     try:

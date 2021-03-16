@@ -40,35 +40,31 @@ public:
                                             std::map<std::string,std::string> &coulunmtdatas); 
 };
 
-// GtcsTcsDatabase
-class GtcsTcsDatabase : public Sqlite3Manager
+// GtcsDatabase
+class GtcsDatabase : public Sqlite3Manager
 {
 private:
     std::string dbPath = "";
 public:
     // Constructor.
-    GtcsTcsDatabase(std::string Path);
-    ~GtcsTcsDatabase();
+    GtcsDatabase(std::string Path);
+    ~GtcsDatabase();
        
+    // Table = 'device'.
+    bool ReadDatabaseDeviceData(GtcsDatabaseDeviceInfo &dbstruct);
     // Table = Basic parameter.  
-    bool ReadDatabaseBasicData(GtcsTcsDatabaseBasicInfo &dbstruct);     
-    bool UpdateDatabaseBasicData(GtcsTcsDatabaseBasicInfo &dbstruct);    
-    
+    bool ReadDatabaseBasicData(GtcsDatabaseBasicInfo &dbstruct);     
+    bool UpdateDatabaseBasicData(GtcsDatabaseBasicInfo &dbstruct);    
     // Table = jobsequence.
-    bool ReadDatabaseJobData(GtcsTcsDatabaseJobInfo &dbstruct,int jobid);
-
+    bool ReadDatabaseJobData(GtcsDatabaseJobInfo &dbstruct,int jobid);
     // Table = program.     
-    bool ReadDataBaseSequenceList(std::vector<GtcsTcsDatabaseSequenceInfo> &dblist,int jobid);  
-    
+    bool ReadDataBaseSequenceList(std::vector<GtcsDatabaseSequenceInfo> &dblist,int jobid);  
     // Table = step.
-    bool ReadDatabaseStepList(std::vector<GtcsTcsDatabaseStepInfo> &dblist,int jobid,int seqid);
-
+    bool ReadDatabaseStepList(std::vector<GtcsDatabaseStepInfo> &dblist,int jobid,int seqid);
     // Table = inputstep_job.
-    bool ReadDatabaseGPIOInputList(std::vector<GtcsTcsDatabaseStepInfo> &dblist,int jobid,int seqid);
-
+    bool ReadDatabaseGPIOInputList(std::vector<GtcsDatabaseStepInfo> &dblist,int jobid,int seqid);
     // Table = outputstep_job.
-    bool ReadDatabaseGPIOOutputList(std::vector<GtcsTcsDatabaseStepInfo> &dblist,int jobid,int seqid);
-
+    bool ReadDatabaseGPIOOutputList(std::vector<GtcsDatabaseStepInfo> &dblist,int jobid,int seqid);
 };
 
 // GctsScrewStatusData

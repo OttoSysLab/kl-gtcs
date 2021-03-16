@@ -84,8 +84,8 @@ int main()
         }
         
         #if defined(_DEBUG_JOB_SEQ_)
-        std::string datatime = "";
-        manager.GetCurrentSystemDateTime(datatime);
+        std::string datatime = manager.GetCurrentDateime();
+        std::cout << "Current sys time = " << datatime << std::endl;
         break;
         #endif
     }

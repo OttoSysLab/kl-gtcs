@@ -26,8 +26,8 @@
 #pragma region Parameter
 // GTCS batch mode
 enum GTCS_BATCH_MODE:int{
-    INC = 0,                     
-    DEC = 1,
+    DEC = 0,                //  
+    INC = 1,                //    
 };
 // GPIO Pin define.
 enum GTCS_GPIO_REGEIST:int{
@@ -1101,54 +1101,65 @@ public:
     // void SetDataValue(std::string *ptr);
     void SetDataValue(std::map<std::string,std::string> &pDatavalue);
 };
-
-// Gtcs database basic information.
-class GtcsTcsDatabaseBasicInfo : public GtcsDatabaseBaseInfo
+// Gtcsdatabase deviece information.
+class GtcsDatabaseDeviceInfo : public GtcsDatabaseBaseInfo
 {
 private:
     /* data */
 public:
-    GtcsTcsDatabaseBasicInfo(/* args */);
-    ~GtcsTcsDatabaseBasicInfo();
+    GtcsDatabaseDeviceInfo(/* args */);
+    ~GtcsDatabaseDeviceInfo();
+    std::string dbtablename = "device";
+    void InitialColumnType();
+    void InitialColumnName();
+};
+// Gtcs database basic information.
+class GtcsDatabaseBasicInfo : public GtcsDatabaseBaseInfo
+{
+private:
+    /* data */
+public:
+    GtcsDatabaseBasicInfo(/* args */);
+    ~GtcsDatabaseBasicInfo();
     std::string dbtablename = "basic";
     void InitialColumnType();
     void InitialColumnName();
 };
 
 // Gtcs database program information.
-class GtcsTcsDatabaseJobInfo : public GtcsDatabaseBaseInfo
+class GtcsDatabaseJobInfo : public GtcsDatabaseBaseInfo
 {
 private:
     /* data */
 public:
-    GtcsTcsDatabaseJobInfo(/* args */);
-    ~GtcsTcsDatabaseJobInfo();
+    GtcsDatabaseJobInfo(/* args */);
+    ~GtcsDatabaseJobInfo();
     std::string dbtablename = "jobsequence";
     void InitialColumnType();
     void InitialColumnName();
 };
 
 // Gtcs database program information.
-class GtcsTcsDatabaseSequenceInfo : public GtcsDatabaseBaseInfo
+class GtcsDatabaseSequenceInfo : public GtcsDatabaseBaseInfo
 {
 private:
     /* data */
 public:
-    GtcsTcsDatabaseSequenceInfo (/* args */);
-    ~GtcsTcsDatabaseSequenceInfo();
+    GtcsDatabaseSequenceInfo (/* args */);
+    ~GtcsDatabaseSequenceInfo();
     std::string dbtablename = "program";
     void InitialColumnType();
     void InitialColumnName();
 };
 
 // Gtcs database step information.
-class GtcsTcsDatabaseStepInfo : public GtcsDatabaseBaseInfo
+class GtcsDatabaseStepInfo : public GtcsDatabaseBaseInfo
 {
 private:
     /* data */
 public:
-    GtcsTcsDatabaseStepInfo (/* args */);
-    ~GtcsTcsDatabaseStepInfo();
+    GtcsDatabaseStepInfo (/* args */);
+    ~GtcsDatabaseStepInfo();
     std::string dbtablename = "step";
     void InitialColumnType();
     void InitialColumnName();
@@ -1265,7 +1276,8 @@ public:
     int currentsequenceid = 0;
     uint16_t currentstepid = 0; 
     std::string currentprogramname = "_";   
-    uint16_t batchmode = (uint16_t)GTCS_BATCH_MODE::INC;  // uint16_t batchmode = (uint16_t)GTCS_BATCH_MODE::DEC;
+    uint16_t batchmode = (uint16_t)GTCS_BATCH_MODE::DEC;  // DEC = 0, INC = 1;
+    uint16_t torqueunit = 0;
     uint16_t inputstatus = 0;
     uint16_t outputstatus = 0; 
     

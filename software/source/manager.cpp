@@ -3130,6 +3130,10 @@ bool GtcsManager::RunGtcsSystem()
                 if (bulletin->ScrewHandler.screwrunning ==true)
                 {
                     InsertRealTimeActuralValueToDatabase(bulletin->AmsBulletin.DATA300Struct);
+                    // Calaulate RT actural value.
+                    GetRealTimeActuralValue(bulletin->AmsBulletin.DATA300Struct,bulletin->ScrewHandler,mcb->telegram.status.current_status);
+                    // Write data to ramdisk
+                    WriteRealTimeActuralValueToRamdisk(bulletin->AmsBulletin.DATA300Struct);
                 }
                 bulletin->ScrewHandler.screwrunning = false;
             }
@@ -3148,7 +3152,7 @@ bool GtcsManager::RunGtcsSystem()
             // Switch to next sequence index.
             if(CheckScrewDriverCountingFinished(bulletin->ScrewHandler) == true)
             {
-                SetScrewDriverNextSeqindex(bulletin->ScrewHandler);             //  
+                SetScrewDriverNextSeqindex(bulletin->ScrewHandler);             // 
             }
         }
         // Step 4 = Package system status to bulletin.

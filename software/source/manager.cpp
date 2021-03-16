@@ -553,7 +553,7 @@ bool GtcsManager::GetRealTimeActuralValue(AmsDATA300Struct &data300,GtcsScrewSeq
     std::array<bool, 32> error_flags = BitArray::To32BiteArray(mcb->telegram.status.current_status.u32ActError);
 
     // Calcuate angle & revalution.
-    float gear = (float)screwhandler.u16GearBoxRatio / 100;             // Get gear box.
+    float gear = (float)screwhandler.u16GearBoxRatio / 100;                 // Get gear box.
     std::string acttorque = DataSorter::GetFloatScaleSortString(((float)mcbstatus.u16ActTorque / 1862) * toolmaxtorque, 4); // Calculate Act torque.
     std::string angle = DataSorter::GetFloatScaleSortString((float)mcbstatus.u32Angle / (gear * 200) * 360, 1);             // Calculate angle.
     std::string maxtorque = DataSorter::GetFloatScaleSortString(((float)mcbstatus.u16MaxTorque / 1862) * toolmaxtorque, 4); // Calculate max torque.
@@ -567,17 +567,32 @@ bool GtcsManager::GetRealTimeActuralValue(AmsDATA300Struct &data300,GtcsScrewSeq
     data300.dervicetype = std::to_string(0);                  // str5:Device type
     data300.toolsn = std::to_string(0);                       // str6:Tool SN
     data300.dervicesn = std::to_string(0);                    // str7:Device SN
-    data300.jobid = std::to_string(bulletin->ScrewHandler.GtcsJob.jobid);       // str8:Job ID
+    data300.jobid = std::to_string(bulletin->ScrewHandler.GtcsJob.jobid);   // str8:Job ID
     // str9:Sequence ID.
     data300.seqid = std::to_string(bulletin->ScrewHandler.currentsequenceid);
-    // str10:Program name
+    // str10:Program name.
     data300.progid = bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentsequenceindex].program_name;
     data300.stepid = std::to_string(bulletin->ScrewHandler.currentstepid);  // str11:Step ID
-    data300.dircetion = std::to_string(0);                          // str12:Direction
-    data300.torqueuint = std::to_string(screwhandler.torqueunit);   // str13:Torque unit
-    data300.inc_dec = std::to_string(screwhandler.batchmode);           // str14:INC/DEC
-    data300.last_screwcnt = std::to_string(screwhandler.screwcounter);  // str15:Last_screw_count
-    data300.max_screwcnd = std::to_string(screwhandler.maxscrewcounter);// str16:Max_screw_count
+    data300.dircetion = std::to_string(0);                                  // str12:Direction
+    data300.torqueuint = std::to_string(screwhandler.torqueunit);           // str13:Torque unit
+    data300.inc_dec = std::to_string(screwhandler.batchmode);               // str14:INC/DEC
+    // package data300 last screw by batch mode setting. 
+    if (screwhandler.batchmode==(int)GTCS_BATCH_MODE::DEC)
+    {
+        data300.last_screwcnt = std::to_string(screwhandler.screwcounter);      // str15:Last_screw_count
+    }
+    else
+    {
+        if(CheckScrewDriverCountingFinished(screwhandler)==true)
+        {
+            data300.last_screwcnt = std::to_string(screwhandler.screwcounter-1); // str15:Last_screw_count
+        }
+        else
+        {
+            data300.last_screwcnt = std::to_string(screwhandler.screwcounter); // str15:Last_screw_count
+        }
+    }
+    data300.max_screwcnd = std::to_string(screwhandler.maxscrewcounter);    // str16:Max_screw_count
     data300.fasteningtime = std::to_string(0);                // str17:Fastening time
     data300.acttorque = acttorque;                            // str18:Torque
     data300.actangle = angle;                                 // str19:Angle
@@ -2304,16 +2319,16 @@ bool GtcsManager::GetScrewDeviceInfoFormDB(GtcsScrewSequenceHandler &screwhandle
  *******************************************************************************************/
 bool GtcsManager::CheckScrewDriverCountingFinished (GtcsScrewSequenceHandler &screwhandler)
 {
-    if (screwhandler.batchmode == (uint16_t)GTCS_BATCH_MODE::INC)
+    if (screwhandler.batchmode == (uint16_t)GTCS_BATCH_MODE::DEC)
     {
-        if (screwhandler.screwcounter != screwhandler.maxscrewcounter)
+        if (screwhandler.screwcounter != 0)
         {
             return false;
         }
     }
     else
     {
-        if (screwhandler.screwcounter != 0)
+        if ((screwhandler.screwcounter-1) != screwhandler.maxscrewcounter)
         {
             return false;
         }
@@ -2364,13 +2379,13 @@ bool GtcsManager::GetCurrentScrewDriverTighteningCounter(GtcsScrewSequenceHandle
  *******************************************************************************************/
 bool GtcsManager::SetCurrentScrewDriverTighteningCounter(GtcsScrewSequenceHandler &screwhandler)
 {
-    if (screwhandler.batchmode==(int)GTCS_BATCH_MODE::INC)
-    {
-        screwhandler.screwcounter = 0;                          // 
-    }
-    else
+    if (screwhandler.batchmode==(int)GTCS_BATCH_MODE::DEC)
     {
         screwhandler.screwcounter = screwhandler.maxscrewcounter;
+    }
+    if (screwhandler.batchmode==(int)GTCS_BATCH_MODE::INC)
+    {
+        screwhandler.screwcounter = 1;                          // 
     }    
     return true;
 } 

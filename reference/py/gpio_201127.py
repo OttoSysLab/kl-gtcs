@@ -33,7 +33,6 @@ def set_io(Pin_Num,Pin_status):
 
 def main():
     set_io(14,True)
-        
 
 if __name__ == "__main__":
     main() 

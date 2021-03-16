@@ -1,6 +1,6 @@
 #pragma once
 #define _DEBUG_MODE_
-#define _DEBUG_MODE_207_
+// #define _DEBUG_MODE_207_
 // #define _DEBUG_MODE_202_
 // #define _DEBUG_JOB_SEQ_
 /*=======================================================================================
@@ -1275,6 +1275,7 @@ public:
     uint16_t currenjobid = 0;
     int currentsequenceid = 0;
     uint16_t currentstepid = 0; 
+    uint16_t laststepid = 1;
     std::string currentprogramname = "_";   
     uint16_t batchmode = (uint16_t)GTCS_BATCH_MODE::DEC;  // DEC = 0, INC = 1;
     uint16_t torqueunit = 0;

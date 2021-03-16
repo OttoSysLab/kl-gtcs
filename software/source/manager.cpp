@@ -264,8 +264,8 @@ bool GtcsManager::GetToolRunTimeStatus(GtcsScrewSequenceHandler &screwhandler,St
     std::array<bool, 16> last_status_lags = BitArray::To16BiteArray(mcbstatus.last_status.u16Statusflags);
     std::array<bool, 16> tmd_flags = BitArray::To16BiteArray(mcbstatus.current_status.u16TMDFlags);
 
-    // Check sensor.
-    bool start_signal = tmd_flags[TMD_INPUT::LEVER_SW];
+    // Check start signal.
+    bool start_signal = tmd_flags[TMD_INPUT::LEVER_SW];   
 
     // Check flag status.
     bool last_proc_status = last_status_lags[STATUS_FlAGS_IDX::PROC_STATUS];
@@ -273,7 +273,6 @@ bool GtcsManager::GetToolRunTimeStatus(GtcsScrewSequenceHandler &screwhandler,St
     bool tool_reverse = current_status_flags[STATUS_FlAGS_IDX::TOOL_REVERSE];
     bool tool_NG = current_status_flags[STATUS_FlAGS_IDX::ERROR_OCCURED];
     bool proc_status = current_status_flags[STATUS_FlAGS_IDX::PROC_STATUS];
-
     int lc_statusnum = screwhandler.statusnum;
 
     #pragma region Check current RT Status.
@@ -312,10 +311,15 @@ bool GtcsManager::GetToolRunTimeStatus(GtcsScrewSequenceHandler &screwhandler,St
         }
     }
     #pragma endregion
+
     // Get current step id
     if (mcbstatus.current_status.u16ActStepNr !=0)
     {
         screwhandler.currentstepid = (mcbstatus.current_status.u16ActStepNr-3000)+1;
+        if ((tool_run==true)&&(start_signal==true))
+        {
+            screwhandler.laststepid = screwhandler.currentstepid;
+        }
     }
     // Assign data to last locked status num.
     screwhandler.statusnum = lc_statusnum;
@@ -567,12 +571,11 @@ bool GtcsManager::GetRealTimeActuralValue(AmsDATA300Struct &data300,GtcsScrewSeq
     data300.dervicetype = std::to_string(0);                  // str5:Device type
     data300.toolsn = std::to_string(0);                       // str6:Tool SN
     data300.dervicesn = std::to_string(0);                    // str7:Device SN
-    data300.jobid = std::to_string(bulletin->ScrewHandler.GtcsJob.jobid);   // str8:Job ID
-    // str9:Sequence ID.
-    data300.seqid = std::to_string(bulletin->ScrewHandler.currentsequenceid);
+    data300.jobid = std::to_string(screwhandler.GtcsJob.jobid);      // str8:Job ID
+    data300.seqid = std::to_string(screwhandler.currentsequenceid);  // str9:Sequence ID.
     // str10:Program name.
-    data300.progid = bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentsequenceindex].program_name;
-    data300.stepid = std::to_string(bulletin->ScrewHandler.currentstepid);  // str11:Step ID
+    data300.progid = screwhandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentsequenceindex].program_name;
+    data300.stepid = std::to_string(screwhandler.laststepid);  // str11:Step ID
     data300.dircetion = std::to_string(0);                                  // str12:Direction
     data300.torqueuint = std::to_string(screwhandler.torqueunit);           // str13:Torque unit
     data300.inc_dec = std::to_string(screwhandler.batchmode);               // str14:INC/DEC
@@ -1003,6 +1006,7 @@ bool GtcsManager::CheckUiSettingFSM(int uicmd)
             bulletin->ScrewHandler.lastsequenceindex = bulletin->ScrewHandler.currentsequenceindex;
             bulletin->ScrewHandler.currentsequenceid 
                 = bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentsequenceindex].seq_id;
+            bulletin->ScrewHandler.laststepid = 1;
             // Setting MCB to fasten status.
             mcb->telegram.status.loosen_status = false;
         }
@@ -3061,9 +3065,10 @@ bool GtcsManager::RunGtcsSystem()
                 bulletin->ScrewHandler.currentsequenceid 
                     = bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentsequenceindex].seq_id;
                 // Setting MCB to fasten status.
-                mcb->telegram.status.loosen_status = false;
+                mcb->telegram.status.loosen_status = false; 
                 bulletin->ScrewHandler.currentstatus = 0;
                 bulletin->ScrewHandler.IsEnable = true;
+                bulletin->ScrewHandler.laststepid = 1;
             }
         }
         else
@@ -3076,7 +3081,7 @@ bool GtcsManager::RunGtcsSystem()
         if (mcb->telegram.status.loosen_status == false)
         {
             ctrltelegram = mcb->telegram.ctrl.fasten;          // Configure fasten ctrl telegram.
-            mcb->telegram.ctrl.InitialCtrlFlags(ctrltelegram);
+            mcb->telegram.ctrl.InitialCtrlFlags(ctrltelegram); 
         }
         else
         {
@@ -3105,7 +3110,16 @@ bool GtcsManager::RunGtcsSystem()
             GetToolRunTimeStatus(bulletin->ScrewHandler,mcb->telegram.status);
             
             // Calaulate tigthtening repeat times.
-            if ((bulletin->ScrewHandler.statusnum == (int)LOCKED_STATUS::OK)||(bulletin->ScrewHandler.statusnum == (int)LOCKED_STATUS::NG_MCB))
+            if (bulletin->ScrewHandler.statusnum == (int)LOCKED_STATUS::RUNNING)
+            {
+                bulletin->ScrewHandler.screwcounterlocked = false;
+                if (bulletin->ScrewHandler.screwrunning ==false)
+                {
+                   ClearRamdiskTxtFile();
+                }
+                bulletin->ScrewHandler.screwrunning = true;
+            }
+            else
             {
                 // Onlay to process OK!
                 if ((bulletin->ScrewHandler.statusnum == (int)LOCKED_STATUS::OK)&&(bulletin->ScrewHandler.GtcsJob.jobid!=0))
@@ -3119,20 +3133,7 @@ bool GtcsManager::RunGtcsSystem()
                 }
                 bulletin->ScrewHandler.screwrunning = false;
             }
-            else if (bulletin->ScrewHandler.statusnum == (int)LOCKED_STATUS::RUNNING)
-            {
-                bulletin->ScrewHandler.screwcounterlocked = false;
-                if (bulletin->ScrewHandler.screwrunning ==false)
-                {
-                   ClearRamdiskTxtFile();
-                }
-                bulletin->ScrewHandler.screwrunning = true;
-            }
-            else
-            {
-                bulletin->ScrewHandler.screwrunning = false;
-            }
-            
+
             // Calaulate RT actural value.
             GetRealTimeActuralValue(bulletin->AmsBulletin.DATA300Struct,bulletin->ScrewHandler,mcb->telegram.status.current_status);
             

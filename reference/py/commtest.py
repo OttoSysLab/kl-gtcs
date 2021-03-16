@@ -20,7 +20,15 @@
 #     if(idx>2):
 #         print("Fuck = "+str(idx))
 
-_float_1 = 2.1
-_float_2 = 5.1
-_float_add = round(_float_1+_float_2,3) 
-print(_float_add)
+# _float_1 = 2.1
+# _float_2 = 5.1
+# _float_add = round(_float_1+_float_2,3) 
+# print(_float_add)
+
+int_Cnt = 0
+
+def function():
+    if(int_Cnt < 10):
+        int_Cnt += 1
+    else:
+        int_Cnt = 0

@@ -558,10 +558,22 @@ bool GtcsManager::GetRealTimeActuralValue(AmsDATA300Struct &data300,GtcsScrewSeq
 
     // Calcuate angle & revalution.
     float gear = (float)screwhandler.u16GearBoxRatio / 100;                 // Get gear box.
-    std::string acttorque = DataSorter::GetFloatScaleSortString(((float)mcbstatus.u16ActTorque / 1862) * toolmaxtorque, 4); // Calculate Act torque.
-    std::string angle = DataSorter::GetFloatScaleSortString((float)mcbstatus.u32Angle / (gear * 200) * 360, 1);             // Calculate angle.
-    std::string maxtorque = DataSorter::GetFloatScaleSortString(((float)mcbstatus.u16MaxTorque / 1862) * toolmaxtorque, 4); // Calculate max torque.
-    std::string revolution = DataSorter::GetFloatScaleSortString((float)mcbstatus.u32Revolutions / (gear * 200) * 360, 4);  // Calculate revalution.
+    // Calculate Act torque.
+    std::string acttorque = DataSorter::GetFloatScaleSortString(((float)mcbstatus.u16ActTorque / 1862) * toolmaxtorque, 4); 
+    // Calculate angle.
+    std::string angle = "0.0";
+    if (mcbstatus.u32Angle<0x0fffffff)
+    {
+        angle = DataSorter::GetFloatScaleSortString((float)mcbstatus.u32Angle / (gear * 200) * 360, 1); 
+    }
+    else
+    {
+        angle = DataSorter::GetFloatScaleSortString(-(float)(0xffffffff-mcbstatus.u32Angle)/ (gear * 200) * 360, 1); // Complement
+    }
+    // Calculate max torque.
+    std::string maxtorque = DataSorter::GetFloatScaleSortString(((float)mcbstatus.u16MaxTorque / 1862) * toolmaxtorque, 4); 
+    // Calculate revalution.
+    std::string revolution = DataSorter::GetFloatScaleSortString((float)mcbstatus.u32Revolutions / (gear * 200) * 360, 4);  
     std::string current_rt_status = screwhandler.lockedmessage;
     std::string current_status_msg = GetCurrentSystemStatusMessage(screwhandler.currentstatus,mcbstatus.u32ActError);
     // time.

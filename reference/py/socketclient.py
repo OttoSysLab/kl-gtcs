@@ -27,7 +27,7 @@ _CMD_301 = {
     "str2"   :datetime.now().strftime("%Y%m%d %H:%M:%S"), # yyyyMMdd HH:mm:ss
     "str3"   :"0119",                                     # check sum ,4 chars
     "str4"   :"001",                                      # Command_sn
-    "str5"   :"1",                                        # Job ID, nnornal - 0;
+    "str5"   :"0",                                        # Job ID, nnornal - 0;
 }
 # CMD302, 工具控制命令
 _CMD_302 = {          # {CMDstr1,str2,str3,str4}                                             

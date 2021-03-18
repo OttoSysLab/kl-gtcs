@@ -148,6 +148,9 @@ int GtcsAmsProtocol::GetAmsSymmetryCmdNumber(int amscmd)
     case AMSCMD::CMD302:
         result = AMSCMD::ANS302;
         break;
+    case AMSCMD::CMD303:
+        result = AMSCMD::ANS303;
+        break;
     case AMSCMD::CMD310:
         result = AMSCMD::ANS310;
         break;

@@ -1,5 +1,6 @@
 #pragma once
 #define _DEBUG_MODE_
+// #define _DEBUG_MODE_38_
 // #define _DEBUG_MODE_207_
 // #define _DEBUG_MODE_202_
 // #define _DEBUG_JOB_SEQ_
@@ -474,6 +475,7 @@ enum AMSCMD : int {
     // ANS
     ANS301,
     ANS302,
+    ANS303,
     ANS310,
     ANS311,
     ANS312,

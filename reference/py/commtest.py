@@ -25,10 +25,19 @@
 # _float_add = round(_float_1+_float_2,3) 
 # print(_float_add)
 
-int_Cnt = 0
+# int_Cnt = 0
 
-def function():
-    if(int_Cnt < 10):
-        int_Cnt += 1
-    else:
-        int_Cnt = 0
+# def function():
+#     if(int_Cnt < 10):
+#         int_Cnt += 1
+#     else:
+#         int_Cnt = 0
+
+
+_value_1 = 0x0000004f
+_value_2 = 0x000000ff
+
+print(_value_1 | _value_2)
+
+if ((_value_1 & _value_2)==79):
+    print("FUCK!!!")

@@ -179,7 +179,7 @@ void GtcsTcpSocket::GtcsTcpSocketServerHandler()
             // Waiting for app to process CMD.
             while (manager.GetUiSettingStatus()==true)        
             {
-                std::this_thread::sleep_for(std::chrono::milliseconds(100));
+                std::this_thread::sleep_for(std::chrono::milliseconds(10)); // sleep = 100->10 (ms)
             }
             // Send data to tcpclient.
             std::fill_n(sendbuff,sizeof(sendbuff),0);   

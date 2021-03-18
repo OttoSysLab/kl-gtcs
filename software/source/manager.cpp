@@ -1053,6 +1053,11 @@ bool GtcsManager::CheckUiSettingFSM(int uicmd)
         }
         #pragma endregion
         break;
+    case AMSCMD::CMD303:
+        #pragma region cmd303 sequence
+                
+        #pragma endregion
+        break;
     case AMSCMD::CMD340:
         if (SetSystemBasicParameter(bulletin->AmsBulletin.CMD340Struct, bulletin->McbBulletin.BasicPara) == false)
         {
@@ -2940,7 +2945,7 @@ bool GtcsManager::CheckGtcsSystem()
     // Step 1 : Read data from mcb basice parameter.
     if (mcb->ReadBasicParameter(bulletin->McbBulletin.BasicPara) == false)
     {
-        std::cout << "Step 1 : Read data from mcb basice parameter." << std::endl;
+        std::cout << "Step 1 : Read data from mcb basice parameter error." << std::endl;
         return false;
     }
 
@@ -3042,12 +3047,11 @@ bool GtcsManager::RunGtcsSystem()
     // Check settingstatus status.
     if(bulletin->settingstatus == true)
     {
-        SetMainFSM(MAIN_FSM::SETTING); // MAIN_FSM Jump to setting mode.
+        SetMainFSM(MAIN_FSM::SETTING);  // MAIN_FSM Jump to setting mode.
     }
     else if(bulletin->ScrewHandler.statusnum == (int)LOCKED_STATUS::NG_MCB)
-    // else if (bulletin->alarmstatus == true)
     {
-        SetMainFSM(MAIN_FSM::ALARM); // MAIN_FSM Jump to setting mode.
+        SetMainFSM(MAIN_FSM::ALARM);    // MAIN_FSM Jump to setting mode.
     }
     else
     {

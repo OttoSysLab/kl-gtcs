@@ -1,8 +1,9 @@
 #pragma once
 #define _DEBUG_MODE_
 // #define _DEBUG_MODE_38_
-// #define _DEBUG_MODE_207_
+#define _DEBUG_MODE_54_
 // #define _DEBUG_MODE_202_
+// #define _DEBUG_MODE_207_
 // #define _DEBUG_JOB_SEQ_
 /*=======================================================================================
  Program Nane  	: gtcs_tlg_decoder.c
@@ -1283,6 +1284,8 @@ public:
     uint16_t torqueunit = 0;
     uint16_t inputstatus = 0;
     uint16_t outputstatus = 0; 
+    clock_t fastenstartclock;
+    uint32_t fasteningtime;
     
     GtcsScrewSequenceHandler(/* args */);
     ~GtcsScrewSequenceHandler();

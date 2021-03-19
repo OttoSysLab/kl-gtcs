@@ -357,3 +357,27 @@ bool DateTime::SetCurrentSystemDateTime(std::string &datetime)
 {
     return true;
 }
+
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
+ *  @date    2021/03/19
+ *
+ *  @fn      DateTime::GetCurrentSystemClock(cokck_t &setclock)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   clock_t &setclock
+ *
+ *  @return  bool
+ *
+ *  @note    none.
+ *
+ *******************************************************************************************/
+bool DateTime::GetCurrentSystemClock(clock_t &setclock)
+{
+    // Set clock
+    setclock = clock();
+    return true;
+}

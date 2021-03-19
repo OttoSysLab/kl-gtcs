@@ -50,11 +50,15 @@ int main()
     #if defined(_DEBUG_MODE_38_)
     manager.StartGtcsTcpSocketServerThread("192.168.0.38", 9000);  // OTTO : 38,
     // manager.StartGtcsGPIOThread();                                  // GPIO thread
-    #elif defined(_DEBUG_MODE_207_)
-    manager.StartGtcsTcpSocketServerThread("192.168.0.207", 9000);  // OTTO : 207,
+    #elif defined(_DEBUG_MODE_54_)
+    manager.StartGtcsTcpSocketServerThread("192.168.0.54", 9000); // ERIC : 202
     // manager.StartGtcsGPIOThread();                                  // GPIO thread
     #elif defined(_DEBUG_MODE_202_)
     manager.StartGtcsTcpSocketServerThread("192.168.0.202", 9000); // ERIC : 202
+    // manager.StartGtcsGPIOThread();                                  // GPIO thread
+    #elif defined(_DEBUG_MODE_207_)
+    manager.StartGtcsTcpSocketServerThread("192.168.0.207", 9000);  // OTTO : 207,
+    // manager.StartGtcsGPIOThread();                                  // GPIO thread
     #else
     manager.StartGtcsTcpSocketServerThread("127.0.0.1", 9000); // Linux OTTO
     #endif

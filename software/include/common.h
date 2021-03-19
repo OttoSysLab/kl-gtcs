@@ -70,4 +70,5 @@ public:
     // Get & set current time.
     static std::string GetCurrentSystemDateTime();
     static bool SetCurrentSystemDateTime(std::string &datetime);
+    static bool GetCurrentSystemClock(clock_t &setcolock);
 };

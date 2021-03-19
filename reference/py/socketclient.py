@@ -7,22 +7,16 @@ import os
 DEBUG_MODE = True
 
 if DEBUG_MODE == True:
-    IP =  "192.168.0.38"  # i.Max8 :38 , Eric = 202.
-    # IP =  "192.168.0.207"  # OTTO :207 , Eric = 202.
+    # IP =  "192.168.0.38"  # i.Max8 :38.
+    IP =  "192.168.0.54"  # i.Max8 :38.
     # IP =  "192.168.0.202"  # OTTO :207 , Eric = 202.
+    # IP =  "192.168.0.207"  # OTTO :207 , Eric = 202.
 else:
     IP =  "127.0.0.1"
 PORT = 9000
 
 #region CMD
 # CMD301, 條碼/手動切換工作
-# _CMD_301 = {
-#     "str1"   :"CMD301",                                   # Header+DATA
-#     "str2"   :datetime.now().strftime("%Y%m%d %H:%M:%S"), # yyyyMMdd HH:mm:ss
-#     "str3"   :"0119",                                     # check sum ,4 chars
-#     "str4"   :"001",                                      # Command_sn
-#     "str5"   :"1",                                        # Job ID, nnornal - 0;
-# }
 _CMD_301 = {
     "str1"   :"CMD301",                                   # Header+DATA
     "str2"   :datetime.now().strftime("%Y%m%d %H:%M:%S"), # yyyyMMdd HH:mm:ss
@@ -205,16 +199,16 @@ def test_socket_client():
     _ams_dict = dict()  
     
     # AMS command.
-    # _ams_dict = _CMD_301       # Seitch Jobs
+    _ams_dict = _CMD_301       # Seitch Jobs
     # _ams_dict = _CMD_302
     # _ams_dict = _CMD_310
     # _ams_dict = _CMD_311
     # _ams_dict = _CMD_312
     # _ams_dict = _CMD_313
-    _ams_dict = _CMD_340       # Initial ID2. 
+    # _ams_dict = _CMD_340       # Initial ID2. 
 
     # AMS REQ.
-    # _ams_dict = _REQ_300
+    _ams_dict = _REQ_300
     # _ams_dict = _REQ_302   
 
     # Convert dictionary to  ams string.

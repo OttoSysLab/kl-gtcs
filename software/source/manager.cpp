@@ -576,6 +576,9 @@ bool GtcsManager::GetRealTimeActuralValue(AmsDATA300Struct &data300,GtcsScrewSeq
     std::string revolution = DataSorter::GetFloatScaleSortString((float)mcbstatus.u32Revolutions / (gear * 200) * 360, 4);  
     std::string current_rt_status = screwhandler.lockedmessage;
     std::string current_status_msg = GetCurrentSystemStatusMessage(screwhandler.currentstatus,mcbstatus.u32ActError);
+    // std::string fasteningtime = DataSorter::GetFloatScaleSortString((float)screwhandler.fasteningtime / CLOCKS_PER_SEC, 2);
+    std::string fasteningtime = DataSorter::GetFloatScaleSortString((float)screwhandler.fasteningtime/10000, 2);
+
     // time.
     data300.datetime =  DateTime::GetCurrentSystemDateTime(); // str2:yyyyMMdd HH:mm:ss
     data300.checksum = std::to_string(0);                     // str3:check sum ,4 chars
@@ -608,7 +611,7 @@ bool GtcsManager::GetRealTimeActuralValue(AmsDATA300Struct &data300,GtcsScrewSeq
         }
     }
     data300.max_screwcnd = std::to_string(screwhandler.maxscrewcounter);    // str16:Max_screw_count
-    data300.fasteningtime = std::to_string(0);                // str17:Fastening time
+    data300.fasteningtime = fasteningtime;                  // str17:Fastening time
     data300.acttorque = acttorque;                            // str18:Torque
     data300.actangle = angle;                                 // str19:Angle
     data300.maxtorque = maxtorque;                            // str20:Max Torque
@@ -2483,6 +2486,52 @@ bool GtcsManager::SetScrewDriverTighteningCounter(GtcsScrewSequenceHandler &scre
  *
  *  @author  Otto Chang
  *
+ *  @date    2021/03/19
+ *
+ *  @fn      GtcsManager::SetScrewDriverFasteningStartClock(clock_t &scclock)
+ *
+ *  @brief   ( Constructivist )
+ * 
+ *  @param   clock_t &scclock
+ *
+ *  @return  bool
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+bool GtcsManager::SetScrewDriverFasteningStartClock(clock_t &scclock)
+{
+    DateTime::GetCurrentSystemClock(scclock);
+    return true;
+}
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
+ *  @date    2021/03/19
+ *
+ *  @fn      GtcsManager::GetScrewDriverFasteningTime(uint16_t &fastentime,clock_t &startclock)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   uint32_t &fastentime
+ * 
+ *  @param   clock_t &startclock
+ *  
+ *  @return  bool
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+bool GtcsManager::GetScrewDriverFasteningTime(uint32_t &fastentime,clock_t &startclock)
+{
+    fastentime = clock()-startclock;
+    return true;
+}
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
  *  @date    2021/03/12
  *
  *  @fn      GtcsManager::GetScrewDriverNextSeqindex(GtcsScrewSequenceHandler  &screwhandler)
@@ -3131,12 +3180,15 @@ bool GtcsManager::RunGtcsSystem()
                 bulletin->ScrewHandler.screwcounterlocked = false;
                 if (bulletin->ScrewHandler.screwrunning ==false)
                 {
-                   ClearRamdiskTxtFile();
+                    ClearRamdiskTxtFile();
+                    bulletin->ScrewHandler.screwrunning = true;
+                    SetScrewDriverFasteningStartClock(bulletin->ScrewHandler.fastenstartclock);
                 }
-                bulletin->ScrewHandler.screwrunning = true;
+                // Calculate fasten time.
+                GetScrewDriverFasteningTime(bulletin->ScrewHandler.fasteningtime,bulletin->ScrewHandler.fastenstartclock);                
             }
             else
-            {
+            {                
                 // Onlay to process OK!
                 if ((bulletin->ScrewHandler.statusnum == (int)LOCKED_STATUS::OK)&&(bulletin->ScrewHandler.GtcsJob.jobid!=0))
                 {
@@ -3150,8 +3202,8 @@ bool GtcsManager::RunGtcsSystem()
                     GetRealTimeActuralValue(bulletin->AmsBulletin.DATA300Struct,bulletin->ScrewHandler,mcb->telegram.status.current_status);
                     // Write data to ramdisk
                     WriteRealTimeActuralValueToRamdisk(bulletin->AmsBulletin.DATA300Struct);
+                    bulletin->ScrewHandler.screwrunning = false;
                 }
-                bulletin->ScrewHandler.screwrunning = false;
             }
 
             // Calaulate RT actural value.

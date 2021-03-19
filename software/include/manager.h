@@ -124,6 +124,10 @@ private:
     bool GetScrewDriverTighteningCounter(GtcsScrewSequenceHandler &screwhandler,int &tighteningcounter);
     bool SetScrewDriverTighteningCounter(GtcsScrewSequenceHandler &screwhandler);
 
+    // Get & set screw driver fastening time and clock.
+    bool GetScrewDriverFasteningTime(uint32_t &fastentime,clock_t &startclock);
+    bool SetScrewDriverFasteningStartClock(clock_t &scclock);
+
     // Get and set screw driver next seqindex. 
     bool GetScrewDriverNextSeqindex(GtcsScrewSequenceHandler &screwhandler);
     bool SetScrewDriverNextSeqindex(GtcsScrewSequenceHandler &screwhandler);
@@ -132,7 +136,7 @@ private:
     bool SetDatabaseBasicParaToAns(AmsANS340Struct &amsans,GtcsDatabaseBasicInfo &db_basic);   // DB_BASIC  ->AMS_ANS340
     bool SetDatabaseBasicParaToReq(AmsREQ301Struct &amsreq,GtcsDatabaseBasicInfo &db_basic);   // DB_BASIC  ->AMS_REQ301
     void SetAmsCmdBaiscParaToAns(AmsANS340Struct &amsans,AmsCMD340Struct &amscmd);             // AMS_CMD340->AMS_ANS340
-        
+
     // GTCS AMS DATA300
     bool GetRealTimeActuralValue(AmsDATA300Struct &data300,GtcsScrewSequenceHandler &screwhandler,GtcsStatusTelegramStrcut &mcbstatus);  
     // Write data300 to txt.

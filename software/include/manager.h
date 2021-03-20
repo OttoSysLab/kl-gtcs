@@ -59,7 +59,8 @@ private:
     // std::string GetMcbRtStatusString(MCB_RT_STATUS status);
     std::string GetRtLockedStatusMessage(int lcstatusnum);                                        // Define Locksed status string. 
 
-    bool GetToolRunTimeStatus(GtcsScrewSequenceHandler &screwstatus,StatusTelegram &mcbstatus);
+    bool GetScrewDriverRunTimeStatus(GtcsScrewSequenceHandler &screwstatus,StatusTelegram &mcbstatus);
+    bool GetScrewDriverRunTimeStatusMessage(GtcsScrewSequenceHandler &screwstatus,StatusTelegram &mcbstatus);
     
     bool GetStartSignalStatus(uint16_t &tmdflags);
     bool GetSystemErrorStatus(uint16_t &statusflags);
@@ -189,7 +190,7 @@ public:
     // Jion thread.
     bool StopAllThread();
     std::string GetMCBErrMessageString(uint32_t errorflagindex);
-    std::string GetCurrentSystemStatusMessage(uint32_t &currentstatus,uint32_t errorflags);
+    std::string GetCurrentSystemStatusMessage(uint16_t &currentstatus,uint32_t errorflags);
 
     // Gtcs System Main state.(MAIN)FSM)
     bool InitialGtcsSystem();

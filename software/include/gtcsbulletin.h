@@ -37,6 +37,7 @@ public:
     #pragma region ANS
     AmsANS301Struct ANS301Struct;// ANS301, 回復條碼切換工序.
     AmsANS302Struct ANS302Struct;// ANS302, 回復工具控制命令.
+    AmsANS303Struct ANS303Struct;// ANS303, 回復跳工序.
     AmsANS310Struct ANS310Struct;// ANS310, 回復Normal Torque.
     AmsANS311Struct ANS311Struct;// ANS311, 回復Normal Angle.
     AmsANS312Struct ANS312Struct;// ANS312, 回復Normal Reverse.

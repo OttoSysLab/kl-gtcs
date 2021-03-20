@@ -33,6 +33,13 @@ _CMD_302 = {          # {CMDstr1,str2,str3,str4}
     "str5"   :"0",                                        # Tool control = enable
     # "str5"   :"1",                                        # Tool control = disabke
 }
+# CMD302, 工具控制命令
+_CMD_303 = {          # {CMDstr1,str2,str3,str4}                                             
+    "str1"   :"CMD303",                                   # Header+DATA
+    "str2"   :datetime.now().strftime("%Y%m%d %H:%M:%S"), # yyyyMMdd HH:mm:ss
+    "str3"   :"0119",                                     # check sum ,4 chars
+    "str4"   :"001",                                      # Command_sn
+}
 # CMD310, 設定Normal Torque
 _CMD_310 = {                                               # Nornal Troque
     "str1"   : "CMD310",                                   # Header+DATA
@@ -199,8 +206,9 @@ def test_socket_client():
     _ams_dict = dict()  
     
     # AMS command.
-    _ams_dict = _CMD_301       # Seitch Jobs
-    # _ams_dict = _CMD_302
+    # _ams_dict = _CMD_301       # Seitch Jobs
+    # _ams_dict = _CMD_302     
+    _ams_dict = _CMD_303     # Jumpt to next sequence. l
     # _ams_dict = _CMD_310
     # _ams_dict = _CMD_311
     # _ams_dict = _CMD_312
@@ -209,7 +217,7 @@ def test_socket_client():
 
     # AMS REQ.
     _ams_dict = _REQ_300
-    # _ams_dict = _REQ_302   
+    # _ams_dict = _REQ_302      
 
     # Convert dictionary to  ams string.
     _ams_str = encode_ams_cmd(pdict =_ams_dict)

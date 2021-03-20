@@ -275,6 +275,9 @@ std::string GtcsAmsProtocol::GetAmsBulletin(int amscmd)
     case AMSCMD::ANS302:
         ConvertToProtocolString((std::string *)(void *)&amsbulletin->ANS302Struct,result);
         break;
+    case AMSCMD::ANS303:
+        ConvertToProtocolString((std::string *)(void *)&amsbulletin->ANS303Struct,result);
+        break;
     case AMSCMD::ANS310:
         ConvertToProtocolString((std::string *)(void *)&amsbulletin->ANS310Struct,result);
         break;
@@ -555,6 +558,9 @@ bool GtcsAmsProtocol::SetAmsBulletin(std::string ams_string)
         break;
     case AMSCMD::ANS302:
         UpdateProtocolStruct((std::string *)(void *)&amsbulletin->ANS302Struct,ams_arry);
+        break;
+    case AMSCMD::ANS303:
+        UpdateProtocolStruct((std::string *)(void *)&amsbulletin->ANS303Struct,ams_arry);
         break;
     case AMSCMD::ANS310:
         UpdateProtocolStruct((std::string *)(void *)&amsbulletin->ANS310Struct,ams_arry);

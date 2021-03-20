@@ -760,6 +760,16 @@ typedef struct
     std::string str5;  // Tool control
     std::string str6;  // CL,RF
 }AmsANS302Struct;
+// ANS303
+typedef struct
+{
+    /* data */
+    std::string str1;  // Header+DATA
+    std::string str2;  // yyyyMMdd HH:mm:ss
+    std::string str3;  // check sum ,4 chars
+    std::string str4;  // Command_sn
+    std::string str5;  // CL,RF
+}AmsANS303Struct;
 // ANS310
 typedef struct
 {
@@ -1271,8 +1281,9 @@ public:
     GtcsJobStruct GtcsJob;
     uint16_t u16GearBoxRatio;    // SID = 14,Gear box ratio. Unit [0,01] (1600 = 16:1)
     uint16_t u32StartInp;        // SID = 15,0 = Start Switch,1 = From Displaycontroller Telegram"
-    uint32_t currentstatus = 0; 
-    std::string lockedmessage = "___________";
+    uint16_t currentstatusnum = 0; 
+    std::string currentstatus = "___________";
+    std::string currentstatusmessage = "___________";
     int currentsequenceindex = 0;
     int lastsequenceindex = 0;
     uint16_t currenjobid = 0;

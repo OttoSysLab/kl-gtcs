@@ -112,8 +112,7 @@ void Manager::SetMainFSM(int main_fsm)
  *
  *******************************************************************************************/
 NtcsManager::NtcsManager()
-{
-}
+{}
 /******************************************************************************************
  *
  *  @author  Otto Chang
@@ -246,7 +245,7 @@ std::string GtcsManager::GetRtLockedStatusMessage(int lcstatusnum)
  *
  *  @date    2021/02/04
  *
- *  @fn      GtcsManager::GetToolRunTimeStatus(GtcsScrewSequenceHandler &screwhandler)
+ *  @fn      GtcsManager::GetScrewDriverRunTimeStatus(GtcsScrewSequenceHandler &screwhandler)
  *
  *  @brief   Get real time tool status.
  *
@@ -257,7 +256,7 @@ std::string GtcsManager::GetRtLockedStatusMessage(int lcstatusnum)
  *  @note    none
  *
  *******************************************************************************************/
-bool GtcsManager::GetToolRunTimeStatus(GtcsScrewSequenceHandler &screwhandler,StatusTelegram &mcbstatus)
+bool GtcsManager::GetScrewDriverRunTimeStatus(GtcsScrewSequenceHandler &screwhandler,StatusTelegram &mcbstatus)
 {
     // Check flags.
     std::array<bool, 16> current_status_flags = BitArray::To16BiteArray(mcbstatus.current_status.u16Statusflags);
@@ -323,7 +322,30 @@ bool GtcsManager::GetToolRunTimeStatus(GtcsScrewSequenceHandler &screwhandler,St
     }
     // Assign data to last locked status num.
     screwhandler.statusnum = lc_statusnum;
-    screwhandler.lockedmessage = GetRtLockedStatusMessage(lc_statusnum);
+    screwhandler.currentstatusmessage = GetRtLockedStatusMessage(lc_statusnum);
+    return true;
+}
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
+ *  @date    2021/03/20
+ *
+ *  @fn      GtcsManager::GetScrewDriverRunTimeStatusMessage(GtcsScrewSequenceHandler &screwhandler,StatusTelegram &mcbstatus)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   GtcsScrewSequenceHandler &screwhandler
+ * 
+ *  @param   StatusTelegram &mcbstatus
+ *
+ *  @return  bool
+ *
+ *  @note    none
+ *
+ *******************************************************************************************/
+bool GtcsManager::GetScrewDriverRunTimeStatusMessage(GtcsScrewSequenceHandler &screwhandler,StatusTelegram &mcbstatus)
+{
     return true;
 }
 /******************************************************************************************
@@ -485,11 +507,11 @@ std::string GtcsManager::GetMCBErrMessageString(uint32_t errorflagindex)
  *
  *  @date    2021/02/04
  *
- *  @fn      GtcsManager::GetCurrentSystemStatusMessage(int &currentstatus,uint32_t errorflags)
+ *  @fn      GtcsManager::GetCurrentSystemStatusMessage(uint16_t &currentstatusnum,uint32_t errorflags)
  *
  *  @brief   ( Constructivist )
  * 
- *  @param   uint32_t &currentstatus
+ *  @param   uint16_t &currentstatusnum
  *
  *  @param   uint32_t errorflags
  *
@@ -498,13 +520,13 @@ std::string GtcsManager::GetMCBErrMessageString(uint32_t errorflagindex)
  *  @note    none
  *
  *******************************************************************************************/
-std::string GtcsManager::GetCurrentSystemStatusMessage(uint32_t &currentstatus,uint32_t errorflags)
+std::string GtcsManager::GetCurrentSystemStatusMessage(uint16_t &currentstatusnum,uint32_t errorflags)
 {
     std::string result = "";
     std::array<bool, 32> errorflagarray = BitArray::To32BiteArray(errorflags);
     int count = 24;
 
-    switch(currentstatus)
+    switch(currentstatusnum)
     {
         case 1:
             for (uint32_t i = 0; i < count; i++)
@@ -574,8 +596,8 @@ bool GtcsManager::GetRealTimeActuralValue(AmsDATA300Struct &data300,GtcsScrewSeq
     std::string maxtorque = DataSorter::GetFloatScaleSortString(((float)mcbstatus.u16MaxTorque / 1862) * toolmaxtorque, 4); 
     // Calculate revalution.
     std::string revolution = DataSorter::GetFloatScaleSortString((float)mcbstatus.u32Revolutions / (gear * 200) * 360, 4);  
-    std::string current_rt_status = screwhandler.lockedmessage;
-    std::string current_status_msg = GetCurrentSystemStatusMessage(screwhandler.currentstatus,mcbstatus.u32ActError);
+    std::string current_rt_status = screwhandler.currentstatusmessage;
+    std::string current_status_msg = GetCurrentSystemStatusMessage(screwhandler.currentstatusnum,mcbstatus.u32ActError);
     // std::string fasteningtime = DataSorter::GetFloatScaleSortString((float)screwhandler.fasteningtime / CLOCKS_PER_SEC, 2);
     std::string fasteningtime = DataSorter::GetFloatScaleSortString((float)screwhandler.fasteningtime/10000, 2);
 
@@ -970,6 +992,8 @@ bool GtcsManager::SetSystemBasicParameter(AmsCMD340Struct &amscmd, McbID2Struct 
  *******************************************************************************************/
 bool GtcsManager::CheckUiSettingFSM(int uicmd)
 {
+    // Initial value 
+    int count = 0;
     switch (uicmd)
     {
     case AMSCMD::CMD301:
@@ -995,7 +1019,7 @@ bool GtcsManager::CheckUiSettingFSM(int uicmd)
                 return false;
             }
             #if defined(_DEBUG_MODE_)    
-            int count = bulletin->ScrewHandler.GtcsJob.sequencelist.size();
+            count = bulletin->ScrewHandler.GtcsJob.sequencelist.size();
             std::cout <<"bulletin->ScrewHandler.GtcsJob.sequencelist = " <<std::to_string(count) <<std::endl;
             for (int i = 0; i < count; i++)
             {
@@ -1025,7 +1049,7 @@ bool GtcsManager::CheckUiSettingFSM(int uicmd)
             // Setting MCB to fasten status.
             mcb->telegram.status.loosen_status = false;
         }
-        // EnableMcbScrewStatus();
+        EnableMcbScrewStatus();
         #pragma endregion
         break;
     case AMSCMD::CMD302:
@@ -1058,7 +1082,58 @@ bool GtcsManager::CheckUiSettingFSM(int uicmd)
         break;
     case AMSCMD::CMD303:
         #pragma region cmd303 sequence
-                
+        // Disable screw.
+        DisableMcbScrewStatus();
+        // Increase current index.
+        if (bulletin->ScrewHandler.currentsequenceindex == (bulletin->ScrewHandler.GtcsJob.sequencelist.size()-1))
+        {
+            bulletin->ScrewHandler.currentsequenceindex = 0;
+        }
+        else
+        {
+            bulletin->ScrewHandler.currentsequenceindex += 1;
+        }
+        // Excute switch sequence . 
+        if(ScrewDriverSwitchSequenceHandler(bulletin->ScrewHandler.GtcsJob.jobid,
+                        bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentsequenceindex].seq_id)==false)
+        {
+            #if defined(_DEBUG_MODE_)    
+            std::cout << "Error to use CMD301 set ScrewDriverSwitchSequecneHandler." <<std::endl;
+            #endif
+            return false;
+        }
+        #if defined(_DEBUG_MODE_)    
+        count = bulletin->ScrewHandler.GtcsJob.sequencelist.size();
+        std::cout <<"bulletin->ScrewHandler.GtcsJob.sequencelist = " <<std::to_string(count) <<std::endl;
+        for (int i = 0; i < count; i++)
+        {
+            std::cout << std::to_string(bulletin->ScrewHandler.GtcsJob.sequencelist[i].seq_id) <<std::endl;
+        }
+        std::cout << "bulletin->ScrewHandler.GtcsJob.job_id = ";
+        std::cout << std::to_string(bulletin->ScrewHandler.GtcsJob.jobid)<<std::endl;
+        std::cout << "bulletin->ScrewHandler.GtcsJob.sequencelist seq_id value = ";
+        std::cout << std::to_string(bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentsequenceindex].seq_id)<<std::endl;
+        std::cout << "bulletin->ScrewHandler.currentsequenceindex = " << std::to_string(bulletin->ScrewHandler.currentsequenceindex)<<std::endl;
+        #endif
+        // Get TighteningCounter form database.
+        GetScrewDriverTighteningCounter(bulletin->ScrewHandler,
+                                bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentsequenceindex].tr);
+        // Setting list index.
+        SetCurrentScrewDriverTighteningCounter(bulletin->ScrewHandler);
+        
+        #if defined(_DEBUG_MODE_)
+        std::cout << "bulletin->ScrewHandler.maxscrewcounter = "<< std::to_string(bulletin->ScrewHandler.maxscrewcounter)<<std::endl;
+        std::cout << "bulletin->ScrewHandler.screwcounter = "<< std::to_string(bulletin->ScrewHandler.screwcounter)<<std::endl;
+        #endif
+        // Setting last sequence index = current seqeuce index.
+        bulletin->ScrewHandler.lastsequenceindex = bulletin->ScrewHandler.currentsequenceindex;
+        bulletin->ScrewHandler.currentsequenceid 
+            = bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentsequenceindex].seq_id;
+        bulletin->ScrewHandler.laststepid = 1;
+        // Setting MCB to fasten status.
+        mcb->telegram.status.loosen_status = false;
+        // Enable screw 
+        EnableMcbScrewStatus();
         #pragma endregion
         break;
     case AMSCMD::CMD340:
@@ -3111,9 +3186,9 @@ bool GtcsManager::RunGtcsSystem()
             if (bulletin->ScrewHandler.lastsequenceindex!=bulletin->ScrewHandler.currentsequenceindex)
             {
                 bulletin->ScrewHandler.IsEnable = false;
-                bulletin->ScrewHandler.currentstatus = 2;
+                bulletin->ScrewHandler.currentstatusnum = 2;
                 // Get current system status.
-                GetCurrentSystemStatusMessage(bulletin->ScrewHandler.currentstatus,mcb->telegram.status.current_status.u32ActError);
+                GetCurrentSystemStatusMessage(bulletin->ScrewHandler.currentstatusnum,mcb->telegram.status.current_status.u32ActError);
                 // Calaulate RT actural value.
                 GetRealTimeActuralValue(bulletin->AmsBulletin.DATA300Struct,bulletin->ScrewHandler,mcb->telegram.status.current_status);
                 // Disable Screwdriver.
@@ -3131,7 +3206,7 @@ bool GtcsManager::RunGtcsSystem()
                     = bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentsequenceindex].seq_id;
                 // Setting MCB to fasten status.
                 mcb->telegram.status.loosen_status = false; 
-                bulletin->ScrewHandler.currentstatus = 0;
+                bulletin->ScrewHandler.currentstatusnum = 0;
                 bulletin->ScrewHandler.IsEnable = true;
                 bulletin->ScrewHandler.laststepid = 1;
             }
@@ -3166,13 +3241,17 @@ bool GtcsManager::RunGtcsSystem()
 
         #if defined(_DEBUG_MODE_)
         std::cout << "telegram.ctrl.IsEnable status = " << std::to_string(bulletin->ScrewHandler.IsEnable) << std::endl;
+        std::cout << "bulletin->ScrewHandler.currentsequenceindex = " << std::to_string(bulletin->ScrewHandler.currentsequenceindex) << std::endl;
         #endif
 
         // Step 3 = Polling to MCB & get MCB status.
         if (mcb->GetMcbPollingStatus(ctrltelegram))
         {
             // Get MCB Process excute run time status.
-            GetToolRunTimeStatus(bulletin->ScrewHandler,mcb->telegram.status);
+            GetScrewDriverRunTimeStatus(bulletin->ScrewHandler,mcb->telegram.status);
+
+            // Get runtime status message.
+            GetScrewDriverRunTimeStatusMessage(bulletin->ScrewHandler,mcb->telegram.status);
             
             // Calaulate tigthtening repeat times.
             if (bulletin->ScrewHandler.statusnum == (int)LOCKED_STATUS::RUNNING)

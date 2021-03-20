@@ -293,6 +293,14 @@ void AMSBulletin::InitialStructValue()
         .str4 = "0",                                        // Command_sn
         .str5 = "0",                                        // Tool control
         .str6 = "\n\r",                                     // CR,LF
+    };
+    // ANS303, 回復跳工具.
+    ANS303Struct = {
+        .str1 = "ANS303",                                   // Header+DATA
+        .str2 = "yyyyMMdd HH:mm:ss",                        // yyyyMMdd HH:mm:ss
+        .str3 = "0",                                        // check sum ,4 chars
+        .str4 = "0",                                        // Command_sn
+        .str5 = "\n\r",                                     // CR,LF
     };// ANS302, 回復工具控制命令.
     ANS310Struct = {
         .str1 = "ANS310",                                  // Header+DATA

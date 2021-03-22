@@ -49,7 +49,7 @@ int main()
     #pragma region step 2
     #if defined(_DEBUG_MODE_38_)
     manager.StartGtcsTcpSocketServerThread("192.168.0.38", 9000);  // OTTO : 38,
-    // manager.StartGtcsGPIOThread();                                  // GPIO thread
+    manager.StartGtcsGPIOThread();                                  // GPIO thread
     #elif defined(_DEBUG_MODE_54_)
     manager.StartGtcsTcpSocketServerThread("192.168.0.54", 9000); // ERIC : 202
     // manager.StartGtcsGPIOThread();                                  // GPIO thread

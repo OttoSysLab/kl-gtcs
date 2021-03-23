@@ -4,13 +4,13 @@ from datetime import datetime
 from time import sleep,perf_counter_ns
 import os
 
-DEBUG_MODE = True
+DEBUG_MODE = False
 
 if DEBUG_MODE == True:
     # IP =  "192.168.0.38"  # i.Max8 :38.
-    IP =  "192.168.0.54"  # i.Max8 :38.
+    # IP =  "192.168.0.54"  # i.Max8 :38.
     # IP =  "192.168.0.202"  # OTTO :207 , Eric = 202.
-    # IP =  "192.168.0.207"  # OTTO :207 , Eric = 202.
+    IP =  "192.168.0.207"  # OTTO :207 , Eric = 202.
 else:
     IP =  "127.0.0.1"
 PORT = 9000
@@ -207,8 +207,8 @@ def test_socket_client():
     
     # AMS command.
     # _ams_dict = _CMD_301       # Seitch Jobs
-    # _ams_dict = _CMD_302     
-    _ams_dict = _CMD_303     # Jumpt to next sequence. l
+    _ams_dict = _CMD_302     
+    # _ams_dict = _CMD_303     # Jumpt to next sequence. l
     # _ams_dict = _CMD_310
     # _ams_dict = _CMD_311
     # _ams_dict = _CMD_312

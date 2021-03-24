@@ -1910,11 +1910,9 @@ bool GtcsManager::GetMcbStepTelegramFromDBData(McbID3Struct &mcbstep, McbID2Stru
     mcbstep.u16StepMaxCurrent   = mcbbasic.u16MaxCurrent;    // SID = 4,Maximum current of this step. Unit is [mA].
 
     mcbstep.u16StepMaxTorque    = (uint16_t)((dbstep.u16StepMaxTorque/5)*1862);   // SID = 5,Maximum Torque Value is 0- 1862 (max Raw TMD Value)
-    // std::cout << "mcbstep.u16StepMaxTorque = "<<std::to_string(mcbstep.u16StepMaxTorque) << std::endl;
-
     mcbstep.u16StepMaxRevol     = dbstep.u16StepMaxRevol;    // SID = 6,Maximum Revolutions (after the Gearbox) of this step.
                                                              // Unit is [0,01] (1000 = 10,00 Revolutions)
-    mcbstep.u16StepTime         = dbstep.u16StepTime;        // SID = 7,Execution Time- time. Unit is [ms].
+    mcbstep.u16StepTime         = (uint16_t)(dbstep.u16StepTime * 1000);        // SID = 7,Execution Time- time. Unit is [ms].
     mcbstep.s32StepAngle        = dbstep.u16StepAngle;       // SID = 8,Position to Angle. Unit is [0,1 °] (10 = 1°)
     mcbstep.u16StepAngleWindow  = dbstep.u16StepAngleWindow; // SID = 9,Window of the Angle Monitoring. Unit is [0,1°] (10 = 1°)
     mcbstep.u16StepTorqueWindow = dbstep.u16StepTorqueWindow;// SID = 10,Window of the torque monitoring.
@@ -2155,14 +2153,16 @@ bool GtcsManager::SetMcbScrewStepFlags(McbID3Struct &mcbstep,GtcsStepDataStruct 
             mcbstep.u16StepFlags |= 1<<(uint16_t)SCREW_STEP_FLAG::NEXT_TIME;
             break;
     }
-    // First step tp reset angle & revolution..
-    // if (stepindex==0)
-    // {
-    //     mcbstep.u16StepFlags |= 1<<(uint16_t)SCREW_STEP_FLAG::RESET_ANGLE_STA;     //
-    //     mcbstep.u16StepFlags |= 1<<(uint16_t)SCREW_STEP_FLAG::RESET_REV_STA;       //
-    // }
+
+    // Setting step tp reset angle & revolution.
     mcbstep.u16StepFlags |= 1<<(uint16_t)SCREW_STEP_FLAG::RESET_ANGLE_STA;     //
     mcbstep.u16StepFlags |= 1<<(uint16_t)SCREW_STEP_FLAG::RESET_REV_STA;       //
+    
+    // If database ScrewStepDirection  = 1,step dircetion is CCW.
+    if (dbstep.ScrewStepDirection == 1)  // CW = 0,CCW = 1 
+    {
+        mcbstep.u16StepFlags |= 1<<(uint16_t)SCREW_STEP_FLAG::STEP_REVERSE;       //
+    }
     
     // If stopmotor is true,send stop flag.
     if (stopmotor==true)

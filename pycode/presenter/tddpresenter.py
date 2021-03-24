@@ -189,7 +189,7 @@ class GtcsTddPresenter():
         # Creat TlgPresenter,INIWriter obj.
         _tlgp = tlgp.TlgPresenter()
         _monitor = view.GtcsMonitor()
-        
+
         # Config MCB sraial port and delay time.
         _tlgp.initial_MCB_serial(MCBcomm=self.__COM_PORT,MCBbaudrate=self.__BAUD_RATES)
         _tlgp.set_MCB_poll_delay(self.__poll_delay)
@@ -199,15 +199,49 @@ class GtcsTddPresenter():
         while True:
             _tlgp.SL_MCB_polling()    
             _monitor.dispaly_SL_info()
+    
+    # Process data ram request telegram.
+    def test_process_ram_telegram(self):
+        """
+        docstring
+        """
+        # Creat TlgPresenter,INIWriter obj.
+        _tlgp = tlgp.TlgPresenter()
+        _monitor = view.GtcsMonitor()
+        
+        # Config MCB sraial port and delay time.
+        _tlgp.initial_MCB_serial(MCBcomm=self.__COM_PORT,MCBbaudrate=self.__BAUD_RATES)
+        _tlgp.set_MCB_poll_delay(self.__poll_delay)
+        _tlgp.set_MCB_write_flash_delay(self.__write_flash_delay)
+        _tlgp.set_MCB_write_para_delay(self.__write_para_delay)
+        
+        # Test process ram telegram.
+        _tlgp.Set_MCB_process_ram()    
+    
+    # Process data ram request telegram.
+    def test_step_ram_telegram(self):
+        """
+        docstring
+        """
+        # Creat TlgPresenter,INIWriter obj.
+        _tlgp = tlgp.TlgPresenter()
+        _monitor = view.GtcsMonitor()
+        # Config MCB sraial port and delay time.
+        _tlgp.initial_MCB_serial(MCBcomm=self.__COM_PORT,MCBbaudrate=self.__BAUD_RATES)
+        _tlgp.set_MCB_poll_delay(self.__poll_delay)
+        _tlgp.set_MCB_write_flash_delay(self.__write_flash_delay)
+        _tlgp.set_MCB_write_para_delay(self.__write_para_delay)
 
     #cyclic start
     def cyclic_start(self):
         print("")
         print("Protocol item :")
-        print("1.Telegram")
-        print("2.Manual")
+        print("1.Telegram.")
+        print("2.Manual.")
         print("3.Cycle Start")
-        print("4.Test Self leaning")
+        print("4.Test Self leaning.")
+        print("5.Test Process data ram request telegram.")
+        print("6.Test step data ram request telegram.")
         print("")
         print("Select Protocol TDD item =",end=" ")
         _p = int(input())
@@ -215,6 +249,8 @@ class GtcsTddPresenter():
         elif _p==2:self.manual_start()
         elif _p==3:self.process_start()
         elif _p==4:self.test_self_leaning()
+        elif _p==5:self.test_process_ram_telegram()
+        elif _p==6:self.test_step_ram_telegram()
     #endregion
      
     # Jay Demand INI.

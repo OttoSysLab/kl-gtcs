@@ -66,20 +66,20 @@ public:
     ~CtrlTelegram(){};
     
     GtcsCtrlTelegramStrcut fasten = {
-        .u16Ctrlflags     = 0, 
+        .u16Ctrlflags     = 0,     
         .u16ControlMode   = 1,
-        .u16WorkProc      = 4000,   // 4248
-        .u16CtrlProgram   = 1,
+        .u16WorkProc      = 4000,       // 4248
+        .u16CtrlProgram   = 4,          // Manuala mode = 0,Process mode = 1,Process ram mode = 4
         .u16ManRpm        = 1000,
         .u16ManSlope      = 1000,
         .u16ManMaxTorque  = 1862,
         .u16ManMaxCurrent = 30000,
         .u16ManRpmMode    = 0,
-        .u8TMDControl     = 8,  
+        .u8TMDControl     = 4,          // 8 = bule  
     }; 
     GtcsCtrlTelegramStrcut loosen = {
         .u16Ctrlflags     = 0,          // 
-        .u16ControlMode   = 0,          // Manuala mode = 0,Process mode = 1,
+        .u16ControlMode   = 0,          // Manuala mode = 0,Process mode = 1,Process ram mode = 4,
         .u16WorkProc      = 4000,       
         .u16CtrlProgram   = 1,
         .u16ManRpm        = 1000,
@@ -87,7 +87,7 @@ public:
         .u16ManMaxTorque  = 1862,
         .u16ManMaxCurrent = 30000,
         .u16ManRpmMode    = 0,
-        .u8TMDControl     = 4,
+        .u8TMDControl     = 8,          // green = 4
     };
     GtcsCtrlTelegramStrcut config = {
         .u16Ctrlflags     = 0,          // 
@@ -364,6 +364,10 @@ public:
     int ReadProcessParameter(McbID4Struct &process,int processnum);
     int WriteProcessParameter(McbID4Struct &process,int processid);
     #pragma endregion
+
+    // Process ram mode.
+    int WriteProcessRamData(McbID4Struct &process);
+    int WriteStepRamData(McbID3Struct &step,uint16_t mainid);
 
     // Polling to MCB.
     int CheckLoosenStatus();

@@ -78,7 +78,11 @@ class TlgPresenter():
         """
         self.__MCB_INI_PATH = Path
 
-    def set_last_ctrl_tlg(self,tlg:str):self.__last_ctrl_tlg = tlg
+    def set_last_ctrl_tlg(self,tlg:str):
+        """
+        docstring
+        """
+        self.__last_ctrl_tlg = tlg
 
     def enable_screwdriver(self):   # Enable screwdriver. 
         """
@@ -139,6 +143,7 @@ class TlgPresenter():
             _dict = self.__tlgs.ctrl_request.loosen_dict
         return _dict
     
+    # Get MCB status flag 
     def get_MCB_status_tlg(self):        # Get MCB status    
         """
         docstring
@@ -146,6 +151,7 @@ class TlgPresenter():
         _tlgs = tlg.TlgStructure()
         return _tlgs.status_response.dict
     
+    # Get RMD flags.
     def get_TMD_flags(self):
         """
         docstring
@@ -180,9 +186,44 @@ class TlgPresenter():
         # Retrurn MCB status dict.
         _status_dict =  _tlgs.status_response.dict
         return _status_dict
+    
+    # Set MCB process ram.
+    def Set_MCB_process_ram(self):
+        """
+        docstring
+        """
+        _tlgs = tlg.TlgStructure()
+        # Initial ctrl.
+        _tlgs.ctrl_request.dict = _tlgs.ctrl_request.SL_dict
+        _tlgs.process_request. = 
+        _tlgs.process_request.I_gain = 
+        _tlgs.process_request.P_gain = 
+
+
+        _send_tlg = _tlgs.encode_request_tlg(gdt.HearderType.PR_REQUEST.value)
+        # Write TLG to MCB.
+        self.__MCB_comm.write_to_MCB(_send_tlg)        
+        # Sleep 0.01s.
+        sleep(self.__MCB_poll_delay)        
+        # Read from MCB.
+        _list = self.__MCB_comm.read_MCB_data()        
+        # Decode telegram.
+        if len(_list)==48:
+            if _tlgs.decode_response_tlg(_list)==True:
+                pass
+            else:
+                self.__log.warning("Decode tlg error!")    
+        else:
+            self.__log.warning("SL_MCB_polling eho length is not 48 byte.!")
+        # Retrurn MCB status dict.
+        # _status_dict =  _tlgs.status_response.dict
+        return _status_dict
 
     # Polling to MCB without data.
     def poll_to_MCB(self):
+        """
+        docstring
+        """
         # initial tlg TlgStructure.
         _tlgs = tlg.TlgStructure()
         _err_flag = False

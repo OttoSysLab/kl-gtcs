@@ -1,6 +1,7 @@
 #pragma once
 #define _DEBUG_MODE_
-#define _DEBUG_RAM_MODE_
+#define _SOCKET_DEBUG_MODE_
+// #define _DEBUG_RAM_MODE_
 // #define _DEBUG_MODE_38_
 // #define _DEBUG_MODE_54_
 // #define _DEBUG_MODE_202_

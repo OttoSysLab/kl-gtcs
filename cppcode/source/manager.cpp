@@ -3048,20 +3048,20 @@ bool GtcsManager::InitialGtcsSystem()
     CopyDatabase(db_ramdisk_Path, db_emmc_Path);
     // Get batchmod from database.
     GetScrewDeviceInfoFormDB(bulletin->ScrewHandler,db_ramdisk_Path);
-    // // Switch job to normal mode.
-    // ScrewDriverSwitchJobHandler(bulletin->ScrewHandler.GtcsJob.jobid);
-    // // Switch sequence list to normal mode.
-    // ScrewDriverSwitchSequenceHandler(bulletin->ScrewHandler.GtcsJob.jobid,
-    //                     bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentsequenceindex].seq_id);
+    // Switch job to normal mode.
+    ScrewDriverSwitchJobHandler(bulletin->ScrewHandler.GtcsJob.jobid);
+    // Switch sequence list to normal mode.
+    ScrewDriverSwitchSequenceHandler(bulletin->ScrewHandler.GtcsJob.jobid,
+                        bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentsequenceindex].seq_id);
     // Polling 5 time to trace ttymxc3.
     for (int index = 0; index < 5; index++)
     {
         // Get MCB polling stataus after polling to MCB .
         mcb->GetMcbPollingStatus(mcb->telegram.ctrl.fasten);
         // Calaulate RT actural value.
-        // GetRealTimeActuralValue(bulletin->AmsBulletin.DATA300Struct,
-        //                         bulletin->ScrewHandler,
-        //                         mcb->telegram.status.current_status);
+        GetRealTimeActuralValue(bulletin->AmsBulletin.DATA300Struct,
+                                bulletin->ScrewHandler,
+                                mcb->telegram.status.current_status);
         mcb->telegram.status.last_status = mcb->telegram.status.current_status;  // Storage last telegram status.
     }
     bulletin->ScrewHandler.IsEnable = false;

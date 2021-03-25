@@ -160,7 +160,7 @@ void GtcsTcpSocket::GtcsTcpSocketServerHandler()
         n = recv(connfd, revbuff, MAXLINE, 0);
         revbuff[n] = '\0';
 
-        #ifdef _DEBUG_MODE_
+        #ifdef _SOCKET_DEBUG_MODE_
         std::cout << revbuff << std::endl;
         #endif
 

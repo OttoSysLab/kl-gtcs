@@ -2627,6 +2627,7 @@ int GtcsMcbComm::WriteProcessRamData(McbID4Struct &process)
     #pragma endregion
 
     #if defined(_DEBUG_MODE_)
+    std::cout << "========================================================================== " << std::endl;
     std::cout << "process.u16ProcPGain   = " << std::to_string(process.u16ProcPGain)   <<std::endl;
     // ID4xxx, SID = 3
     std::cout << "process.u16ProcIGain   = " << std::to_string(process.u16ProcIGain)   <<std::endl;
@@ -2761,6 +2762,7 @@ int GtcsMcbComm::WriteStepRamData(McbID3Struct &step,uint16_t stepindex )
     #pragma endregion
 
     #if defined(_DEBUG_MODE_)
+    std::cout << "========================================================================== " << std::endl;
     // ID3xxx, SID = 2
     std::cout << "step.u16StepRpm          = " << std::to_string(step.u16StepRpm) <<std::endl;
     // ID3xxx, SID = 3

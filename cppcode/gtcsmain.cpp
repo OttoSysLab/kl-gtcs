@@ -89,7 +89,6 @@ int main()
             manager.ClearGtcsSystemAlarm();
             break;
         }
-        
         #if defined(_DEBUG_JOB_SEQ_)
         std::string datatime = manager.GetCurrentDateime();
         std::cout << "Current sys time = " << datatime << std::endl;

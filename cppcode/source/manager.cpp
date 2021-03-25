@@ -1792,34 +1792,34 @@ bool GtcsManager::GetDatabaseScrewStepListData(std::vector<GtcsStepDataStruct> &
         steplist.push_back(step);
 
         #if defined(_DEBUG_MODE_)
-        std::cout << "--------------------------------- " << std::endl;
-        std::cout << "db_steplist[" << std::to_string(i) << "] = " << std::to_string(step.job_id) << std::endl;
-        std::cout << "db_steplist[" << std::to_string(i) << "] = " << std::to_string(step.seq_id) << std::endl;
-        std::cout << "db_steplist[" << std::to_string(i) << "] = " << std::to_string(step.target_type) << std::endl;
-        std::cout << "db_steplist[" << std::to_string(i) << "] = " << step.program_name << std::endl;
-        std::cout << "db_steplist[" << std::to_string(i) << "] = " << std::to_string(step.ScrewStepID) << std::endl;
-        std::cout << "db_steplist[" << std::to_string(i) << "] = " << step.u8StepName << std::endl;
-        std::cout << "db_steplist[" << std::to_string(i) << "] = " << std::to_string(step.u16StepRpm) << std::endl;
-        std::cout << "db_steplist[" << std::to_string(i) << "] = " << std::to_string(step.u16StepMaxTorque) << std::endl;
-        std::cout << "db_steplist[" << std::to_string(i) << "] = " << std::to_string(step.u16StepMaxRevol) << std::endl;
-        std::cout << "db_steplist[" << std::to_string(i) << "] = " << std::to_string(step.u16StepTime) << std::endl;
-        std::cout << "db_steplist[" << std::to_string(i) << "] = " << std::to_string(step.u16StepAngle) << std::endl;
-        std::cout << "db_steplist[" << std::to_string(i) << "] = " << std::to_string(step.u16StepAngleWindow) << std::endl;
-        std::cout << "db_steplist[" << std::to_string(i) << "] = " << std::to_string(step.u16StepTorqueWindow) << std::endl;
-        std::cout << "db_steplist[" << std::to_string(i) << "] = " << std::to_string(step.ScrewHiTorque) << std::endl;
-        std::cout << "db_steplist[" << std::to_string(i) << "] = " << std::to_string(step.ScrewLoTorque) << std::endl;
-        std::cout << "db_steplist[" << std::to_string(i) << "] = " << std::to_string(step.ScrewHiAngle) << std::endl;
-        std::cout << "db_steplist[" << std::to_string(i) << "] = " << std::to_string(step.ScrewLoAngle) << std::endl;
-        std::cout << "db_steplist[" << std::to_string(i) << "] = " << std::to_string(step.TorqueThreshold) << std::endl;
-        std::cout << "db_steplist[" << std::to_string(i) << "] = " << std::to_string(step.TorqueJointOffset) << std::endl;
-        std::cout << "db_steplist[" << std::to_string(i) << "] = " << std::to_string(step.StepDelaytime) << std::endl;
-        std::cout << "db_steplist[" << std::to_string(i) << "] = " << std::to_string(step.ScrewStepDirection) << std::endl;
-        std::cout << "db_steplist[" << std::to_string(i) << "] = " << std::to_string(step.StepMonitoringMode) << std::endl;
-        std::cout << "db_steplist[" << std::to_string(i) << "] = " << std::to_string(step.off_set) << std::endl;
-        std::cout << "db_steplist[" << std::to_string(i) << "] = " << std::to_string(step.enable_downshift) << std::endl;
-        std::cout << "db_steplist[" << std::to_string(i) << "] = " << std::to_string(step.downshift_torque) << std::endl;
-        std::cout << "db_steplist[" << std::to_string(i) << "] = " << std::to_string(step.downshift_speed) << std::endl;
-        std::cout << "--------------------------------- " << std::endl;
+        // std::cout << "--------------------------------- " << std::endl;
+        // std::cout << "db_steplist[" << std::to_string(i) << "] = " << std::to_string(step.job_id) << std::endl;
+        // std::cout << "db_steplist[" << std::to_string(i) << "] = " << std::to_string(step.seq_id) << std::endl;
+        // std::cout << "db_steplist[" << std::to_string(i) << "] = " << std::to_string(step.target_type) << std::endl;
+        // std::cout << "db_steplist[" << std::to_string(i) << "] = " << step.program_name << std::endl;
+        // std::cout << "db_steplist[" << std::to_string(i) << "] = " << std::to_string(step.ScrewStepID) << std::endl;
+        // std::cout << "db_steplist[" << std::to_string(i) << "] = " << step.u8StepName << std::endl;
+        // std::cout << "db_steplist[" << std::to_string(i) << "] = " << std::to_string(step.u16StepRpm) << std::endl;
+        // std::cout << "db_steplist[" << std::to_string(i) << "] = " << std::to_string(step.u16StepMaxTorque) << std::endl;
+        // std::cout << "db_steplist[" << std::to_string(i) << "] = " << std::to_string(step.u16StepMaxRevol) << std::endl;
+        // std::cout << "db_steplist[" << std::to_string(i) << "] = " << std::to_string(step.u16StepTime) << std::endl;
+        // std::cout << "db_steplist[" << std::to_string(i) << "] = " << std::to_string(step.u16StepAngle) << std::endl;
+        // std::cout << "db_steplist[" << std::to_string(i) << "] = " << std::to_string(step.u16StepAngleWindow) << std::endl;
+        // std::cout << "db_steplist[" << std::to_string(i) << "] = " << std::to_string(step.u16StepTorqueWindow) << std::endl;
+        // std::cout << "db_steplist[" << std::to_string(i) << "] = " << std::to_string(step.ScrewHiTorque) << std::endl;
+        // std::cout << "db_steplist[" << std::to_string(i) << "] = " << std::to_string(step.ScrewLoTorque) << std::endl;
+        // std::cout << "db_steplist[" << std::to_string(i) << "] = " << std::to_string(step.ScrewHiAngle) << std::endl;
+        // std::cout << "db_steplist[" << std::to_string(i) << "] = " << std::to_string(step.ScrewLoAngle) << std::endl;
+        // std::cout << "db_steplist[" << std::to_string(i) << "] = " << std::to_string(step.TorqueThreshold) << std::endl;
+        // std::cout << "db_steplist[" << std::to_string(i) << "] = " << std::to_string(step.TorqueJointOffset) << std::endl;
+        // std::cout << "db_steplist[" << std::to_string(i) << "] = " << std::to_string(step.StepDelaytime) << std::endl;
+        // std::cout << "db_steplist[" << std::to_string(i) << "] = " << std::to_string(step.ScrewStepDirection) << std::endl;
+        // std::cout << "db_steplist[" << std::to_string(i) << "] = " << std::to_string(step.StepMonitoringMode) << std::endl;
+        // std::cout << "db_steplist[" << std::to_string(i) << "] = " << std::to_string(step.off_set) << std::endl;
+        // std::cout << "db_steplist[" << std::to_string(i) << "] = " << std::to_string(step.enable_downshift) << std::endl;
+        // std::cout << "db_steplist[" << std::to_string(i) << "] = " << std::to_string(step.downshift_torque) << std::endl;
+        // std::cout << "db_steplist[" << std::to_string(i) << "] = " << std::to_string(step.downshift_speed) << std::endl;
+        // std::cout << "--------------------------------- " << std::endl;
         #endif
     }
     return true;
@@ -1906,7 +1906,11 @@ bool GtcsManager::GetMcbStepTelegramFromDBData( McbID3Struct &mcbstep,
                                                 bool endstepflag)
 {
     // Package database step data to mcb telegram.
+    #if defined(_DEBUG_RAM_MODE_)
+    mcbstep.u8StepID            = stepindex;          // 3XXX
+    #else
     mcbstep.u8StepID            = 3000 + stepindex;          // 3XXX
+    #endif
     mcbstep.u8StepName          = dbstep.u8StepName;         // SID = 1,32 byte long string which contains the name of the step.
     // property.
     mcbstep.u16StepRpm          = dbstep.u16StepRpm;         // SID = 2,Rpm of this screwing step. Unit is [rpm] (after the Gearbox)
@@ -2270,19 +2274,19 @@ bool GtcsManager::ScrewDriverSwitchJobHandler(int jobid)
         return false;
     }
 
-    #ifdef _DEBUG_MODE_
-    std::cout << "--------------------------------- " << std::endl;
-    std::cout << "normal.unscrew.u16Ctrlflags     = " << mcb->telegram.ctrl.loosen.u16Ctrlflags<< std::endl;
-    std::cout << "normal.unscrew.u16ControlMode   = " << mcb->telegram.ctrl.loosen.u16ControlMode<< std::endl;
-    std::cout << "normal.unscrew.u16WorkProc      = " << mcb->telegram.ctrl.loosen.u16WorkProc<< std::endl;
-    std::cout << "normal.unscrew.u16CtrlProgram   = " << mcb->telegram.ctrl.loosen.u16CtrlProgram<< std::endl;
-    std::cout << "normal.unscrew.u16ManRpm        = " << mcb->telegram.ctrl.loosen.u16ManRpm<< std::endl;
-    std::cout << "normal.unscrew.u16ManSlope      = " << mcb->telegram.ctrl.loosen.u16ManSlope<< std::endl;
-    std::cout << "normal.unscrew.u16ManMaxTorque  = " << mcb->telegram.ctrl.loosen.u16ManMaxTorque<< std::endl;
-    std::cout << "normal.unscrew.u16ManMaxCurrent = " << mcb->telegram.ctrl.loosen.u16ManMaxCurrent<< std::endl;
-    std::cout << "normal.unscrew.u16ManRpmMode    = " << mcb->telegram.ctrl.loosen.u16ManRpmMode<< std::endl;
-    std::cout << "normal.unscrew.u8TMDControl     = " << mcb->telegram.ctrl.loosen.u8TMDControl<< std::endl;
-    std::cout << "--------------------------------- " << std::endl;
+    #if defined(_DEBUG_MODE_)
+    // std::cout << "--------------------------------- " << std::endl;
+    // std::cout << "normal.unscrew.u16Ctrlflags     = " << mcb->telegram.ctrl.loosen.u16Ctrlflags<< std::endl;
+    // std::cout << "normal.unscrew.u16ControlMode   = " << mcb->telegram.ctrl.loosen.u16ControlMode<< std::endl;
+    // std::cout << "normal.unscrew.u16WorkProc      = " << mcb->telegram.ctrl.loosen.u16WorkProc<< std::endl;
+    // std::cout << "normal.unscrew.u16CtrlProgram   = " << mcb->telegram.ctrl.loosen.u16CtrlProgram<< std::endl;
+    // std::cout << "normal.unscrew.u16ManRpm        = " << mcb->telegram.ctrl.loosen.u16ManRpm<< std::endl;
+    // std::cout << "normal.unscrew.u16ManSlope      = " << mcb->telegram.ctrl.loosen.u16ManSlope<< std::endl;
+    // std::cout << "normal.unscrew.u16ManMaxTorque  = " << mcb->telegram.ctrl.loosen.u16ManMaxTorque<< std::endl;
+    // std::cout << "normal.unscrew.u16ManMaxCurrent = " << mcb->telegram.ctrl.loosen.u16ManMaxCurrent<< std::endl;
+    // std::cout << "normal.unscrew.u16ManRpmMode    = " << mcb->telegram.ctrl.loosen.u16ManRpmMode<< std::endl;
+    // std::cout << "normal.unscrew.u8TMDControl     = " << mcb->telegram.ctrl.loosen.u8TMDControl<< std::endl;
+    // std::cout << "--------------------------------- " << std::endl;
     #endif
 
     // Get screw handler sequence list form database.
@@ -2293,13 +2297,13 @@ bool GtcsManager::ScrewDriverSwitchJobHandler(int jobid)
     }
     else
     {
-        #ifdef _DEBUG_MODE_
-        int seqlist_size = bulletin->ScrewHandler.GtcsJob.sequencelist.size();
-        for (int i = 0; i < seqlist_size; i++)
-        {
-            std::cout << "normal.screw.jobid = " << std::to_string(bulletin->ScrewHandler.GtcsJob.sequencelist[i].job_id);
-            std::cout << "normal.screw.sequence = "<< std::to_string(bulletin->ScrewHandler.GtcsJob.sequencelist[i].seq_id) << std::endl;
-        }
+        #if defined(_DEBUG_MODE_)
+        // int seqlist_size = bulletin->ScrewHandler.GtcsJob.sequencelist.size();
+        // for (int i = 0; i < seqlist_size; i++)
+        // {
+        //     std::cout << "normal.screw.jobid = " << std::to_string(bulletin->ScrewHandler.GtcsJob.sequencelist[i].job_id);
+        //     std::cout << "normal.screw.sequence = "<< std::to_string(bulletin->ScrewHandler.GtcsJob.sequencelist[i].seq_id) << std::endl;
+        // }
         #endif
     }
     return true;
@@ -2361,23 +2365,23 @@ bool GtcsManager::ScrewDriverSwitchSequenceHandler(int jobid,int seqid)
                                     i,
                                     endstepflag);
         #if defined(_DEBUG_MODE_)
-        std::cout << "=============================================================================== "  << std::endl;
-        std::cout << "u8StepID            = "<<std::to_string(bulletin->McbBulletin.StepPara.u8StepID)   << std::endl;
-        std::cout << "u8StepName          = "<<bulletin->McbBulletin.StepPara.u8StepName                 << std::endl;
-        std::cout << "u16StepRpm          = "<<std::to_string(bulletin->McbBulletin.StepPara.u16StepRpm) << std::endl;
-        std::cout << "u16StepSlope        = "<<std::to_string(bulletin->McbBulletin.StepPara.u16StepSlope) << std::endl;
-        std::cout << "u16StepMaxCurrent   = "<<std::to_string(bulletin->McbBulletin.StepPara.u16StepMaxCurrent) << std::endl;
-        std::cout << "u16StepMaxTorque    = "<<std::to_string(bulletin->McbBulletin.StepPara.u16StepMaxTorque) << std::endl;
-        std::cout << "u16StepMaxRevol     = "<<std::to_string(bulletin->McbBulletin.StepPara.u16StepMaxRevol) << std::endl;
-        std::cout << "u16StepTime         = "<<std::to_string(bulletin->McbBulletin.StepPara.u16StepTime) << std::endl;
-        std::cout << "s32StepAngle        = "<<std::to_string(bulletin->McbBulletin.StepPara.s32StepAngle) << std::endl;
-        std::cout << "u16StepAngleWindow  = "<<std::to_string(bulletin->McbBulletin.StepPara.u16StepAngleWindow) << std::endl;
-        std::cout << "u16StepTorqueWindow = "<<std::to_string(bulletin->McbBulletin.StepPara.u16StepTorqueWindow) << std::endl;
-        std::cout << "u16MinDutyCycle     = "<<std::to_string(bulletin->McbBulletin.StepPara.u16MinDutyCycle) << std::endl;
-        std::cout << "u16StepFlags        = "<<std::to_string(bulletin->McbBulletin.StepPara.u16StepFlags) << std::endl;
-        std::cout << "u16WindowMode       = "<<std::to_string(bulletin->McbBulletin.StepPara.u16WindowMode) << std::endl;
-        std::cout << "u16AngleWindow2     = "<<std::to_string(bulletin->McbBulletin.StepPara.u16AngleWindow2) << std::endl;
-        std::cout << "u16TorqueWindow2    = "<<std::to_string(bulletin->McbBulletin.StepPara.u16TorqueWindow2) << std::endl;
+        // std::cout << "=============================================================================== "  << std::endl;
+        // std::cout << "u8StepID            = "<<std::to_string(bulletin->McbBulletin.StepPara.u8StepID)   << std::endl;
+        // std::cout << "u8StepName          = "<<bulletin->McbBulletin.StepPara.u8StepName                 << std::endl;
+        // std::cout << "u16StepRpm          = "<<std::to_string(bulletin->McbBulletin.StepPara.u16StepRpm) << std::endl;
+        // std::cout << "u16StepSlope        = "<<std::to_string(bulletin->McbBulletin.StepPara.u16StepSlope) << std::endl;
+        // std::cout << "u16StepMaxCurrent   = "<<std::to_string(bulletin->McbBulletin.StepPara.u16StepMaxCurrent) << std::endl;
+        // std::cout << "u16StepMaxTorque    = "<<std::to_string(bulletin->McbBulletin.StepPara.u16StepMaxTorque) << std::endl;
+        // std::cout << "u16StepMaxRevol     = "<<std::to_string(bulletin->McbBulletin.StepPara.u16StepMaxRevol) << std::endl;
+        // std::cout << "u16StepTime         = "<<std::to_string(bulletin->McbBulletin.StepPara.u16StepTime) << std::endl;
+        // std::cout << "s32StepAngle        = "<<std::to_string(bulletin->McbBulletin.StepPara.s32StepAngle) << std::endl;
+        // std::cout << "u16StepAngleWindow  = "<<std::to_string(bulletin->McbBulletin.StepPara.u16StepAngleWindow) << std::endl;
+        // std::cout << "u16StepTorqueWindow = "<<std::to_string(bulletin->McbBulletin.StepPara.u16StepTorqueWindow) << std::endl;
+        // std::cout << "u16MinDutyCycle     = "<<std::to_string(bulletin->McbBulletin.StepPara.u16MinDutyCycle) << std::endl;
+        // std::cout << "u16StepFlags        = "<<std::to_string(bulletin->McbBulletin.StepPara.u16StepFlags) << std::endl;
+        // std::cout << "u16WindowMode       = "<<std::to_string(bulletin->McbBulletin.StepPara.u16WindowMode) << std::endl;
+        // std::cout << "u16AngleWindow2     = "<<std::to_string(bulletin->McbBulletin.StepPara.u16AngleWindow2) << std::endl;
+        // std::cout << "u16TorqueWindow2    = "<<std::to_string(bulletin->McbBulletin.StepPara.u16TorqueWindow2) << std::endl;
         #endif
 
         // Check step data 有效性
@@ -3044,20 +3048,20 @@ bool GtcsManager::InitialGtcsSystem()
     CopyDatabase(db_ramdisk_Path, db_emmc_Path);
     // Get batchmod from database.
     GetScrewDeviceInfoFormDB(bulletin->ScrewHandler,db_ramdisk_Path);
-    // Switch job to normal mode.
-    ScrewDriverSwitchJobHandler(bulletin->ScrewHandler.GtcsJob.jobid);
-    // Switch sequence list to normal mode.
-    ScrewDriverSwitchSequenceHandler(bulletin->ScrewHandler.GtcsJob.jobid,
-                        bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentsequenceindex].seq_id);
+    // // Switch job to normal mode.
+    // ScrewDriverSwitchJobHandler(bulletin->ScrewHandler.GtcsJob.jobid);
+    // // Switch sequence list to normal mode.
+    // ScrewDriverSwitchSequenceHandler(bulletin->ScrewHandler.GtcsJob.jobid,
+    //                     bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentsequenceindex].seq_id);
     // Polling 5 time to trace ttymxc3.
     for (int index = 0; index < 5; index++)
     {
         // Get MCB polling stataus after polling to MCB .
         mcb->GetMcbPollingStatus(mcb->telegram.ctrl.fasten);
         // Calaulate RT actural value.
-        GetRealTimeActuralValue(bulletin->AmsBulletin.DATA300Struct,
-                                bulletin->ScrewHandler,
-                                mcb->telegram.status.current_status);
+        // GetRealTimeActuralValue(bulletin->AmsBulletin.DATA300Struct,
+        //                         bulletin->ScrewHandler,
+        //                         mcb->telegram.status.current_status);
         mcb->telegram.status.last_status = mcb->telegram.status.current_status;  // Storage last telegram status.
     }
     bulletin->ScrewHandler.IsEnable = false;
@@ -3165,7 +3169,6 @@ bool GtcsManager::CheckGtcsSystem()
         #endif
         SetCurrentScrewDriverTighteningCounter(bulletin->ScrewHandler);
         bulletin->ScrewHandler.IsEnable = true;
-        // EnableMcbScrewStatus();
         SetMainFSM(MAIN_FSM::READY);
     }
     else
@@ -3238,14 +3241,13 @@ bool GtcsManager::RunGtcsSystem()
                 bulletin->ScrewHandler.currentstatusnum = 0;
                 bulletin->ScrewHandler.IsEnable = true;
                 bulletin->ScrewHandler.laststepid = 1;
-                // EnableMcbScrewStatus();
             }
         }
         else
         {
             bulletin->ScrewHandler.currentsequenceindex = 0;    // Repeat sequence list operation.
             return false;
-        }
+        }        
 
         // step 2 = Config ctrl telegram.
         if (mcb->telegram.status.loosen_status == false)

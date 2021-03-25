@@ -1920,7 +1920,14 @@ bool GtcsManager::GetMcbStepTelegramFromDBData( McbID3Struct &mcbstep,
     }
     else
     {
-        mcbstep.u16StepMaxTorque    = (uint16_t)(1862);       
+        if (dbstep.ScrewHiTorque!=0)
+        {
+            mcbstep.u16StepMaxTorque = (uint16_t)((dbstep.ScrewHiTorque/5)*1862);
+        }   
+        else
+        {
+            mcbstep.u16StepMaxTorque = 0;
+        }    
     }    
     mcbstep.u16StepMaxRevol     = dbstep.u16StepMaxRevol;    // SID = 6,Maximum Revolutions (after the Gearbox) of this step.
                                                              // Unit is [0,01] (1000 = 10,00 Revolutions)

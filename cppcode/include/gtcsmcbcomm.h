@@ -67,9 +67,9 @@ public:
     
     GtcsCtrlTelegramStrcut fasten = {
         .u16Ctrlflags     = 0,     
-        .u16ControlMode   = 1,
+        .u16ControlMode   = 1,          // Manuala mode = 0,Process mode = 1,Process ram mode = 4
         .u16WorkProc      = 4000,       // 4248
-        .u16CtrlProgram   = 1,          // Manuala mode = 0,Process mode = 1,Process ram mode = 4
+        .u16CtrlProgram   = 1,          
         .u16ManRpm        = 1000,
         .u16ManSlope      = 1000,
         .u16ManMaxTorque  = 1862,
@@ -80,7 +80,7 @@ public:
     GtcsCtrlTelegramStrcut loosen = {
         .u16Ctrlflags     = 0,          // 
         .u16ControlMode   = 0,          // Manuala mode = 0,Process mode = 1,Process ram mode = 4,
-        .u16WorkProc      = 4000,       // Manuala mode = 0,Process mode = 1,Process ram mode = 4
+        .u16WorkProc      = 4000,       
         .u16CtrlProgram   = 1,          
         .u16ManRpm        = 1000,
         .u16ManSlope      = 1000,

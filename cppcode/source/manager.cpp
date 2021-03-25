@@ -1899,7 +1899,11 @@ bool GtcsManager::GetMcbProcessTelegramFromDBData(McbID4Struct &mcbprocess, McbI
  *  @note    none
  *
  *******************************************************************************************/
-bool GtcsManager::GetMcbStepTelegramFromDBData(McbID3Struct &mcbstep, McbID2Struct &mcbbasic, GtcsStepDataStruct &dbstep,int stepindex,bool endstepflag)
+bool GtcsManager::GetMcbStepTelegramFromDBData( McbID3Struct &mcbstep, 
+                                                McbID2Struct &mcbbasic, 
+                                                GtcsStepDataStruct &dbstep,
+                                                int stepindex,
+                                                bool endstepflag)
 {
     // Package database step data to mcb telegram.
     mcbstep.u8StepID            = 3000 + stepindex;          // 3XXX
@@ -1909,7 +1913,15 @@ bool GtcsManager::GetMcbStepTelegramFromDBData(McbID3Struct &mcbstep, McbID2Stru
     mcbstep.u16StepSlope        = mcbbasic.u16MaxSlope;      // SID = 3,Start slope of this screwing step. Unit is [rpm/s] (after the Gearbox).
     mcbstep.u16StepMaxCurrent   = mcbbasic.u16MaxCurrent;    // SID = 4,Maximum current of this step. Unit is [mA].
 
-    mcbstep.u16StepMaxTorque    = (uint16_t)((dbstep.u16StepMaxTorque/5)*1862);   // SID = 5,Maximum Torque Value is 0- 1862 (max Raw TMD Value)
+    // SID = 5,Maximum Torque Value is 0- 1862 (max Raw TMD Value)
+    if (dbstep.target_type == (int)SCREW_TARGET_TYPE::TARGET_TORQUE)
+    {
+        mcbstep.u16StepMaxTorque    = (uint16_t)((dbstep.u16StepMaxTorque/5)*1862);   
+    }
+    else
+    {
+        mcbstep.u16StepMaxTorque    = (uint16_t)(1862);       
+    }    
     mcbstep.u16StepMaxRevol     = dbstep.u16StepMaxRevol;    // SID = 6,Maximum Revolutions (after the Gearbox) of this step.
                                                              // Unit is [0,01] (1000 = 10,00 Revolutions)
     mcbstep.u16StepTime         = (uint16_t)(dbstep.u16StepTime * 1000);        // SID = 7,Execution Time- time. Unit is [ms].
@@ -2041,11 +2053,13 @@ bool GtcsManager::GetMcbProcessParameter(McbID4Struct &mcbprocess)
  *******************************************************************************************/
 bool GtcsManager::SetMcbProcessParameter(McbID4Struct &mcbprocess)
 {
-#ifdef _DEBUG_MODE_
-    // std::cout << mcbprocess.u8ProcName<< std::endl;
-#endif
-    // Wtite to MCB.
+    #if defined(_DEBUG_RAM_MODE_)
+    // Write process data to MCB ram.
+    mcb->WriteProcessRamData(mcbprocess);
+    #else
+    // Write process data to MCB flash.
     mcb->WriteProcessParameter(mcbprocess,4000);
+    #endif
     return true;
 }
 /******************************************************************************************
@@ -2088,7 +2102,14 @@ bool GtcsManager::GetMcbStepParameter(McbID3Struct &mcbstep)
  *******************************************************************************************/
 bool GtcsManager::SetMcbStepParameter(McbID3Struct &mcbstep)
 {
+    #if defined(_DEBUG_RAM_MODE_)
+    // Write step data to MCB flash.
+    mcb->WriteStepRamData(mcbstep,mcbstep.u8StepID);
+    #else
+    // Write step data to MCB flash.
     mcb->WriteStepParameter(mcbstep,mcbstep.u8StepID);
+    #endif
+
     return true;
 }
 /******************************************************************************************
@@ -3137,6 +3158,7 @@ bool GtcsManager::CheckGtcsSystem()
         #endif
         SetCurrentScrewDriverTighteningCounter(bulletin->ScrewHandler);
         bulletin->ScrewHandler.IsEnable = true;
+        // EnableMcbScrewStatus();
         SetMainFSM(MAIN_FSM::READY);
     }
     else
@@ -3209,6 +3231,7 @@ bool GtcsManager::RunGtcsSystem()
                 bulletin->ScrewHandler.currentstatusnum = 0;
                 bulletin->ScrewHandler.IsEnable = true;
                 bulletin->ScrewHandler.laststepid = 1;
+                // EnableMcbScrewStatus();
             }
         }
         else

@@ -206,14 +206,14 @@ def test_socket_client():
     _ams_dict = dict()  
     
     # AMS command.
-    # _ams_dict = _CMD_301       # Seitch Jobs
+    _ams_dict = _CMD_301       # Seitch Jobs
     # _ams_dict = _CMD_302     
     # _ams_dict = _CMD_303     # Jumpt to next sequence. l
     # _ams_dict = _CMD_310
     # _ams_dict = _CMD_311
     # _ams_dict = _CMD_312
     # _ams_dict = _CMD_313
-    _ams_dict = _CMD_340       # Initial ID2. 
+    # _ams_dict = _CMD_340       # Initial ID2. 
 
     # AMS REQ.
     # _ams_dict = _REQ_300

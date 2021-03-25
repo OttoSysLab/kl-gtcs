@@ -1,5 +1,6 @@
 #pragma once
 #define _DEBUG_MODE_
+// #define _DEBUG_RAM_MODE_
 // #define _DEBUG_MODE_38_
 // #define _DEBUG_MODE_54_
 // #define _DEBUG_MODE_202_
@@ -26,6 +27,13 @@
 
 #pragma region GTCS MCB Protcol
 #pragma region Parameter
+// Screw_target type
+enum SCREW_TARGET_TYPE:int{
+    TARGET_TORQUE       = 1,                //  
+    TARGET_ANGLE        = 2,                //
+    TARGET_REVALUTION   = 3,                //    
+    TARGET_TIME         = 4,                //    
+};
 // GTCS batch mode
 enum GTCS_BATCH_MODE:int{
     DEC = 0,                //  
@@ -79,8 +87,10 @@ enum MCB_TELEGRAM_TYPE : uint8_t{
     RW_RESPONSE      = 5,
     TMD_REQUEST      = 6,
     TMD_RESPONSE     = 7,
+    
     LOG_REQUEST      = 10,
     LOG_RESPONSE     = 11,
+
     PROCESS_REQUST   = 12,
     PROCESS_RESPONSE = 13,
     STEP_REQUEST     = 14,

@@ -2619,12 +2619,34 @@ int GtcsMcbComm::WriteProcessRamData(McbID4Struct &process)
     }
     // Get Data for telegram rw request.
     std::this_thread::sleep_for(std::chrono::milliseconds(delaytime));
-    telegram.rw_response.InitialTelegramArray();
-    result = read(com_num, &telegram.rw_response.telegram_array, 1024);
+    telegram.process_response.InitialTelegramArray();
+    result = read(com_num, &telegram.process_response.telegram_array, 1024);
     // flush buffer.
     tcflush(com_num, TCIFLUSH);   	/* Discards old data in the rx buffer            */
 	tcflush(com_num, TCOFLUSH);
     #pragma endregion
+
+    #if defined(_DEBUG_MODE_)
+    std::cout << "process.u16ProcPGain   = " << std::to_string(process.u16ProcPGain)   <<std::endl;
+    // ID4xxx, SID = 3
+    std::cout << "process.u16ProcIGain   = " << std::to_string(process.u16ProcIGain)   <<std::endl;
+    // ID4xxx, SID = 4
+    std::cout << "process.u16ProcMaxTime = " << std::to_string(process.u16ProcMaxTime) <<std::endl; 
+    // ID4xxx, SID = 5
+    std::cout << "process.u16ProcMinTime = " << std::to_string(process.u16ProcMinTime) <<std::endl; 
+    // ID4xxx, SID = 6
+    std::cout << "process.u16ProcRevFunc = " << std::to_string(process.u16ProcRevFunc) <<std::endl;
+    // ID4xxx, SID = 7
+    std::cout << "process.u16NbrSteps = " << std::to_string(process.u16NbrSteps) << std::endl;
+    // Printf information.
+    int count =  telegram.process_response.telegram_array.size();
+    std::cout << "========================================================================== " << std::endl;
+    for (int i = 0; i < count; i++)
+    {
+        std::cout << "telegram.process_response.telegram_array[" << std::to_string(i) <<"] = " ;
+        std::cout << std::to_string(telegram.process_response.telegram_array[i]) <<std::endl;
+    }    
+    #endif
 
     return result; 
 }
@@ -2731,12 +2753,51 @@ int GtcsMcbComm::WriteStepRamData(McbID3Struct &step,uint16_t stepindex )
     }
     // Get Data for telegram rw request.
     std::this_thread::sleep_for(std::chrono::milliseconds(delaytime));
-    telegram.rw_response.InitialTelegramArray();
-    result = read(com_num, &telegram.rw_response.telegram_array, 1024);
+    telegram.step_response.InitialTelegramArray();
+    result = read(com_num, &telegram.step_response.telegram_array, 1024);
     // flush buffer.
     tcflush(com_num, TCIFLUSH);   	/* Discards old data in the rx buffer            */
 	tcflush(com_num, TCOFLUSH);
     #pragma endregion
+
+    #if defined(_DEBUG_MODE_)
+    // ID3xxx, SID = 2
+    std::cout << "step.u16StepRpm          = " << std::to_string(step.u16StepRpm) <<std::endl;
+    // ID3xxx, SID = 3
+    std::cout << "step.u16StepSlope        = " << std::to_string(step.u16StepSlope) <<std::endl;
+    // ID3xxx, SID = 4
+    std::cout << "step.u16StepMaxCurrent   = " << std::to_string(step.u16StepMaxCurrent) <<std::endl;
+    // ID3xxx, SID = 5
+    std::cout << "step.u16StepMaxTorque    = " << std::to_string(step.u16StepMaxTorque) <<std::endl;
+    // ID3xxx, SID = 6
+    std::cout << "step.u16StepMaxRevol     = " << std::to_string(step.u16StepMaxRevol) <<std::endl;
+    // ID3xxx, SID = 7
+    std::cout << "step.u16StepTime         = " << std::to_string(step.u16StepTime) <<std::endl;
+    // ID3xxx, SID = 8 (angle)
+    std::cout << "step.s32StepAngle        = " << std::to_string(step.s32StepAngle) <<std::endl;
+    // ID3xxx, SID = 9
+    std::cout << "step.u16StepAngleWindow  = " << std::to_string(step.u16StepAngleWindow) <<std::endl;
+    // ID3xxx, SID = 10
+    std::cout << "step.u16StepTorqueWindow = " << std::to_string(step.u16StepTorqueWindow) <<std::endl;
+    // ID3xxx, SID = 11
+    std::cout << "step.u16MinDutyCycle     = " << std::to_string(step.u16MinDutyCycle) <<std::endl;
+    // ID3xxx, SID = 12
+    std::cout << "step.u16StepFlags        = " << std::to_string(step.u16StepFlags) <<std::endl;
+    // ID3xxx, SID = 13
+    std::cout << "step.u16WindowMode       = " << std::to_string(step.u16WindowMode) <<std::endl;
+    // ID3xxx, SID = 14
+    std::cout << "step.u16AngleWindow2     = " << std::to_string(step.u16AngleWindow2) <<std::endl;
+    // ID3xxx, SID = 15
+    std::cout << "step.u16TorqueWindow2    = " << std::to_string(step.u16TorqueWindow2) <<std::endl;
+
+    std::cout << "========================================================================== " << std::endl;
+    int count =  telegram.step_response.telegram_array.size();
+    for (int i = 0; i < count; i++)
+    {
+        std::cout << "telegram.step_response.telegram_array[" << std::to_string(i) <<"] = " ;
+        std::cout << std::to_string(telegram.step_response.telegram_array[i]) <<std::endl;
+    }    
+    #endif
 
     return result; 
 }
@@ -2804,6 +2865,19 @@ int GtcsMcbComm::GetMcbPollingStatus(GtcsCtrlTelegramStrcut &ctrltelegram)
     int MAX_READ = 1024; 
 
     // Encode ctrl telegram array.
+    #if defined(_DEBUG_MODE_)
+    std::cout <<"u16Ctrlflags     = "<<std::to_string(ctrltelegram.u16Ctrlflags)<< std::endl;
+    std::cout <<"u16ControlMode   = "<<std::to_string(ctrltelegram.u16ControlMode)<< std::endl;
+    std::cout <<"u16WorkProc      = "<<std::to_string(ctrltelegram.u16WorkProc)<< std::endl;
+    std::cout <<"u16CtrlProgram   = "<<std::to_string(ctrltelegram.u16CtrlProgram)<< std::endl;
+    std::cout <<"u16ManRpm        = "<<std::to_string(ctrltelegram.u16ManRpm)<< std::endl;
+    std::cout <<"u16ManSlope      = "<<std::to_string(ctrltelegram.u16ManSlope)<< std::endl;
+    std::cout <<"u16ManMaxTorque  = "<<std::to_string(ctrltelegram.u16ManMaxTorque)<< std::endl;
+    std::cout <<"u16ManMaxCurrent = "<<std::to_string(ctrltelegram.u16ManMaxCurrent)<< std::endl;
+    std::cout <<"u16ManRpmMode    = "<<std::to_string(ctrltelegram.u16ManRpmMode)<< std::endl;
+    std::cout <<"u8TMDControl     = "<<std::to_string(ctrltelegram.u8TMDControl)<< std::endl;
+    #endif
+    
     telegram.ctrl.EncodeTelegramArray(&ctrltelegram,telegram.ctrl.struct_length);
     // Send to MCB.
     for(int index=0;index<48;index++)
@@ -2812,7 +2886,7 @@ int GtcsMcbComm::GetMcbPollingStatus(GtcsCtrlTelegramStrcut &ctrltelegram)
     }
     // Read data form mcb.
     std::this_thread::sleep_for(std::chrono::milliseconds(delaytime));
-    // 
+    // Get data form MCB reqsponse.
     telegram.status.InitialTelegramArray();
     result = read(com_num, &telegram.status.telegram_array, MAX_READ);
     telegram.status.DecodeTelegramArray();

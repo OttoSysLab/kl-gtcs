@@ -1,11 +1,12 @@
 #pragma once
-#define _DEBUG_MODE_
-#define _SOCKET_DEBUG_MODE_
+// #define _DEBUG_MODE_
+// #define _SOCKET_DEBUG_MODE_
+// #define _GPIO_DEBUG_MODE_
 // #define _DEBUG_RAM_MODE_
 // #define _DEBUG_MODE_38_
-// #define _DEBUG_MODE_54_
+#define _DEBUG_MODE_54_
 // #define _DEBUG_MODE_202_
-#define _DEBUG_MODE_207_
+// #define _DEBUG_MODE_207_
 // #define _DEBUG_JOB_SEQ_
 /*=======================================================================================
  Program Nane  	: gtcs_tlg_decoder.c
@@ -16,7 +17,7 @@
  Commands      	: Geany Build Command
   				: Compile : gcc -Wall -I"../inc" -c "%f"
   				: Buid 	  : gcc -Wall -o "%e" "%f" "sarm2pcb.c" "pcb2sarm.c" "../lib/sarmdb.c" "../lib/sarmcomm.c" "../lib/sarmutility.c" -I"../inc" -l"sqlite3" -l"X11" `pkg-config --cflags --libs gtk+-3.0` -export-dynamic
- Programmer    	: Otto Chang
+ Programmer    	: Otto Changls 
  Date	       	: 2019/08/06
 =======================================================================================*/
 #include "common.h"
@@ -42,42 +43,42 @@ enum GTCS_BATCH_MODE:int{
 };
 // GPIO Pin define.
 enum GTCS_GPIO_REGEIST:int{
-    GPIO2_DR = 0x020A0000,
-    GPIO3_DR = 0x020A4000,
-    GPIO5_DR = 0x020AC000,
-    GPIO6_DR = 0x020B0000,
+    GPIO2_DR = 0x30210000,
+    GPIO3_DR = 0x30220000,
+    GPIO4_DR = 0x30230000,
+    GPIO5_DR = 0x30240000,
 };
 // GTCS_GPIO_IN
 enum GTCS_GPIO_IN :int{
-    IN_01 = 6,
-    IN_02 = 4,
-    IN_03 = 0,
-    IN_04 = 27,
-    IN_05 = 28,
-    IN_06 = 29,
-    IN_07 = 26,
-    IN_08 = 30,
-    IN_09 = 31,
-    IN_10 = 4,
-    IN_11 = 7,
-    IN_12 = 16,
+    IN_01 = 28,     // /dev/IN1 -> GPIO4_IO28
+    IN_02 = 29,     // /dev/IN2 -> GPIO4_IO29
+    IN_03 = 30,     // /dev/IN3 -> GPIO4_IO30
+    IN_04 = 5,      // /dev/IN4 -> GPIO5_IO5
+    IN_05 = 6,      // /dev/IN5 -> GPIO5_IO6
+    IN_06 = 8,      // /dev/IN6 -> GPIO5_IO8
+    IN_07 = 7,      // /dev/IN7 -> GPIO5_IO7
+    IN_08 = 9,      // /dev/IN8 -> GPIO5_IO9
+    IN_09 = 10,     // /dev/IN9 -> GPIO5_IO10
+    IN_10 = 12,     // /dev/IN10 -> GPIO5_IO12
+    IN_11 = 11,     // /dev/IN11 -> GPIO5_IO11
+    IN_12 = 13,     // /dev/IN12 -> GPIO5_IO13
 };
 // GTCS_GPIO_IN
 enum GTCS_GPIO_OUT :int{
-    OUT_01 = 0,
-    OUT_02 = 1,
-    OUT_03 = 2,
-    OUT_04 = 3,
-    OUT_05 = 8,
-    OUT_06 = 9,
-    OUT_07 = 10,
-    OUT_08 = 15,
-    OUT_09 = 22,
-    OUT_10 = 21,
-    OUT_11 = 20,
-    OUT_12 = 19,
-    OUT_13 = 18,
-    OUT_14 = 17,
+    OUT_01 = 24,     // /dev/OUT1 -> GPIO3_IO24
+    OUT_02 = 23,     // /dev/OUT2 -> GPIO3_IO23
+    OUT_03 = 22,     // /dev/OUT3 -> GPIO3_IO22
+    OUT_04 = 20,     // /dev/OUT4 -> GPIO3_IO20
+    OUT_05 = 19,     // /dev/OUT5 -> GPIO3_IO19
+    OUT_06 = 11,     // /dev/OUT6 -> GPIO2_IO11
+    OUT_07 = 10,     // /dev/OUT7 -> GPIO2_IO10
+    OUT_08 = 9,      // /dev/OUT8 -> GPIO2_IO9
+    OUT_09 = 8,      // /dev/OUT9 -> GPIO2_IO8
+    OUT_10 = 7,      // /dev/OUT10 -> GPIO2_IO7
+    OUT_11 = 6,      // /dev/OUT11 -> GPIO2_IO6
+    OUT_12 = 3,      // /dev/OUT12 -> GPIO5_IO3  
+    OUT_13 = 25,     // /dev/OUT13 -> GPIO3_IO25
+    OUT_14 = 21,     // /dev/OUT14 -> GPIO3_IO21
 };
 // MCB_TELEGRAM_TYPE
 enum MCB_TELEGRAM_TYPE : uint8_t{

@@ -104,9 +104,9 @@ GtcsGPIOHandler::~GtcsGPIOHandler()
  * 
  *  @param   uint32_t &gpio3
  * 
- *  @param   uint32_t &gpio5
+ *  @param   uint32_t &gpio4
  * 
- *  @param   uint32_t &gpio6
+ *  @param   uint32_t &gpio5
  *
  *  @return  bool
  *
@@ -115,67 +115,67 @@ GtcsGPIOHandler::~GtcsGPIOHandler()
  *******************************************************************************************/
 uint16_t GtcsGPIOHandler::GetGPIOInputStatus(volatile uint32_t *gpio2,
                                             volatile uint32_t *gpio3,
-                                            volatile uint32_t *gpio5,
-                                            volatile uint32_t *gpio6)
+                                            volatile uint32_t *gpio4,
+                                            volatile uint32_t *gpio5)
 {
     uint16_t inputvalue = 0;
     // gpio IN_OUT_1
-    if (*gpio6 & (1 << (int)GTCS_GPIO_IN::IN_01))
+    if (*gpio4 & (1 << (int)GTCS_GPIO_IN::IN_01))
     {
         inputvalue |= 1 << 0;
     }
     // gpio IN_OUT_2
-    if (*gpio5 & (1 << (int)GTCS_GPIO_IN::IN_02))
+    if (*gpio4 & (1 << (int)GTCS_GPIO_IN::IN_02))
     {
         inputvalue |= 1 << 1;
     }
     // gpio IN_OUT_3
-    if (*gpio5 & (1 << (int)GTCS_GPIO_IN::IN_03))
+    if (*gpio4 & (1 << (int)GTCS_GPIO_IN::IN_03))
     {
         inputvalue |= 1 << 2;
     }
     // gpio IN_OUT_4
-    if (*gpio2 & (1 << (int)GTCS_GPIO_IN::IN_04))
+    if (*gpio5 & (1 << (int)GTCS_GPIO_IN::IN_04))
     {
         inputvalue |= 1 << 3;
     }    
     // gpio IN_OUT_5
-    if (*gpio2 & (1 << (int)GTCS_GPIO_IN::IN_05))
+    if (*gpio5 & (1 << (int)GTCS_GPIO_IN::IN_05))
     {
         inputvalue |= 1 << 4;
     }
     // gpio IN_OUT_6
-    if (*gpio2 & (1 << (int)GTCS_GPIO_IN::IN_06))
+    if (*gpio5 & (1 << (int)GTCS_GPIO_IN::IN_06))
     {
         inputvalue |= 1 << 5;
     }
     // gpio IN_OUT_7
-    if (*gpio2 & (1 << (int)GTCS_GPIO_IN::IN_07))
+    if (*gpio5 & (1 << (int)GTCS_GPIO_IN::IN_07))
     {
         inputvalue |= 1 << 6;
     }
     // gpio IN_OUT_8
-    if (*gpio2 & (1 << (int)GTCS_GPIO_IN::IN_08))
+    if (*gpio5 & (1 << (int)GTCS_GPIO_IN::IN_08))
     {
         inputvalue |= 1 << 7;
     }
     // gpio IN_OUT_9
-    if (*gpio2 & (1 << (int)GTCS_GPIO_IN::IN_09))
+    if (*gpio5 & (1 << (int)GTCS_GPIO_IN::IN_09))
     {
         inputvalue |= 1 << 8;
     }
     // gpio IN_OUT_10
-    if (*gpio3 & (1 << (int)GTCS_GPIO_IN::IN_10))
+    if (*gpio5 & (1 << (int)GTCS_GPIO_IN::IN_10))
     {
         inputvalue |= 1 << 9;
     }
     // gpio IN_OUT_11
-    if (*gpio3 & (1 << (int)GTCS_GPIO_IN::IN_11))
+    if (*gpio5 & (1 << (int)GTCS_GPIO_IN::IN_11))
     {
         inputvalue |= 1 << 10;
     }
     // gpio IN_OUT_12
-    if (*gpio2 & (1 << (int)GTCS_GPIO_IN::IN_12))
+    if (*gpio5 & (1 << (int)GTCS_GPIO_IN::IN_12))
     {
         inputvalue |= 1 << 11;
     }
@@ -197,9 +197,9 @@ uint16_t GtcsGPIOHandler::GetGPIOInputStatus(volatile uint32_t *gpio2,
  * 
  *  @param   uint32_t &gpio3
  * 
- *  @param   uint32_t &gpio5
+ *  @param   uint32_t &gpio4
  * 
- *  @param   uint32_t &gpio6
+ *  @param   uint32_t &gpio5
  *
  *  @return  bool
  *
@@ -209,8 +209,8 @@ uint16_t GtcsGPIOHandler::GetGPIOInputStatus(volatile uint32_t *gpio2,
 bool GtcsGPIOHandler::SetGPIOOutputStatus(uint16_t outputvalue, 
                                         volatile uint32_t *gpio2,
                                         volatile uint32_t *gpio3,
-                                        volatile uint32_t *gpio5,
-                                        volatile uint32_t *gpio6)
+                                        volatile uint32_t *gpio4,
+                                        volatile uint32_t *gpio5)
 {
     // gpio OUT_1
     if (outputvalue & (1 << 0))
@@ -260,29 +260,29 @@ bool GtcsGPIOHandler::SetGPIOOutputStatus(uint16_t outputvalue,
     // gpio IN_OUT_6
     if (outputvalue & (1 << 5))
     {
-        *gpio3 = *gpio3 | (1 << GTCS_GPIO_OUT::OUT_06);
+        *gpio2 = *gpio2 | (1 << GTCS_GPIO_OUT::OUT_06);
     }
     else
     {
-        *gpio3 = *gpio3 & ~(1 << GTCS_GPIO_OUT::OUT_06);
+        *gpio2 = *gpio2 & ~(1 << GTCS_GPIO_OUT::OUT_06);
     }
     // gpio IN_OUT_7
     if (outputvalue & (1 << 6))
     {
-        *gpio3 = *gpio3 | (1 << GTCS_GPIO_OUT::OUT_07);
+        *gpio2 = *gpio2 | (1 << GTCS_GPIO_OUT::OUT_07);
     }
     else
     {
-        *gpio3 = *gpio3 & ~(1 << GTCS_GPIO_OUT::OUT_07);
+        *gpio2 = *gpio2 & ~(1 << GTCS_GPIO_OUT::OUT_07);
     }
     // gpio IN_OUT_8
     if (outputvalue & (1 << 7))
     {
-        *gpio3 = *gpio3 | (1 << GTCS_GPIO_OUT::OUT_08);
+        *gpio2 = *gpio2 | (1 << GTCS_GPIO_OUT::OUT_08);
     }
     else
     {
-        *gpio3 = *gpio3 & ~(1 << GTCS_GPIO_OUT::OUT_08);
+        *gpio2 = *gpio2 & ~(1 << GTCS_GPIO_OUT::OUT_08);
     }
     // gpio IN_OUT_9
     if (outputvalue & (1 << 8))
@@ -348,8 +348,8 @@ void GtcsGPIOHandler::GtcsGPIOHandlerProcess()
     // Initial regiest.
     static volatile uint32_t *gpio2;
     static volatile uint32_t *gpio3;
+    static volatile uint32_t *gpio4;
     static volatile uint32_t *gpio5;
-    static volatile uint32_t *gpio6;
     // Initial valuable.
     int fd;
     int i;
@@ -364,8 +364,8 @@ void GtcsGPIOHandler::GtcsGPIOHandlerProcess()
 	// Map the GPIO2 Data Register
     gpio2 = (uint32_t *)mmap(0, (getpagesize() * 250), PROT_READ|PROT_WRITE, MAP_SHARED, fd, (int)GTCS_GPIO_REGEIST::GPIO2_DR);
     gpio3 = (uint32_t *)mmap(0, (getpagesize() * 250), PROT_READ|PROT_WRITE, MAP_SHARED, fd, (int)GTCS_GPIO_REGEIST::GPIO3_DR);
+    gpio4 = (uint32_t *)mmap(0, (getpagesize() * 250), PROT_READ|PROT_WRITE, MAP_SHARED, fd, (int)GTCS_GPIO_REGEIST::GPIO4_DR);
     gpio5 = (uint32_t *)mmap(0, (getpagesize() * 250), PROT_READ|PROT_WRITE, MAP_SHARED, fd, (int)GTCS_GPIO_REGEIST::GPIO5_DR);
-    gpio6 = (uint32_t *)mmap(0, (getpagesize() * 250), PROT_READ|PROT_WRITE, MAP_SHARED, fd, (int)GTCS_GPIO_REGEIST::GPIO6_DR);
 
     #pragma region mmap
     if (gpio2 == MAP_FAILED){
@@ -382,16 +382,16 @@ void GtcsGPIOHandler::GtcsGPIOHandlerProcess()
 		// return false;
     }
 
-    if (gpio5 == MAP_FAILED){
+    if (gpio4 == MAP_FAILED){
         //printf("mmap failed: %s\n", strerror(errno));
-        printf("mmap failed: %s\n", "5");
+        printf("mmap failed: %s\n", "4");
         // exit(2);
 		// return false;
     }
 
-    if (gpio6 == MAP_FAILED){
+    if (gpio5 == MAP_FAILED){
         //printf("mmap failed: %s\n", strerror(errno));
-        printf("mmap failed: %s\n", "6");
+        printf("mmap failed: %s\n", "5");
         // exit(2);
 		// return false;
     }
@@ -402,15 +402,14 @@ void GtcsGPIOHandler::GtcsGPIOHandlerProcess()
 	while (true)
 	{
         // Check GPIO input data.
-        screwhandler.inputstatus = GetGPIOInputStatus(gpio2,gpio3,gpio5,gpio6);
+        screwhandler.inputstatus = GetGPIOInputStatus(gpio2,gpio3,gpio4,gpio5);
         screwhandler.outputstatus = screwhandler.inputstatus;
-        SetGPIOOutputStatus(screwhandler.outputstatus,gpio2,gpio3,gpio5,gpio6);
+        SetGPIOOutputStatus(screwhandler.outputstatus,gpio2,gpio3,gpio4,gpio5);
+        #if defined(_GPIO_DEBUG_MODE_)  
         std::cout << "GPIO Input value = " << std::to_string(screwhandler.inputstatus) << std::endl;
-        
-        #if defined(_DEBUG_MODE_)  
 		std::cout << "Date time now = " << DateTime::GetCurrentSystemDateTime()<< std::endl;
 		#endif
-        std::this_thread::sleep_for(std::chrono::milliseconds(100)); 							// Thread sleep 1s.
+        std::this_thread::sleep_for(std::chrono::milliseconds(1)); 							// Thread sleep 1s.
 	}
     close(fd);
 }

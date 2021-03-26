@@ -42,13 +42,13 @@ private:
     // Iuput & output status.
     static uint16_t GetGPIOInputStatus( volatile uint32_t *gpio2,
                                         volatile uint32_t *gpio3,
-                                        volatile uint32_t *gpio5,
-                                        volatile uint32_t *gpio6);
+                                        volatile uint32_t *gpio4,
+                                        volatile uint32_t *gpio5);
     static bool SetGPIOOutputStatus(uint16_t outputvalue,
                                 volatile uint32_t *gpio2,
                                 volatile uint32_t *gpio3,
-                                volatile uint32_t *gpio5,
-                                volatile uint32_t *gpio6);
+                                volatile uint32_t *gpio4,
+                                volatile uint32_t *gpio5);
 public:
     GtcsGPIOHandler(/* args */);
     ~GtcsGPIOHandler();

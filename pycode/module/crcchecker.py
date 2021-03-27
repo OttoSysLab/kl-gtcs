@@ -88,13 +88,43 @@ class CrcChecker:
         if self._debug_mode == True:
             for idx,var in enumerate(self._crc32_convert_arr):
                 print("Index = %d , value = %d"%(idx,var))
+    
+    # Get 
+    def get_32bit_reverse(self,pValue:np.uint32)->np.uint32:
+        """
+        Get STM crc32 check sum value.
+        """
+        _reslut = 0
+        return _reslut
 
-    # Get crc32 check sum value.
-    def get_crc32_array(self,parr:np.array)->np.array:
+    # Get STM crc32 check sum value.
+    def get_crc32_STM(self,pData:np.array,count:int)->np.uint32:
         """
-        docstring
+        Get STM crc32 check sum value.
         """
-        _result = np.zeros((4,),dtype=np.byte)
+        _u32_crc = 0xffffffff
+        _u32_data = np.uint32
+        
+        for idx in range(count):
+            n = idx*4
+            pu8 = np.zeros([4],dtype= np.ubyte)
+            _u32_data = pData[n]
+            _u32_data += pData[n+1]*0x100
+            _u32_data += pData[n+2]*0x10000
+            _u32_data += pData[n+3]*0x1000000
+            _u32_data = self.get_32bit_reverse(_u32_data)
+
+        return _u32_crc
+
+    # Get STM crc32 check sum array.
+    def get_crc32_array(self,pData:np.array)->np.array:
+        """
+        Get STM crc32 check sum array.
+        """
+        #Initial returl reslut.
+        _result = np.zeros((4,),dtype=np.ubyte)
+        # Calculate crc.
+
         _value = struct.pack("<H",123)
         for idx,val in enumerate(_value):
             _result[idx] = val

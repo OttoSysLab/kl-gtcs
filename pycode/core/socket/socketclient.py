@@ -8,9 +8,11 @@ DEBUG_MODE = True
 
 if DEBUG_MODE == True:
     # IP =  "192.168.0.38"  # i.Max8 :38.
-    # IP =  "192.168.0.54"  # i.Max8 :38.
+    # IP =  "192.168.0.54"  # i.Max8 :58.
+    # IP =  "192.168.0.54"  # i.Max8 :58.
+    IP =  "192.168.0.107"  # OTTO :207 , Eric = 202.
     # IP =  "192.168.0.202"  # OTTO :207 , Eric = 202.
-    IP =  "192.168.0.207"  # OTTO :207 , Eric = 202.
+    # IP =  "192.168.0.207"  # OTTO :207 , Eric = 202.
 else:
     IP =  "127.0.0.1"
 PORT = 9000
@@ -115,7 +117,7 @@ _CMD_340 = {
     "str15" : "10.0",                                     # Min bus voltage
     "str16" : "80.0",                                     # Max bus voltage
     "str17" : "3.0",                                      # Start duty cycle
-    "str18" : "11.11",                                    # Gear box ratio 13Nm=11.11,5Nm=16.00 ,7Mn = 27.04
+    "str18" : "16.00",                                    # Gear box ratio 13Nm=11.11,5Nm=16.00 ,7Mn = 27.04
     "str19" : "2",                                        # Start input source
     "str20" : "1",                                        # Reverse ipnut source
     "str21" : "1000",                                     # Reverse rpm
@@ -206,9 +208,9 @@ def test_socket_client():
     _ams_dict = dict()  
     
     # AMS command.
-    _ams_dict = _CMD_301       # Seitch Jobs
+    # _ams_dict = _CMD_301       # Seitch Jobs
     # _ams_dict = _CMD_302     
-    _ams_dict = _CMD_303     # Jumpt to next sequence. l
+    # _ams_dict = _CMD_303     # Jumpt to next sequence. 
     # _ams_dict = _CMD_310
     # _ams_dict = _CMD_311
     # _ams_dict = _CMD_312
@@ -216,7 +218,7 @@ def test_socket_client():
     # _ams_dict = _CMD_340       # Initial ID2. 
 
     # AMS REQ.
-    # _ams_dict = _REQ_300
+    _ams_dict = _REQ_300
     # _ams_dict = _REQ_302      
 
     # Convert dictionary to  ams string.

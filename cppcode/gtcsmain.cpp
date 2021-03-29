@@ -53,6 +53,9 @@ int main()
     #elif defined(_DEBUG_MODE_54_)
     manager.StartGtcsTcpSocketServerThread("192.168.0.54", 9000);   // ERIC : 202
     // manager.StartGtcsGPIOThread();                                  // GPIO thread
+    #elif defined(_DEBUG_MODE_107_)
+    manager.StartGtcsTcpSocketServerThread("192.168.0.107", 9000);   // ERIC : 202
+    // manager.StartGtcsGPIOThread();                                  // GPIO thread
     #elif defined(_DEBUG_MODE_202_)
     manager.StartGtcsTcpSocketServerThread("192.168.0.202", 9000); // ERIC : 202
     // manager.StartGtcsGPIOThread();                                  // GPIO thread

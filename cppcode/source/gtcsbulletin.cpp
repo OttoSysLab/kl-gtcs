@@ -263,18 +263,19 @@ void AMSBulletin::InitialStructValue()
         .str27 = "0",                                        // Proportional gain
         .str28 = "0",                                        // Integral gain
         .str29 = "0",                                        // Encoder
+        .str30 = "\n\r",                                    // CL,RF
         // New
-        .str30 = "0",     // Min Torque
-        .str31 = "0",     // Min RPM
-        .str32 = "0",     // Reverse Min RPM
-        .str33 = "0",     // DmsSWVer
-        .str34 = "0",     // DmsCoreID
-        .str35 = "0",     // DmsSerNr
-        .str36 = "0",     // Led
-        .str37 = "0",     // Lever Sensitivity
-        .str38 = "0",     // Push Sensitivity
-        .str39 = "0",     // MotSWVer
-        .str40 = "\n\r",  // CL,RF
+        // .str30 = "0",     // Min Torque
+        // .str31 = "0",     // Min RPM
+        // .str32 = "0",     // Reverse Min RPM
+        // .str33 = "0",     // DmsSWVer
+        // .str34 = "0",     // DmsCoreID
+        // .str35 = "0",     // DmsSerNr
+        // .str36 = "0",     // Led
+        // .str37 = "0",     // Lever Sensitivity
+        // .str38 = "0",     // Push Sensitivity
+        // .str39 = "0",     // MotSWVer
+        // .str40 = "\n\r",  // CL,RF
     };// CMD340, 設定Initial.
     #pragma endregion
     #pragma region ANS
@@ -463,18 +464,19 @@ void AMSBulletin::InitialStructValue()
         .str27 = "0",                                        // Proportional gain
         .str28 = "0",                                        // Integral gain
         .str29 = "0",                                        // Encoder
+        .str30 = "\n\r",                                    // CL,RF
         // New
-        .str30 = "0",     // Min Torque
-        .str31 = "0",     // Min RPM
-        .str32 = "0",     // Reverse Min RPM
-        .str33 = "0",     // DmsSWVer
-        .str34 = "0",     // DmsCoreID
-        .str35 = "0",     // DmsSerNr
-        .str36 = "0",     // Led
-        .str37 = "0",     // Lever Sensitivity
-        .str38 = "0",     // Push Sensitivity
-        .str39 = "0",     // MotSWVer
-        .str40 = "\n\r",  // CL,RF
+        // .str30 = "0",     // Min Torque
+        // .str31 = "0",     // Min RPM
+        // .str32 = "0",     // Reverse Min RPM
+        // .str33 = "0",     // DmsSWVer
+        // .str34 = "0",     // DmsCoreID
+        // .str35 = "0",     // DmsSerNr
+        // .str36 = "0",     // Led
+        // .str37 = "0",     // Lever Sensitivity
+        // .str38 = "0",     // Push Sensitivity
+        // .str39 = "0",     // MotSWVer
+        // .str40 = "\n\r",  // CL,RF
     };// ANS340, 回復Initial.
 	#pragma endregion
     #pragma region REQ
@@ -515,18 +517,20 @@ void AMSBulletin::InitialStructValue()
         .str27 = "0",                                        // Proportional gain
         .str28 = "0",                                        // Integral gain
         .str29 = "0",                                        // Encoder
+
+        .str30 = "\n\r",                                     // CR,LF
         // New
-        .str30 = "0",                                        // Min Torque
-        .str31 = "0",                                        // Min RPM
-        .str32 = "0",                                        // Reverse Min RPM
-        .str33 = "0",                                        // DmsSWVer
-        .str34 = "0",                                        // DmsCoreID
-        .str35 = "0",                                        // DmsSerNr
-        .str36 = "0",                                        // Led
-        .str37 = "0",                                        // Lever Sensitivity
-        .str38 = "0",                                        // Push Sensitivity
-        .str39 = "0",                                        // MotSWVer
-        .str40 = "\n\r",                                     // CR,LF
+        // .str30 = "0",                                        // Min Torque
+        // .str31 = "0",                                        // Min RPM
+        // .str32 = "0",                                        // Reverse Min RPM
+        // .str33 = "0",                                        // DmsSWVer
+        // .str34 = "0",                                        // DmsCoreID
+        // .str35 = "0",                                        // DmsSerNr
+        // .str36 = "0",                                        // Led
+        // .str37 = "0",                                        // Lever Sensitivity
+        // .str38 = "0",                                        // Push Sensitivity
+        // .str39 = "0",                                        // MotSWVer
+        // .str40 = "\n\r",                                     // CR,LF
     };// REQ301, 開機啟動MCB狀態.
     REQ302Struct = {
         .str1  = "REQ302",                                   // Header+DATA

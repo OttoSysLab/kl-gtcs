@@ -160,7 +160,7 @@ void GtcsTcpSocket::GtcsTcpSocketServerHandler()
         n = recv(connfd, revbuff, MAXLINE, 0);
         revbuff[n] = '\0';
 
-        #ifdef _SOCKET_DEBUG_MODE_
+        #if defined(_SOCKET_DEBUG_MODE_)
         std::cout << revbuff << std::endl;
         #endif
 
@@ -184,6 +184,9 @@ void GtcsTcpSocket::GtcsTcpSocketServerHandler()
             // Send data to tcpclient.
             std::fill_n(sendbuff,sizeof(sendbuff),0);   
             strcpy(sendbuff,manager.GetUiResponseCmd(socketrevcmd).c_str());
+            #if defined(_SOCKET_DEBUG_MODE_)
+            std::cout << sendbuff << std::endl;
+            #endif
             if (send(connfd,sendbuff,sizeof(sendbuff),0)<0)
             {
                 printf("send msg error: %s(errno: %d)\n", strerror(errno), errno);

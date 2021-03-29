@@ -1,8 +1,8 @@
 #pragma once
 #define _DEBUG_MODE_
-#define _SOCKET_DEBUG_MODE_
+// #define _SOCKET_DEBUG_MODE_
 // #define _GPIO_DEBUG_MODE_
-// #define _DEBUG_RAM_MODE_
+// #define _DEBUG_RAM_MODE_./g  ./g 
 // #define _DEBUG_MODE_38_
 #define _DEBUG_MODE_54_
 // #define _DEBUG_MODE_107_
@@ -736,17 +736,19 @@ typedef struct
     std::string str28; // Integral gain
     std::string str29; // Encoder
 
-    std::string str30;  // Min Torque
-    std::string str31;  // Min RPM
-    std::string str32;  // Reverse Min RPM
-    std::string str33;  // DmsSWVer
-    std::string str34;  // DmsCoreID
-    std::string str35;  // DmsSerNr
-    std::string str36;  // Led
-    std::string str37;  // Lever Sensitivity
-    std::string str38;  // Push Sensitivity
-    std::string str39;  // MotSWVer
-    std::string str40;  // CL,RF
+    std::string str30; // CL,RF
+
+    // std::string str30;  // Min Torque
+    // std::string str31;  // Min RPM
+    // std::string str32;  // Reverse Min RPM
+    // std::string str33;  // DmsSWVer
+    // std::string str34;  // DmsCoreID
+    // std::string str35;  // DmsSerNr
+    // std::string str36;  // Led
+    // std::string str37;  // Lever Sensitivity
+    // std::string str38;  // Push Sensitivity
+    // std::string str39;  // MotSWVer
+    // std::string str40;  // CL,RF
 
 }AmsCMD340Struct;
 #pragma endregion
@@ -971,18 +973,19 @@ typedef struct
     std::string str27;  // Proportional gain
     std::string str28;  // Integral gain
     std::string str29;  // Encoder
+    std::string str30;  // CL,RF
     // New
-    std::string str30;  // Min Torque
-    std::string str31;  // Min RPM
-    std::string str32;  // Reverse Min RPM
-    std::string str33;  // DmsSWVer
-    std::string str34;  // DmsCoreID
-    std::string str35;  // DmsSerNr
-    std::string str36;  // Led
-    std::string str37;  // Lever Sensitivity
-    std::string str38;  // Push Sensitivity
-    std::string str39;  // MotSWVer
-    std::string str40;  // CL,RF
+    // std::string str30;  // Min Torque
+    // std::string str31;  // Min RPM
+    // std::string str32;  // Reverse Min RPM
+    // std::string str33;  // DmsSWVer
+    // std::string str34;  // DmsCoreID
+    // std::string str35;  // DmsSerNr
+    // std::string str36;  // Led
+    // std::string str37;  // Lever Sensitivity
+    // std::string str38;  // Push Sensitivity
+    // std::string str39;  // MotSWVer
+    // std::string str40;  // CL,RF
 }AmsANS340Struct;
 #pragma endregion
 #pragma region REQ
@@ -1028,18 +1031,19 @@ typedef struct
     std::string str27; // Proportional gain
     std::string str28; // Integral gain
     std::string str29; // Encoder
+    std::string str30; // CL,RF
     // New
-    std::string str30;  // Min Torque
-    std::string str31;  // Min RPM
-    std::string str32;  // Reverse Min RPM
-    std::string str33;  // DmsSWVer
-    std::string str34;  // DmsCoreID
-    std::string str35;  // DmsSerNr
-    std::string str36;  // Led
-    std::string str37;  // Lever Sensitivity
-    std::string str38;  // Push Sensitivity
-    std::string str39;  // MotSWVer
-    std::string str40;  // CL,RF
+    // std::string str30;  // Min Torque
+    // std::string str31;  // Min RPM
+    // std::string str32;  // Reverse Min RPM
+    // std::string str33;  // DmsSWVer
+    // std::string str34;  // DmsCoreID
+    // std::string str35;  // DmsSerNr
+    // std::string str36;  // Led
+    // std::string str37;  // Lever Sensitivity
+    // std::string str38;  // Push Sensitivity
+    // std::string str39;  // MotSWVer
+    // std::string str40;  // CL,RF
 }AmsREQ301Struct;
 // REQ302
 typedef struct

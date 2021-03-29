@@ -896,17 +896,19 @@ void GtcsManager::SetAmsCmdBaiscParaToAns(AmsANS340Struct &amsans, AmsCMD340Stru
     amsans.str27 = amscmd.str27;
     amsans.str28 = amscmd.str28;
     amsans.str29 = amscmd.str29;
+
+    amsans.str30 = amscmd.str30;    // cl,rf
     // New
-    amsans.str30 = amscmd.str30;
-    amsans.str31 = amscmd.str31;
-    amsans.str32 = amscmd.str32;
-    amsans.str33 = amscmd.str33;
-    amsans.str34 = amscmd.str34;
-    amsans.str35 = amscmd.str35;
-    amsans.str36 = amscmd.str36;
-    amsans.str37 = amscmd.str37;
-    amsans.str38 = amscmd.str38;
-    amsans.str39 = amscmd.str39;
+    // amsans.str30 = amscmd.str30;
+    // amsans.str31 = amscmd.str31;
+    // amsans.str32 = amscmd.str32;
+    // amsans.str33 = amscmd.str33;
+    // amsans.str34 = amscmd.str34;
+    // amsans.str35 = amscmd.str35;
+    // amsans.str36 = amscmd.str36;
+    // amsans.str37 = amscmd.str37;
+    // amsans.str38 = amscmd.str38;
+    // amsans.str39 = amscmd.str39;
 }
 /******************************************************************************************
  *
@@ -1575,16 +1577,16 @@ bool GtcsManager::SetDatabaseBasicParaToAns(AmsANS340Struct &amsans, GtcsDatabas
     amsans.str28 = db_basic.data["igain"];           // Integral gain
     amsans.str29 = db_basic.data["encoder"];         // Encoder
     // New
-    amsans.str30 = db_basic.data["mintorque"];         // Min Torque
-    amsans.str31 = db_basic.data["minrpm"];            // Min RPM
-    amsans.str32 = db_basic.data["revminrpm"];         // Reverse Min RPM
-    amsans.str33 = db_basic.data["dmsswver"];          // DmsSWVer
-    amsans.str34 = db_basic.data["dmscoreid"];         // DmsCoreID
-    amsans.str35 = db_basic.data["dmssernr"];          // DmsSerNr
-    amsans.str36 = db_basic.data["led"];               // Led
-    amsans.str37 = db_basic.data["lever_sensitivity"]; // Lever Sensitivity
-    amsans.str38 = db_basic.data["push_sensitivity"];  // Push Sensitivity
-    amsans.str39 = db_basic.data["motswver"];          // MotSWVer
+    // amsans.str30 = db_basic.data["mintorque"];         // Min Torque
+    // amsans.str31 = db_basic.data["minrpm"];            // Min RPM
+    // amsans.str32 = db_basic.data["revminrpm"];         // Reverse Min RPM
+    // amsans.str33 = db_basic.data["dmsswver"];          // DmsSWVer
+    // amsans.str34 = db_basic.data["dmscoreid"];         // DmsCoreID
+    // amsans.str35 = db_basic.data["dmssernr"];          // DmsSerNr
+    // amsans.str36 = db_basic.data["led"];               // Led
+    // amsans.str37 = db_basic.data["lever_sensitivity"]; // Lever Sensitivity
+    // amsans.str38 = db_basic.data["push_sensitivity"];  // Push Sensitivity
+    // amsans.str39 = db_basic.data["motswver"];          // MotSWVer
     return true;
 }
 /******************************************************************************************
@@ -2732,16 +2734,16 @@ bool GtcsManager::SetDatabaseBasicParaToReq(AmsREQ301Struct &amsreq, GtcsDatabas
     amsreq.str28 = db_basic.data["igain"];           // Integral gain
     amsreq.str29 = db_basic.data["encoder"];         // Encoder
     // New
-    amsreq.str30 = db_basic.data["mintorque"];         // Min Torque
-    amsreq.str31 = db_basic.data["minrpm"];            // Min RPM
-    amsreq.str32 = db_basic.data["revminrpm"];         // Reverse Min RPM
-    amsreq.str33 = db_basic.data["dmsswver"];          // DmsSWVer
-    amsreq.str34 = db_basic.data["dmscoreid"];         // DmsCoreID
-    amsreq.str35 = db_basic.data["dmssernr"];          // DmsSerNr
-    amsreq.str36 = db_basic.data["led"];               // Led
-    amsreq.str37 = db_basic.data["lever_sensitivity"]; // Lever Sensitivity
-    amsreq.str38 = db_basic.data["push_sensitivity"];  // Push Sensitivity
-    amsreq.str39 = db_basic.data["motswver"];          // MotSWVer
+    // amsreq.str30 = db_basic.data["mintorque"];         // Min Torque
+    // amsreq.str31 = db_basic.data["minrpm"];            // Min RPM
+    // amsreq.str32 = db_basic.data["revminrpm"];         // Reverse Min RPM
+    // amsreq.str33 = db_basic.data["dmsswver"];          // DmsSWVer
+    // amsreq.str34 = db_basic.data["dmscoreid"];         // DmsCoreID
+    // amsreq.str35 = db_basic.data["dmssernr"];          // DmsSerNr
+    // amsreq.str36 = db_basic.data["led"];               // Led
+    // amsreq.str37 = db_basic.data["lever_sensitivity"]; // Lever Sensitivity
+    // amsreq.str38 = db_basic.data["push_sensitivity"];  // Push Sensitivity
+    // amsreq.str39 = db_basic.data["motswver"];          // MotSWVer
     return true;
 }
 /******************************************************************************************

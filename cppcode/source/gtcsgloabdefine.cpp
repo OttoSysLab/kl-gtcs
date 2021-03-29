@@ -351,42 +351,42 @@ GtcsDatabaseBasicInfo::~GtcsDatabaseBasicInfo()
  *******************************************************************************************/
 void GtcsDatabaseBasicInfo::InitialColumnType()
 {    
-    type.insert(std::pair<std::string,std::string>("mintemp","REAL"));            // Min temperature       (REAL)
-    type.insert(std::pair<std::string,std::string>("maxtemp","REAL"));            // Max temperature       (REAL)
-    type.insert(std::pair<std::string,std::string>("maxcurrent","INTEGER"));      // Max current           (INTEGER)
-    type.insert(std::pair<std::string,std::string>("maxpeakcurrent","INTEGER"));  // Max peak current      (INTEGER)
-    type.insert(std::pair<std::string,std::string>("torquesensortype","INTEGER"));// torque sensor type    (INTEGER)
-    type.insert(std::pair<std::string,std::string>("maxdutycycle","REAL"));       // Max duty cycle        (REAL)
-    type.insert(std::pair<std::string,std::string>("maxtorque","REAL"));          // Max torque            (REAL)
-    type.insert(std::pair<std::string,std::string>("pwmfreq","INTEGER"));         // PWM frequency         (INTEGER)
-    type.insert(std::pair<std::string,std::string>("maxrpm","INTEGER"));          // Max rpm               (INTEGER)
-    type.insert(std::pair<std::string,std::string>("maxslope","INTEGER"));        // Max slope             (INTEGER)
-    type.insert(std::pair<std::string,std::string>("minbusvolt","REAL"));         // Min bus voltage       (REAL)
-    type.insert(std::pair<std::string,std::string>("maxbusvolt","REAL"));         // Max bus voltage       (REAL)
-    type.insert(std::pair<std::string,std::string>("startdutycycle","REAL"));     // Start duty cycle      (REAL)
-    type.insert(std::pair<std::string,std::string>("gearboxratio","REAL"));       // Gear box ratio        (REAL)
-    type.insert(std::pair<std::string,std::string>("startinp","INTEGER"));        // Start input source    (INTEGER)
-    type.insert(std::pair<std::string,std::string>("revinp","INTEGER"));          // Reverse ipnut source  (INTEGER)
-    type.insert(std::pair<std::string,std::string>("revrpm","INTEGER"));          // Reverse rpm           (INTEGER)
-    type.insert(std::pair<std::string,std::string>("revslope","INTEGER"));        // Reverse slope         (INTEGER)
-    type.insert(std::pair<std::string,std::string>("revmaxcurrent","INTEGER"));   // Reverse max current   (INTEGER)
-    type.insert(std::pair<std::string,std::string>("revmaxtorque","REAL"));       // Reverse max torque    (REAL)
-    type.insert(std::pair<std::string,std::string>("erroridletime","INTEGER"));   // Error idle time       (INTEGER)
-    type.insert(std::pair<std::string,std::string>("backlash","INTEGER"));        // Bachlash              (INTEGER)
-    type.insert(std::pair<std::string,std::string>("pgain","INTEGER"));           // Proportional gain     (INTEGER)
-    type.insert(std::pair<std::string,std::string>("igain","INTEGER"));           // Integral gain         (INTEGER)
-    type.insert(std::pair<std::string,std::string>("encoder","INTEGER"));         // Encoder               (INTEGER)
+    type.insert(std::pair<std::string,std::string>("mintemp","REAL"));            // column_index  = 1
+    type.insert(std::pair<std::string,std::string>("maxtemp","REAL"));            // column_index  = 2
+    type.insert(std::pair<std::string,std::string>("maxcurrent","INTEGER"));      // column_index  = 3
+    type.insert(std::pair<std::string,std::string>("maxpeakcurrent","INTEGER"));  // column_index  = 4
+    type.insert(std::pair<std::string,std::string>("torquesensortype","INTEGER"));// column_index  = 5
+    type.insert(std::pair<std::string,std::string>("maxdutycycle","REAL"));       // column_index  = 6
+    type.insert(std::pair<std::string,std::string>("maxtorque","REAL"));          // column_index  = 7
+    type.insert(std::pair<std::string,std::string>("pwmfreq","INTEGER"));         // column_index  = 8
+    type.insert(std::pair<std::string,std::string>("maxrpm","INTEGER"));          // column_index  = 9
+    type.insert(std::pair<std::string,std::string>("maxslope","INTEGER"));        // column_index  = 10
+    type.insert(std::pair<std::string,std::string>("minbusvolt","REAL"));         // column_index  = 11
+    type.insert(std::pair<std::string,std::string>("maxbusvolt","REAL"));         // column_index  = 12
+    type.insert(std::pair<std::string,std::string>("startdutycycle","REAL"));     // column_index  = 13
+    type.insert(std::pair<std::string,std::string>("gearboxratio","REAL"));       // column_index  = 14
+    type.insert(std::pair<std::string,std::string>("startinp","INTEGER"));        // column_index  = 15
+    type.insert(std::pair<std::string,std::string>("revinp","INTEGER"));          // column_index  = 16
+    type.insert(std::pair<std::string,std::string>("revrpm","INTEGER"));          // column_index  = 17
+    type.insert(std::pair<std::string,std::string>("revslope","INTEGER"));        // column_index  = 18
+    type.insert(std::pair<std::string,std::string>("revmaxcurrent","INTEGER"));   // column_index  = 19
+    type.insert(std::pair<std::string,std::string>("revmaxtorque","REAL"));       // column_index  = 20
+    type.insert(std::pair<std::string,std::string>("erroridletime","INTEGER"));   // column_index  = 21
+    type.insert(std::pair<std::string,std::string>("backlash","INTEGER"));        // column_index  = 22
+    type.insert(std::pair<std::string,std::string>("pgain","INTEGER"));           // column_index  = 23
+    type.insert(std::pair<std::string,std::string>("igain","INTEGER"));           // column_index  = 24
+    type.insert(std::pair<std::string,std::string>("encoder","INTEGER"));         // column_index  = 25
     // New add
-    type.insert(std::pair<std::string,std::string>("mintorque","REAL"));          // (REAL)
-    type.insert(std::pair<std::string,std::string>("minrpm","INTEGER"));           // (INTEGER)
-    type.insert(std::pair<std::string,std::string>("revminrpm","INTEGER"));        // (INTEGER)
-    type.insert(std::pair<std::string,std::string>("dmsswver","INTEGER"));         // (INTEGER)
-    type.insert(std::pair<std::string,std::string>("dmscoreid","INTEGER"));        // (INTEGER)
-    type.insert(std::pair<std::string,std::string>("dmssernr","INTEGER"));         // (INTEGER)
-    type.insert(std::pair<std::string,std::string>("led","INTEGER"));              // (INTEGER)
-    type.insert(std::pair<std::string,std::string>("lever_sensitivity","INTEGER"));// (INTEGER)
-    type.insert(std::pair<std::string,std::string>("push_sensitivity","INTEGER")); // (INTEGER) 
-    type.insert(std::pair<std::string,std::string>("motswver","TEXT"));         // (TEXT)
+    // type.insert(std::pair<std::string,std::string>("mintorque","REAL"));          // (REAL)
+    // type.insert(std::pair<std::string,std::string>("minrpm","INTEGER"));           // (INTEGER)
+    // type.insert(std::pair<std::string,std::string>("revminrpm","INTEGER"));        // (INTEGER)
+    // type.insert(std::pair<std::string,std::string>("dmsswver","INTEGER"));         // (INTEGER)
+    // type.insert(std::pair<std::string,std::string>("dmscoreid","INTEGER"));        // (INTEGER)
+    // type.insert(std::pair<std::string,std::string>("dmssernr","INTEGER"));         // (INTEGER)
+    // type.insert(std::pair<std::string,std::string>("led","INTEGER"));              // (INTEGER)
+    // type.insert(std::pair<std::string,std::string>("lever_sensitivity","INTEGER"));// (INTEGER)
+    // type.insert(std::pair<std::string,std::string>("push_sensitivity","INTEGER")); // (INTEGER) 
+    // type.insert(std::pair<std::string,std::string>("motswver","TEXT"));         // (TEXT)
 }
 /******************************************************************************************
  *
@@ -407,42 +407,42 @@ void GtcsDatabaseBasicInfo::InitialColumnType()
  *******************************************************************************************/
 void GtcsDatabaseBasicInfo::InitialColumnName()
 {
-    columnnames.push_back("mintemp");         // Min temperature       (REAL)
-    columnnames.push_back("maxtemp");         // Max temperature       (REAL)
-    columnnames.push_back("maxcurrent");      // Max current           (INTEGER)
-    columnnames.push_back("maxpeakcurrent");  // Max peak current      (INTEGER)
-    columnnames.push_back("torquesensortype");// torque sensor type    (INTEGER)
-    columnnames.push_back("maxdutycycle");    // Max duty cycle        (REAL)
-    columnnames.push_back("maxtorque");       // Max torque            (REAL)
-    columnnames.push_back("pwmfreq");         // PWM frequency         (INTEGER)
-    columnnames.push_back("maxrpm");          // Max rpm               (INTEGER)
-    columnnames.push_back("maxslope");        // Max slope             (INTEGER)
-    columnnames.push_back("minbusvolt");      // Min bus voltage       (REAL)
-    columnnames.push_back("maxbusvolt");      // Max bus voltage       (REAL)
-    columnnames.push_back("startdutycycle");  // Start duty cycle      (REAL)
-    columnnames.push_back("gearboxratio");    // Gear box ratio        (REAL)
-    columnnames.push_back("startinp");        // Start input source    (INTEGER)
-    columnnames.push_back("revinp");          // Reverse ipnut source  (INTEGER)
-    columnnames.push_back("revrpm");          // Reverse rpm           (INTEGER)
-    columnnames.push_back("revslope");        // Reverse slope         (INTEGER)
-    columnnames.push_back("revmaxcurrent");   // Reverse max current   (INTEGER)
-    columnnames.push_back("revmaxtorque");    // Reverse max torque    (REAL)
-    columnnames.push_back("erroridletime");   // Error idle time       (INTEGER)
-    columnnames.push_back("backlash");        // Bachlash              (INTEGER)
-    columnnames.push_back("pgain");           // Proportional gain     (INTEGER)
-    columnnames.push_back("igain");           // Integral gain         (INTEGER)
-    columnnames.push_back("encoder");         // Encoder               (INTEGER)
+    columnnames.push_back("mintemp");         // column_index  = 1
+    columnnames.push_back("maxtemp");         // column_index  = 2
+    columnnames.push_back("maxcurrent");      // column_index  = 3
+    columnnames.push_back("maxpeakcurrent");  // column_index  = 4
+    columnnames.push_back("torquesensortype");// column_index  = 5
+    columnnames.push_back("maxdutycycle");    // column_index  = 6
+    columnnames.push_back("maxtorque");       // column_index  = 7
+    columnnames.push_back("pwmfreq");         // column_index  = 8
+    columnnames.push_back("maxrpm");          // column_index  = 9
+    columnnames.push_back("maxslope");        // column_index  = 10
+    columnnames.push_back("minbusvolt");      // column_index  = 11
+    columnnames.push_back("maxbusvolt");      // column_index  = 12
+    columnnames.push_back("startdutycycle");  // column_index  = 13
+    columnnames.push_back("gearboxratio");    // column_index  = 14
+    columnnames.push_back("startinp");        // column_index  = 15
+    columnnames.push_back("revinp");          // column_index  = 16
+    columnnames.push_back("revrpm");          // column_index  = 17
+    columnnames.push_back("revslope");        // column_index  = 18
+    columnnames.push_back("revmaxcurrent");   // column_index  = 19
+    columnnames.push_back("revmaxtorque");    // column_index  = 20
+    columnnames.push_back("erroridletime");   // column_index  = 21
+    columnnames.push_back("backlash");        // column_index  = 22
+    columnnames.push_back("pgain");           // column_index  = 23
+    columnnames.push_back("igain");           // column_index  = 24
+    columnnames.push_back("encoder");         // column_index  = 25
     // New add
-    columnnames.push_back("mintorque");        // (REAL)
-    columnnames.push_back("minrpm");           // (INTEGER)
-    columnnames.push_back("revminrpm");        // (INTEGER)
-    columnnames.push_back("dmsswver");         // (INTEGER)
-    columnnames.push_back("dmscoreid");        // (INTEGER)
-    columnnames.push_back("dmssernr");         // (INTEGER)
-    columnnames.push_back("led");              // (INTEGER)
-    columnnames.push_back("lever_sensitivity");// (INTEGER)
-    columnnames.push_back("push_sensitivity"); // (INTEGER) 
-    columnnames.push_back("motswver");         // (TEXT)
+    // columnnames.push_back("mintorque");        // (REAL)
+    // columnnames.push_back("minrpm");           // (INTEGER)
+    // columnnames.push_back("revminrpm");        // (INTEGER)
+    // columnnames.push_back("dmsswver");         // (INTEGER)
+    // columnnames.push_back("dmscoreid");        // (INTEGER)
+    // columnnames.push_back("dmssernr");         // (INTEGER)
+    // columnnames.push_back("led");              // (INTEGER)
+    // columnnames.push_back("lever_sensitivity");// (INTEGER)
+    // columnnames.push_back("push_sensitivity"); // (INTEGER) 
+    // columnnames.push_back("motswver");         // (TEXT)
     // columnnames.push_back("end");           // CL,RF  
 }
 /******************************************************************************************

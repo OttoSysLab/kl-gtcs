@@ -1,10 +1,11 @@
 #pragma once
-#define _DEBUG_MODE_
+// #define _DEBUG_MODE_
 // #define _SOCKET_DEBUG_MODE_
-// #define _GPIO_DEBUG_MODE_
-// #define _DEBUG_RAM_MODE_./g  ./g 
+#define _GPIO_DEBUG_MODE_
+// #define _DEBUG_RAM_MODE_ 
 // #define _DEBUG_MODE_38_
-#define _DEBUG_MODE_54_
+// #define _DEBUG_MODE_54_
+#define _DEBUG_MODE_111_ // 惠達機
 // #define _DEBUG_MODE_107_
 // #define _DEBUG_MODE_202_
 // #define _DEBUG_MODE_207_

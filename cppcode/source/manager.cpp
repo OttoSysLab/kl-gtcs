@@ -1282,9 +1282,9 @@ bool GtcsManager::SetGtcsGPIOTConfigure()
  *
  *  @author  Otto Chang
  *
- *  @date    2021/03/05
+ *  @date    2021/04/01
  *
- *  @fn      GtcsManager::StartGtcsGPIOThread()
+ *  @fn      GtcsManager::StartGtcsGPIOInputThread()
  *
  *  @brief   ( Constructivist )
  *
@@ -1298,14 +1298,14 @@ bool GtcsManager::SetGtcsGPIOTConfigure()
 bool GtcsManager::StartGtcsGPIOThread()
 {
     // Initial thread.
-    thread_gpio = std::thread(GtcsGPIOHandler::GtcsGPIOHandlerProcess);
+    thread_gpio = std::thread(GtcsGPIOHandler::GtcsGPIOProcessHandler);
     return true;
 }
 /******************************************************************************************
  *
  *  @author  Otto Chang
  *
- *  @date    2021/03/05
+ *  @date    2021/04/02
  *
  *  @fn      GtcsManager::StopGtcsGPIOThread()
  *
@@ -3259,9 +3259,18 @@ bool GtcsManager::RunGtcsSystem()
         }
         else
         {
+            #if defined(_DEBUG_MODE_111_)
+            ctrltelegram = mcb->telegram.ctrl.fasten;           // Config fasten ctrl telegram.
+            #else
             ctrltelegram = mcb->telegram.ctrl.loosen;           // Config loosen ctrl telegram.
+            #endif
+
             mcb->telegram.ctrl.InitialCtrlFlags(ctrltelegram);
+            #if defined(_DEBUG_MODE_111_)
+            
+            #else
             mcb->telegram.ctrl.SetCtrlFlags(ctrltelegram, CTRL_FLAGS_IDX::SC_REVERSE); // Reverse
+            #endif
         }
         // Set ctrltelegram = SHORT_UW.
         mcb->telegram.ctrl.SetCtrlFlags(ctrltelegram, CTRL_FLAGS_IDX::SHORT_UVW);

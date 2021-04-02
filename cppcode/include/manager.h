@@ -176,6 +176,7 @@ public:
     // GPIO.
     bool GetGtcsGPIOTConfigure();
     bool SetGtcsGPIOTConfigure();
+    
     bool StartGtcsGPIOThread();
     bool StopGtcsGPIOThread();
 

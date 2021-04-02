@@ -47,24 +47,26 @@ int main()
 
     // Ste 3 = Set tcpsocket thread and start.
     #pragma region step 2
+    std::string socketip = "";
+    int port = 9000;
     #if defined(_DEBUG_MODE_38_)
-    manager.StartGtcsTcpSocketServerThread("192.168.0.38", 9000);   // OTTO : 38,
-    // manager.StartGtcsGPIOThread();                                  // GPIO thread
+    socketip = "192.168.0.38";      // i.mx8 Leo.
     #elif defined(_DEBUG_MODE_54_)
-    manager.StartGtcsTcpSocketServerThread("192.168.0.54", 9000);   // ERIC : 202
-    // manager.StartGtcsGPIOThread();                                  // GPIO thread
+    socketip = "192.168.0.54";      // i.mx8 Otto.
     #elif defined(_DEBUG_MODE_107_)
-    manager.StartGtcsTcpSocketServerThread("192.168.0.107", 9000);   // ERIC : 202
-    // manager.StartGtcsGPIOThread();                                  // GPIO thread
+    socketip = "192.168.0.107";     // i.mx8 ERIC.
+    // #elif defined(_DEBUG_MODE_111_)
+    // socketip = "192.168.0.111";     // i.mx8 惠達機
     #elif defined(_DEBUG_MODE_202_)
-    manager.StartGtcsTcpSocketServerThread("192.168.0.202", 9000); // ERIC : 202
-    // manager.StartGtcsGPIOThread();                                  // GPIO thread
+    socketip = "192.168.0.202";     // i.mx6.
     #elif defined(_DEBUG_MODE_207_)
-    manager.StartGtcsTcpSocketServerThread("192.168.0.207", 9000);  // OTTO : 207,
-    // manager.StartGtcsGPIOThread();                                  // GPIO thread
+    socketip = "192.168.0.207";     // i.mx6 Otto.
     #else
-    manager.StartGtcsTcpSocketServerThread("127.0.0.1", 9000); // Linux OTTO
+    socketip = "127.0.0.1"; // Linux OTTO
     #endif
+
+    manager.StartGtcsTcpSocketServerThread(socketip, port);     // OTTO : 38,
+    manager.StartGtcsGPIOThread();                              // GPIO thread
     #pragma endregion
 
     #pragma region step 3

@@ -92,31 +92,22 @@ GtcsGPIOHandler::~GtcsGPIOHandler()
  *
  *  @author  Otto Chang
  *
- *  @date    2021/03/07
+ *  @date    2021/04/02
  *
- *  @fn      GtcsGPIOHandler::GetGPIOInputStatus(uint16_t inputvalue,uint32_t &gpio2,uint32_t &gpio3,uint32_t &gpio5,uint32_t &gpio6)
+ *  @fn      GtcsGPIOHandler::GetGPIOInputStatus(volatile uint32_t *gpio4,volatile uint32_t *gpio5)
  *
  *  @brief   ( Constructivist )
- *
- *  @param   uint16_t inputvalue
- * 
- *  @param   uint32_t &gpio2
- * 
- *  @param   uint32_t &gpio3
  * 
  *  @param   uint32_t &gpio4
  * 
  *  @param   uint32_t &gpio5
  *
- *  @return  bool
+ *  @return  uint16_t
  *
  *  @note    none
  *
  *******************************************************************************************/
-uint16_t GtcsGPIOHandler::GetGPIOInputStatus(volatile uint32_t *gpio2,
-                                            volatile uint32_t *gpio3,
-                                            volatile uint32_t *gpio4,
-                                            volatile uint32_t *gpio5)
+uint16_t GtcsGPIOHandler::GetGPIOInputStatus(volatile uint32_t *gpio4,volatile uint32_t *gpio5)
 {
     uint16_t inputvalue = 0;
     // gpio IN_OUT_1
@@ -197,20 +188,12 @@ uint16_t GtcsGPIOHandler::GetGPIOInputStatus(volatile uint32_t *gpio2,
  * 
  *  @param   uint32_t &gpio3
  * 
- *  @param   uint32_t &gpio4
- * 
- *  @param   uint32_t &gpio5
- *
  *  @return  bool
  *
  *  @note    none
  *
  *******************************************************************************************/
-bool GtcsGPIOHandler::SetGPIOOutputStatus(uint16_t outputvalue, 
-                                        volatile uint32_t *gpio2,
-                                        volatile uint32_t *gpio3,
-                                        volatile uint32_t *gpio4,
-                                        volatile uint32_t *gpio5)
+bool GtcsGPIOHandler::SetGPIOOutputStatus(uint16_t outputvalue, volatile uint32_t *gpio2,volatile uint32_t *gpio3)
 {
     // gpio OUT_1
     if (outputvalue & (1 << 0))
@@ -328,7 +311,7 @@ bool GtcsGPIOHandler::SetGPIOOutputStatus(uint16_t outputvalue,
  *
  *  @date    2021/03/07
  *
- *  @fn      GtcsGPIOHandler::GtcsGPIOHandlerProcess()
+ *  @fn      GtcsGPIOHandler::GtcsGPIOProcessHandler()
  *
  *  @brief   ( Constructivist )
  *
@@ -339,7 +322,7 @@ bool GtcsGPIOHandler::SetGPIOOutputStatus(uint16_t outputvalue,
  *  @note    none
  *
  *******************************************************************************************/
-void GtcsGPIOHandler::GtcsGPIOHandlerProcess()
+void GtcsGPIOHandler::GtcsGPIOProcessHandler()
 {
     // Initials vlaue & object.
     GtcsManager manager;
@@ -402,14 +385,15 @@ void GtcsGPIOHandler::GtcsGPIOHandlerProcess()
 	while (true)
 	{
         // Check GPIO input data.
-        screwhandler.inputstatus = GetGPIOInputStatus(gpio2,gpio3,gpio4,gpio5);
+        screwhandler.inputstatus = GetGPIOInputStatus(gpio4,gpio5);
         screwhandler.outputstatus = screwhandler.inputstatus;
-        SetGPIOOutputStatus(screwhandler.outputstatus,gpio2,gpio3,gpio4,gpio5);
+        SetGPIOOutputStatus(screwhandler.outputstatus,gpio2,gpio3);
         #if defined(_GPIO_DEBUG_MODE_)  
         std::cout << "GPIO Input value = " << std::to_string(screwhandler.inputstatus) << std::endl;
-		std::cout << "Date time now = " << DateTime::GetCurrentSystemDateTime()<< std::endl;
+        std::cout << "GPIO Output value = " << std::to_string(screwhandler.inputstatus) << std::endl;
+		// std::cout << "Date time now = " << DateTime::GetCurrentSystemDateTime()<< std::endl;
 		#endif
-        std::this_thread::sleep_for(std::chrono::milliseconds(1)); 							// Thread sleep 1s.
+        std::this_thread::sleep_for(std::chrono::milliseconds(100)); 							// Thread sleep 1s.
 	}
     close(fd);
 }

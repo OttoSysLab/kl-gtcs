@@ -193,7 +193,7 @@ uint16_t GtcsGPIOHandler::GetGPIOInputStatus(volatile uint32_t *gpio4,volatile u
  *  @note    none
  *
  *******************************************************************************************/
-bool GtcsGPIOHandler::SetGPIOOutputStatus(uint16_t outputvalue, volatile uint32_t *gpio2,volatile uint32_t *gpio3)
+bool GtcsGPIOHandler::SetGPIOOutputStatus(uint16_t &outputvalue, volatile uint32_t *gpio2,volatile uint32_t *gpio3)
 {
     // gpio OUT_1
     if (outputvalue & (1 << 0))
@@ -326,7 +326,8 @@ void GtcsGPIOHandler::GtcsGPIOProcessHandler()
 {
     // Initials vlaue & object.
     GtcsManager manager;
-    GtcsScrewSequenceHandler screwhandler;
+    uint16_t inputstatus = 0;
+    uint16_t outputstatus = 0;
     #pragma region initial linux gpio regiest.
     // Initial regiest.
     static volatile uint32_t *gpio2;
@@ -385,12 +386,14 @@ void GtcsGPIOHandler::GtcsGPIOProcessHandler()
 	while (true)
 	{
         // Check GPIO input data.
-        screwhandler.inputstatus = GetGPIOInputStatus(gpio4,gpio5);
-        screwhandler.outputstatus = screwhandler.inputstatus;
-        SetGPIOOutputStatus(screwhandler.outputstatus,gpio2,gpio3);
+        inputstatus = GetGPIOInputStatus(gpio4,gpio5);
+        manager.SetGtcsGpioInputStatus(inputstatus);
+        outputstatus = manager.GetGtcsGpioOutputStatus();
+        SetGPIOOutputStatus(outputstatus,gpio2,gpio3);
+
         #if defined(_GPIO_DEBUG_MODE_)  
-        std::cout << "GPIO Input value = " << std::to_string(screwhandler.inputstatus) << std::endl;
-        std::cout << "GPIO Output value = " << std::to_string(screwhandler.inputstatus) << std::endl;
+        std::cout << "GPIO Input value = " << std::to_string(inputstatus) << std::endl;
+        std::cout << "GPIO Output value = " << std::to_string(outputstatus) << std::endl;
 		// std::cout << "Date time now = " << DateTime::GetCurrentSystemDateTime()<< std::endl;
 		#endif
         std::this_thread::sleep_for(std::chrono::milliseconds(100)); 							// Thread sleep 1s.

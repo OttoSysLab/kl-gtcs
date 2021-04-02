@@ -188,6 +188,10 @@ public:
     bool GetGtcsScrewSequenceHandlerStatus(GtcsScrewSequenceHandler &screwhandler);
     bool SetGtcsScrewSequenceHandlerStatus(GtcsScrewSequenceHandler &screwhandler);
 
+    // Get & set GPIO status
+    uint16_t GetGtcsGpioOutputStatus();
+    bool SetGtcsGpioInputStatus(uint16_t &gpiostatus);
+
     // Jion thread.
     bool StopAllThread();
     std::string GetMCBErrMessageString(uint32_t errorflagindex);

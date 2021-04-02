@@ -1431,6 +1431,53 @@ bool GtcsManager::SetGtcsScrewSequenceHandlerStatus(GtcsScrewSequenceHandler &sc
  *  @note    none.
  *
  *******************************************************************************************/
+uint16_t GtcsManager::GetGtcsGpioOutputStatus()
+{
+    return bulletin->ScrewHandler.outputstatus;
+}
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
+ *  @date    2021/02/04
+ *
+ *  @fn      GtcsManager::CopyDatabase(std::string destination ,std::string source)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   std::string destination
+ *
+ *  @param   std::string source
+ *
+ *  @return  bool
+ *
+ *  @note    none.
+ *
+ *******************************************************************************************/
+bool GtcsManager::SetGtcsGpioInputStatus(uint16_t &gpiostatus)
+{
+    bulletin->ScrewHandler.inputstatus = gpiostatus;
+    return true;
+}
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
+ *  @date    2021/02/04
+ *
+ *  @fn      GtcsManager::CopyDatabase(std::string destination ,std::string source)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   std::string destination
+ *
+ *  @param   std::string source
+ *
+ *  @return  bool
+ *
+ *  @note    none.
+ *
+ *******************************************************************************************/
 bool GtcsManager::CopyDatabase(std::string destination, std::string source)
 {
     std::string systemcmd = "sudo cp " + source + " " + destination;
@@ -3305,6 +3352,7 @@ bool GtcsManager::RunGtcsSystem()
                     ClearRamdiskTxtFile();
                     bulletin->ScrewHandler.screwrunning = true;
                     SetScrewDriverFasteningStartClock(bulletin->ScrewHandler.fastenstartclock);
+                    bulletin->ScrewHandler.outputstatus = 0;
                 }
                 // Calculate fasten time.
                 GetScrewDriverFasteningTime(bulletin->ScrewHandler.fasteningtime,bulletin->ScrewHandler.fastenstartclock);                
@@ -3325,6 +3373,7 @@ bool GtcsManager::RunGtcsSystem()
                     // Write data to ramdisk
                     WriteRealTimeActuralValueToRamdisk(bulletin->AmsBulletin.DATA300Struct);
                     bulletin->ScrewHandler.screwrunning = false;
+                    bulletin->ScrewHandler.outputstatus = 1;
                 }
             }
 

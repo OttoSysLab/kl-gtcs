@@ -192,6 +192,9 @@ public:
     uint16_t GetGtcsGpioOutputStatus();
     bool SetGtcsGpioInputStatus(uint16_t &gpiostatus);
 
+    bool SetGtcsGpioOutputPinStatus(uint16_t &gpiostatus,const uint16_t &checkpinnum,bool status);
+    bool GetGtcsGpioInputPinStatus(const uint16_t &gpiostatus,const uint16_t &pinnum);
+
     // Jion thread.
     bool StopAllThread();
     std::string GetMCBErrMessageString(uint32_t errorflagindex);

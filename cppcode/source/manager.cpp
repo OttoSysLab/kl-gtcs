@@ -30,8 +30,7 @@
  *
  *******************************************************************************************/
 Manager::Manager(/* args */)
-{
-}
+{}
 /******************************************************************************************
  *
  *  @author  Otto Chang
@@ -50,8 +49,7 @@ Manager::Manager(/* args */)
  *
  *******************************************************************************************/
 Manager::~Manager()
-{
-}
+{}
 /******************************************************************************************
  *
  *  @author  Otto Chang
@@ -1141,7 +1139,7 @@ bool GtcsManager::CheckUiSettingFSM(int uicmd)
     case AMSCMD::CMD340:
         if (SetSystemBasicParameter(bulletin->AmsBulletin.CMD340Struct, bulletin->McbBulletin.BasicPara) == false)
         {
-            #ifdef _DEBUG_MODE_
+            #if defined(_DEBUG_MODE_)
             std::cout << "Error to use CMD340 set SetSystemBasicParameter." <<std::endl;
             #endif
             return false;
@@ -1441,13 +1439,11 @@ uint16_t GtcsManager::GetGtcsGpioOutputStatus()
  *
  *  @date    2021/02/04
  *
- *  @fn      GtcsManager::CopyDatabase(std::string destination ,std::string source)
+ *  @fn      GtcsManager::SetGtcsGpioInputStatus(uint16_t &gpiostatus)
  *
  *  @brief   ( Constructivist )
  *
- *  @param   std::string destination
- *
- *  @param   std::string source
+ *  @param   uint16_t &gpiostatus
  *
  *  @return  bool
  *
@@ -1457,6 +1453,67 @@ uint16_t GtcsManager::GetGtcsGpioOutputStatus()
 bool GtcsManager::SetGtcsGpioInputStatus(uint16_t &gpiostatus)
 {
     bulletin->ScrewHandler.inputstatus = gpiostatus;
+    return true;
+}
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
+ *  @date    2021/04/12
+ *
+ *  @fn      GtcsManager::SetGtcsGpioOutputPinStatus(uint16_t &gpiostatus,const uint16_t &checkpinnum,bool status)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   uint16_t &gpiostatus
+ * 
+ *  @param   const uint16_t &pinnum
+ * 
+ *  @param   bool status
+ *
+ *  @return  bool
+ *
+ *  @note    none.
+ *
+ *******************************************************************************************/
+bool GtcsManager::SetGtcsGpioOutputPinStatus(uint16_t &gpiostatus,const uint16_t &pinnum,bool status)
+{
+    if (status==true)
+    {
+        gpiostatus |= (1<<pinnum);
+    }
+    else
+    {
+        gpiostatus ^= (1<<pinnum);
+    }
+    return true;
+}
+/******************************************************************************************
+ *
+ *  @author  Otto Chang
+ *
+ *  @date    2021/04/12
+ *
+ *  @fn      GtcsManager::GetGtcsGpioInputPinStatus(const uint16_t &gpiostatus,const uint16_t &pinnum)
+ *
+ *  @brief   ( Constructivist )
+ *
+ *  @param   uint16_t &gpiostatus
+ *
+ *  @param   uint16_t &checkpinnum
+ *
+ *  @return  bool
+ *
+ *  @note    none.
+ *
+ *******************************************************************************************/
+bool GtcsManager::GetGtcsGpioInputPinStatus(const uint16_t &gpiostatus,const uint16_t &pinnum)
+{
+    uint16_t checknum =  gpiostatus;
+    if(((checknum >> pinnum)&0x01)==0)
+    {
+        return false; 
+    }
     return true;
 }
 /******************************************************************************************
@@ -1665,7 +1722,7 @@ bool GtcsManager::GetDatabaseUnscrewData(GtcsCtrlTelegramStrcut &telegram, int j
     // Get data from database
     if (db_ramdisk.ReadDatabaseJobData(jobinfo, jobid) == true)
     {
-#ifdef _DEBUG_MODE_
+        #if defined(_DEBUG_MODE_)
         std::cout << "--------------------------------- " << std::endl;
         std::cout << "id                   = " << jobinfo.data["id"] << std::endl;
         std::cout << "job_id               = " << jobinfo.data["job_id"] << std::endl;
@@ -1675,7 +1732,7 @@ bool GtcsManager::GetDatabaseUnscrewData(GtcsCtrlTelegramStrcut &telegram, int j
         std::cout << "rpm                  = " << jobinfo.data["rpm"] << std::endl;
         std::cout << "enable_unscrew_force = " << jobinfo.data["enable_unscrew_force"] << std::endl;
         std::cout << "--------------------------------- " << std::endl;
-#endif
+        #endif
 
         telegram.u16ManRpm = (uint16_t)(std::stoi(jobinfo.data["rpm"]));
         if (std::stoi(jobinfo.data["enable_unscrew_force"]) == 1)
@@ -1685,9 +1742,9 @@ bool GtcsManager::GetDatabaseUnscrewData(GtcsCtrlTelegramStrcut &telegram, int j
         }
         else
         {
-#ifdef _DEBUG_MODE_
+            #if defined(_DEBUG_MODE_)
             std::cout << "Fuck unscrew_forcerate!!!" << std::endl;
-#endif
+            #endif
         }
     }
     else
@@ -1979,7 +2036,7 @@ bool GtcsManager::GetMcbStepTelegramFromDBData( McbID3Struct &mcbstep,
         }   
         else
         {
-            mcbstep.u16StepMaxTorque = 0;
+            mcbstep.u16StepMaxTorque = 0; // 1862?  
         }    
     }    
     mcbstep.u16StepMaxRevol     = dbstep.u16StepMaxRevol;    // SID = 6,Maximum Revolutions (after the Gearbox) of this step.
@@ -2347,12 +2404,12 @@ bool GtcsManager::ScrewDriverSwitchJobHandler(int jobid)
     else
     {
         #if defined(_DEBUG_MODE_)
-        // int seqlist_size = bulletin->ScrewHandler.GtcsJob.sequencelist.size();
-        // for (int i = 0; i < seqlist_size; i++)
-        // {
-        //     std::cout << "normal.screw.jobid = " << std::to_string(bulletin->ScrewHandler.GtcsJob.sequencelist[i].job_id);
-        //     std::cout << "normal.screw.sequence = "<< std::to_string(bulletin->ScrewHandler.GtcsJob.sequencelist[i].seq_id) << std::endl;
-        // }
+        int seqlist_size = bulletin->ScrewHandler.GtcsJob.sequencelist.size();
+        for (int i = 0; i < seqlist_size; i++)
+        {
+            std::cout << "normal.screw.jobid = " << std::to_string(bulletin->ScrewHandler.GtcsJob.sequencelist[i].job_id);
+            std::cout << "normal.screw.sequence = "<< std::to_string(bulletin->ScrewHandler.GtcsJob.sequencelist[i].seq_id) << std::endl;
+        }
         #endif
     }
     return true;
@@ -2414,23 +2471,23 @@ bool GtcsManager::ScrewDriverSwitchSequenceHandler(int jobid,int seqid)
                                     i,
                                     endstepflag);
         #if defined(_DEBUG_MODE_)
-        // std::cout << "=============================================================================== "  << std::endl;
-        // std::cout << "u8StepID            = "<<std::to_string(bulletin->McbBulletin.StepPara.u8StepID)   << std::endl;
-        // std::cout << "u8StepName          = "<<bulletin->McbBulletin.StepPara.u8StepName                 << std::endl;
-        // std::cout << "u16StepRpm          = "<<std::to_string(bulletin->McbBulletin.StepPara.u16StepRpm) << std::endl;
-        // std::cout << "u16StepSlope        = "<<std::to_string(bulletin->McbBulletin.StepPara.u16StepSlope) << std::endl;
-        // std::cout << "u16StepMaxCurrent   = "<<std::to_string(bulletin->McbBulletin.StepPara.u16StepMaxCurrent) << std::endl;
-        // std::cout << "u16StepMaxTorque    = "<<std::to_string(bulletin->McbBulletin.StepPara.u16StepMaxTorque) << std::endl;
-        // std::cout << "u16StepMaxRevol     = "<<std::to_string(bulletin->McbBulletin.StepPara.u16StepMaxRevol) << std::endl;
-        // std::cout << "u16StepTime         = "<<std::to_string(bulletin->McbBulletin.StepPara.u16StepTime) << std::endl;
-        // std::cout << "s32StepAngle        = "<<std::to_string(bulletin->McbBulletin.StepPara.s32StepAngle) << std::endl;
-        // std::cout << "u16StepAngleWindow  = "<<std::to_string(bulletin->McbBulletin.StepPara.u16StepAngleWindow) << std::endl;
-        // std::cout << "u16StepTorqueWindow = "<<std::to_string(bulletin->McbBulletin.StepPara.u16StepTorqueWindow) << std::endl;
-        // std::cout << "u16MinDutyCycle     = "<<std::to_string(bulletin->McbBulletin.StepPara.u16MinDutyCycle) << std::endl;
-        // std::cout << "u16StepFlags        = "<<std::to_string(bulletin->McbBulletin.StepPara.u16StepFlags) << std::endl;
-        // std::cout << "u16WindowMode       = "<<std::to_string(bulletin->McbBulletin.StepPara.u16WindowMode) << std::endl;
-        // std::cout << "u16AngleWindow2     = "<<std::to_string(bulletin->McbBulletin.StepPara.u16AngleWindow2) << std::endl;
-        // std::cout << "u16TorqueWindow2    = "<<std::to_string(bulletin->McbBulletin.StepPara.u16TorqueWindow2) << std::endl;
+        std::cout << "=============================================================================== "  << std::endl;
+        std::cout << "u8StepID            = "<<std::to_string(bulletin->McbBulletin.StepPara.u8StepID)   << std::endl;
+        std::cout << "u8StepName          = "<<bulletin->McbBulletin.StepPara.u8StepName                 << std::endl;
+        std::cout << "u16StepRpm          = "<<std::to_string(bulletin->McbBulletin.StepPara.u16StepRpm) << std::endl;
+        std::cout << "u16StepSlope        = "<<std::to_string(bulletin->McbBulletin.StepPara.u16StepSlope) << std::endl;
+        std::cout << "u16StepMaxCurrent   = "<<std::to_string(bulletin->McbBulletin.StepPara.u16StepMaxCurrent) << std::endl;
+        std::cout << "u16StepMaxTorque    = "<<std::to_string(bulletin->McbBulletin.StepPara.u16StepMaxTorque) << std::endl;
+        std::cout << "u16StepMaxRevol     = "<<std::to_string(bulletin->McbBulletin.StepPara.u16StepMaxRevol) << std::endl;
+        std::cout << "u16StepTime         = "<<std::to_string(bulletin->McbBulletin.StepPara.u16StepTime) << std::endl;
+        std::cout << "s32StepAngle        = "<<std::to_string(bulletin->McbBulletin.StepPara.s32StepAngle) << std::endl;
+        std::cout << "u16StepAngleWindow  = "<<std::to_string(bulletin->McbBulletin.StepPara.u16StepAngleWindow) << std::endl;
+        std::cout << "u16StepTorqueWindow = "<<std::to_string(bulletin->McbBulletin.StepPara.u16StepTorqueWindow) << std::endl;
+        std::cout << "u16MinDutyCycle     = "<<std::to_string(bulletin->McbBulletin.StepPara.u16MinDutyCycle) << std::endl;
+        std::cout << "u16StepFlags        = "<<std::to_string(bulletin->McbBulletin.StepPara.u16StepFlags) << std::endl;
+        std::cout << "u16WindowMode       = "<<std::to_string(bulletin->McbBulletin.StepPara.u16WindowMode) << std::endl;
+        std::cout << "u16AngleWindow2     = "<<std::to_string(bulletin->McbBulletin.StepPara.u16AngleWindow2) << std::endl;
+        std::cout << "u16TorqueWindow2    = "<<std::to_string(bulletin->McbBulletin.StepPara.u16TorqueWindow2) << std::endl;
         #endif
 
         // Check step data 有效性
@@ -2815,7 +2872,7 @@ bool GtcsManager::CheckUiRequestCmd(std::string reqest_string)
     // Set AMS bulletin.
     if (ams->SetAmsBulletin(reqest_string) == false)
     {
-        #ifdef _DEBUG_MODE_
+        #if defined(_DEBUG_MODE_)
         std::cout << "CheckUiRequestCmd = error!! " << std::endl;
         #endif
         return false;
@@ -3286,10 +3343,10 @@ bool GtcsManager::RunGtcsSystem()
                 bulletin->ScrewHandler.currentsequenceid 
                     = bulletin->ScrewHandler.GtcsJob.sequencelist[bulletin->ScrewHandler.currentsequenceindex].seq_id;
                 // Setting MCB to fasten status.
-                mcb->telegram.status.loosen_status = false; 
+                mcb->telegram.status.loosen_status      = false; 
                 bulletin->ScrewHandler.currentstatusnum = 0;
-                bulletin->ScrewHandler.IsEnable = true;
-                bulletin->ScrewHandler.laststepid = 1;
+                bulletin->ScrewHandler.IsEnable         = true;
+                bulletin->ScrewHandler.laststepid       = 1;
             }
         }
         else
@@ -3314,7 +3371,6 @@ bool GtcsManager::RunGtcsSystem()
 
             mcb->telegram.ctrl.InitialCtrlFlags(ctrltelegram);
             #if defined(_DEBUG_MODE_111_)
-            
             #else
             mcb->telegram.ctrl.SetCtrlFlags(ctrltelegram, CTRL_FLAGS_IDX::SC_REVERSE); // Reverse
             #endif
@@ -3324,7 +3380,11 @@ bool GtcsManager::RunGtcsSystem()
         mcb->telegram.ctrl.SetCtrlFlags(ctrltelegram, CTRL_FLAGS_IDX::EN_TIMEOUT_200MS);
 
         // Enabale | Disable ?
-        if (bulletin->ScrewHandler.IsEnable == true)
+        if(GetGtcsGpioInputPinStatus(bulletin->ScrewHandler.inputstatus,(uint16_t)GTCS_GPIO_IN::DISABLE_IN)==true)
+        {
+            ;
+        }
+        else if (bulletin->ScrewHandler.IsEnable == true)
         {
             mcb->telegram.ctrl.SetCtrlFlags(ctrltelegram, CTRL_FLAGS_IDX::SC_ENABLE);
         }
@@ -3352,7 +3412,7 @@ bool GtcsManager::RunGtcsSystem()
                     ClearRamdiskTxtFile();
                     bulletin->ScrewHandler.screwrunning = true;
                     SetScrewDriverFasteningStartClock(bulletin->ScrewHandler.fastenstartclock);
-                    bulletin->ScrewHandler.outputstatus = 0;
+                    SetGtcsGpioOutputPinStatus(bulletin->ScrewHandler.outputstatus,(uint16_t)GTCS_GPIO_OUT::START_OUT,false);                  
                 }
                 // Calculate fasten time.
                 GetScrewDriverFasteningTime(bulletin->ScrewHandler.fasteningtime,bulletin->ScrewHandler.fastenstartclock);                
@@ -3373,7 +3433,7 @@ bool GtcsManager::RunGtcsSystem()
                     // Write data to ramdisk
                     WriteRealTimeActuralValueToRamdisk(bulletin->AmsBulletin.DATA300Struct);
                     bulletin->ScrewHandler.screwrunning = false;
-                    bulletin->ScrewHandler.outputstatus = 1;
+                    SetGtcsGpioOutputPinStatus(bulletin->ScrewHandler.outputstatus,(uint16_t)GTCS_GPIO_OUT::START_OUT,true);
                 }
             }
 
@@ -3385,8 +3445,6 @@ bool GtcsManager::RunGtcsSystem()
             {
                 WriteRealTimeActuralValueToRamdisk(bulletin->AmsBulletin.DATA300Struct);
             }
-            else
-            {;}
             
             // Switch to next sequence index.
             if(CheckScrewDriverCountingFinished(bulletin->ScrewHandler) == true)
@@ -3428,12 +3486,10 @@ bool GtcsManager::SettingGtcsSystem()
                 SetMainFSM(MAIN_FSM::READY);
             }
         }
-        std::this_thread::sleep_for(std::chrono::milliseconds(10)); // Thread sleep 1s.
     }
     else
-    {
-        std::this_thread::sleep_for(std::chrono::milliseconds(10)); // Thread sleep 1s.
-    }
+    {;}
+    std::this_thread::sleep_for(std::chrono::milliseconds(10)); // Thread sleep 1s.
     return true;
 }
 /******************************************************************************************
@@ -3486,7 +3542,23 @@ bool GtcsManager::ClearGtcsSystemAlarm()
                 }
                 // Polling Ack signal to mcb.
                 if(mcb->GetMcbPollingStatus(ctrltelegram))
-                {;}           
+                {
+                    #if defined(_DEBUG_MODE_)
+                    std::cout << "Polling to clear Gtcs system alarm statua!" <<std::endl;
+                    #endif
+                }         
+                else
+                {
+                    #if defined(_DEBUG_MODE_)
+                    std::cout << "Error to polling Gtcs system alarm statua!" <<std::endl;
+                    #endif
+                }  
+            }
+            else
+            {
+                #if defined(_DEBUG_MODE_)
+                std::cout << "Gtcs system alarm statua NG stop = 1 !" <<std::endl;
+                #endif
             }
         }
         else
@@ -3499,5 +3571,6 @@ bool GtcsManager::ClearGtcsSystemAlarm()
         std::cout << "Erro to clear Gtcs system alarm statua!" <<std::endl;
         #endif
     }
+    std::this_thread::sleep_for(std::chrono::milliseconds(10)); // Thread sleep 1s.
     return true;
 }

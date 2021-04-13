@@ -111,62 +111,62 @@ uint16_t GtcsGPIOHandler::GetGPIOInputStatus(volatile uint32_t *gpio4,volatile u
 {
     uint16_t inputvalue = 0;
     // gpio IN_OUT_1
-    if (*gpio4 & (1 << (int)GTCS_GPIO_IN::IN_01))
+    if (*gpio4 & (1 << (int)GTCS_GPIO_IN_REGIEST::PIN_IN_01))
     {
         inputvalue |= 1 << 0;
     }
     // gpio IN_OUT_2
-    if (*gpio4 & (1 << (int)GTCS_GPIO_IN::IN_02))
+    if (*gpio4 & (1 << (int)GTCS_GPIO_IN_REGIEST::PIN_IN_02))
     {
         inputvalue |= 1 << 1;
     }
     // gpio IN_OUT_3
-    if (*gpio4 & (1 << (int)GTCS_GPIO_IN::IN_03))
+    if (*gpio4 & (1 << (int)GTCS_GPIO_IN_REGIEST::PIN_IN_03))
     {
         inputvalue |= 1 << 2;
     }
     // gpio IN_OUT_4
-    if (*gpio5 & (1 << (int)GTCS_GPIO_IN::IN_04))
+    if (*gpio5 & (1 << (int)GTCS_GPIO_IN_REGIEST::PIN_IN_04))
     {
         inputvalue |= 1 << 3;
     }    
     // gpio IN_OUT_5
-    if (*gpio5 & (1 << (int)GTCS_GPIO_IN::IN_05))
+    if (*gpio5 & (1 << (int)GTCS_GPIO_IN_REGIEST::PIN_IN_05))
     {
         inputvalue |= 1 << 4;
     }
     // gpio IN_OUT_6
-    if (*gpio5 & (1 << (int)GTCS_GPIO_IN::IN_06))
+    if (*gpio5 & (1 << (int)GTCS_GPIO_IN_REGIEST::PIN_IN_06))
     {
         inputvalue |= 1 << 5;
     }
     // gpio IN_OUT_7
-    if (*gpio5 & (1 << (int)GTCS_GPIO_IN::IN_07))
+    if (*gpio5 & (1 << (int)GTCS_GPIO_IN_REGIEST::PIN_IN_07))
     {
         inputvalue |= 1 << 6;
     }
     // gpio IN_OUT_8
-    if (*gpio5 & (1 << (int)GTCS_GPIO_IN::IN_08))
+    if (*gpio5 & (1 << (int)GTCS_GPIO_IN_REGIEST::PIN_IN_08))
     {
         inputvalue |= 1 << 7;
     }
     // gpio IN_OUT_9
-    if (*gpio5 & (1 << (int)GTCS_GPIO_IN::IN_09))
+    if (*gpio5 & (1 << (int)GTCS_GPIO_IN_REGIEST::PIN_IN_09))
     {
         inputvalue |= 1 << 8;
     }
     // gpio IN_OUT_10
-    if (*gpio5 & (1 << (int)GTCS_GPIO_IN::IN_10))
+    if (*gpio5 & (1 << (int)GTCS_GPIO_IN_REGIEST::PIN_IN_10))
     {
         inputvalue |= 1 << 9;
     }
     // gpio IN_OUT_11
-    if (*gpio5 & (1 << (int)GTCS_GPIO_IN::IN_11))
+    if (*gpio5 & (1 << (int)GTCS_GPIO_IN_REGIEST::PIN_IN_11))
     {
         inputvalue |= 1 << 10;
     }
     // gpio IN_OUT_12
-    if (*gpio5 & (1 << (int)GTCS_GPIO_IN::IN_12))
+    if (*gpio5 & (1 << (int)GTCS_GPIO_IN_REGIEST::PIN_IN_12))
     {
         inputvalue |= 1 << 11;
     }
@@ -198,110 +198,110 @@ bool GtcsGPIOHandler::SetGPIOOutputStatus(uint16_t &outputvalue, volatile uint32
     // gpio OUT_1
     if (outputvalue & (1 << 0))
     {
-        *gpio3 = *gpio3 | (1 << GTCS_GPIO_OUT::OUT_01);
+        *gpio3 = *gpio3 | (1 << GTCS_GPIO_OUT_REGIEST::PIN_OUT_01);
     }
     else
     {
-        *gpio3 = *gpio3 & ~(1 << GTCS_GPIO_OUT::OUT_01);
+        *gpio3 = *gpio3 & ~(1 << GTCS_GPIO_OUT_REGIEST::PIN_OUT_01);
     }
     // gpio OUT_2
     if (outputvalue & (1 << 1))
     {
-        *gpio3 = *gpio3 | (1 << GTCS_GPIO_OUT::OUT_02);
+        *gpio3 = *gpio3 | (1 << GTCS_GPIO_OUT_REGIEST::PIN_OUT_02);
     }
     else
     {
-        *gpio3 = *gpio3 & ~(1 << GTCS_GPIO_OUT::OUT_02);
+        *gpio3 = *gpio3 & ~(1 << GTCS_GPIO_OUT_REGIEST::PIN_OUT_02);
     }
     // gpio IN_OUT_3
     if (outputvalue & (1 << 2))
     {
-        *gpio3 = *gpio3 | (1 << GTCS_GPIO_OUT::OUT_03);
+        *gpio3 = *gpio3 | (1 << GTCS_GPIO_OUT_REGIEST::PIN_OUT_03);
     }
     else
     {
-        *gpio3 = *gpio3 & ~(1 << GTCS_GPIO_OUT::OUT_03);
+        *gpio3 = *gpio3 & ~(1 << GTCS_GPIO_OUT_REGIEST::PIN_OUT_03);
     }
     // gpio IN_OUT_4
     if (outputvalue & (1 << 3))
     {
-        *gpio3 = *gpio3 | (1 << GTCS_GPIO_OUT::OUT_04);
+        *gpio3 = *gpio3 | (1 << GTCS_GPIO_OUT_REGIEST::PIN_OUT_04);
     }
     else
     {
-        *gpio3 = *gpio3 & ~(1 << GTCS_GPIO_OUT::OUT_04);
+        *gpio3 = *gpio3 & ~(1 << GTCS_GPIO_OUT_REGIEST::PIN_OUT_04);
     }
     // gpio IN_OUT_5
     if (outputvalue & (1 << 4))
     {
-        *gpio3 = *gpio3 | (1 << GTCS_GPIO_OUT::OUT_05);
+        *gpio3 = *gpio3 | (1 << GTCS_GPIO_OUT_REGIEST::PIN_OUT_05);
     }
     else
     {
-        *gpio3 = *gpio3 & ~(1 << GTCS_GPIO_OUT::OUT_05);
+        *gpio3 = *gpio3 & ~(1 << GTCS_GPIO_OUT_REGIEST::PIN_OUT_05);
     }
     // gpio IN_OUT_6
     if (outputvalue & (1 << 5))
     {
-        *gpio2 = *gpio2 | (1 << GTCS_GPIO_OUT::OUT_06);
+        *gpio2 = *gpio2 | (1 << GTCS_GPIO_OUT_REGIEST::PIN_OUT_06);
     }
     else
     {
-        *gpio2 = *gpio2 & ~(1 << GTCS_GPIO_OUT::OUT_06);
+        *gpio2 = *gpio2 & ~(1 << GTCS_GPIO_OUT_REGIEST::PIN_OUT_06);
     }
     // gpio IN_OUT_7
     if (outputvalue & (1 << 6))
     {
-        *gpio2 = *gpio2 | (1 << GTCS_GPIO_OUT::OUT_07);
+        *gpio2 = *gpio2 | (1 << GTCS_GPIO_OUT_REGIEST::PIN_OUT_07);
     }
     else
     {
-        *gpio2 = *gpio2 & ~(1 << GTCS_GPIO_OUT::OUT_07);
+        *gpio2 = *gpio2 & ~(1 << GTCS_GPIO_OUT_REGIEST::PIN_OUT_07);
     }
     // gpio IN_OUT_8
     if (outputvalue & (1 << 7))
     {
-        *gpio2 = *gpio2 | (1 << GTCS_GPIO_OUT::OUT_08);
+        *gpio2 = *gpio2 | (1 << GTCS_GPIO_OUT_REGIEST::PIN_OUT_08);
     }
     else
     {
-        *gpio2 = *gpio2 & ~(1 << GTCS_GPIO_OUT::OUT_08);
+        *gpio2 = *gpio2 & ~(1 << GTCS_GPIO_OUT_REGIEST::PIN_OUT_08);
     }
     // gpio IN_OUT_9
     if (outputvalue & (1 << 8))
     {
-        *gpio2 = *gpio2 | (1 << GTCS_GPIO_OUT::OUT_09);
+        *gpio2 = *gpio2 | (1 << GTCS_GPIO_OUT_REGIEST::PIN_OUT_09);
     }
     else
     {
-        *gpio2 = *gpio2 & ~(1 << GTCS_GPIO_OUT::OUT_09);
+        *gpio2 = *gpio2 & ~(1 << GTCS_GPIO_OUT_REGIEST::PIN_OUT_09);
     }
     // gpio IN_OUT_10
     if (outputvalue & (1 << 9))
     {
-        *gpio2 = *gpio2 | (1 << GTCS_GPIO_OUT::OUT_10);
+        *gpio2 = *gpio2 | (1 << GTCS_GPIO_OUT_REGIEST::PIN_OUT_10);
     }
     else
     {
-        *gpio2 = *gpio2 & ~(1 << GTCS_GPIO_OUT::OUT_10);
+        *gpio2 = *gpio2 & ~(1 << GTCS_GPIO_OUT_REGIEST::PIN_OUT_10);
     }
     // gpio IN_OUT_11
     if (outputvalue & (1 << 10))
     {
-        *gpio2 = *gpio2 | (1 << GTCS_GPIO_OUT::OUT_11);
+        *gpio2 = *gpio2 | (1 << GTCS_GPIO_OUT_REGIEST::PIN_OUT_11);
     }
     else
     {
-        *gpio2 = *gpio2 & ~(1 << GTCS_GPIO_OUT::OUT_11);
+        *gpio2 = *gpio2 & ~(1 << GTCS_GPIO_OUT_REGIEST::PIN_OUT_11);
     }
     // gpio IN_OUT_12
     if (outputvalue & (1 << 11))
     {
-        *gpio2 = *gpio2 | (1 << GTCS_GPIO_OUT::OUT_12);
+        *gpio2 = *gpio2 | (1 << GTCS_GPIO_OUT_REGIEST::PIN_OUT_12);
     }
     else
     {
-        *gpio2 = *gpio2 & ~(1 << GTCS_GPIO_OUT::OUT_12);
+        *gpio2 = *gpio2 & ~(1 << GTCS_GPIO_OUT_REGIEST::PIN_OUT_12);
     }
     return true;
 }
@@ -392,9 +392,8 @@ void GtcsGPIOHandler::GtcsGPIOProcessHandler()
         SetGPIOOutputStatus(outputstatus,gpio2,gpio3);
 
         #if defined(_GPIO_DEBUG_MODE_)  
-        std::cout << "GPIO Input value = " << std::to_string(inputstatus) << std::endl;
-        std::cout << "GPIO Output value = " << std::to_string(outputstatus) << std::endl;
-		// std::cout << "Date time now = " << DateTime::GetCurrentSystemDateTime()<< std::endl;
+        std::cout << "GPIO Input value = " << std::to_string(inputstatus) ;
+        std::cout << " Output value = " << std::to_string(outputstatus) << std::endl;
 		#endif
         std::this_thread::sleep_for(std::chrono::milliseconds(100)); 							// Thread sleep 1s.
 	}

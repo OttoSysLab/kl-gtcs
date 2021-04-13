@@ -4,8 +4,9 @@
 #define _GPIO_DEBUG_MODE_
 // #define _DEBUG_RAM_MODE_ 
 // #define _DEBUG_MODE_38_
-// #define _DEBUG_MODE_54_
-#define _DEBUG_MODE_111_ // 惠達機
+// #define _DEBUG_MODE_52_     // GPIO 測試機
+#define _DEBUG_MODE_54_
+// #define _DEBUG_MODE_111_ // 惠達機   
 // #define _DEBUG_MODE_107_
 // #define _DEBUG_MODE_202_
 // #define _DEBUG_MODE_207_
@@ -50,37 +51,56 @@ enum GTCS_GPIO_REGEIST:int{
     GPIO4_DR = 0x30230000,
     GPIO5_DR = 0x30240000,
 };
-// GTCS_GPIO_IN
-enum GTCS_GPIO_IN :int{
-    IN_01 = 28,     // /dev/IN1 -> GPIO4_IO28
-    IN_02 = 29,     // /dev/IN2 -> GPIO4_IO29
-    IN_03 = 30,     // /dev/IN3 -> GPIO4_IO30
-    IN_04 = 5,      // /dev/IN4 -> GPIO5_IO5
-    IN_05 = 6,      // /dev/IN5 -> GPIO5_IO6
-    IN_06 = 8,      // /dev/IN6 -> GPIO5_IO8
-    IN_07 = 7,      // /dev/IN7 -> GPIO5_IO7
-    IN_08 = 9,      // /dev/IN8 -> GPIO5_IO9
-    IN_09 = 10,     // /dev/IN9 -> GPIO5_IO10
-    IN_10 = 12,     // /dev/IN10 -> GPIO5_IO12
-    IN_11 = 11,     // /dev/IN11 -> GPIO5_IO11
-    IN_12 = 13,     // /dev/IN12 -> GPIO5_IO13
+// GTCS_GPIO_IN regiest
+enum GTCS_GPIO_IN_REGIEST :int{
+    PIN_IN_01 = 28,     // /dev/IN1 -> GPIO4_IO28
+    PIN_IN_02 = 29,     // /dev/IN2 -> GPIO4_IO29
+    PIN_IN_03 = 30,     // /dev/IN3 -> GPIO4_IO30
+    PIN_IN_04 = 5,      // /dev/IN4 -> GPIO5_IO5
+    PIN_IN_05 = 6,      // /dev/IN5 -> GPIO5_IO6
+    PIN_IN_06 = 8,      // /dev/IN6 -> GPIO5_IO8
+    PIN_IN_07 = 7,      // /dev/IN7 -> GPIO5_IO7
+    PIN_IN_08 = 9,      // /dev/IN8 -> GPIO5_IO9
+    PIN_IN_09 = 10,     // /dev/IN9 -> GPIO5_IO10
+    PIN_IN_10 = 12,     // /dev/IN10 -> GPIO5_IO12
+    PIN_IN_11 = 11,     // /dev/IN11 -> GPIO5_IO11
+    PIN_IN_12 = 13,     // /dev/IN12 -> GPIO5_IO13
 };
-// GTCS_GPIO_IN
-enum GTCS_GPIO_OUT :int{
-    OUT_01 = 24,     // /dev/OUT1 -> GPIO3_IO24
-    OUT_02 = 23,     // /dev/OUT2 -> GPIO3_IO23
-    OUT_03 = 22,     // /dev/OUT3 -> GPIO3_IO22
-    OUT_04 = 20,     // /dev/OUT4 -> GPIO3_IO20
-    OUT_05 = 19,     // /dev/OUT5 -> GPIO3_IO19
-    OUT_06 = 11,     // /dev/OUT6 -> GPIO2_IO11
-    OUT_07 = 10,     // /dev/OUT7 -> GPIO2_IO10
-    OUT_08 = 9,      // /dev/OUT8 -> GPIO2_IO9
-    OUT_09 = 8,      // /dev/OUT9 -> GPIO2_IO8
-    OUT_10 = 7,      // /dev/OUT10 -> GPIO2_IO7
-    OUT_11 = 6,      // /dev/OUT11 -> GPIO2_IO6
-    OUT_12 = 3,      // /dev/OUT12 -> GPIO5_IO3  
-    OUT_13 = 25,     // /dev/OUT13 -> GPIO3_IO25
-    OUT_14 = 21,     // /dev/OUT14 -> GPIO3_IO21
+// GTCS_GPIO_IN regiest
+enum GTCS_GPIO_OUT_REGIEST :int{
+    PIN_OUT_01 = 24,     // /dev/OUT1 -> GPIO3_IO24
+    PIN_OUT_02 = 23,     // /dev/OUT2 -> GPIO3_IO23
+    PIN_OUT_03 = 22,     // /dev/OUT3 -> GPIO3_IO22
+    PIN_OUT_04 = 20,     // /dev/OUT4 -> GPIO3_IO20
+    PIN_OUT_05 = 19,     // /dev/OUT5 -> GPIO3_IO19
+    PIN_OUT_06 = 11,     // /dev/OUT6 -> GPIO2_IO11
+    PIN_OUT_07 = 10,     // /dev/OUT7 -> GPIO2_IO10
+    PIN_OUT_08 = 9,      // /dev/OUT8 -> GPIO2_IO9
+    PIN_OUT_09 = 8,      // /dev/OUT9 -> GPIO2_IO8
+    PIN_OUT_10 = 7,      // /dev/OUT10 -> GPIO2_IO7
+    PIN_OUT_11 = 6,      // /dev/OUT11 -> GPIO2_IO6
+    PIN_OUT_12 = 3,      // /dev/OUT12 -> GPIO5_IO3  
+    PIN_OUT_13 = 25,     // /dev/OUT13 -> GPIO3_IO25
+    PIN_OUT_14 = 21,     // /dev/OUT14 -> GPIO3_IO21
+};
+// GTCS_GPIO_OUT 
+enum GTCS_GPIO_IN:uint16_t {
+    START_IN     = 0,
+    REVER_IN     = 1,
+    DISABLE_IN   = 2,
+    CONFIRM_IN   = 3,
+    CLEAR_IN     = 4,
+    GATE_IN      = 5,
+    SEQ_CLEAR_IN = 6,
+};
+// GTCS_GPIO_OUT 
+enum GTCS_GPIO_OUT:uint16_t {
+    START_OUT  = 0,
+    REVER_OUT  = 2,
+    OK_OUT     = 3,
+    NG_OUT     = 4,
+    OK_SEQ_OUT = 5,
+    OK_JOB_OUT = 6,
 };
 // MCB_TELEGRAM_TYPE
 enum MCB_TELEGRAM_TYPE : uint8_t{

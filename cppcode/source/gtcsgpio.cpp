@@ -285,24 +285,24 @@ bool GtcsGPIOHandler::SetGPIOOutputStatus(uint16_t &outputvalue, volatile uint32
     {
         *gpio2 = *gpio2 & ~(1 << GTCS_GPIO_OUT_REGIEST::PIN_OUT_10);
     }
-    // gpio IN_OUT_11
-    if (outputvalue & (1 << 10))
-    {
-        *gpio2 = *gpio2 | (1 << GTCS_GPIO_OUT_REGIEST::PIN_OUT_11);
-    }
-    else
-    {
-        *gpio2 = *gpio2 & ~(1 << GTCS_GPIO_OUT_REGIEST::PIN_OUT_11);
-    }
-    // gpio IN_OUT_12
-    if (outputvalue & (1 << 11))
-    {
-        *gpio2 = *gpio2 | (1 << GTCS_GPIO_OUT_REGIEST::PIN_OUT_12);
-    }
-    else
-    {
-        *gpio2 = *gpio2 & ~(1 << GTCS_GPIO_OUT_REGIEST::PIN_OUT_12);
-    }
+    // // gpio IN_OUT_11
+    // if (outputvalue & (1 << 10))
+    // {
+    //     *gpio2 = *gpio2 | (1 << GTCS_GPIO_OUT_REGIEST::PIN_OUT_11);
+    // }
+    // else
+    // {
+    //     *gpio2 = *gpio2 & ~(1 << GTCS_GPIO_OUT_REGIEST::PIN_OUT_11);
+    // }
+    // // gpio IN_OUT_12
+    // if (outputvalue & (1 << 11))
+    // {
+    //     *gpio2 = *gpio2 | (1 << GTCS_GPIO_OUT_REGIEST::PIN_OUT_12);
+    // }
+    // else
+    // {
+    //     *gpio2 = *gpio2 & ~(1 << GTCS_GPIO_OUT_REGIEST::PIN_OUT_12);
+    // }
     return true;
 }
 /******************************************************************************************
@@ -328,6 +328,8 @@ void GtcsGPIOHandler::GtcsGPIOProcessHandler()
     GtcsManager manager;
     uint16_t inputstatus = 0;
     uint16_t outputstatus = 0;
+    uint16_t index_buf = 0;
+
     #pragma region initial linux gpio regiest.
     // Initial regiest.
     static volatile uint32_t *gpio2;
@@ -391,11 +393,23 @@ void GtcsGPIOHandler::GtcsGPIOProcessHandler()
         outputstatus = manager.GetGtcsGpioOutputStatus();
         SetGPIOOutputStatus(outputstatus,gpio2,gpio3);
 
+        // inputstatus = GetGPIOInputStatus(gpio4,gpio5);
+        // outputstatus = inputstatus;
+        // SetGPIOOutputStatus(outputstatus,gpio2,gpio3);   
+
+        // outputstatus = (1 << index_buf);
+        // SetGPIOOutputStatus(outputstatus,gpio2,gpio3);
+        // index_buf += 1;
+        // if (index_buf ==10){
+        //     index_buf =0;
+        // }     
+
         #if defined(_GPIO_DEBUG_MODE_)  
+        // std::cout << "Index = " << std::to_string(index_buf) ;
         std::cout << "GPIO Input value = " << std::to_string(inputstatus) ;
         std::cout << " Output value = " << std::to_string(outputstatus) << std::endl;
 		#endif
-        std::this_thread::sleep_for(std::chrono::milliseconds(100)); 							// Thread sleep 1s.
+        std::this_thread::sleep_for(std::chrono::milliseconds(10)); 							// Thread sleep 1s.
 	}
     close(fd);
 }
